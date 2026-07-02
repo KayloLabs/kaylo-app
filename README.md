@@ -1,6 +1,6 @@
 <div align="center">
 
-# KaivoLabs
+# KayloLabs
 
 ### Building the future of trusted local services.
 
@@ -10,7 +10,7 @@
 
 <sub>
 
-Kaivo • カイボ • 카이보 • 凯沃 • कैवो • কাইভো • કૈવો • ਕੈਵੋ • କୈଭୋ • கைவோ • కైవో • ಕೈವೋ • കൈവോ • كايفو • Кайво • Κάιβο
+Kaylo • カイロ • 카일로 • 凯洛 • कैलो • কেলো • કેલો • ਕੈਲੋ • କେଲୋ • கெய்லோ • కైలో • ಕೈಲೋ • കൈലോ • كايلو • Кайло • Κάιλο
 
 </sub>
 

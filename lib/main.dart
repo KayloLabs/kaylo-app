@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-// import 'package:firebase_core/firebase_core.dart'; // TODO: M2 uncomment
+import 'package:device_preview/device_preview.dart';
 
 import 'core/router/app_router.dart';
 import 'core/services/storage_service.dart';
+import 'core/theme/app_theme.dart';
+import 'features/home/application/home_providers.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -19,7 +21,10 @@ void main() async {
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const KayloApp(),
+      child: DevicePreview(
+        enabled: useMock,
+        builder: (context) => const KayloApp(),
+      ),
     ),
   );
 }
@@ -33,10 +38,11 @@ class KayloApp extends ConsumerWidget {
 
     return MaterialApp.router(
       title: 'Kaylo',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color(0xFF16873E)),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.lightTheme,
+      darkTheme: AppTheme.darkTheme,
+      themeMode: ThemeMode.system,
+      locale: DevicePreview.locale(context),
+      builder: DevicePreview.appBuilder,
       routerConfig: router,
     );
   }

@@ -6,6 +6,9 @@ class Routes {
   static const String otp = '/otp';
   static const String location = '/location';
   
+  // Dev Routes
+  static const String widgetbook = '/dev/widgetbook';
+  
   // Dashboard Tabs (ShellRoute)
   static const String dashboard = '/dashboard'; // default tab (home)
   static const String bookings = '/bookings';

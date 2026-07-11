@@ -1,0 +1,58 @@
+import 'package:flutter/material.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/theme/app_radius.dart';
+import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../core/widgets/kaylo_button.dart';
+
+class BottomPromoBanner extends StatelessWidget {
+  const BottomPromoBanner({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return KayloLiquidGlass(
+      borderRadius: AppRadius.card,
+      padding: const EdgeInsets.all(AppSpacing.m),
+      child: Row(
+        children: [
+          Image.asset(
+            'assets_kaylo/3d_transparent/promo_calendar.png',
+            width: 80,
+            height: 80,
+            fit: BoxFit.contain,
+          ),
+          const SizedBox(width: AppSpacing.m),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Never miss important work',
+                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                        fontWeight: FontWeight.bold,
+                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  'Set reminders and we\'ll take\ncare of the rest.',
+                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                        height: 1.2,
+                      ),
+                ),
+                const SizedBox(height: AppSpacing.s),
+                KayloButton(
+                  text: 'Set Reminder',
+                  onPressed: () {},
+                  icon: Icons.arrow_forward_rounded,
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+}

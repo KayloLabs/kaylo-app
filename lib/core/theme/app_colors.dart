@@ -21,9 +21,9 @@ class AppColors {
   static const Color surfaceMuted = Color(0xFFEFF3EE); // Alias for backwards compat
   
   // Section Accents
-  static const Color homeAccent = brandPrimary;
-  static const Color farmAccent = secondaryAccent;
-  static const Color careAccent = accent;
+  static const Color homeAccent = Color(0xFF2D6BE4);
+  static const Color farmAccent = Color(0xFFF0851B);
+  static const Color careAccent = Color(0xFF7A5AF5);
 
   // Typography
   static const Color textPrimary = Color(0xFF16211B); // Near-black with green undertone

@@ -3,12 +3,12 @@ import '../domain/home_repository.dart';
 
 class MockHomeRepository implements HomeRepository {
   final List<ServiceItem> _mockServices = [
-    ServiceItem(id: '1', name: 'Plumbing', category: 'home', description: 'Expert plumbing services', iconPath: 'assets/icons/plumbing.png', basePrice: 500, isPopular: true),
-    ServiceItem(id: '2', name: 'Electrical', category: 'home', description: 'Electrical repairs and wiring', iconPath: 'assets/icons/electrical.png', basePrice: 400, isPopular: true),
-    ServiceItem(id: '3', name: 'Cleaning', category: 'home', description: 'Deep house cleaning', iconPath: 'assets/icons/cleaning.png', basePrice: 1500, isPopular: true),
-    ServiceItem(id: '4', name: 'AC Service', category: 'home', description: 'AC repair and maintenance', iconPath: 'assets/icons/ac.png', basePrice: 600, isPopular: true),
-    ServiceItem(id: '5', name: 'Coconut Harvesting', category: 'farm', description: 'Professional coconut climbers', iconPath: 'assets/icons/coconut.png', basePrice: 1000, isPopular: false),
-    ServiceItem(id: '6', name: 'Gardening', category: 'farm', description: 'Lawn and garden maintenance', iconPath: 'assets/icons/garden.png', basePrice: 800, isPopular: false),
+    ServiceItem(id: '1', name: 'Coconut Plucking', category: 'farm', description: 'Professional coconut climbers', iconPath: 'assets_kaylo/3d_transparent/icon_coconut.png', basePrice: 1000, isPopular: true),
+    ServiceItem(id: '2', name: 'Arecanut Harvesting', category: 'farm', description: 'Expert harvesting', iconPath: 'assets_kaylo/3d_transparent/icon_arecanut.png', basePrice: 1200, isPopular: true),
+    ServiceItem(id: '3', name: 'Gardening', category: 'home', description: 'Lawn and garden maintenance', iconPath: 'assets_kaylo/3d_transparent/icon_garden.png', basePrice: 800, isPopular: true),
+    ServiceItem(id: '4', name: 'Plumbing', category: 'home', description: 'Expert plumbing services', iconPath: 'assets_kaylo/3d_transparent/icon_plumb.png', basePrice: 500, isPopular: true),
+    ServiceItem(id: '5', name: 'Electrical', category: 'home', description: 'Electrical repairs and wiring', iconPath: 'assets_kaylo/3d_transparent/icon_electric.png', basePrice: 400, isPopular: true),
+    ServiceItem(id: '6', name: 'More', category: 'home', description: 'More services', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 0, isPopular: true),
   ];
 
   @override

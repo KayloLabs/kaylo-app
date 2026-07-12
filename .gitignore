@@ -43,3 +43,7 @@ app.*.map.json
 /android/app/debug
 /android/app/profile
 /android/app/release
+FOUNDATION_SPRINT.md
+MEMBER_1_LEAD_DASHBOARD.md
+README.flutter.md
+TEAM_OVERVIEW.md

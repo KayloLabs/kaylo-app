@@ -7,6 +7,7 @@ class KayloLiquidGlass extends StatelessWidget {
   final EdgeInsetsGeometry? padding;
   final double? width;
   final double? height;
+  final Color? colorOverlay;
 
   const KayloLiquidGlass({
     super.key,
@@ -15,16 +16,17 @@ class KayloLiquidGlass extends StatelessWidget {
     this.padding,
     this.width,
     this.height,
+    this.colorOverlay,
   });
 
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
-    // 3. Light, controlled tint (whisper of warm white / cool dark)
-    final tintColor = isDark 
+    // 3. Light, controlled tint (whisper of warm white / cool dark or custom overlay)
+    final tintColor = colorOverlay ?? (isDark 
         ? const Color(0xFF16211B).withValues(alpha: 0.15) 
-        : const Color(0xFFFAF8F3).withValues(alpha: 0.15);
+        : const Color(0xFFFAF8F3).withValues(alpha: 0.15));
 
     // 2. Bright specular rim (gradient border effect)
     final topRimColor = isDark ? Colors.white.withValues(alpha: 0.15) : Colors.white.withValues(alpha: 0.6);

@@ -3,6 +3,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'routes.dart';
+import '../widgets/kaylo_bottom_nav.dart';
+import '../widgets/widgetbook_screen.dart';
+import '../services/storage_service.dart';
+import '../../features/splash/presentation/screens/splash_screen.dart';
+import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
+import '../../features/home/presentation/screens/dashboard_screen.dart';
 
 class AuthStateNotifier extends Notifier<bool> {
   @override
@@ -37,13 +43,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     routes: [
       GoRoute(
         path: Routes.splash,
-        builder: (context, state) =>
-            const Placeholder(child: Text('Splash Screen')),
+        builder: (context, state) => const SplashScreen(),
       ),
       GoRoute(
         path: Routes.onboarding,
-        builder: (context, state) =>
-            const Placeholder(child: Text('Onboarding Screen')),
+        builder: (context, state) => const OnboardingScreen(),
       ),
       GoRoute(
         path: Routes.login,
@@ -60,97 +64,68 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) =>
             const Placeholder(child: Text('OTP Screen')),
       ),
+      GoRoute(
+        path: Routes.widgetbook,
+        builder: (context, state) => const WidgetbookScreen(),
+      ),
       // ShellRoute for Bottom Navigation
-      ShellRoute(
-        builder: (context, state, child) {
-          // This would be replaced by the actual KayloBottomNav scaffold
-          return Scaffold(
-            body: child,
-            bottomNavigationBar: BottomNavigationBar(
-              currentIndex: _calculateSelectedIndex(state.matchedLocation),
-              onTap: (index) {
-                switch (index) {
-                  case 0:
-                    context.go(Routes.dashboard);
-                    break;
-                  case 1:
-                    context.go(Routes.bookings);
-                    break;
-                  case 2:
-                    context.go(Routes.careHome);
-                    break;
-                  case 3:
-                    context.go(Routes.messages);
-                    break;
-                  case 4:
-                    context.go(Routes.profile);
-                    break;
-                }
-              },
-              items: const [
-                BottomNavigationBarItem(icon: Icon(Icons.home), label: 'Home'),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.list),
-                  label: 'Bookings',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.favorite),
-                  label: 'Care',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.message),
-                  label: 'Messages',
-                ),
-                BottomNavigationBarItem(
-                  icon: Icon(Icons.person),
-                  label: 'Profile',
-                ),
-              ],
-            ),
-          );
+      StatefulShellRoute.indexedStack(
+        builder: (context, state, navigationShell) {
+          return KayloBottomNav(navigationShell: navigationShell);
         },
-        routes: [
-          GoRoute(
-            path: Routes.dashboard,
-            builder: (context, state) =>
-                const Placeholder(child: Text('Home Dashboard')),
+        branches: [
+          StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.serviceDetails,
-                builder: (context, state) =>
-                    const Placeholder(child: Text('Service Details')),
-              ),
-              GoRoute(
-                path: Routes.workerList,
-                builder: (context, state) =>
-                    const Placeholder(child: Text('Worker List')),
+                path: Routes.dashboard,
+                builder: (context, state) => const DashboardScreen(),
+                routes: [
+                  GoRoute(
+                    path: Routes.serviceDetails,
+                    builder: (context, state) =>
+                        const Placeholder(child: Text('Service Details')),
+                  ),
+                  GoRoute(
+                    path: Routes.workerList,
+                    builder: (context, state) =>
+                        const Placeholder(child: Text('Worker List')),
+                  ),
+                ],
               ),
             ],
           ),
-          GoRoute(
-            path: Routes.bookings,
-            builder: (context, state) =>
-                const Placeholder(child: Text('Bookings Tab')),
-          ),
-          GoRoute(
-            path: Routes.careHome,
-            builder: (context, state) =>
-                const Placeholder(child: Text('Care Mode')),
-          ),
-          GoRoute(
-            path: Routes.messages,
-            builder: (context, state) =>
-                const Placeholder(child: Text('Messages')),
-          ),
-          GoRoute(
-            path: Routes.profile,
-            builder: (context, state) =>
-                const Placeholder(child: Text('Profile Tab')),
+          StatefulShellBranch(
             routes: [
               GoRoute(
-                path: Routes.settings,
+                path: Routes.bookings,
                 builder: (context, state) =>
-                    const Placeholder(child: Text('Settings')),
+                    const Placeholder(child: Text('Bookings Tab')),
+              ),
+            ],
+          ),
+
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.messages,
+                builder: (context, state) =>
+                    const Placeholder(child: Text('Messages')),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.profile,
+                builder: (context, state) =>
+                    const Placeholder(child: Text('Profile Tab')),
+                routes: [
+                  GoRoute(
+                    path: Routes.settings,
+                    builder: (context, state) =>
+                        const Placeholder(child: Text('Settings')),
+                  ),
+                ],
               ),
             ],
           ),
@@ -159,12 +134,3 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
-
-int _calculateSelectedIndex(String location) {
-  if (location.startsWith(Routes.dashboard)) return 0;
-  if (location.startsWith(Routes.bookings)) return 1;
-  if (location.startsWith(Routes.careHome)) return 2;
-  if (location.startsWith(Routes.messages)) return 3;
-  if (location.startsWith(Routes.profile)) return 4;
-  return 0;
-}

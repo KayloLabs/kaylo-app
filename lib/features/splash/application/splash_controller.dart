@@ -19,9 +19,9 @@ class SplashController extends AsyncNotifier<SplashRouteDestination?> {
     try {
       // Simulate Firebase/App initialization
       // TODO: await Firebase.initializeApp();
-      await Future.delayed(const Duration(milliseconds: 300));
+      await Future.delayed(const Duration(milliseconds: 1200));
 
-      final hasSeenOnboarding = false; // Forced to false for testing
+      final hasSeenOnboarding = await _storageService.getOnboardingSeen();
       final token = await _storageService.getToken();
 
       if (!hasSeenOnboarding) {

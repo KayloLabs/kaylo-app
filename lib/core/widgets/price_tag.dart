@@ -17,6 +17,7 @@ class PriceTag extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     final style = isLarge
         ? Theme.of(context).textTheme.titleLarge!.copyWith(
             fontWeight: FontWeight.bold,
@@ -36,7 +37,7 @@ class PriceTag extends StatelessWidget {
             text: ' $suffix',
             style: TextStyle(
               fontSize: isLarge ? 14 : 12,
-              color: AppColors.textSecondary,
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               fontWeight: FontWeight.normal,
             ),
           ),

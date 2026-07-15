@@ -21,6 +21,7 @@ class EmptyState extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Center(
       child: Padding(
         padding: const EdgeInsets.all(AppSpacing.xxxl),
@@ -31,7 +32,7 @@ class EmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSpacing.l),
               decoration: BoxDecoration(
-                color: AppColors.surfaceTint,
+                color: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 48, color: AppColors.brandPrimary),
@@ -45,7 +46,7 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: AppSpacing.s),
             Text(
               description,
-              style: const TextStyle(color: AppColors.textSecondary),
+              style: TextStyle(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
               textAlign: TextAlign.center,
             ),
             if (actionText != null && onActionPressed != null) ...[

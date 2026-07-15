@@ -25,15 +25,16 @@ class KayloTextField extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           label,
-          style: const TextStyle(
+          style: TextStyle(
             fontSize: 14,
             fontWeight: FontWeight.w500,
-            color: AppColors.textSecondary,
+            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
           ),
         ),
         const SizedBox(height: 8),
@@ -42,10 +43,10 @@ class KayloTextField extends StatelessWidget {
           obscureText: obscureText,
           validator: validator,
           keyboardType: keyboardType,
-          style: const TextStyle(color: AppColors.textPrimary),
+          style: TextStyle(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
           decoration: InputDecoration(
             hintText: hintText,
-            hintStyle: const TextStyle(color: AppColors.textSecondary),
+            hintStyle: TextStyle(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
             prefixIcon: prefixIcon,
             suffixIcon: suffixIcon,
           ),

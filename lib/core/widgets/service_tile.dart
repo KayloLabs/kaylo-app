@@ -13,6 +13,7 @@ class ServiceTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return KayloCard(
       onTap: onTap,
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -23,7 +24,7 @@ class ServiceTile extends StatelessWidget {
           Container(
             padding: const EdgeInsets.all(AppSpacing.s),
             decoration: BoxDecoration(
-              color: AppColors.surfaceTint,
+              color: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
               borderRadius: BorderRadius.circular(AppRadius.button),
             ),
             // Placeholder for image loading from asset or network
@@ -39,8 +40,8 @@ class ServiceTile extends StatelessWidget {
           const SizedBox(height: AppSpacing.xs),
           Text(
             'Starts from ₹${service.basePrice.toInt()}',
-            style: const TextStyle(
-              color: AppColors.textSecondary,
+            style: TextStyle(
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               fontSize: 12,
             ),
           ),

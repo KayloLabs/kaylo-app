@@ -12,7 +12,8 @@ class KayloSnackbar {
   }
 
   static void showInfo(BuildContext context, String message) {
-    _showSnackbar(context, message, AppColors.textPrimary, Icons.info);
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    _showSnackbar(context, message, isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, Icons.info);
   }
 
   static void _showSnackbar(BuildContext context, String message, Color color, IconData icon) {

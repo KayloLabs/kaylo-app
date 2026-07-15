@@ -15,6 +15,7 @@ class RatingStars extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return Row(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -26,7 +27,7 @@ class RatingStars extends StatelessWidget {
           style: TextStyle(
             fontSize: size,
             fontWeight: FontWeight.w600,
-            color: AppColors.textPrimary,
+            color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           ),
         ),
         if (reviewCount != null) ...[
@@ -35,7 +36,7 @@ class RatingStars extends StatelessWidget {
             '($reviewCount reviews)',
             style: TextStyle(
               fontSize: size - 2,
-              color: AppColors.textSecondary,
+              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
             ),
           ),
         ]

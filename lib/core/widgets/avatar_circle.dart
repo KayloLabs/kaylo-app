@@ -15,9 +15,10 @@ class AvatarCircle extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
     return CircleAvatar(
       radius: radius,
-      backgroundColor: AppColors.surfaceTint,
+      backgroundColor: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
       backgroundImage: _getImageProvider(),
       child: _getImageProvider() == null
           ? Text(

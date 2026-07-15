@@ -31,17 +31,17 @@ class SearchBarField extends StatelessWidget {
       decoration: InputDecoration(
         hintText: hintText,
         filled: false,
-        prefixIcon: const Padding(
-          padding: EdgeInsets.only(left: 16, right: 8),
+        prefixIcon: Padding(
+          padding: const EdgeInsets.only(left: 16, right: 8),
           child: Icon(
             Icons.search,
-            color: AppColors.textSecondary,
+            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
           ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
         suffixIcon: controller?.text.isNotEmpty == true 
           ? IconButton(
-              icon: const Icon(Icons.clear, color: AppColors.textSecondary),
+              icon: Icon(Icons.clear, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
               onPressed: () {
                 controller?.clear();
                 onChanged?.call('');

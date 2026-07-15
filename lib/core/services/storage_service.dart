@@ -11,6 +11,9 @@ abstract class StorageService {
   
   Future<void> setOnboardingSeen(bool seen);
   Future<bool> getOnboardingSeen();
+  
+  Future<void> saveLanguageCode(String code);
+  Future<String?> getLanguageCode();
 }
 
 class SharedPreferencesStorageService implements StorageService {
@@ -21,6 +24,7 @@ class SharedPreferencesStorageService implements StorageService {
   static const _tokenKey = 'auth_token';
   static const _careModeKey = 'care_mode';
   static const _onboardingKey = 'onboarding_seen';
+  static const _languageKey = 'language_code';
 
   @override
   Future<String?> getToken() async => _prefs.getString(_tokenKey);
@@ -42,6 +46,12 @@ class SharedPreferencesStorageService implements StorageService {
 
   @override
   Future<void> setOnboardingSeen(bool seen) async => await _prefs.setBool(_onboardingKey, seen);
+
+  @override
+  Future<String?> getLanguageCode() async => _prefs.getString(_languageKey);
+
+  @override
+  Future<void> saveLanguageCode(String code) async => await _prefs.setString(_languageKey, code);
 }
 
 // Provider needs to be overridden in main.dart after SharedPreferences.getInstance()

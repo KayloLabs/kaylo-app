@@ -9,6 +9,7 @@ import '../services/storage_service.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/home/presentation/screens/dashboard_screen.dart';
+import '../../features/profile/presentation/screens/profile_screen.dart';
 
 class AuthStateNotifier extends Notifier<bool> {
   @override
@@ -118,7 +119,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.profile,
                 builder: (context, state) =>
-                    const Placeholder(child: Text('Profile Tab')),
+                    const ProfileScreen(),
                 routes: [
                   GoRoute(
                     path: Routes.settings,

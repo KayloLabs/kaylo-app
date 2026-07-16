@@ -4,6 +4,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
 import '../../../../core/widgets/kaylo_button.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class BottomPromoBanner extends StatelessWidget {
   const BottomPromoBanner({super.key});
@@ -28,7 +29,7 @@ class BottomPromoBanner extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Never miss important work',
+                  AppLocalizations.of(context)!.promoTitle,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                         fontWeight: FontWeight.bold,
                         color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
@@ -36,7 +37,7 @@ class BottomPromoBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: 4),
                 Text(
-                  'Set reminders and we\'ll take\ncare of the rest.',
+                  AppLocalizations.of(context)!.promoSubtitle,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
                         color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
                         height: 1.2,
@@ -44,7 +45,7 @@ class BottomPromoBanner extends StatelessWidget {
                 ),
                 const SizedBox(height: AppSpacing.s),
                 KayloButton(
-                  text: 'Set Reminder',
+                  text: AppLocalizations.of(context)!.promoButton,
                   onPressed: () {},
                   icon: Icons.arrow_forward_rounded,
                 ),

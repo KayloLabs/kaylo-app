@@ -4,6 +4,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class ModeSwitcherSection extends StatelessWidget {
   const ModeSwitcherSection({super.key});
@@ -13,8 +14,8 @@ class ModeSwitcherSection extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const SectionHeader(
-          title: 'What do you need help with?',
+        SectionHeader(
+          title: AppLocalizations.of(context)!.whatDoYouNeedHelpWith,
         ),
         const SizedBox(height: AppSpacing.m),
         Row(
@@ -22,8 +23,8 @@ class ModeSwitcherSection extends StatelessWidget {
           children: [
             Expanded(
               child: _ModeCard(
-                title: 'Home',
-                subtitle: 'Solutions for\nyour home.',
+                title: AppLocalizations.of(context)!.home,
+                subtitle: AppLocalizations.of(context)!.homeSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
                 colorOverlay: Colors.amber.withValues(alpha: 0.15), // Gold tint
                 onTap: () {},
@@ -32,8 +33,8 @@ class ModeSwitcherSection extends StatelessWidget {
             const SizedBox(width: AppSpacing.s),
             Expanded(
               child: _ModeCard(
-                title: 'Farm',
-                subtitle: 'Care and support\nfor your farm.',
+                title: AppLocalizations.of(context)!.farm,
+                subtitle: AppLocalizations.of(context)!.farmSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
                 colorOverlay: Colors.green.withValues(alpha: 0.15), // Green tint
                 onTap: () {},
@@ -42,8 +43,8 @@ class ModeSwitcherSection extends StatelessWidget {
             const SizedBox(width: AppSpacing.s),
             Expanded(
               child: _ModeCard(
-                title: 'Care',
-                subtitle: 'Help for your\nloved ones.',
+                title: AppLocalizations.of(context)!.care,
+                subtitle: AppLocalizations.of(context)!.careSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
                 colorOverlay: Colors.deepPurpleAccent.withValues(alpha: 0.15), // Violet tint
                 onTap: () {},

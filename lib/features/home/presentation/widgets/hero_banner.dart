@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class HeroSlideData {
   final String title;
@@ -30,26 +31,29 @@ class _HeroBannerState extends State<HeroBanner> {
   int _currentPage = 0;
   Timer? _timer;
 
-  final List<HeroSlideData> _slides = [
-    HeroSlideData(
-      title: 'Coconut\nHarvesting\nMade Easy',
-      subtitle: 'Book trusted climbers\nin your area',
-      imagePath: 'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
-      buttonText: 'Book Now',
-    ),
-    HeroSlideData(
-      title: 'Deep Clean\nYour Home\nToday',
-      subtitle: 'Professional services\nat your doorstep',
-      imagePath: 'assets_kaylo/3d_transparent/hero_kerala_clay.png',
-      buttonText: 'Explore',
-    ),
-    HeroSlideData(
-      title: 'Expert Plumbers\n& Farmers\nReady',
-      subtitle: 'Reliable helpers for\nevery task',
-      imagePath: 'assets_kaylo/3d_transparent/hero_workers_clay.png',
-      buttonText: 'Hire Now',
-    ),
-  ];
+  List<HeroSlideData> _getSlides(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return [
+      HeroSlideData(
+        title: l10n.heroCoconutTitle,
+        subtitle: l10n.heroCoconutSubtitle,
+        imagePath: 'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
+        buttonText: l10n.heroBookNow,
+      ),
+      HeroSlideData(
+        title: l10n.heroCleanTitle,
+        subtitle: l10n.heroCleanSubtitle,
+        imagePath: 'assets_kaylo/3d_transparent/hero_kerala_clay.png',
+        buttonText: l10n.heroExplore,
+      ),
+      HeroSlideData(
+        title: l10n.heroPlumberTitle,
+        subtitle: l10n.heroPlumberSubtitle,
+        imagePath: 'assets_kaylo/3d_transparent/hero_workers_clay.png',
+        buttonText: l10n.heroHireNow,
+      ),
+    ];
+  }
 
   @override
   void initState() {
@@ -67,7 +71,8 @@ class _HeroBannerState extends State<HeroBanner> {
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 4), (timer) {
       if (_pageController.hasClients) {
-        int nextPage = (_currentPage + 1) % _slides.length;
+        // Hardcoded 3 slides for modulus
+        int nextPage = (_currentPage + 1) % 3;
         _pageController.animateToPage(
           nextPage,
           duration: const Duration(milliseconds: 600),
@@ -98,9 +103,9 @@ class _HeroBannerState extends State<HeroBanner> {
                 _currentPage = index;
               });
             },
-            itemCount: _slides.length,
+            itemCount: 3,
             itemBuilder: (context, index) {
-              final slide = _slides[index];
+              final slide = _getSlides(context)[index];
               return Stack(
                 children: [
                   // Image on the right with a fade gradient mask
@@ -217,7 +222,7 @@ class _HeroBannerState extends State<HeroBanner> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(
-                _slides.length,
+                3,
                 (index) => Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 2.0),
                   child: _buildDot(isActive: _currentPage == index),

@@ -5,6 +5,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class PopularServicesHorizontal extends StatelessWidget {
   final List<ServiceItem> services;
@@ -20,8 +21,8 @@ class PopularServicesHorizontal extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: 'Popular Services',
-          actionText: 'See all >',
+          title: AppLocalizations.of(context)!.popularServices,
+          actionText: '${AppLocalizations.of(context)!.seeAll} >',
           onActionPressed: () {},
         ),
         const SizedBox(height: AppSpacing.m),

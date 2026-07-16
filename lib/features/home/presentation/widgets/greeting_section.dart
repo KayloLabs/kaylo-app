@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class GreetingSection extends StatelessWidget {
   final String userName;
@@ -17,7 +18,7 @@ class GreetingSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'Hello, $userName 👋',
+          '${AppLocalizations.of(context)!.hello}, $userName 👋',
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
@@ -25,7 +26,7 @@ class GreetingSection extends StatelessWidget {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'How can we help you today?',
+          AppLocalizations.of(context)!.howCanWeHelp,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),

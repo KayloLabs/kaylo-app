@@ -3,6 +3,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/search_bar_field.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class DashboardSearchBar extends StatelessWidget {
   const DashboardSearchBar({super.key});
@@ -16,8 +17,8 @@ class DashboardSearchBar extends StatelessWidget {
         Expanded(
           child: KayloLiquidGlass(
             borderRadius: 24.0,
-            child: const SearchBarField(
-              hintText: 'Search for services or workers...',
+            child: SearchBarField(
+              hintText: AppLocalizations.of(context)!.searchServices,
             ),
           ),
         ),

@@ -82,7 +82,7 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
               padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 8),
               child: LayoutBuilder(
                 builder: (context, constraints) {
-                  final itemWidth = constraints.maxWidth / 4;
+                  final itemWidth = constraints.maxWidth / 5;
                   final bgColor = isDark ? Colors.white.withValues(alpha: 0.15) : AppColors.brandPrimary.withValues(alpha: 0.15);
                   
                   return Stack(
@@ -124,20 +124,28 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
                             onTap: () => _onTap(1),
                           ),
                           _NavItem(
-                            icon: Icons.chat_bubble_outline,
-                            activeIcon: Icons.chat_bubble,
+                            icon: Icons.favorite_outline,
+                            activeIcon: Icons.favorite,
                             isSelected: currentIndex == 2,
                             isDark: isDark,
                             width: itemWidth,
                             onTap: () => _onTap(2),
                           ),
                           _NavItem(
-                            icon: Icons.person_outline,
-                            activeIcon: Icons.person,
+                            icon: Icons.chat_bubble_outline,
+                            activeIcon: Icons.chat_bubble,
                             isSelected: currentIndex == 3,
                             isDark: isDark,
                             width: itemWidth,
                             onTap: () => _onTap(3),
+                          ),
+                          _NavItem(
+                            icon: Icons.person_outline,
+                            activeIcon: Icons.person,
+                            isSelected: currentIndex == 4,
+                            isDark: isDark,
+                            width: itemWidth,
+                            onTap: () => _onTap(4),
                           ),
                         ],
                       ),

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -46,7 +48,9 @@ class BottomPromoBanner extends StatelessWidget {
                 const SizedBox(height: AppSpacing.s),
                 KayloButton(
                   text: AppLocalizations.of(context)!.promoButton,
-                  onPressed: () {},
+                  // Reminders live in Kaylo Care — route there until M5's
+                  // dedicated reminders screen lands.
+                  onPressed: () => context.go(Routes.careHome),
                   icon: Icons.arrow_forward_rounded,
                 ),
               ],

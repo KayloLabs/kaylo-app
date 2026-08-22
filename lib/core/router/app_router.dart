@@ -8,6 +8,7 @@ import '../widgets/widgetbook_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/home/presentation/screens/dashboard_screen.dart';
+import '../../features/care/presentation/screens/care_home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/settings_screen.dart';
 
@@ -104,7 +105,14 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               ),
             ],
           ),
-
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.careHome,
+                builder: (context, state) => const CareHomeScreen(),
+              ),
+            ],
+          ),
           StatefulShellBranch(
             routes: [
               GoRoute(

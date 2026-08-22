@@ -19,6 +19,8 @@ class GreetingSection extends StatelessWidget {
       children: [
         Text(
           '${AppLocalizations.of(context)!.hello}, $userName 👋',
+          maxLines: 1,
+          overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                 fontWeight: FontWeight.bold,
                 color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
@@ -27,6 +29,8 @@ class GreetingSection extends StatelessWidget {
         const SizedBox(height: AppSpacing.xs),
         Text(
           AppLocalizations.of(context)!.howCanWeHelp,
+          maxLines: 2,
+          overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
                 color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
               ),

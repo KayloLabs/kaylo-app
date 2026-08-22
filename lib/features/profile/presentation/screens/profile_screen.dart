@@ -13,6 +13,7 @@ import '../../../../core/widgets/kaylo_liquid_glass.dart';
 import '../../../../core/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 // TODO(M2): replace with the real session user once auth lands.
 final _mockUser = AppUser(
@@ -29,6 +30,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final user = _mockUser;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
       body: SafeArea(
@@ -38,7 +40,7 @@ class ProfileScreen extends ConsumerWidget {
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
               child: Text(
-                'Profile',
+                l10n.profile,
                 style: Theme.of(context).textTheme.displaySmall,
               ),
             ),
@@ -88,8 +90,8 @@ class ProfileScreen extends ConsumerWidget {
                       ),
                     ),
                     IconButton(
-                      onPressed: () => KayloSnackbar.showInfo(
-                          context, 'Profile editing arrives with sign-in'),
+                      onPressed: () =>
+                          KayloSnackbar.showInfo(context, l10n.profileEditSoon),
                       icon: const Icon(Icons.edit_rounded, size: 20),
                       style: IconButton.styleFrom(
                         backgroundColor: (isDark ? Colors.white : Colors.black)
@@ -104,21 +106,29 @@ class ProfileScreen extends ConsumerWidget {
 
             // Quick stats
             Row(
-              children: const [
+              children: [
                 Expanded(
-                    child:
-                        _StatTile(value: '12', label: 'Bookings', icon: Icons.event_available_rounded)),
-                SizedBox(width: AppSpacing.m),
+                    child: _StatTile(
+                        value: '12',
+                        label: l10n.statBookings,
+                        icon: Icons.event_available_rounded)),
+                const SizedBox(width: AppSpacing.m),
                 Expanded(
-                    child: _StatTile(value: '4.9', label: 'Rating', icon: Icons.star_rounded)),
-                SizedBox(width: AppSpacing.m),
+                    child: _StatTile(
+                        value: '4.9',
+                        label: l10n.statRating,
+                        icon: Icons.star_rounded)),
+                const SizedBox(width: AppSpacing.m),
                 Expanded(
-                    child: _StatTile(value: '5', label: 'Saved', icon: Icons.bookmark_rounded)),
+                    child: _StatTile(
+                        value: '5',
+                        label: l10n.statSaved,
+                        icon: Icons.bookmark_rounded)),
               ],
             ),
             const SizedBox(height: AppSpacing.xxl),
 
-            const SectionHeader(title: 'Account'),
+            SectionHeader(title: l10n.account),
             const SizedBox(height: AppSpacing.m),
             KayloCard(
               padding: EdgeInsets.zero,
@@ -127,47 +137,47 @@ class ProfileScreen extends ConsumerWidget {
                   _MenuTile(
                     icon: Icons.receipt_long_rounded,
                     color: AppColors.homeAccent,
-                    title: 'My Bookings',
-                    subtitle: 'Track and manage your services',
+                    title: l10n.myBookings,
+                    subtitle: l10n.myBookingsSubtitle,
                     onTap: () => context.go(Routes.bookings),
                   ),
                   _tileDivider(isDark),
                   _MenuTile(
                     icon: Icons.location_on_rounded,
                     color: AppColors.farmAccent,
-                    title: 'Saved Addresses',
+                    title: l10n.savedAddresses,
                     onTap: () =>
-                        KayloSnackbar.showInfo(context, 'Coming soon'),
+                        KayloSnackbar.showInfo(context, l10n.comingSoon),
                   ),
                   _tileDivider(isDark),
                   _MenuTile(
                     icon: Icons.account_balance_wallet_rounded,
                     color: AppColors.careAccent,
-                    title: 'Payment Methods',
+                    title: l10n.paymentMethods,
                     onTap: () =>
-                        KayloSnackbar.showInfo(context, 'Arrives with Razorpay in R2'),
+                        KayloSnackbar.showInfo(context, l10n.comingSoon),
                   ),
                 ],
               ),
             ),
             const SizedBox(height: AppSpacing.xxl),
 
-            const SectionHeader(title: 'Preferences'),
+            SectionHeader(title: l10n.preferences),
             const SizedBox(height: AppSpacing.m),
             KayloCard(
               padding: EdgeInsets.zero,
               child: _MenuTile(
                 icon: Icons.settings_rounded,
                 color: AppColors.textSecondary,
-                title: 'Settings',
-                subtitle: 'Theme, language, care mode, notifications',
+                title: l10n.settings,
+                subtitle: l10n.settingsSubtitle,
                 onTap: () =>
                     context.go('${Routes.profile}/${Routes.settings}'),
               ),
             ),
             const SizedBox(height: AppSpacing.xxl),
 
-            const SectionHeader(title: 'Support'),
+            SectionHeader(title: l10n.support),
             const SizedBox(height: AppSpacing.m),
             KayloCard(
               padding: EdgeInsets.zero,
@@ -176,17 +186,17 @@ class ProfileScreen extends ConsumerWidget {
                   _MenuTile(
                     icon: Icons.help_rounded,
                     color: AppColors.secondaryAccent,
-                    title: 'Help & Support',
+                    title: l10n.helpSupport,
                     onTap: () =>
-                        KayloSnackbar.showInfo(context, 'Coming soon'),
+                        KayloSnackbar.showInfo(context, l10n.comingSoon),
                   ),
                   _tileDivider(isDark),
                   _MenuTile(
                     icon: Icons.favorite_rounded,
                     color: AppColors.error,
-                    title: 'Rate Kaylo',
+                    title: l10n.rateKaylo,
                     onTap: () =>
-                        KayloSnackbar.showInfo(context, 'Thanks for the love!'),
+                        KayloSnackbar.showInfo(context, l10n.rateThanks),
                   ),
                 ],
               ),
@@ -199,7 +209,7 @@ class ProfileScreen extends ConsumerWidget {
               child: _MenuTile(
                 icon: Icons.logout_rounded,
                 color: AppColors.error,
-                title: 'Log out',
+                title: l10n.logOut,
                 titleColor: AppColors.error,
                 onTap: () => _confirmLogout(context, ref),
               ),
@@ -218,20 +228,21 @@ class ProfileScreen extends ConsumerWidget {
       );
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
     final confirmed = await showDialog<bool>(
       context: context,
       builder: (context) => AlertDialog(
-        title: const Text('Log out?'),
-        content: const Text('You will need to sign in again to book services.'),
+        title: Text(l10n.logOutConfirmTitle),
+        content: Text(l10n.logOutConfirmMessage),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
-            child: const Text('Cancel'),
+            child: Text(l10n.cancel),
           ),
           TextButton(
             onPressed: () => Navigator.pop(context, true),
             style: TextButton.styleFrom(foregroundColor: AppColors.error),
-            child: const Text('Log out'),
+            child: Text(l10n.logOut),
           ),
         ],
       ),

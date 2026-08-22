@@ -11,6 +11,7 @@ import '../../../../core/widgets/kaylo_card.dart';
 import '../../../../core/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import '../../../../core/widgets/section_header.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 const _notificationsKey = 'notifications_enabled';
 
@@ -44,19 +45,21 @@ class SettingsScreen extends ConsumerWidget {
     final careMode = ref.watch(careModeProvider);
     final notifications = ref.watch(_notificationsEnabledProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Settings')),
+      appBar: AppBar(title: Text(l10n.settings)),
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.l),
         children: [
-          const SectionHeader(title: 'Appearance'),
+          SectionHeader(title: l10n.appearance),
           const SizedBox(height: AppSpacing.m),
           KayloCard(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text('Theme', style: Theme.of(context).textTheme.titleMedium),
+                Text(l10n.theme,
+                    style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: AppSpacing.m),
                 _ThemeModeSelector(
                   selected: themeMode,
@@ -74,7 +77,7 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.translate_rounded,
                 color: AppColors.homeAccent,
               ),
-              title: const Text('Language'),
+              title: Text(l10n.language),
               subtitle: Text(_languageNames[locale.languageCode] ?? 'English'),
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => showModalBottomSheet(
@@ -87,7 +90,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xxl),
 
-          const SectionHeader(title: 'Accessibility'),
+          SectionHeader(title: l10n.accessibility),
           const SizedBox(height: AppSpacing.m),
           KayloCard(
             padding: EdgeInsets.zero,
@@ -96,8 +99,8 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.favorite_rounded,
                 color: AppColors.careAccent,
               ),
-              title: const Text('Kaylo Care Mode'),
-              subtitle: const Text('Larger text and simpler screens for seniors'),
+              title: Text(l10n.careModeTitle),
+              subtitle: Text(l10n.careModeSubtitle),
               trailing: Switch.adaptive(
                 value: careMode,
                 activeThumbColor: AppColors.careAccent,
@@ -108,7 +111,7 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xxl),
 
-          const SectionHeader(title: 'Notifications'),
+          SectionHeader(title: l10n.notifications),
           const SizedBox(height: AppSpacing.m),
           KayloCard(
             padding: EdgeInsets.zero,
@@ -117,8 +120,8 @@ class SettingsScreen extends ConsumerWidget {
                 icon: Icons.notifications_rounded,
                 color: AppColors.accent,
               ),
-              title: const Text('Push notifications'),
-              subtitle: const Text('Booking updates and offers'),
+              title: Text(l10n.pushNotifications),
+              subtitle: Text(l10n.pushNotificationsSubtitle),
               trailing: Switch.adaptive(
                 value: notifications,
                 onChanged: (value) => ref
@@ -129,19 +132,19 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xxl),
 
-          const SectionHeader(title: 'About'),
+          SectionHeader(title: l10n.about),
           const SizedBox(height: AppSpacing.m),
           KayloCard(
             padding: EdgeInsets.zero,
             child: Column(
               children: [
-                const KayloListTile(
-                  leading: _SettingIcon(
+                KayloListTile(
+                  leading: const _SettingIcon(
                     icon: Icons.info_rounded,
                     color: AppColors.brandPrimary,
                   ),
-                  title: Text('Version'),
-                  trailing: Text('1.0.0'),
+                  title: Text(l10n.version),
+                  trailing: const Text('1.0.0'),
                 ),
                 Divider(
                   height: 1,
@@ -152,7 +155,7 @@ class SettingsScreen extends ConsumerWidget {
                     icon: Icons.description_rounded,
                     color: AppColors.textSecondary,
                   ),
-                  title: const Text('Terms & Privacy'),
+                  title: Text(l10n.termsPrivacy),
                   trailing: const Icon(Icons.chevron_right_rounded),
                   onTap: () {},
                 ),
@@ -162,7 +165,7 @@ class SettingsScreen extends ConsumerWidget {
           const SizedBox(height: AppSpacing.xxl),
           Center(
             child: Text(
-              'Made with ♥ in Kerala',
+              l10n.madeInKerala,
               style: Theme.of(context).textTheme.bodySmall,
             ),
           ),
@@ -200,17 +203,17 @@ class _ThemeModeSelector extends StatelessWidget {
 
   const _ThemeModeSelector({required this.selected, required this.onChanged});
 
-  static const _options = [
-    (ThemeMode.system, Icons.brightness_auto_rounded, 'System'),
-    (ThemeMode.light, Icons.light_mode_rounded, 'Light'),
-    (ThemeMode.dark, Icons.dark_mode_rounded, 'Dark'),
-  ];
-
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final index = _options.indexWhere((o) => o.$1 == selected);
-    final count = _options.length;
+    final l10n = AppLocalizations.of(context)!;
+    final options = [
+      (ThemeMode.system, Icons.brightness_auto_rounded, l10n.themeSystem),
+      (ThemeMode.light, Icons.light_mode_rounded, l10n.themeLight),
+      (ThemeMode.dark, Icons.dark_mode_rounded, l10n.themeDark),
+    ];
+    final index = options.indexWhere((o) => o.$1 == selected);
+    final count = options.length;
 
     // The label Row defines the height, and the sliding pill is aligned as a
     // fraction of the track, so the control stays intact at any text scale.
@@ -252,7 +255,7 @@ class _ThemeModeSelector extends StatelessWidget {
           ),
           Row(
             children: [
-              for (final (mode, icon, label) in _options)
+              for (final (mode, icon, label) in options)
                 Expanded(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(100),

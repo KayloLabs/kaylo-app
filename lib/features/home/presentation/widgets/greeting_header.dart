@@ -24,8 +24,10 @@ class GreetingHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // Greeting replacing logo
-        GreetingSection(userName: userName),
+        // Greeting must flex: Malayalam/Hindi strings run long and would
+        // otherwise overflow the fixed-width location pill and bell.
+        Expanded(child: GreetingSection(userName: userName)),
+        const SizedBox(width: AppSpacing.s),
 
         // Location & Bell
         Row(

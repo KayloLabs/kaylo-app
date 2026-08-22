@@ -249,6 +249,294 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Set Reminder'**
   String get promoButton;
+
+  /// No description provided for @recommendedForYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Recommended for you'**
+  String get recommendedForYou;
+
+  /// No description provided for @settings.
+  ///
+  /// In en, this message translates to:
+  /// **'Settings'**
+  String get settings;
+
+  /// No description provided for @appearance.
+  ///
+  /// In en, this message translates to:
+  /// **'Appearance'**
+  String get appearance;
+
+  /// No description provided for @theme.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme'**
+  String get theme;
+
+  /// No description provided for @themeSystem.
+  ///
+  /// In en, this message translates to:
+  /// **'System'**
+  String get themeSystem;
+
+  /// No description provided for @themeLight.
+  ///
+  /// In en, this message translates to:
+  /// **'Light'**
+  String get themeLight;
+
+  /// No description provided for @themeDark.
+  ///
+  /// In en, this message translates to:
+  /// **'Dark'**
+  String get themeDark;
+
+  /// No description provided for @language.
+  ///
+  /// In en, this message translates to:
+  /// **'Language'**
+  String get language;
+
+  /// No description provided for @accessibility.
+  ///
+  /// In en, this message translates to:
+  /// **'Accessibility'**
+  String get accessibility;
+
+  /// No description provided for @careModeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo Care Mode'**
+  String get careModeTitle;
+
+  /// No description provided for @careModeSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Larger text and simpler screens for seniors'**
+  String get careModeSubtitle;
+
+  /// No description provided for @notifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Notifications'**
+  String get notifications;
+
+  /// No description provided for @pushNotifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Push notifications'**
+  String get pushNotifications;
+
+  /// No description provided for @pushNotificationsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking updates and offers'**
+  String get pushNotificationsSubtitle;
+
+  /// No description provided for @about.
+  ///
+  /// In en, this message translates to:
+  /// **'About'**
+  String get about;
+
+  /// No description provided for @version.
+  ///
+  /// In en, this message translates to:
+  /// **'Version'**
+  String get version;
+
+  /// No description provided for @termsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Terms & Privacy'**
+  String get termsPrivacy;
+
+  /// No description provided for @madeInKerala.
+  ///
+  /// In en, this message translates to:
+  /// **'Made with ♥ in Kerala'**
+  String get madeInKerala;
+
+  /// No description provided for @profile.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile'**
+  String get profile;
+
+  /// No description provided for @statBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'Bookings'**
+  String get statBookings;
+
+  /// No description provided for @statRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get statRating;
+
+  /// No description provided for @statSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved'**
+  String get statSaved;
+
+  /// No description provided for @account.
+  ///
+  /// In en, this message translates to:
+  /// **'Account'**
+  String get account;
+
+  /// No description provided for @myBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'My Bookings'**
+  String get myBookings;
+
+  /// No description provided for @myBookingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Track and manage your services'**
+  String get myBookingsSubtitle;
+
+  /// No description provided for @savedAddresses.
+  ///
+  /// In en, this message translates to:
+  /// **'Saved Addresses'**
+  String get savedAddresses;
+
+  /// No description provided for @paymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment Methods'**
+  String get paymentMethods;
+
+  /// No description provided for @preferences.
+  ///
+  /// In en, this message translates to:
+  /// **'Preferences'**
+  String get preferences;
+
+  /// No description provided for @settingsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme, language, care mode, notifications'**
+  String get settingsSubtitle;
+
+  /// No description provided for @support.
+  ///
+  /// In en, this message translates to:
+  /// **'Support'**
+  String get support;
+
+  /// No description provided for @helpSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Help & Support'**
+  String get helpSupport;
+
+  /// No description provided for @rateKaylo.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate Kaylo'**
+  String get rateKaylo;
+
+  /// No description provided for @rateThanks.
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks for the love!'**
+  String get rateThanks;
+
+  /// No description provided for @logOut.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out'**
+  String get logOut;
+
+  /// No description provided for @logOutConfirmTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Log out?'**
+  String get logOutConfirmTitle;
+
+  /// No description provided for @logOutConfirmMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'You will need to sign in again to book services.'**
+  String get logOutConfirmMessage;
+
+  /// No description provided for @cancel.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel'**
+  String get cancel;
+
+  /// No description provided for @profileEditSoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile editing arrives with sign-in'**
+  String get profileEditSoon;
+
+  /// No description provided for @kayloCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo Care'**
+  String get kayloCare;
+
+  /// No description provided for @careHomeGreeting.
+  ///
+  /// In en, this message translates to:
+  /// **'How can we care for you today?'**
+  String get careHomeGreeting;
+
+  /// No description provided for @medicineReminders.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine Reminders'**
+  String get medicineReminders;
+
+  /// No description provided for @medicineRemindersSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Never miss a dose'**
+  String get medicineRemindersSubtitle;
+
+  /// No description provided for @doctorAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Doctor Appointment'**
+  String get doctorAppointment;
+
+  /// No description provided for @doctorAppointmentSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a visit or teleconsult'**
+  String get doctorAppointmentSubtitle;
+
+  /// No description provided for @emergencySos.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency SOS'**
+  String get emergencySos;
+
+  /// No description provided for @emergencySosSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Alert your family instantly'**
+  String get emergencySosSubtitle;
+
+  /// No description provided for @caregiverBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a Caregiver'**
+  String get caregiverBooking;
+
+  /// No description provided for @caregiverBookingSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Trusted help at home'**
+  String get caregiverBookingSubtitle;
 }
 
 class _AppLocalizationsDelegate

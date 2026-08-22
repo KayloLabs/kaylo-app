@@ -83,4 +83,149 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get promoButton => 'Set Reminder';
+
+  @override
+  String get recommendedForYou => 'Recommended for you';
+
+  @override
+  String get settings => 'Settings';
+
+  @override
+  String get appearance => 'Appearance';
+
+  @override
+  String get theme => 'Theme';
+
+  @override
+  String get themeSystem => 'System';
+
+  @override
+  String get themeLight => 'Light';
+
+  @override
+  String get themeDark => 'Dark';
+
+  @override
+  String get language => 'Language';
+
+  @override
+  String get accessibility => 'Accessibility';
+
+  @override
+  String get careModeTitle => 'Kaylo Care Mode';
+
+  @override
+  String get careModeSubtitle => 'Larger text and simpler screens for seniors';
+
+  @override
+  String get notifications => 'Notifications';
+
+  @override
+  String get pushNotifications => 'Push notifications';
+
+  @override
+  String get pushNotificationsSubtitle => 'Booking updates and offers';
+
+  @override
+  String get about => 'About';
+
+  @override
+  String get version => 'Version';
+
+  @override
+  String get termsPrivacy => 'Terms & Privacy';
+
+  @override
+  String get madeInKerala => 'Made with ♥ in Kerala';
+
+  @override
+  String get profile => 'Profile';
+
+  @override
+  String get statBookings => 'Bookings';
+
+  @override
+  String get statRating => 'Rating';
+
+  @override
+  String get statSaved => 'Saved';
+
+  @override
+  String get account => 'Account';
+
+  @override
+  String get myBookings => 'My Bookings';
+
+  @override
+  String get myBookingsSubtitle => 'Track and manage your services';
+
+  @override
+  String get savedAddresses => 'Saved Addresses';
+
+  @override
+  String get paymentMethods => 'Payment Methods';
+
+  @override
+  String get preferences => 'Preferences';
+
+  @override
+  String get settingsSubtitle => 'Theme, language, care mode, notifications';
+
+  @override
+  String get support => 'Support';
+
+  @override
+  String get helpSupport => 'Help & Support';
+
+  @override
+  String get rateKaylo => 'Rate Kaylo';
+
+  @override
+  String get rateThanks => 'Thanks for the love!';
+
+  @override
+  String get logOut => 'Log out';
+
+  @override
+  String get logOutConfirmTitle => 'Log out?';
+
+  @override
+  String get logOutConfirmMessage =>
+      'You will need to sign in again to book services.';
+
+  @override
+  String get cancel => 'Cancel';
+
+  @override
+  String get profileEditSoon => 'Profile editing arrives with sign-in';
+
+  @override
+  String get kayloCare => 'Kaylo Care';
+
+  @override
+  String get careHomeGreeting => 'How can we care for you today?';
+
+  @override
+  String get medicineReminders => 'Medicine Reminders';
+
+  @override
+  String get medicineRemindersSubtitle => 'Never miss a dose';
+
+  @override
+  String get doctorAppointment => 'Doctor Appointment';
+
+  @override
+  String get doctorAppointmentSubtitle => 'Book a visit or teleconsult';
+
+  @override
+  String get emergencySos => 'Emergency SOS';
+
+  @override
+  String get emergencySosSubtitle => 'Alert your family instantly';
+
+  @override
+  String get caregiverBooking => 'Book a Caregiver';
+
+  @override
+  String get caregiverBookingSubtitle => 'Trusted help at home';
 }

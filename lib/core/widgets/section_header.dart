@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../theme/app_spacing.dart';
 
 class SectionHeader extends StatelessWidget {
   final String title;
@@ -20,10 +21,17 @@ class SectionHeader extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.baseline,
       textBaseline: TextBaseline.alphabetic,
       children: [
-        Text(
-          title,
-          style: Theme.of(context).textTheme.titleLarge,
+        // Flexible: Malayalam/Hindi titles run long and must ellipsize
+        // instead of overflowing into the action button.
+        Flexible(
+          child: Text(
+            title,
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
         ),
+        if (actionText != null) const SizedBox(width: AppSpacing.s),
         if (actionText != null)
           TextButton(
             onPressed: onActionPressed,

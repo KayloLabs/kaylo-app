@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/bookings_repository.dart';
+
+import '../../../core/config/app_env.dart';
+import '../../../core/network/supabase_providers.dart';
 import '../data/mock_bookings_repository.dart';
-import '../../home/application/home_providers.dart'; // import useMock
+import '../data/supabase_bookings_repository.dart';
+import '../domain/bookings_repository.dart';
 
 final bookingsRepositoryProvider = Provider<BookingsRepository>((ref) {
-  if (useMock) {
+  if (useMockData) {
     return MockBookingsRepository();
   }
-  throw UnimplementedError('Real FirestoreBookingsRepository is not implemented yet.');
+  return SupabaseBookingsRepository(ref.watch(supabaseClientProvider));
 });

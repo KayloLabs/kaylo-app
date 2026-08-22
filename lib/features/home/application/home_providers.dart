@@ -1,14 +1,16 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/home_repository.dart';
-import '../data/mock_home_repository.dart';
 
-const bool useMock = bool.fromEnvironment('USE_MOCK', defaultValue: false);
+import '../../../core/config/app_env.dart';
+import '../../../core/network/supabase_providers.dart';
+import '../data/mock_home_repository.dart';
+import '../data/supabase_home_repository.dart';
+import '../domain/home_repository.dart';
+
+export '../../../core/config/app_env.dart' show useMock, useMockData;
 
 final homeRepositoryProvider = Provider<HomeRepository>((ref) {
-  if (useMock) {
+  if (useMockData) {
     return MockHomeRepository();
   }
-  // TODO: Return Real FirestoreHomeRepository here
-  // return FirestoreHomeRepository();
-  throw UnimplementedError('Real FirestoreHomeRepository is not implemented yet. Use --dart-define=USE_MOCK=true');
+  return SupabaseHomeRepository(ref.watch(supabaseClientProvider));
 });

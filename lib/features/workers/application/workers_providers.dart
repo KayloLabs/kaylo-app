@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../domain/workers_repository.dart';
+
+import '../../../core/config/app_env.dart';
+import '../../../core/network/supabase_providers.dart';
 import '../data/mock_workers_repository.dart';
-import '../../home/application/home_providers.dart'; // import useMock
+import '../data/supabase_workers_repository.dart';
+import '../domain/workers_repository.dart';
 
 final workersRepositoryProvider = Provider<WorkersRepository>((ref) {
-  if (useMock) {
+  if (useMockData) {
     return MockWorkersRepository();
   }
-  throw UnimplementedError('Real FirestoreWorkersRepository is not implemented yet.');
+  return SupabaseWorkersRepository(ref.watch(supabaseClientProvider));
 });

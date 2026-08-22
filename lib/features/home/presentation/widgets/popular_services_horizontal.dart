@@ -10,9 +10,14 @@ import '../../../../l10n/generated/app_localizations.dart';
 class PopularServicesHorizontal extends StatelessWidget {
   final List<ServiceItem> services;
 
+  /// Section heading override; defaults to "Popular Services". The
+  /// dashboard passes "Recommended for you" when the list is personalized.
+  final String? title;
+
   const PopularServicesHorizontal({
     super.key,
     required this.services,
+    this.title,
   });
 
   @override
@@ -21,7 +26,7 @@ class PopularServicesHorizontal extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         SectionHeader(
-          title: AppLocalizations.of(context)!.popularServices,
+          title: title ?? AppLocalizations.of(context)!.popularServices,
           actionText: '${AppLocalizations.of(context)!.seeAll} >',
           onActionPressed: () {},
         ),

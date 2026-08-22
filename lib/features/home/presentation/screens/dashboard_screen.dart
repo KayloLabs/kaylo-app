@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/dashboard_controller.dart';
+import '../../application/personalization_providers.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../widgets/greeting_header.dart';
 import '../widgets/dashboard_search_bar.dart';
 import '../widgets/hero_banner.dart';
@@ -16,6 +18,8 @@ class DashboardScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final dashboardState = ref.watch(dashboardControllerProvider);
+    final recommended = ref.watch(recommendedServicesProvider);
+    final unreadCount = ref.watch(unreadNotificationsCountProvider);
 
     return Scaffold(
       backgroundColor: Theme.of(context).scaffoldBackgroundColor,
@@ -33,7 +37,8 @@ class DashboardScreen extends ConsumerWidget {
                 children: [
                   GreetingHeader(
                     location: state.location,
-                    notificationCount: 3, // Mocked from reference image
+                    notificationCount:
+                        unreadCount.whenOrNull(data: (c) => c) ?? 0,
                     userName: state.userName,
                   ),
                   const SizedBox(height: AppSpacing.l),
@@ -43,7 +48,18 @@ class DashboardScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.xl),
                   const ModeSwitcherSection(),
                   const SizedBox(height: AppSpacing.xl),
-                  PopularServicesHorizontal(services: state.popularServices),
+                  // Personalized ranking when booking history exists;
+                  // otherwise the plain popular list.
+                  switch (recommended) {
+                    AsyncData(:final value) => PopularServicesHorizontal(
+                        services: value.services,
+                        title: value.personalized
+                            ? AppLocalizations.of(context)!.recommendedForYou
+                            : null,
+                      ),
+                    _ => PopularServicesHorizontal(
+                        services: state.popularServices),
+                  },
                   const SizedBox(height: AppSpacing.xl),
                   const BottomPromoBanner(),
                   const SizedBox(height: 120), // Padding for bottom nav

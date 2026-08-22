@@ -14,6 +14,9 @@ abstract class StorageService {
   
   Future<void> saveLanguageCode(String code);
   Future<String?> getLanguageCode();
+
+  Future<void> saveThemeMode(String mode); // 'system' | 'light' | 'dark'
+  Future<String?> getThemeMode();
 }
 
 class SharedPreferencesStorageService implements StorageService {
@@ -25,6 +28,7 @@ class SharedPreferencesStorageService implements StorageService {
   static const _careModeKey = 'care_mode';
   static const _onboardingKey = 'onboarding_seen';
   static const _languageKey = 'language_code';
+  static const _themeModeKey = 'theme_mode';
 
   @override
   Future<String?> getToken() async => _prefs.getString(_tokenKey);
@@ -52,6 +56,12 @@ class SharedPreferencesStorageService implements StorageService {
 
   @override
   Future<void> saveLanguageCode(String code) async => await _prefs.setString(_languageKey, code);
+
+  @override
+  Future<String?> getThemeMode() async => _prefs.getString(_themeModeKey);
+
+  @override
+  Future<void> saveThemeMode(String mode) async => await _prefs.setString(_themeModeKey, mode);
 }
 
 // Provider needs to be overridden in main.dart after SharedPreferences.getInstance()

@@ -5,11 +5,11 @@ import 'package:go_router/go_router.dart';
 import 'routes.dart';
 import '../widgets/kaylo_bottom_nav.dart';
 import '../widgets/widgetbook_screen.dart';
-import '../services/storage_service.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/home/presentation/screens/dashboard_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
+import '../../features/profile/presentation/screens/settings_screen.dart';
 
 class AuthStateNotifier extends Notifier<bool> {
   @override
@@ -123,8 +123,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 routes: [
                   GoRoute(
                     path: Routes.settings,
-                    builder: (context, state) =>
-                        const Placeholder(child: Text('Settings')),
+                    builder: (context, state) => const SettingsScreen(),
                   ),
                 ],
               ),

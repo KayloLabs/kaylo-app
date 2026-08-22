@@ -1,26 +1,309 @@
 import 'package:flutter/material.dart';
-import '../../../../core/widgets/language_selector_sheet.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
-class ProfileScreen extends StatelessWidget {
+import '../../../../core/models/app_user.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/services/storage_service.dart';
+import '../../../../core/theme/app_colors.dart';
+import '../../../../core/theme/app_spacing.dart';
+import '../../../../core/widgets/avatar_circle.dart';
+import '../../../../core/widgets/kaylo_card.dart';
+import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../core/widgets/kaylo_list_tile.dart';
+import '../../../../core/widgets/kaylo_snackbar.dart';
+import '../../../../core/widgets/section_header.dart';
+
+// TODO(M2): replace with the real session user once auth lands.
+final _mockUser = AppUser(
+  id: 'u1',
+  firstName: 'Nimal',
+  lastName: '',
+  phone: '+91 98470 12345',
+);
+
+class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final user = _mockUser;
+
     return Scaffold(
-      appBar: AppBar(title: const Text('Profile')),
-      body: Center(
-        child: ElevatedButton(
-          onPressed: () {
-            showModalBottomSheet(
-              context: context,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
-              builder: (context) => const LanguageSelectorSheet(),
-            );
-          },
-          child: const Text('Language Settings'),
+      body: SafeArea(
+        child: ListView(
+          padding: const EdgeInsets.all(AppSpacing.l),
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+              child: Text(
+                'Profile',
+                style: Theme.of(context).textTheme.displaySmall,
+              ),
+            ),
+
+            // Identity card on a soft brand gradient, glass on top.
+            Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(28),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: isDark
+                      ? [
+                          AppColors.brandPrimaryDark.withValues(alpha: 0.45),
+                          AppColors.surfaceDark,
+                        ]
+                      : [
+                          AppColors.brandPrimaryBright.withValues(alpha: 0.25),
+                          AppColors.surfaceTint,
+                        ],
+                ),
+              ),
+              child: KayloLiquidGlass(
+                borderRadius: 28,
+                padding: const EdgeInsets.all(AppSpacing.xl),
+                child: Row(
+                  children: [
+                    AvatarCircle(
+                      fallbackText: '${user.firstName} ${user.lastName}'.trim(),
+                      radius: 34,
+                    ),
+                    const SizedBox(width: AppSpacing.l),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            '${user.firstName} ${user.lastName}'.trim(),
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: AppSpacing.xs),
+                          Text(
+                            user.phone,
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                        ],
+                      ),
+                    ),
+                    IconButton(
+                      onPressed: () => KayloSnackbar.showInfo(
+                          context, 'Profile editing arrives with sign-in'),
+                      icon: const Icon(Icons.edit_rounded, size: 20),
+                      style: IconButton.styleFrom(
+                        backgroundColor: (isDark ? Colors.white : Colors.black)
+                            .withValues(alpha: 0.06),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.l),
+
+            // Quick stats
+            Row(
+              children: const [
+                Expanded(
+                    child:
+                        _StatTile(value: '12', label: 'Bookings', icon: Icons.event_available_rounded)),
+                SizedBox(width: AppSpacing.m),
+                Expanded(
+                    child: _StatTile(value: '4.9', label: 'Rating', icon: Icons.star_rounded)),
+                SizedBox(width: AppSpacing.m),
+                Expanded(
+                    child: _StatTile(value: '5', label: 'Saved', icon: Icons.bookmark_rounded)),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+
+            const SectionHeader(title: 'Account'),
+            const SizedBox(height: AppSpacing.m),
+            KayloCard(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _MenuTile(
+                    icon: Icons.receipt_long_rounded,
+                    color: AppColors.homeAccent,
+                    title: 'My Bookings',
+                    subtitle: 'Track and manage your services',
+                    onTap: () => context.go(Routes.bookings),
+                  ),
+                  _tileDivider(isDark),
+                  _MenuTile(
+                    icon: Icons.location_on_rounded,
+                    color: AppColors.farmAccent,
+                    title: 'Saved Addresses',
+                    onTap: () =>
+                        KayloSnackbar.showInfo(context, 'Coming soon'),
+                  ),
+                  _tileDivider(isDark),
+                  _MenuTile(
+                    icon: Icons.account_balance_wallet_rounded,
+                    color: AppColors.careAccent,
+                    title: 'Payment Methods',
+                    onTap: () =>
+                        KayloSnackbar.showInfo(context, 'Arrives with Razorpay in R2'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+
+            const SectionHeader(title: 'Preferences'),
+            const SizedBox(height: AppSpacing.m),
+            KayloCard(
+              padding: EdgeInsets.zero,
+              child: _MenuTile(
+                icon: Icons.settings_rounded,
+                color: AppColors.textSecondary,
+                title: 'Settings',
+                subtitle: 'Theme, language, care mode, notifications',
+                onTap: () =>
+                    context.go('${Routes.profile}/${Routes.settings}'),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+
+            const SectionHeader(title: 'Support'),
+            const SizedBox(height: AppSpacing.m),
+            KayloCard(
+              padding: EdgeInsets.zero,
+              child: Column(
+                children: [
+                  _MenuTile(
+                    icon: Icons.help_rounded,
+                    color: AppColors.secondaryAccent,
+                    title: 'Help & Support',
+                    onTap: () =>
+                        KayloSnackbar.showInfo(context, 'Coming soon'),
+                  ),
+                  _tileDivider(isDark),
+                  _MenuTile(
+                    icon: Icons.favorite_rounded,
+                    color: AppColors.error,
+                    title: 'Rate Kaylo',
+                    onTap: () =>
+                        KayloSnackbar.showInfo(context, 'Thanks for the love!'),
+                  ),
+                ],
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxl),
+
+            // Logout
+            KayloCard(
+              padding: EdgeInsets.zero,
+              child: _MenuTile(
+                icon: Icons.logout_rounded,
+                color: AppColors.error,
+                title: 'Log out',
+                titleColor: AppColors.error,
+                onTap: () => _confirmLogout(context, ref),
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xxxl),
+          ],
         ),
       ),
+    );
+  }
+
+  Widget _tileDivider(bool isDark) => Divider(
+        height: 1,
+        indent: AppSpacing.l + 40 + AppSpacing.l,
+        color: isDark ? AppColors.borderDark : AppColors.border,
+      );
+
+  Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
+    final confirmed = await showDialog<bool>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Log out?'),
+        content: const Text('You will need to sign in again to book services.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context, false),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () => Navigator.pop(context, true),
+            style: TextButton.styleFrom(foregroundColor: AppColors.error),
+            child: const Text('Log out'),
+          ),
+        ],
+      ),
+    );
+
+    if (confirmed != true || !context.mounted) return;
+    await ref.read(storageServiceProvider).removeToken();
+    if (context.mounted) context.go(Routes.splash);
+  }
+}
+
+class _StatTile extends StatelessWidget {
+  final String value;
+  final String label;
+  final IconData icon;
+
+  const _StatTile({required this.value, required this.label, required this.icon});
+
+  @override
+  Widget build(BuildContext context) {
+    return KayloCard(
+      padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.l, horizontal: AppSpacing.s),
+      child: Column(
+        children: [
+          Icon(icon, color: AppColors.brandPrimary, size: 20),
+          const SizedBox(height: AppSpacing.s),
+          Text(value, style: Theme.of(context).textTheme.titleLarge),
+          const SizedBox(height: 2),
+          Text(label, style: Theme.of(context).textTheme.bodySmall),
+        ],
+      ),
+    );
+  }
+}
+
+class _MenuTile extends StatelessWidget {
+  final IconData icon;
+  final Color color;
+  final String title;
+  final String? subtitle;
+  final Color? titleColor;
+  final VoidCallback? onTap;
+
+  const _MenuTile({
+    required this.icon,
+    required this.color,
+    required this.title,
+    this.subtitle,
+    this.titleColor,
+    this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return KayloListTile(
+      leading: Container(
+        width: 40,
+        height: 40,
+        decoration: BoxDecoration(
+          color: color.withValues(alpha: 0.12),
+          borderRadius: BorderRadius.circular(12),
+        ),
+        child: Icon(icon, color: color, size: 22),
+      ),
+      title: Text(
+        title,
+        style: titleColor != null ? TextStyle(color: titleColor) : null,
+      ),
+      subtitle: subtitle != null ? Text(subtitle!) : null,
+      trailing: const Icon(Icons.chevron_right_rounded),
+      onTap: onTap,
     );
   }
 }

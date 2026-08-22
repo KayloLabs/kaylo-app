@@ -31,7 +31,7 @@ class SplashController extends AsyncNotifier<SplashRouteDestination?> {
       } else {
         state = const AsyncValue.data(SplashRouteDestination.dashboard);
       }
-    } catch (e, stack) {
+    } catch (e) {
       // In case of error, default to login instead of hanging
       state = const AsyncValue.data(SplashRouteDestination.login);
     }

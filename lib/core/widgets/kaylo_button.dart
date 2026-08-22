@@ -22,7 +22,6 @@ class KayloButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
     final content = isLoading
         ? _buildLoadingIndicator()
         : _buildContent(context);
@@ -126,7 +125,6 @@ class KayloButton extends StatelessWidget {
   }
 
   ButtonStyle _getButtonStyle(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final shape = RoundedRectangleBorder(
       borderRadius: BorderRadius.circular(100),

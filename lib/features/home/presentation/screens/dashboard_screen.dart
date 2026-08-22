@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/dashboard_controller.dart';
 import '../widgets/greeting_header.dart';
-import '../widgets/greeting_section.dart';
 import '../widgets/dashboard_search_bar.dart';
 import '../widgets/hero_banner.dart';
 import '../widgets/mode_switcher_section.dart';

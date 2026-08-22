@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import 'kaylo_logo.dart';
 
 class SearchBarField extends StatelessWidget {
   final String hintText;

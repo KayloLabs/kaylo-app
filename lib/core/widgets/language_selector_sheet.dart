@@ -42,6 +42,7 @@ class LanguageSelectorSheet extends ConsumerWidget {
             _buildLanguageOption(context, ref, 'English', 'en', currentLocale.languageCode),
             _buildLanguageOption(context, ref, 'മലയാളം (Malayalam)', 'ml', currentLocale.languageCode),
             _buildLanguageOption(context, ref, 'हिंदी (Hindi)', 'hi', currentLocale.languageCode),
+            _buildLanguageOption(context, ref, 'தமிழ் (Tamil)', 'ta', currentLocale.languageCode),
             const SizedBox(height: AppSpacing.l),
           ],
         ),

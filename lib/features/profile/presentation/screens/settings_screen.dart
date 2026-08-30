@@ -37,6 +37,7 @@ class SettingsScreen extends ConsumerWidget {
     'en': 'English',
     'ml': 'മലയാളം',
     'hi': 'हिंदी',
+    'ta': 'தமிழ்',
   };
 
   @override

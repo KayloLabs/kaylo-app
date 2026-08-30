@@ -46,16 +46,10 @@ class BottomPromoBanner extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(height: AppSpacing.s),
-                // scaleDown keeps long localized labels (Tamil, Malayalam)
-                // inside the banner instead of overflowing.
-                FittedBox(
-                  fit: BoxFit.scaleDown,
-                  alignment: Alignment.centerLeft,
-                  child: KayloButton(
-                    text: AppLocalizations.of(context)!.promoButton,
-                    onPressed: () => context.go(Routes.careHome),
-                    icon: Icons.arrow_forward_rounded,
-                  ),
+                KayloButton(
+                  text: AppLocalizations.of(context)!.promoButton,
+                  onPressed: () => context.go(Routes.careHome),
+                  icon: Icons.arrow_forward_rounded,
                 ),
               ],
             ),

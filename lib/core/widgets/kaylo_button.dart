@@ -93,13 +93,22 @@ class KayloButton extends StatelessWidget {
     Widget content;
     if (icon != null) {
       content = Row(
+        mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Icon(icon, size: 20),
           const SizedBox(width: 8),
-          Text(
-            text,
-            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+          // Long localized labels (Tamil, Malayalam) shrink to fit
+          // instead of overflowing the button.
+          Flexible(
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                text,
+                style:
+                    const TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+              ),
+            ),
           ),
         ],
       );

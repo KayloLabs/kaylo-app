@@ -46,12 +46,16 @@ class BottomPromoBanner extends StatelessWidget {
                       ),
                 ),
                 const SizedBox(height: AppSpacing.s),
-                KayloButton(
-                  text: AppLocalizations.of(context)!.promoButton,
-                  // Reminders live in Kaylo Care — route there until M5's
-                  // dedicated reminders screen lands.
-                  onPressed: () => context.go(Routes.careHome),
-                  icon: Icons.arrow_forward_rounded,
+                // scaleDown keeps long localized labels (Tamil, Malayalam)
+                // inside the banner instead of overflowing.
+                FittedBox(
+                  fit: BoxFit.scaleDown,
+                  alignment: Alignment.centerLeft,
+                  child: KayloButton(
+                    text: AppLocalizations.of(context)!.promoButton,
+                    onPressed: () => context.go(Routes.careHome),
+                    icon: Icons.arrow_forward_rounded,
+                  ),
                 ),
               ],
             ),

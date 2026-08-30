@@ -57,9 +57,19 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
     return false;
   }
 
+  int? _lastIndex;
+
   @override
   Widget build(BuildContext context) {
     final currentIndex = widget.navigationShell.currentIndex;
+    // Landing on a new tab must always reveal the nav: a short screen
+    // (like Care Home) can't scroll it back, stranding the user.
+    if (_lastIndex != currentIndex) {
+      _lastIndex = currentIndex;
+      if (_hideController.status != AnimationStatus.dismissed) {
+        _hideController.reverse();
+      }
+    }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     
     return Scaffold(

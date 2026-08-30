@@ -228,4 +228,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get caregiverBookingSubtitle => 'Trusted help at home';
+
+  @override
+  String get themeCareOverride => 'Theme follows Care Mode while it is on';
 }

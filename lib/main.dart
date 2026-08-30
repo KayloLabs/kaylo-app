@@ -8,6 +8,7 @@ import 'l10n/generated/app_localizations.dart';
 
 import 'core/config/app_env.dart';
 import 'core/router/app_router.dart';
+import 'core/providers/care_mode_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'core/services/storage_service.dart';
@@ -45,12 +46,15 @@ class KayloApp extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(goRouterProvider);
+    // Care Mode overrides the whole app with the senior-friendly shell:
+    // careTheme is deliberately always-light for maximum legibility.
+    final careMode = ref.watch(careModeProvider);
 
     return MaterialApp.router(
       title: 'Kaylo',
-      theme: AppTheme.lightTheme,
-      darkTheme: AppTheme.darkTheme,
-      themeMode: ref.watch(themeModeProvider),
+      theme: careMode ? AppTheme.careTheme : AppTheme.lightTheme,
+      darkTheme: careMode ? AppTheme.careTheme : AppTheme.darkTheme,
+      themeMode: careMode ? ThemeMode.light : ref.watch(themeModeProvider),
       locale: ref.watch(localeProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,

@@ -9,6 +9,7 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/kaylo_card.dart';
 import '../../../../core/widgets/kaylo_list_tile.dart';
+import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -61,11 +62,29 @@ class SettingsScreen extends ConsumerWidget {
                 Text(l10n.theme,
                     style: Theme.of(context).textTheme.titleMedium),
                 const SizedBox(height: AppSpacing.m),
-                _ThemeModeSelector(
-                  selected: themeMode,
-                  onChanged: (mode) =>
-                      ref.read(themeModeProvider.notifier).setThemeMode(mode),
+                // Care Mode forces the always-light careTheme, so the
+                // selector is locked while it's on.
+                IgnorePointer(
+                  ignoring: careMode,
+                  child: Opacity(
+                    opacity: careMode ? 0.4 : 1,
+                    child: _ThemeModeSelector(
+                      selected: themeMode,
+                      onChanged: (mode) => ref
+                          .read(themeModeProvider.notifier)
+                          .setThemeMode(mode),
+                    ),
+                  ),
                 ),
+                if (careMode) ...[
+                  const SizedBox(height: AppSpacing.s),
+                  Text(
+                    l10n.themeCareOverride,
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                          color: AppColors.careAccent,
+                        ),
+                  ),
+                ],
               ],
             ),
           ),
@@ -157,7 +176,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: Text(l10n.termsPrivacy),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () {},
+                  onTap: () => KayloSnackbar.showInfo(context, l10n.comingSoon),
                 ),
               ],
             ),

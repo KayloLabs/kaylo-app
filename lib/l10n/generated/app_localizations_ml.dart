@@ -231,4 +231,8 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get caregiverBookingSubtitle => 'വീട്ടിൽ വിശ്വസ്ത സഹായം';
+
+  @override
+  String get themeCareOverride =>
+      'കെയർ മോഡ് ഓണായിരിക്കുമ്പോൾ തീം അതിനെ പിന്തുടരും';
 }

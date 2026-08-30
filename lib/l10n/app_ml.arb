@@ -72,5 +72,6 @@
   "emergencySos": "അടിയന്തര SOS",
   "emergencySosSubtitle": "കുടുംബത്തെ ഉടൻ അറിയിക്കുക",
   "caregiverBooking": "പരിചാരകനെ ബുക്ക് ചെയ്യുക",
-  "caregiverBookingSubtitle": "വീട്ടിൽ വിശ്വസ്ത സഹായം"
+  "caregiverBookingSubtitle": "വീട്ടിൽ വിശ്വസ്ത സഹായം",
+  "themeCareOverride": "കെയർ മോഡ് ഓണായിരിക്കുമ്പോൾ തീം അതിനെ പിന്തുടരും"
 }

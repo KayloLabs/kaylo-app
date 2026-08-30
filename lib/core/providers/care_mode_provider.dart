@@ -1,8 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../services/storage_service.dart';
 
-/// Persistent Care Mode flag. The full `careTheme` shell arrives in R2;
-/// for now this drives the toggle in Settings and the dashboard switcher.
+/// Persistent Care Mode flag. When on, KayloApp swaps the entire app
+/// into `AppTheme.careTheme` (18sp minimum text, 56x56 targets, always
+/// light); the Settings theme selector is overridden while active.
 class CareModeNotifier extends Notifier<bool> {
   @override
   bool build() {

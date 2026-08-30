@@ -228,4 +228,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get caregiverBookingSubtitle => 'घर पर भरोसेमंद मदद';
+
+  @override
+  String get themeCareOverride =>
+      'केयर मोड चालू रहने पर थीम उसी के अनुसार रहेगी';
 }

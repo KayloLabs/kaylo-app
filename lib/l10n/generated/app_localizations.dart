@@ -537,6 +537,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Trusted help at home'**
   String get caregiverBookingSubtitle;
+
+  /// No description provided for @themeCareOverride.
+  ///
+  /// In en, this message translates to:
+  /// **'Theme follows Care Mode while it is on'**
+  String get themeCareOverride;
 }
 
 class _AppLocalizationsDelegate

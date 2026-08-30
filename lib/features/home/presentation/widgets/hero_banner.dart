@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -85,7 +86,7 @@ class _HeroBannerState extends State<HeroBanner> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 232,
+      height: 244,
       child: Stack(
         children: [
           // Background Color
@@ -148,15 +149,16 @@ class _HeroBannerState extends State<HeroBanner> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        // Flexible + ellipsis: Tamil and Malayalam copy runs
-                        // taller than English and must never overflow the
-                        // fixed banner height.
+                        // Auto-sized: the font shrinks until whole lines
+                        // fit, so taller scripts (Tamil, Malayalam) never
+                        // overflow and never clip a line in half.
                         Flexible(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.5,
-                            child: Text(
+                            child: AutoSizeText(
                               slide.title,
-                              maxLines: 4,
+                              maxLines: 3,
+                              minFontSize: 15,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.titleLarge?.copyWith(
                                     fontWeight: FontWeight.bold,
@@ -170,9 +172,10 @@ class _HeroBannerState extends State<HeroBanner> {
                         Flexible(
                           child: SizedBox(
                             width: MediaQuery.of(context).size.width * 0.45,
-                            child: Text(
+                            child: AutoSizeText(
                               slide.subtitle,
                               maxLines: 3,
+                              minFontSize: 10,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.labelMedium?.copyWith(
                                     color: Colors.white.withValues(alpha: 0.9),

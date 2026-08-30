@@ -40,6 +40,8 @@ class SupabaseBookingsRepository implements BookingsRepository {
             'booking_time': _timeString(booking.scheduledAt),
             'status': _statusToDb(booking.status),
             'estimated_cost': booking.totalAmount,
+            'location_id': booking.locationId,
+            'notes': booking.notes,
           })
           .select()
           .single();
@@ -70,9 +72,10 @@ class SupabaseBookingsRepository implements BookingsRepository {
       scheduledAt: DateTime.parse(
           '${row['booking_date']}T${row['booking_time']}'),
       status: _statusFromDb(row['status'] as String),
-      totalAmount:
-          ((row['final_cost'] ?? row['estimated_cost']) as num? ?? 0)
-              .toDouble(),
+      totalAmount: ((row['estimated_cost'] as num?) ?? 0).toDouble(),
+      locationId: row['location_id'] as String?,
+      notes: row['notes'] as String?,
+      finalCost: (row['final_cost'] as num?)?.toDouble(),
     );
   }
 

@@ -54,6 +54,10 @@ class SupabaseWorkersRepository implements WorkersRepository {
       skillIds: List<String>.from((row['skill_ids'] as List?) ?? const []),
       location: (row['district'] as String?) ?? '',
       trustScore: ((row['trust_score'] as num?) ?? 0).toDouble(),
+      isVerified: (row['is_verified'] as bool?) ?? false,
+      isAvailable: (row['is_available'] as bool?) ?? true,
+      hourlyRate: (row['hourly_rate'] as num?)?.toDouble(),
+      totalJobs: ((row['total_jobs'] as num?) ?? 0).toInt(),
     );
   }
 }

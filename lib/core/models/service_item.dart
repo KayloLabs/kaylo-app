@@ -7,6 +7,9 @@ class ServiceItem {
   final double basePrice;
   final bool isPopular;
 
+  /// Mirrors `services.estimated_duration_minutes`; null when unknown.
+  final int? estimatedDurationMinutes;
+
   ServiceItem({
     required this.id,
     required this.name,
@@ -15,5 +18,6 @@ class ServiceItem {
     required this.iconPath,
     required this.basePrice,
     this.isPopular = false,
+    this.estimatedDurationMinutes,
   });
 }

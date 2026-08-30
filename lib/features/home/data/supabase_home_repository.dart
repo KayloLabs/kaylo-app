@@ -48,6 +48,8 @@ class SupabaseHomeRepository implements HomeRepository {
       iconPath: (row['icon_path'] as String?) ?? '',
       basePrice: ((row['base_price'] as num?) ?? 0).toDouble(),
       isPopular: (row['is_popular'] as bool?) ?? false,
+      estimatedDurationMinutes:
+          (row['estimated_duration_minutes'] as num?)?.toInt(),
     );
   }
 }

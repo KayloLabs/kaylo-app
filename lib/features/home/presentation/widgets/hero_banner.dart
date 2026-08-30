@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -84,7 +85,7 @@ class _HeroBannerState extends State<HeroBanner> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 220,
+      height: 232,
       child: Stack(
         children: [
           // Background Color
@@ -147,26 +148,37 @@ class _HeroBannerState extends State<HeroBanner> {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.5,
-                          child: Text(
-                            slide.title,
-                            style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.white,
-                                  height: 1.2,
-                                ),
+                        // Flexible + ellipsis: Tamil and Malayalam copy runs
+                        // taller than English and must never overflow the
+                        // fixed banner height.
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.5,
+                            child: Text(
+                              slide.title,
+                              maxLines: 4,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                    color: Colors.white,
+                                    height: 1.2,
+                                  ),
+                            ),
                           ),
                         ),
                         const SizedBox(height: AppSpacing.s),
-                        SizedBox(
-                          width: MediaQuery.of(context).size.width * 0.45,
-                          child: Text(
-                            slide.subtitle,
-                            style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                  color: Colors.white.withValues(alpha: 0.9),
-                                  height: 1.4,
-                                ),
+                        Flexible(
+                          child: SizedBox(
+                            width: MediaQuery.of(context).size.width * 0.45,
+                            child: Text(
+                              slide.subtitle,
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    color: Colors.white.withValues(alpha: 0.9),
+                                    height: 1.4,
+                                  ),
+                            ),
                           ),
                         ),
                         const Spacer(),
@@ -177,7 +189,7 @@ class _HeroBannerState extends State<HeroBanner> {
                           borderRadius: BorderRadius.circular(24),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(24),
-                            onTap: () {},
+                            onTap: () => KayloFeedback.press(),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.l,

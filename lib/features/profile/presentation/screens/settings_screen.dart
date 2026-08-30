@@ -8,6 +8,7 @@ import '../../../../core/services/storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/kaylo_card.dart';
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
@@ -124,8 +125,10 @@ class SettingsScreen extends ConsumerWidget {
               trailing: Switch.adaptive(
                 value: careMode,
                 activeThumbColor: AppColors.careAccent,
-                onChanged: (value) =>
-                    ref.read(careModeProvider.notifier).setEnabled(value),
+                onChanged: (value) {
+                  KayloFeedback.tap();
+                  ref.read(careModeProvider.notifier).setEnabled(value);
+                },
               ),
             ),
           ),
@@ -144,9 +147,12 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: Text(l10n.pushNotificationsSubtitle),
               trailing: Switch.adaptive(
                 value: notifications,
-                onChanged: (value) => ref
-                    .read(_notificationsEnabledProvider.notifier)
-                    .setEnabled(value),
+                onChanged: (value) {
+                  KayloFeedback.tap();
+                  ref
+                      .read(_notificationsEnabledProvider.notifier)
+                      .setEnabled(value);
+                },
               ),
             ),
           ),
@@ -279,7 +285,10 @@ class _ThemeModeSelector extends StatelessWidget {
                 Expanded(
                   child: InkWell(
                     borderRadius: BorderRadius.circular(100),
-                    onTap: () => onChanged(mode),
+                    onTap: () {
+                      KayloFeedback.tap();
+                      onChanged(mode);
+                    },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
                           vertical: 10, horizontal: 4),

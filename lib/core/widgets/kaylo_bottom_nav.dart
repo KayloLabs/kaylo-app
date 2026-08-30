@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
+import '../services/feedback_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'kaylo_liquid_glass.dart';
@@ -171,6 +172,7 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
   }
 
   void _onTap(int index) {
+    KayloFeedback.tap();
     widget.navigationShell.goBranch(
       index,
       initialLocation: index == widget.navigationShell.currentIndex,

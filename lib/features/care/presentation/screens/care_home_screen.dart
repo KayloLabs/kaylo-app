@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_theme.dart';
@@ -116,7 +117,10 @@ class _SosCard extends StatelessWidget {
         borderRadius: BorderRadius.circular(20),
         // TODO(M5): trigger the real SOS flow (sos_alerts insert + family
         // notification) instead of the placeholder message.
-        onTap: () => KayloSnackbar.showInfo(context, l10n.comingSoon),
+        onTap: () {
+          KayloFeedback.alert();
+          KayloSnackbar.showInfo(context, l10n.comingSoon);
+        },
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Row(
@@ -182,7 +186,10 @@ class _CareActionCard extends StatelessWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () => KayloSnackbar.showInfo(context, l10n.comingSoon),
+        onTap: () {
+          KayloFeedback.tap();
+          KayloSnackbar.showInfo(context, l10n.comingSoon);
+        },
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Row(

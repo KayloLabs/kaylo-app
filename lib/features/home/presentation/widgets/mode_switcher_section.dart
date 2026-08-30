@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
@@ -49,7 +50,10 @@ class ModeSwitcherSection extends StatelessWidget {
                 subtitle: AppLocalizations.of(context)!.careSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
                 colorOverlay: Colors.deepPurpleAccent.withValues(alpha: 0.15), // Violet tint
-                onTap: () => context.go(Routes.careHome),
+                onTap: () {
+                  KayloFeedback.tap();
+                  context.go(Routes.careHome);
+                },
               ),
             ),
           ],

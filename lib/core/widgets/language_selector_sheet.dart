@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/locale_provider.dart';
+import '../services/feedback_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 
@@ -56,6 +57,7 @@ class LanguageSelectorSheet extends ConsumerWidget {
 
     return ListTile(
       onTap: () {
+        KayloFeedback.tap();
         ref.read(localeProvider.notifier).setLocale(code);
         Navigator.pop(context);
       },

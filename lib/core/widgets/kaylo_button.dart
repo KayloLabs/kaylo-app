@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../services/feedback_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 
@@ -19,6 +20,15 @@ class KayloButton extends StatelessWidget {
     this.isLoading = false,
     this.icon,
   });
+
+  /// Haptic + click on every press, from one place for all variants.
+  VoidCallback? get _handlePress {
+    if (isLoading || onPressed == null) return null;
+    return () {
+      KayloFeedback.press();
+      onPressed!();
+    };
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +57,7 @@ class KayloButton extends StatelessWidget {
           borderRadius: BorderRadius.circular(100),
           child: InkWell(
             borderRadius: BorderRadius.circular(100),
-            onTap: isLoading ? null : onPressed,
+            onTap: _handlePress,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -82,7 +92,7 @@ class KayloButton extends StatelessWidget {
       width: double.infinity,
       height: 48,
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed,
+        onPressed: _handlePress,
         style: _getButtonStyle(context),
         child: content,
       ),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../l10n/generated/app_localizations.dart';
 import '../providers/locale_provider.dart';
 import '../services/feedback_service.dart';
 import '../theme/app_colors.dart';
@@ -28,7 +29,7 @@ class LanguageSelectorSheet extends ConsumerWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Language Settings',
+                  AppLocalizations.of(context)!.languageSettings,
                   style: Theme.of(context).textTheme.titleLarge?.copyWith(
                         fontWeight: FontWeight.bold,
                       ),

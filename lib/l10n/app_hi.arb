@@ -73,5 +73,6 @@
   "emergencySosSubtitle": "परिवार को तुरंत सूचित करें",
   "caregiverBooking": "देखभालकर्ता बुक करें",
   "caregiverBookingSubtitle": "घर पर भरोसेमंद मदद",
-  "themeCareOverride": "केयर मोड चालू रहने पर थीम उसी के अनुसार रहेगी"
+  "themeCareOverride": "केयर मोड चालू रहने पर थीम उसी के अनुसार रहेगी",
+  "languageSettings": "भाषा सेटिंग्स"
 }

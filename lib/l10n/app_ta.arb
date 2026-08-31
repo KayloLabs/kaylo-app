@@ -73,5 +73,6 @@
   "emergencySosSubtitle": "குடும்பத்தினருக்கு உடனடி எச்சரிக்கை",
   "caregiverBooking": "பராமரிப்பாளரை புக் செய்யுங்கள்",
   "caregiverBookingSubtitle": "வீட்டில் நம்பகமான உதவி",
-  "themeCareOverride": "கேர் மோடு இயக்கத்தில் இருக்கும்போது தீம் அதைப் பின்பற்றும்"
+  "themeCareOverride": "கேர் மோடு இயக்கத்தில் இருக்கும்போது தீம் அதைப் பின்பற்றும்",
+  "languageSettings": "மொழி அமைப்புகள்"
 }

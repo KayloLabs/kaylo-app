@@ -235,4 +235,7 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get themeCareOverride =>
       'കെയർ മോഡ് ഓണായിരിക്കുമ്പോൾ തീം അതിനെ പിന്തുടരും';
+
+  @override
+  String get languageSettings => 'ഭാഷാ ക്രമീകരണങ്ങൾ';
 }

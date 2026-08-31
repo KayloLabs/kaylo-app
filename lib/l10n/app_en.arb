@@ -73,5 +73,6 @@
   "emergencySosSubtitle": "Alert your family instantly",
   "caregiverBooking": "Book a Caregiver",
   "caregiverBookingSubtitle": "Trusted help at home",
-  "themeCareOverride": "Theme follows Care Mode while it is on"
+  "themeCareOverride": "Theme follows Care Mode while it is on",
+  "languageSettings": "Language Settings"
 }

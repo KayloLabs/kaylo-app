@@ -237,4 +237,7 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get themeCareOverride =>
       'கேர் மோடு இயக்கத்தில் இருக்கும்போது தீம் அதைப் பின்பற்றும்';
+
+  @override
+  String get languageSettings => 'மொழி அமைப்புகள்';
 }

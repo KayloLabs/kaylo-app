@@ -232,4 +232,7 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get themeCareOverride =>
       'केयर मोड चालू रहने पर थीम उसी के अनुसार रहेगी';
+
+  @override
+  String get languageSettings => 'भाषा सेटिंग्स';
 }

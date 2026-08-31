@@ -231,4 +231,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get themeCareOverride => 'Theme follows Care Mode while it is on';
+
+  @override
+  String get languageSettings => 'Language Settings';
 }

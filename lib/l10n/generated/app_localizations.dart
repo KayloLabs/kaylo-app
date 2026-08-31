@@ -545,6 +545,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Theme follows Care Mode while it is on'**
   String get themeCareOverride;
+
+  /// No description provided for @languageSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Language Settings'**
+  String get languageSettings;
 }
 
 class _AppLocalizationsDelegate

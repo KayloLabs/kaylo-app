@@ -27,44 +27,68 @@ class DashboardScreen extends ConsumerWidget {
         bottom: false,
         child: dashboardState.when(
           data: (state) {
-            return SingleChildScrollView(
-              padding: const EdgeInsets.symmetric(
-                horizontal: AppSpacing.l,
-                vertical: AppSpacing.m,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  GreetingHeader(
-                    location: state.location,
-                    notificationCount:
-                        unreadCount.whenOrNull(data: (c) => c) ?? 0,
-                    userName: state.userName,
+            return CustomScrollView(
+              slivers: [
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.l,
+                    AppSpacing.m,
+                    AppSpacing.l,
+                    AppSpacing.s,
                   ),
-                  const SizedBox(height: AppSpacing.l),
-                  const DashboardSearchBar(),
-                  const SizedBox(height: AppSpacing.xl),
-                  const HeroBanner(),
-                  const SizedBox(height: AppSpacing.xl),
-                  const ModeSwitcherSection(),
-                  const SizedBox(height: AppSpacing.xl),
-                  // Personalized ranking when booking history exists;
-                  // otherwise the plain popular list.
-                  switch (recommended) {
-                    AsyncData(:final value) => PopularServicesHorizontal(
-                        services: value.services,
-                        title: value.personalized
-                            ? AppLocalizations.of(context)!.recommendedForYou
-                            : null,
-                      ),
-                    _ => PopularServicesHorizontal(
-                        services: state.popularServices),
-                  },
-                  const SizedBox(height: AppSpacing.xl),
-                  const BottomPromoBanner(),
-                  const SizedBox(height: 120), // Padding for bottom nav
-                ],
-              ),
+                  sliver: SliverToBoxAdapter(
+                    child: GreetingHeader(
+                      location: state.location,
+                      notificationCount:
+                          unreadCount.whenOrNull(data: (c) => c) ?? 0,
+                      userName: state.userName,
+                    ),
+                  ),
+                ),
+                // The search bar stays pinned while everything else
+                // scrolls beneath it; its liquid glass frosts whatever
+                // passes underneath.
+                const SliverPersistentHeader(
+                  pinned: true,
+                  delegate: _PinnedSearchBarDelegate(),
+                ),
+                SliverPadding(
+                  padding: const EdgeInsets.fromLTRB(
+                    AppSpacing.l,
+                    AppSpacing.m,
+                    AppSpacing.l,
+                    0,
+                  ),
+                  sliver: SliverToBoxAdapter(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const HeroBanner(),
+                        const SizedBox(height: AppSpacing.xl),
+                        const ModeSwitcherSection(),
+                        const SizedBox(height: AppSpacing.xl),
+                        // Personalized ranking when booking history
+                        // exists; otherwise the plain popular list.
+                        switch (recommended) {
+                          AsyncData(:final value) =>
+                            PopularServicesHorizontal(
+                              services: value.services,
+                              title: value.personalized
+                                  ? AppLocalizations.of(context)!
+                                      .recommendedForYou
+                                  : null,
+                            ),
+                          _ => PopularServicesHorizontal(
+                              services: state.popularServices),
+                        },
+                        const SizedBox(height: AppSpacing.xl),
+                        const BottomPromoBanner(),
+                        const SizedBox(height: 120), // bottom nav space
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             );
           },
           loading: () => const Center(
@@ -77,4 +101,34 @@ class DashboardScreen extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _PinnedSearchBarDelegate extends SliverPersistentHeaderDelegate {
+  const _PinnedSearchBarDelegate();
+
+  static const double _height = 72;
+
+  @override
+  double get minExtent => _height;
+
+  @override
+  double get maxExtent => _height;
+
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return const Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: AppSpacing.l,
+        vertical: AppSpacing.s,
+      ),
+      child: Align(
+        alignment: Alignment.topCenter,
+        child: DashboardSearchBar(),
+      ),
+    );
+  }
+
+  @override
+  bool shouldRebuild(_PinnedSearchBarDelegate oldDelegate) => false;
 }

@@ -9,6 +9,11 @@ class MockHomeRepository implements HomeRepository {
     ServiceItem(id: '4', name: 'Plumbing', category: 'home', description: 'Expert plumbing services', iconPath: 'assets_kaylo/3d_transparent/icon_plumb.png', basePrice: 500, isPopular: true),
     ServiceItem(id: '5', name: 'Electrical', category: 'home', description: 'Electrical repairs and wiring', iconPath: 'assets_kaylo/3d_transparent/icon_electric.png', basePrice: 400, isPopular: true),
     ServiceItem(id: '6', name: 'More', category: 'home', description: 'More services', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 0, isPopular: true),
+    // Non-popular services, mirroring the live seed so search and
+    // voice matching cover the full catalog offline too.
+    ServiceItem(id: '7', name: 'House Cleaning', category: 'home', description: 'Deep cleaning services', iconPath: 'assets_kaylo/3d_transparent/mode_home.png', basePrice: 600),
+    ServiceItem(id: '8', name: 'Caregiver Visit', category: 'care', description: 'Trained caregivers for seniors', iconPath: 'assets_kaylo/3d_transparent/mode_care.png', basePrice: 700),
+    ServiceItem(id: '9', name: 'Medicine Delivery', category: 'care', description: 'Medicines at your doorstep', iconPath: 'assets_kaylo/3d_transparent/mode_care.png', basePrice: 100),
   ];
 
   @override

@@ -174,7 +174,7 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
     _energyTarget = 0.3;
     await ref.read(speechServiceProvider).stop();
     try {
-      final pool = await ref.read(homeRepositoryProvider).getPopularServices();
+      final pool = await ref.read(fullCatalogProvider.future);
       if (!mounted) return;
       final matches = matchServicesToTranscript(words, pool);
       setState(() {

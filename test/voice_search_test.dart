@@ -27,6 +27,8 @@ void main() {
       matchServicesToTranscript(transcript, pool).first.name;
 
   group('exact service words', () {
+    test('single word "Care" finds Caregiver Visit',
+        () => expect(top('Care'), 'Caregiver Visit'));
     test('English plumber', () => expect(top('I need a plumber'), 'Plumbing'));
     test('Malayalam plumber',
         () => expect(top('എനിക്ക് ഒരു പ്ലംബറെ വേണം'), 'Plumbing'));

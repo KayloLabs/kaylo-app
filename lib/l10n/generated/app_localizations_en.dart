@@ -234,4 +234,29 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get languageSettings => 'Language Settings';
+
+  @override
+  String get voiceSearch => 'Voice search';
+
+  @override
+  String get voiceListening => 'Listening…';
+
+  @override
+  String get voiceTapToSpeak => 'Speak now, in any app language';
+
+  @override
+  String get voiceYouSaid => 'You said';
+
+  @override
+  String get voiceNoMatch => 'No matching service found. Try again?';
+
+  @override
+  String get voiceUnavailable => 'Voice search is not available on this device';
+
+  @override
+  String get voiceTryAgain => 'Try again';
+
+  @override
+  String get voiceMicDenied =>
+      'Microphone access was denied. Allow it in your browser or phone settings to use voice search.';
 }

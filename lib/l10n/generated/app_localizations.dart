@@ -551,6 +551,54 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Language Settings'**
   String get languageSettings;
+
+  /// No description provided for @voiceSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search'**
+  String get voiceSearch;
+
+  /// No description provided for @voiceListening.
+  ///
+  /// In en, this message translates to:
+  /// **'Listening…'**
+  String get voiceListening;
+
+  /// No description provided for @voiceTapToSpeak.
+  ///
+  /// In en, this message translates to:
+  /// **'Speak now, in any app language'**
+  String get voiceTapToSpeak;
+
+  /// No description provided for @voiceYouSaid.
+  ///
+  /// In en, this message translates to:
+  /// **'You said'**
+  String get voiceYouSaid;
+
+  /// No description provided for @voiceNoMatch.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching service found. Try again?'**
+  String get voiceNoMatch;
+
+  /// No description provided for @voiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Voice search is not available on this device'**
+  String get voiceUnavailable;
+
+  /// No description provided for @voiceTryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get voiceTryAgain;
+
+  /// No description provided for @voiceMicDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Microphone access was denied. Allow it in your browser or phone settings to use voice search.'**
+  String get voiceMicDenied;
 }
 
 class _AppLocalizationsDelegate

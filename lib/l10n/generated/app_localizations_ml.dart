@@ -238,4 +238,30 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get languageSettings => 'ഭാഷാ ക്രമീകരണങ്ങൾ';
+
+  @override
+  String get voiceSearch => 'വോയ്സ് തിരയൽ';
+
+  @override
+  String get voiceListening => 'കേൾക്കുന്നു…';
+
+  @override
+  String get voiceTapToSpeak => 'ഇപ്പോൾ സംസാരിക്കൂ, ഏത് ആപ്പ് ഭാഷയിലും';
+
+  @override
+  String get voiceYouSaid => 'നിങ്ങൾ പറഞ്ഞത്';
+
+  @override
+  String get voiceNoMatch =>
+      'അനുയോജ്യമായ സേവനം കണ്ടെത്തിയില്ല. വീണ്ടും ശ്രമിക്കണോ?';
+
+  @override
+  String get voiceUnavailable => 'ഈ ഉപകരണത്തിൽ വോയ്സ് തിരയൽ ലഭ്യമല്ല';
+
+  @override
+  String get voiceTryAgain => 'വീണ്ടും ശ്രമിക്കുക';
+
+  @override
+  String get voiceMicDenied =>
+      'മൈക്രോഫോൺ അനുമതി നിരസിച്ചു. വോയ്സ് തിരയലിന് ബ്രൗസറിലോ ഫോൺ ക്രമീകരണങ്ങളിലോ അനുവദിക്കുക.';
 }

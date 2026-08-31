@@ -235,4 +235,29 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get languageSettings => 'भाषा सेटिंग्स';
+
+  @override
+  String get voiceSearch => 'वॉइस खोज';
+
+  @override
+  String get voiceListening => 'सुन रहे हैं…';
+
+  @override
+  String get voiceTapToSpeak => 'अब बोलिए, किसी भी ऐप भाषा में';
+
+  @override
+  String get voiceYouSaid => 'आपने कहा';
+
+  @override
+  String get voiceNoMatch => 'कोई मिलती सेवा नहीं मिली। फिर से कोशिश करें?';
+
+  @override
+  String get voiceUnavailable => 'इस डिवाइस पर वॉइस खोज उपलब्ध नहीं है';
+
+  @override
+  String get voiceTryAgain => 'फिर से कोशिश करें';
+
+  @override
+  String get voiceMicDenied =>
+      'माइक्रोफ़ोन की अनुमति नहीं मिली। वॉइस खोज के लिए ब्राउज़र या फ़ोन सेटिंग्स में अनुमति दें।';
 }

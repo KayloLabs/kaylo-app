@@ -240,4 +240,29 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get languageSettings => 'மொழி அமைப்புகள்';
+
+  @override
+  String get voiceSearch => 'குரல் தேடல்';
+
+  @override
+  String get voiceListening => 'கேட்கிறோம்…';
+
+  @override
+  String get voiceTapToSpeak => 'இப்போது பேசுங்கள், எந்த ஆப் மொழியிலும்';
+
+  @override
+  String get voiceYouSaid => 'நீங்கள் சொன்னது';
+
+  @override
+  String get voiceNoMatch => 'பொருந்தும் சேவை இல்லை. மீண்டும் முயற்சிக்கவா?';
+
+  @override
+  String get voiceUnavailable => 'இந்த சாதனத்தில் குரல் தேடல் இல்லை';
+
+  @override
+  String get voiceTryAgain => 'மீண்டும் முயற்சி';
+
+  @override
+  String get voiceMicDenied =>
+      'மைக்ரோஃபோன் அனுமதி மறுக்கப்பட்டது. குரல் தேடலுக்கு உலாவி அல்லது ஃபோன் அமைப்புகளில் அனுமதிக்கவும்.';
 }

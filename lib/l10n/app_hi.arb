@@ -74,5 +74,13 @@
   "caregiverBooking": "देखभालकर्ता बुक करें",
   "caregiverBookingSubtitle": "घर पर भरोसेमंद मदद",
   "themeCareOverride": "केयर मोड चालू रहने पर थीम उसी के अनुसार रहेगी",
-  "languageSettings": "भाषा सेटिंग्स"
+  "languageSettings": "भाषा सेटिंग्स",
+  "voiceSearch": "वॉइस खोज",
+  "voiceListening": "सुन रहे हैं…",
+  "voiceTapToSpeak": "अब बोलिए, किसी भी ऐप भाषा में",
+  "voiceYouSaid": "आपने कहा",
+  "voiceNoMatch": "कोई मिलती सेवा नहीं मिली। फिर से कोशिश करें?",
+  "voiceUnavailable": "इस डिवाइस पर वॉइस खोज उपलब्ध नहीं है",
+  "voiceTryAgain": "फिर से कोशिश करें",
+  "voiceMicDenied": "माइक्रोफ़ोन की अनुमति नहीं मिली। वॉइस खोज के लिए ब्राउज़र या फ़ोन सेटिंग्स में अनुमति दें।"
 }

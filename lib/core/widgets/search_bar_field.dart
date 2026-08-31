@@ -8,6 +8,10 @@ class SearchBarField extends StatelessWidget {
   final VoidCallback? onTap;
   final bool readOnly;
 
+  /// Trailing widget shown while the field is empty (the clear button
+  /// takes over once there is text). Used for the voice search mic.
+  final Widget? suffix;
+
   const SearchBarField({
     super.key,
     this.hintText = 'Search services...',
@@ -15,6 +19,7 @@ class SearchBarField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.suffix,
   });
 
   @override
@@ -38,7 +43,7 @@ class SearchBarField extends StatelessWidget {
           ),
         ),
         prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
-        suffixIcon: controller?.text.isNotEmpty == true 
+        suffixIcon: controller?.text.isNotEmpty == true
           ? IconButton(
               icon: Icon(Icons.clear, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
               onPressed: () {
@@ -46,7 +51,7 @@ class SearchBarField extends StatelessWidget {
                 onChanged?.call('');
               },
             )
-          : null,
+          : suffix,
       ),
     );
   }

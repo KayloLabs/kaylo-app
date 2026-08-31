@@ -53,6 +53,7 @@ class SpeechService {
   Future<void> listen({
     required String? localeId,
     required void Function(String words, bool isFinal) onResult,
+    void Function(double level)? onSoundLevel,
   }) {
     return _speech.listen(
       listenOptions: SpeechListenOptions(
@@ -63,6 +64,7 @@ class SpeechService {
       ),
       onResult: (result) =>
           onResult(result.recognizedWords, result.finalResult),
+      onSoundLevelChange: onSoundLevel,
     );
   }
 

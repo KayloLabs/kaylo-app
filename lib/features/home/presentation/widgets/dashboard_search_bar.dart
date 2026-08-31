@@ -5,7 +5,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/search_bar_field.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import 'voice_search_sheet.dart';
+import 'voice_search_overlay.dart';
 
 class DashboardSearchBar extends ConsumerWidget {
   const DashboardSearchBar({super.key});
@@ -27,7 +27,7 @@ class DashboardSearchBar extends ConsumerWidget {
                   Icons.mic_none_rounded,
                   color: AppColors.brandPrimary,
                 ),
-                onPressed: () => showVoiceSearchSheet(context, ref),
+                onPressed: () => showVoiceSearchOverlay(context, ref),
               ),
             ),
           ),

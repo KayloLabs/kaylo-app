@@ -104,7 +104,7 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
                     center: const Alignment(0.8, -0.8),
                     radius: 2.0,
                     colors: [
-                      Colors.white.withValues(alpha: isDark ? 0.05 : 0.4),
+                      Colors.white.withValues(alpha: isDark ? 0.05 : 0.26),
                       Colors.white.withValues(alpha: 0.0),
                       Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
                     ],
@@ -350,10 +350,13 @@ class _GlassRimPainter extends CustomPainter {
       Radius.circular(borderRadius),
     );
 
+    // Kept soft: the bar can sit over dark content (pinned search bar
+    // above the hero banner), where a bright rim reads as a white
+    // outline instead of a glass edge.
     final boost = pressed ? 1.5 : 1.0;
-    final top = (isDark ? 0.20 : 0.65) * boost;
-    final side = (isDark ? 0.06 : 0.18) * boost;
-    final bottom = isDark ? 0.02 : 0.06;
+    final top = (isDark ? 0.20 : 0.38) * boost;
+    final side = (isDark ? 0.06 : 0.11) * boost;
+    final bottom = isDark ? 0.02 : 0.04;
 
     final paint = Paint()
       ..style = PaintingStyle.stroke

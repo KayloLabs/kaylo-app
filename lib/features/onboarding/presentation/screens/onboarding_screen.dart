@@ -231,7 +231,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         border: Border.all(color: Colors.white, width: 1.5),
         boxShadow: [
           BoxShadow(
-            color: shadowColor.withValues(alpha: 0.3),
+            color: shadowColor.withOpacity(0.3),
             blurRadius: 24,
             offset: const Offset(0, 12),
           ),

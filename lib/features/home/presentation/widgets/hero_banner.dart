@@ -178,7 +178,7 @@ class _HeroBannerState extends State<HeroBanner> {
                               minFontSize: 10,
                               overflow: TextOverflow.ellipsis,
                               style: Theme.of(context).textTheme.labelMedium?.copyWith(
-                                    color: Colors.white.withValues(alpha: 0.9),
+                                    color: Colors.white.withOpacity(0.9),
                                     height: 1.4,
                                   ),
                             ),
@@ -255,7 +255,7 @@ class _HeroBannerState extends State<HeroBanner> {
       width: isActive ? 16 : 4,
       height: 4,
       decoration: BoxDecoration(
-        color: isActive ? Colors.white : Colors.white.withValues(alpha: 0.5),
+        color: isActive ? Colors.white : Colors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(2),
       ),
     );

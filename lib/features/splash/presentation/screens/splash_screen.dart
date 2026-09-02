@@ -303,9 +303,9 @@ class _LogoShimmer extends StatelessWidget {
           begin: Alignment.topLeft,
           end: Alignment.bottomRight,
           colors: [
-            Colors.white.withValues(alpha: 0.0),
-            Colors.white.withValues(alpha: 0.55),
-            Colors.white.withValues(alpha: 0.0),
+            Colors.white.withOpacity(0.0),
+            Colors.white.withOpacity(0.55),
+            Colors.white.withOpacity(0.0),
           ],
           stops: const [0.35, 0.5, 0.65],
         ).createShader(bounds.translate(dx, 0));
@@ -330,15 +330,15 @@ class _AmbientGlowPainter extends CustomPainter {
     void glow(Offset center, double radius, Color color) {
       final paint = Paint()
         ..shader = RadialGradient(
-          colors: [color, color.withValues(alpha: 0.0)],
+          colors: [color, color.withOpacity(0.0)],
         ).createShader(Rect.fromCircle(center: center, radius: radius));
       canvas.drawCircle(center, radius, paint);
     }
 
     final green = AppColors.brandPrimaryBright
-        .withValues(alpha: isDark ? 0.10 : 0.16);
+        .withOpacity(isDark ? 0.10 : 0.16);
     final amber =
-        AppColors.secondaryAccent.withValues(alpha: isDark ? 0.05 : 0.10);
+        AppColors.secondaryAccent.withOpacity(isDark ? 0.05 : 0.10);
 
     glow(
       Offset(

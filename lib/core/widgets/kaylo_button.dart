@@ -63,9 +63,7 @@ class KayloButton extends StatelessWidget {
                 borderRadius: BorderRadius.circular(100),
                 border: Border(
                   top: BorderSide(
-                    color: Colors.white.withValues(
-                      alpha: 0.3,
-                    ), // Top inner-highlight
+                    color: Colors.white.withOpacity(0.3), // Top inner-highlight
                     width: 1.0,
                   ),
                 ),
@@ -154,7 +152,7 @@ class KayloButton extends StatelessWidget {
         return ElevatedButton.styleFrom(); // Unused, handled above
       case KayloButtonVariant.secondary:
         return ElevatedButton.styleFrom(
-          backgroundColor: AppColors.brandPrimary.withValues(alpha: 0.12),
+          backgroundColor: AppColors.brandPrimary.withOpacity(0.12),
           foregroundColor: AppColors.brandPrimary,
           elevation: 0,
           shadowColor: Colors.transparent,

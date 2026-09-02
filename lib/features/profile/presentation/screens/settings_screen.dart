@@ -14,6 +14,7 @@ import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../auth/application/session_controller.dart';
 
 const _notificationsKey = 'notifications_enabled';
 
@@ -124,7 +125,7 @@ class SettingsScreen extends ConsumerWidget {
               subtitle: Text(l10n.careModeSubtitle),
               trailing: Switch.adaptive(
                 value: careMode,
-                activeThumbColor: AppColors.careAccent,
+                activeColor: AppColors.careAccent,
                 onChanged: (value) {
                   KayloFeedback.tap();
                   ref.read(careModeProvider.notifier).setEnabled(value);
@@ -214,7 +215,7 @@ class _SettingIcon extends StatelessWidget {
       width: 40,
       height: 40,
       decoration: BoxDecoration(
-        color: color.withValues(alpha: 0.12),
+        color: color.withOpacity(0.12),
         borderRadius: BorderRadius.circular(12),
       ),
       child: Icon(icon, color: color, size: 22),
@@ -269,7 +270,7 @@ class _ThemeModeSelector extends StatelessWidget {
                     borderRadius: BorderRadius.circular(100),
                     boxShadow: [
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.08),
+                        color: Colors.black.withOpacity(0.08),
                         blurRadius: 8,
                         offset: const Offset(0, 2),
                       ),

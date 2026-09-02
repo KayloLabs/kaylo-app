@@ -94,7 +94,7 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final itemWidth = constraints.maxWidth / 5;
-                  final bgColor = isDark ? Colors.white.withValues(alpha: 0.15) : AppColors.brandPrimary.withValues(alpha: 0.15);
+                  final bgColor = isDark ? Colors.white.withOpacity(0.15) : AppColors.brandPrimary.withOpacity(0.15);
                   
                   return Stack(
                     alignment: Alignment.centerLeft,

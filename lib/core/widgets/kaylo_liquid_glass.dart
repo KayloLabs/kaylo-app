@@ -60,8 +60,8 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
 
     final tintColor = widget.colorOverlay ??
         (isDark
-            ? const Color(0xFF16211B).withValues(alpha: 0.15)
-            : const Color(0xFFFAF8F3).withValues(alpha: 0.15));
+            ? const Color(0xFF16211B).withOpacity(0.15)
+            : const Color(0xFFFAF8F3).withOpacity(0.15));
 
     final glass = ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
@@ -104,9 +104,9 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
                     center: const Alignment(0.8, -0.8),
                     radius: 2.0,
                     colors: [
-                      Colors.white.withValues(alpha: isDark ? 0.05 : 0.26),
-                      Colors.white.withValues(alpha: 0.0),
-                      Colors.black.withValues(alpha: isDark ? 0.2 : 0.05),
+                      Colors.white.withOpacity(isDark ? 0.05 : 0.26),
+                      Colors.white.withOpacity(0.0),
+                      Colors.black.withOpacity(isDark ? 0.2 : 0.05),
                     ],
                     stops: const [0.0, 0.4, 1.0],
                   ),
@@ -137,12 +137,12 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
                                 center: align,
                                 radius: 1.1,
                                 colors: [
-                                  Colors.white.withValues(
-                                    alpha: _pressed
+                                  Colors.white.withOpacity(
+                                     _pressed
                                         ? (isDark ? 0.14 : 0.42)
                                         : (isDark ? 0.08 : 0.26),
                                   ),
-                                  Colors.white.withValues(alpha: 0.0),
+                                  Colors.white.withOpacity(0.0),
                                 ],
                                 stops: const [0.0, 0.7],
                               ),
@@ -183,12 +183,12 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
         borderRadius: BorderRadius.circular(widget.borderRadius),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.3 : 0.08),
+            color: Colors.black.withOpacity(isDark ? 0.3 : 0.08),
             blurRadius: 30,
             offset: const Offset(0, 12),
           ),
           BoxShadow(
-            color: Colors.black.withValues(alpha: isDark ? 0.2 : 0.04),
+            color: Colors.black.withOpacity(isDark ? 0.2 : 0.04),
             blurRadius: 10,
             offset: const Offset(0, 4),
           ),
@@ -283,9 +283,9 @@ class _RenderBackdropRefraction extends RenderProxyBox {
   void paint(PaintingContext context, Offset offset) {
     final center = offset + Offset(size.width / 2, size.height / 2);
     final matrix = Matrix4.identity()
-      ..translateByDouble(center.dx, center.dy, 0, 1)
-      ..scaleByDouble(_scale, _scale, 1, 1)
-      ..translateByDouble(-center.dx, -center.dy, 0, 1);
+      ..translate(center.dx, center.dy, 0.0)
+      ..scale(_scale, _scale, 1.0)
+      ..translate(-center.dx, -center.dy, 0.0);
     context.pushLayer(
       BackdropFilterLayer(
         filter: ui.ImageFilter.matrix(
@@ -367,13 +367,13 @@ class _GlassRimPainter extends CustomPainter {
         endAngle: math.pi * 2,
         transform: const GradientRotation(-math.pi / 2),
         colors: [
-          Colors.white.withValues(alpha: top.clamp(0.0, 1.0)),
-          Colors.white.withValues(alpha: side),
-          Colors.white.withValues(alpha: bottom),
-          Colors.white.withValues(alpha: side * 1.4),
-          Colors.white.withValues(alpha: bottom),
-          Colors.white.withValues(alpha: side),
-          Colors.white.withValues(alpha: top.clamp(0.0, 1.0)),
+          Colors.white.withOpacity(top.clamp(0.0, 1.0)),
+          Colors.white.withOpacity(side),
+          Colors.white.withOpacity(bottom),
+          Colors.white.withOpacity(side * 1.4),
+          Colors.white.withOpacity(bottom),
+          Colors.white.withOpacity(side),
+          Colors.white.withOpacity(top.clamp(0.0, 1.0)),
         ],
         stops: const [0.0, 0.2, 0.42, 0.5, 0.58, 0.8, 1.0],
       ).createShader(rect);
@@ -390,7 +390,7 @@ class _GlassRimPainter extends CustomPainter {
         begin: Alignment.topLeft,
         end: Alignment.bottomRight,
         colors: [
-          const Color(0xFF7FD4FF).withValues(alpha: fringeAlpha),
+          const Color(0xFF7FD4FF).withOpacity(fringeAlpha),
           Colors.transparent,
         ],
         stops: const [0.0, 0.5],
@@ -404,7 +404,7 @@ class _GlassRimPainter extends CustomPainter {
         begin: Alignment.bottomRight,
         end: Alignment.topLeft,
         colors: [
-          const Color(0xFFFFB27F).withValues(alpha: fringeAlpha),
+          const Color(0xFFFFB27F).withOpacity(fringeAlpha),
           Colors.transparent,
         ],
         stops: const [0.0, 0.5],

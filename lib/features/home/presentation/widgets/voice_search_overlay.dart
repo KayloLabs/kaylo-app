@@ -38,8 +38,8 @@ Future<void> showVoiceSearchOverlay(BuildContext context, WidgetRef ref) async {
       opaque: false,
       transitionDuration: const Duration(milliseconds: 260),
       reverseTransitionDuration: const Duration(milliseconds: 200),
-      pageBuilder: (_, _, _) => const VoiceSearchOverlay(),
-      transitionsBuilder: (_, animation, _, child) =>
+      pageBuilder: (context, animation, secondaryAnimation) => const VoiceSearchOverlay(),
+      transitionsBuilder: (context, animation, secondaryAnimation, child) =>
           FadeTransition(opacity: animation, child: child),
     ),
   );
@@ -206,14 +206,14 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
             onTap: _phase == _VoicePhase.listening ? _stopEarly : null,
             child: BackdropFilter(
               filter: ImageFilter.blur(sigmaX: 7, sigmaY: 7),
-              child: Container(color: Colors.black.withValues(alpha: 0.35)),
+              child: Container(color: Colors.black.withOpacity(0.35)),
             ),
           ),
           // The Siri-style ring, repainting every frame.
           IgnorePointer(
             child: AnimatedBuilder(
               animation: _wave,
-              builder: (_, _) => CustomPaint(
+              builder: (context, child) => CustomPaint(
                 painter: SiriEdgePainter(t: _wave.value, energy: _energy),
               ),
             ),
@@ -280,9 +280,9 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
                           height: 72,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: Colors.white.withValues(alpha: 0.16),
+                            color: Colors.white.withOpacity(0.16),
                             border: Border.all(
-                              color: Colors.white.withValues(alpha: 0.55),
+                              color: Colors.white.withOpacity(0.55),
                               width: 1.5,
                             ),
                           ),
@@ -358,11 +358,11 @@ class SiriEdgePainter extends CustomPainter {
       final color = Color.lerp(_green, _mint, field)!;
 
       // Wide soft halo.
-      softPaint.color = color.withValues(alpha: 0.16 * glow + 0.04);
+      softPaint.color = color.withOpacity(0.16 * glow + 0.04);
       canvas.drawCircle(centre, 16 + 34 * glow, softPaint);
 
       // Brighter heart of the orb.
-      innerPaint.color = color.withValues(alpha: 0.30 * glow + 0.05);
+      innerPaint.color = color.withOpacity(0.30 * glow + 0.05);
       canvas.drawCircle(centre, 6 + 15 * glow, innerPaint);
     }
   }
@@ -472,7 +472,7 @@ class _ResultsCard extends StatelessWidget {
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppRadius.card),
                   side: BorderSide(
-                    color: AppColors.brandPrimary.withValues(alpha: 0.25),
+                    color: AppColors.brandPrimary.withOpacity(0.25),
                   ),
                 ),
                 leading: service.iconPath.isEmpty

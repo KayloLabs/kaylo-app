@@ -15,13 +15,7 @@ import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
-// TODO(M2): replace with the real session user once auth lands.
-final _mockUser = AppUser(
-  id: 'u1',
-  firstName: 'Nimal',
-  lastName: '',
-  phone: '+91 98470 12345',
-);
+import '../../../auth/application/session_controller.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -29,8 +23,13 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final user = _mockUser;
+    final sessionState = ref.watch(sessionControllerProvider);
+    final user = sessionState.valueOrNull;
     final l10n = AppLocalizations.of(context)!;
+    
+    if (user == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -54,11 +53,11 @@ class ProfileScreen extends ConsumerWidget {
                   end: Alignment.bottomRight,
                   colors: isDark
                       ? [
-                          AppColors.brandPrimaryDark.withValues(alpha: 0.45),
+                          AppColors.brandPrimaryDark.withOpacity(0.45),
                           AppColors.surfaceDark,
                         ]
                       : [
-                          AppColors.brandPrimaryBright.withValues(alpha: 0.25),
+                          AppColors.brandPrimaryBright.withOpacity(0.25),
                           AppColors.surfaceTint,
                         ],
                 ),
@@ -95,7 +94,7 @@ class ProfileScreen extends ConsumerWidget {
                       icon: const Icon(Icons.edit_rounded, size: 20),
                       style: IconButton.styleFrom(
                         backgroundColor: (isDark ? Colors.white : Colors.black)
-                            .withValues(alpha: 0.06),
+                            .withOpacity(0.06),
                       ),
                     ),
                   ],
@@ -249,8 +248,8 @@ class ProfileScreen extends ConsumerWidget {
     );
 
     if (confirmed != true || !context.mounted) return;
-    await ref.read(storageServiceProvider).removeToken();
-    if (context.mounted) context.go(Routes.splash);
+    await ref.read(sessionControllerProvider.notifier).signOut();
+    if (context.mounted) context.go(Routes.login);
   }
 }
 
@@ -303,7 +302,7 @@ class _MenuTile extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: color.withValues(alpha: 0.12),
+          color: color.withOpacity(0.12),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(icon, color: color, size: 22),

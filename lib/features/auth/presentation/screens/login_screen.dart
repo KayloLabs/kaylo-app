@@ -258,6 +258,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                           // Expandable fields for Sign Up
                           SizeTransition(
                             sizeFactor: _formHeightAnim,
+                            // The replacement `alignment` parameter does not
+                            // exist yet on the Flutter versions the team runs
+                            // locally; switch over once everyone is past 3.41.
+                            // ignore: deprecated_member_use
                             axisAlignment: -1.0,
                             child: FadeTransition(
                               opacity: _fadeAnim,

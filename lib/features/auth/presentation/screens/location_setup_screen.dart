@@ -7,6 +7,8 @@ import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/kaylo_button.dart';
 import '../../../../core/widgets/kaylo_card.dart';
+import '../../../../core/widgets/kaylo_snackbar.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class LocationSetupScreen extends ConsumerWidget {
   const LocationSetupScreen({super.key});
@@ -61,14 +63,22 @@ class LocationSetupScreen extends ConsumerWidget {
                             size: 100,
                             color: isDark ? Colors.grey[700] : Colors.grey[400],
                           ),
+                          // KayloButton fills its parent's width, so the
+                          // Positioned must bound it horizontally: with only
+                          // `bottom` set it gets unconstrained width, fails
+                          // layout, and breaks hit testing for the whole
+                          // screen (every button goes dead).
                           Positioned(
+                            left: 20,
+                            right: 20,
                             bottom: 20,
                             child: KayloButton(
                               text: 'Pick Manually',
                               variant: KayloButtonVariant.secondary,
-                              onPressed: () {
-                                // Manual fallback logic
-                              },
+                              onPressed: () => KayloSnackbar.showInfo(
+                                context,
+                                AppLocalizations.of(context)!.comingSoon,
+                              ),
                             ),
                           ),
                         ],
@@ -80,11 +90,7 @@ class LocationSetupScreen extends ConsumerWidget {
               const SizedBox(height: AppSpacing.xxxl),
               KayloButton(
                 text: 'Enable Location',
-                onPressed: () {
-                  // Request permission & save activeLocation
-                  // For now, proceed to dashboard
-                  context.go(Routes.dashboard);
-                },
+                onPressed: () => context.go(Routes.dashboard),
               ),
               const SizedBox(height: AppSpacing.m),
               TextButton(

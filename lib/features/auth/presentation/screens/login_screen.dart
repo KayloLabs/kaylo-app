@@ -89,7 +89,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
     try {
       await ref.read(authRepositoryProvider).signInWithPhone(formattedPhone);
       if (mounted) {
-        context.push('${Routes.login}/${Routes.otp}', extra: formattedPhone);
+        context.push(Routes.loginOtp, extra: formattedPhone);
       }
     } catch (e) {
       if (mounted) KayloSnackbar.showError(context, e.toString());
@@ -141,7 +141,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.brandPrimary.withOpacity(isDark ? 0.15 : 0.2),
+                color: AppColors.brandPrimary.withValues(alpha: isDark ? 0.15 : 0.2),
               ),
             ),
           ),
@@ -204,7 +204,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withOpacity(0.05),
+                                          color: Colors.black.withValues(alpha: 0.05),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
                                         )

@@ -15,13 +15,13 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/location_setup_screen.dart';
 import '../../features/auth/application/session_controller.dart';
-import '../../features/care/presentation/screens/family_dashboard_screen.dart';
 
 // AuthStateNotifier replaced by SessionController
 
 final goRouterProvider = Provider<GoRouter>((ref) {
   final listenable = ValueNotifier<bool>(false);
-  
+  ref.onDispose(listenable.dispose);
+
   ref.listen(sessionControllerProvider, (previous, next) {
     listenable.value = !listenable.value;
   });
@@ -31,7 +31,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
     refreshListenable: listenable,
     redirect: (context, state) {
       final sessionState = ref.read(sessionControllerProvider);
-      final isLoggedIn = sessionState.valueOrNull != null;
+      final isLoggedIn = sessionState.whenOrNull(data: (user) => user) != null;
       final isGoingToLogin = state.matchedLocation.startsWith(Routes.login);
 
       // Allow splash, onboarding, and widgetbook to be accessed without auth
@@ -67,7 +67,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) => const LoginScreen(),
         routes: [
           GoRoute(
-            path: Routes.otp.replaceAll('/', ''), // e.g. otp relative
+            path: 'otp', // absolute form is Routes.loginOtp
             builder: (context, state) {
               final phone = state.extra as String? ?? '';
               return OtpVerifyScreen(phone: phone);
@@ -123,12 +123,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.careHome,
                 builder: (context, state) => const CareHomeScreen(),
-                routes: [
-                  GoRoute(
-                    path: Routes.familyDashboard,
-                    builder: (context, state) => const FamilyDashboardScreen(),
-                  ),
-                ],
               ),
             ],
           ),

@@ -24,7 +24,7 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sessionState = ref.watch(sessionControllerProvider);
-    final user = sessionState.valueOrNull;
+    final user = sessionState.whenOrNull(data: (u) => u);
     final l10n = AppLocalizations.of(context)!;
     
     if (user == null) {
@@ -53,11 +53,11 @@ class ProfileScreen extends ConsumerWidget {
                   end: Alignment.bottomRight,
                   colors: isDark
                       ? [
-                          AppColors.brandPrimaryDark.withOpacity(0.45),
+                          AppColors.brandPrimaryDark.withValues(alpha: 0.45),
                           AppColors.surfaceDark,
                         ]
                       : [
-                          AppColors.brandPrimaryBright.withOpacity(0.25),
+                          AppColors.brandPrimaryBright.withValues(alpha: 0.25),
                           AppColors.surfaceTint,
                         ],
                 ),
@@ -94,7 +94,7 @@ class ProfileScreen extends ConsumerWidget {
                       icon: const Icon(Icons.edit_rounded, size: 20),
                       style: IconButton.styleFrom(
                         backgroundColor: (isDark ? Colors.white : Colors.black)
-                            .withOpacity(0.06),
+                            .withValues(alpha: 0.06),
                       ),
                     ),
                   ],
@@ -302,7 +302,7 @@ class _MenuTile extends StatelessWidget {
         width: 40,
         height: 40,
         decoration: BoxDecoration(
-          color: color.withOpacity(0.12),
+          color: color.withValues(alpha: 0.12),
           borderRadius: BorderRadius.circular(12),
         ),
         child: Icon(icon, color: color, size: 22),

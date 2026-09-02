@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/models/app_user.dart';
 import '../../../../core/router/routes.dart';
-import '../../../../core/services/storage_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/avatar_circle.dart';
@@ -15,13 +13,7 @@ import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
-// TODO(M2): replace with the real session user once auth lands.
-final _mockUser = AppUser(
-  id: 'u1',
-  firstName: 'Nimal',
-  lastName: '',
-  phone: '+91 98470 12345',
-);
+import '../../../auth/application/session_controller.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -29,8 +21,13 @@ class ProfileScreen extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final user = _mockUser;
+    final sessionState = ref.watch(sessionControllerProvider);
+    final user = sessionState.whenOrNull(data: (u) => u);
     final l10n = AppLocalizations.of(context)!;
+    
+    if (user == null) {
+      return const Scaffold(body: Center(child: CircularProgressIndicator()));
+    }
 
     return Scaffold(
       body: SafeArea(
@@ -249,8 +246,8 @@ class ProfileScreen extends ConsumerWidget {
     );
 
     if (confirmed != true || !context.mounted) return;
-    await ref.read(storageServiceProvider).removeToken();
-    if (context.mounted) context.go(Routes.splash);
+    await ref.read(sessionControllerProvider.notifier).signOut();
+    if (context.mounted) context.go(Routes.login);
   }
 }
 

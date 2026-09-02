@@ -11,36 +11,47 @@ import '../../features/home/presentation/screens/dashboard_screen.dart';
 import '../../features/care/presentation/screens/care_home_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/settings_screen.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/otp_verify_screen.dart';
+import '../../features/auth/presentation/screens/location_setup_screen.dart';
+import '../../features/auth/application/session_controller.dart';
 
-class AuthStateNotifier extends Notifier<bool> {
-  @override
-  bool build() => false;
-}
-
-final authStateProvider = NotifierProvider<AuthStateNotifier, bool>(
-  AuthStateNotifier.new,
-);
+// AuthStateNotifier replaced by SessionController
 
 final goRouterProvider = Provider<GoRouter>((ref) {
-  // final isAuth = ref.watch(authStateProvider);
+  final listenable = ValueNotifier<bool>(false);
+  ref.onDispose(listenable.dispose);
+
+  ref.listen(sessionControllerProvider, (previous, next) {
+    listenable.value = !listenable.value;
+  });
 
   return GoRouter(
     initialLocation: Routes.splash,
+    refreshListenable: listenable,
     redirect: (context, state) {
-      // final loggedIn = isAuth;
-      // final isGoingToLogin = state.matchedLocation == Routes.login ||
-      //                        state.matchedLocation == Routes.signup ||
-      //                        state.matchedLocation == Routes.otp;
+      final sessionState = ref.read(sessionControllerProvider);
+      final isLoggedIn = sessionState.whenOrNull(data: (user) => user) != null;
+      final isGoingToLogin = state.matchedLocation.startsWith(Routes.login);
+
+      // Allow splash, onboarding, and widgetbook to be accessed without auth
+      if (state.matchedLocation == Routes.splash ||
+          state.matchedLocation == Routes.onboarding ||
+          state.matchedLocation == Routes.widgetbook) {
+        return null;
+      }
 
       // Basic Auth guard
-      // for now, if going to a protected route and not logged in, we let it slide for UI testing,
-      //but in real app we redirect to login.
-      // Uncomment to enforce:
-      //if (!loggedIn && !isGoingToLogin && state.matchedLocation != Routes.splash) {
-      //   return Routes.login;
-      // }
+      if (!isLoggedIn && !isGoingToLogin) {
+         return Routes.login;
+      }
 
-      return null; // No redirect
+      // If logged in and trying to access login, redirect to dashboard
+      if (isLoggedIn && isGoingToLogin) {
+         return Routes.dashboard;
+      }
+
+      return null;
     },
     routes: [
       GoRoute(
@@ -53,18 +64,20 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       ),
       GoRoute(
         path: Routes.login,
-        builder: (context, state) =>
-            const Placeholder(child: Text('Login Screen')),
+        builder: (context, state) => const LoginScreen(),
+        routes: [
+          GoRoute(
+            path: 'otp', // absolute form is Routes.loginOtp
+            builder: (context, state) {
+              final phone = state.extra as String? ?? '';
+              return OtpVerifyScreen(phone: phone);
+            },
+          ),
+        ],
       ),
       GoRoute(
-        path: Routes.signup,
-        builder: (context, state) =>
-            const Placeholder(child: Text('Signup Screen')),
-      ),
-      GoRoute(
-        path: Routes.otp,
-        builder: (context, state) =>
-            const Placeholder(child: Text('OTP Screen')),
+        path: Routes.location,
+        builder: (context, state) => const LocationSetupScreen(),
       ),
       GoRoute(
         path: Routes.widgetbook,

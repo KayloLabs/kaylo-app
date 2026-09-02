@@ -130,15 +130,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void _routeToDestination() {
     if (!mounted || _destination == null) return;
 
-    // TODO(M2): drop this bypass once real auth screens land. Until then
-    // the login route is a placeholder, so always continue to the
-    // dashboard — the catalog reads work anonymously on live Supabase too.
     final dest = _destination!;
-    if (dest == SplashRouteDestination.login) {
-      context.go(Routes.dashboard);
-      return;
-    }
-
     switch (dest) {
       case SplashRouteDestination.onboarding:
         context.go(Routes.onboarding);

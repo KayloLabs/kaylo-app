@@ -19,6 +19,7 @@ class SessionController extends _$SessionController {
     _subscription = _authRepo.authStateChanges.listen((user) {
       state = AsyncData(user);
     });
+    ref.onDispose(() => _subscription?.cancel());
 
     // Return current user initially
     return _authRepo.currentUser;

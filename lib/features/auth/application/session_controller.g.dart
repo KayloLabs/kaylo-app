@@ -6,21 +6,49 @@ part of 'session_controller.dart';
 // RiverpodGenerator
 // **************************************************************************
 
+// GENERATED CODE - DO NOT MODIFY BY HAND
+// ignore_for_file: type=lint, type=warning
+
+@ProviderFor(SessionController)
+final sessionControllerProvider = SessionControllerProvider._();
+
+final class SessionControllerProvider
+    extends $AsyncNotifierProvider<SessionController, AppUser?> {
+  SessionControllerProvider._()
+    : super(
+        from: null,
+        argument: null,
+        retry: null,
+        name: r'sessionControllerProvider',
+        isAutoDispose: false,
+        dependencies: null,
+        $allTransitiveDependencies: null,
+      );
+
+  @override
+  String debugGetCreateSourceHash() => _$sessionControllerHash();
+
+  @$internal
+  @override
+  SessionController create() => SessionController();
+}
+
 String _$sessionControllerHash() => r'42b6dace5880839ffae88e973fb9414744bcb80d';
 
-/// See also [SessionController].
-@ProviderFor(SessionController)
-final sessionControllerProvider =
-    AsyncNotifierProvider<SessionController, AppUser?>.internal(
-  SessionController.new,
-  name: r'sessionControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$sessionControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
-
-typedef _$SessionController = AsyncNotifier<AppUser?>;
-// ignore_for_file: type=lint
-// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member, deprecated_member_use_from_same_package
+abstract class _$SessionController extends $AsyncNotifier<AppUser?> {
+  FutureOr<AppUser?> build();
+  @$mustCallSuper
+  @override
+  void runBuild() {
+    final ref = this.ref as $Ref<AsyncValue<AppUser?>, AppUser?>;
+    final element =
+        ref.element
+            as $ClassProviderElement<
+              AnyNotifier<AsyncValue<AppUser?>, AppUser?>,
+              AsyncValue<AppUser?>,
+              Object?,
+              Object?
+            >;
+    element.handleCreate(ref, build);
+  }
+}

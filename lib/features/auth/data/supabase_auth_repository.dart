@@ -12,7 +12,7 @@ class SupabaseAuthRepository implements AuthRepository {
   SupabaseAuthRepository() {
     _authStateSubscription = _client.auth.onAuthStateChange.listen((data) async {
       final session = data.session;
-      if (session != null && session.user != null) {
+      if (session != null) {
         // Fetch user profile from the persons table. Column names match
         // supabase/migrations/0001_initial_schema.sql: person_id,
         // full_name, phone_number, profile_photo.

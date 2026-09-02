@@ -13,21 +13,23 @@ class SupabaseAuthRepository implements AuthRepository {
     _authStateSubscription = _client.auth.onAuthStateChange.listen((data) async {
       final session = data.session;
       if (session != null && session.user != null) {
-        // Fetch user profile from database
+        // Fetch user profile from the persons table. Column names match
+        // supabase/migrations/0001_initial_schema.sql: person_id,
+        // full_name, phone_number, profile_photo.
         try {
           final response = await _client
               .from('persons')
-              .select('id, first_name, last_name, phone, profile_image_url')
+              .select('person_id, full_name, phone_number, profile_photo')
               .eq('auth_user_id', session.user.id)
               .maybeSingle();
 
           if (response != null) {
             _currentUser = AppUser(
-              id: response['id'] as String,
-              firstName: response['first_name'] as String,
-              lastName: (response['last_name'] as String?) ?? '',
-              phone: response['phone'] as String,
-              profileImageUrl: response['profile_image_url'] as String?,
+              id: response['person_id'] as String,
+              firstName: response['full_name'] as String,
+              lastName: '',
+              phone: (response['phone_number'] as String?) ?? '',
+              profileImageUrl: response['profile_photo'] as String?,
             );
           } else {
             // User just signed up and row not created yet, or they don't have a profile

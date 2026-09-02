@@ -29,7 +29,7 @@ class ModeSwitcherSection extends StatelessWidget {
                 title: AppLocalizations.of(context)!.home,
                 subtitle: AppLocalizations.of(context)!.homeSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
-                colorOverlay: Colors.amber.withOpacity(0.15), // Gold tint
+                colorOverlay: Colors.amber.withValues(alpha: 0.15), // Gold tint
                 onTap: () {},
               ),
             ),
@@ -39,7 +39,7 @@ class ModeSwitcherSection extends StatelessWidget {
                 title: AppLocalizations.of(context)!.farm,
                 subtitle: AppLocalizations.of(context)!.farmSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
-                colorOverlay: Colors.green.withOpacity(0.15), // Green tint
+                colorOverlay: Colors.green.withValues(alpha: 0.15), // Green tint
                 onTap: () {},
               ),
             ),
@@ -49,7 +49,7 @@ class ModeSwitcherSection extends StatelessWidget {
                 title: AppLocalizations.of(context)!.care,
                 subtitle: AppLocalizations.of(context)!.careSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
-                colorOverlay: Colors.deepPurpleAccent.withOpacity(0.15), // Violet tint
+                colorOverlay: Colors.deepPurpleAccent.withValues(alpha: 0.15), // Violet tint
                 onTap: () {
                   KayloFeedback.tap();
                   context.go(Routes.careHome);

@@ -42,7 +42,7 @@ class CareHomeScreen extends StatelessWidget {
                         width: 56,
                         height: 56,
                         decoration: BoxDecoration(
-                          color: AppColors.careAccent.withOpacity(0.15),
+                          color: AppColors.careAccent.withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(18),
                         ),
                         child: const Icon(
@@ -129,7 +129,7 @@ class _SosCard extends StatelessWidget {
                 width: 64,
                 height: 64,
                 decoration: BoxDecoration(
-                  color: Colors.white.withOpacity(0.2),
+                  color: Colors.white.withValues(alpha: 0.2),
                   shape: BoxShape.circle,
                 ),
                 child: const Icon(
@@ -153,7 +153,7 @@ class _SosCard extends StatelessWidget {
                     Text(
                       l10n.emergencySosSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withOpacity(0.9),
+                            color: Colors.white.withValues(alpha: 0.9),
                           ),
                     ),
                   ],
@@ -198,7 +198,7 @@ class _CareActionCard extends StatelessWidget {
                 width: 56,
                 height: 56,
                 decoration: BoxDecoration(
-                  color: color.withOpacity(0.14),
+                  color: color.withValues(alpha: 0.14),
                   borderRadius: BorderRadius.circular(16),
                 ),
                 child: Icon(icon, color: color, size: 30),

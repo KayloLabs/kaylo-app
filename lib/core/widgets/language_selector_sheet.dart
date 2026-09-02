@@ -78,7 +78,7 @@ class LanguageSelectorSheet extends ConsumerWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       tileColor: isSelected 
-          ? AppColors.brandPrimary.withOpacity(0.1) 
+          ? AppColors.brandPrimary.withValues(alpha: 0.1) 
           : Colors.transparent,
     );
   }

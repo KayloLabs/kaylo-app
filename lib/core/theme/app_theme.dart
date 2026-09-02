@@ -19,7 +19,7 @@ class AppTheme {
       textTheme: AppTypography.appleTheme,
 
       // Default Card Theme
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.surface,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -84,7 +84,7 @@ class AppTheme {
         displayColor: AppColors.textPrimaryDark,
       ),
 
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: AppColors.surfaceDark,
         elevation: 0,
         shape: RoundedRectangleBorder(
@@ -173,7 +173,7 @@ class AppTheme {
         minVerticalPadding: 16,
         iconColor: careText,
       ),
-      cardTheme: CardTheme(
+      cardTheme: CardThemeData(
         color: careSurface,
         elevation: 0,
         shape: RoundedRectangleBorder(

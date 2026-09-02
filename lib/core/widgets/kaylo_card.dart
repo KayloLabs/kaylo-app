@@ -32,13 +32,13 @@ class KayloCard extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  isDark ? Colors.white.withOpacity(0.05) : Colors.white.withOpacity(0.6),
-                  Colors.white.withOpacity(0.0),
+                  isDark ? Colors.white.withValues(alpha: 0.05) : Colors.white.withValues(alpha: 0.6),
+                  Colors.white.withValues(alpha: 0.0),
                 ],
                 stops: const [0.0, 0.1], 
               ),
               border: Border.all(
-                color: isDark ? AppColors.borderDark : AppColors.border.withOpacity(0.5),
+                color: isDark ? AppColors.borderDark : AppColors.border.withValues(alpha: 0.5),
                 width: 1.0,
               ),
               borderRadius: BorderRadius.circular(AppRadius.card),

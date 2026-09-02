@@ -56,29 +56,29 @@ class KayloChip extends StatelessWidget {
     switch (variant) {
       case KayloChipVariant.brand:
         return _ChipColors(
-          backgroundColor: isDark ? AppColors.brandPrimaryDark.withOpacity(0.1) : AppColors.brandPrimary.withOpacity(0.05),
-          borderColor: isDark ? AppColors.brandPrimaryDark.withOpacity(0.3) : AppColors.brandPrimary.withOpacity(0.2),
+          backgroundColor: isDark ? AppColors.brandPrimaryDark.withValues(alpha: 0.1) : AppColors.brandPrimary.withValues(alpha: 0.05),
+          borderColor: isDark ? AppColors.brandPrimaryDark.withValues(alpha: 0.3) : AppColors.brandPrimary.withValues(alpha: 0.2),
           textColor: primaryText,
           iconColor: isDark ? AppColors.brandPrimaryDark : AppColors.brandPrimary,
         );
       case KayloChipVariant.success:
         return _ChipColors(
-          backgroundColor: AppColors.success.withOpacity(0.1),
-          borderColor: AppColors.success.withOpacity(0.2),
+          backgroundColor: AppColors.success.withValues(alpha: 0.1),
+          borderColor: AppColors.success.withValues(alpha: 0.2),
           textColor: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
           iconColor: AppColors.success,
         );
       case KayloChipVariant.error:
         return _ChipColors(
-          backgroundColor: AppColors.error.withOpacity(0.1),
-          borderColor: AppColors.error.withOpacity(0.2),
+          backgroundColor: AppColors.error.withValues(alpha: 0.1),
+          borderColor: AppColors.error.withValues(alpha: 0.2),
           textColor: primaryText,
           iconColor: AppColors.error,
         );
       case KayloChipVariant.warning:
         return _ChipColors(
-          backgroundColor: AppColors.warning.withOpacity(0.15),
-          borderColor: AppColors.warning.withOpacity(0.3),
+          backgroundColor: AppColors.warning.withValues(alpha: 0.15),
+          borderColor: AppColors.warning.withValues(alpha: 0.3),
           textColor: primaryText,
           iconColor: AppColors.warning,
         );

@@ -32,8 +32,9 @@ void main() async {
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
       child: DevicePreview(
         // Phone-frame emulator whenever we run in a desktop browser;
-        // real devices get the app full-screen.
-        enabled: kIsWeb,
+        // real devices get the app full-screen. FRAMELESS=true drops the
+        // frame on web too, for automated screenshots.
+        enabled: kIsWeb && !const bool.fromEnvironment('FRAMELESS'),
         builder: (context) => const KayloApp(),
       ),
     ),

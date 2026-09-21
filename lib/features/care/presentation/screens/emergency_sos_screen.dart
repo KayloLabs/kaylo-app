@@ -87,7 +87,7 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
 
     KayloFeedback.alert();
     setState(() => _sending = true);
-    final location = ref.read(userLocationProvider);
+    final location = ref.read(userLocationProvider).label;
     try {
       final alert =
           await ref.read(careControllerProvider).triggerSos(location: location);

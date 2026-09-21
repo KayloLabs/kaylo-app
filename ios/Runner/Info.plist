@@ -68,6 +68,8 @@
 	</array>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Kaylo uses the microphone for voice search in your language.</string>
+	<key>NSLocationWhenInUseUsageDescription</key>
+	<string>Kaylo uses your location to find workers near you and to share it in an SOS alert.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Kaylo turns your speech into a service search.</string>
 </dict>

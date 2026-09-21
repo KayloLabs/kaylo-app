@@ -15,6 +15,19 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/location_setup_screen.dart';
 import '../../features/auth/application/session_controller.dart';
+import '../../features/booking/domain/booking_receipt.dart';
+import '../../features/booking/presentation/screens/booking_confirmation_screen.dart';
+import '../../features/booking/presentation/screens/bookings_screen.dart';
+import '../../features/care/presentation/screens/emergency_sos_screen.dart';
+import '../../features/care/presentation/screens/medicine_reminders_screen.dart';
+import '../../features/care/presentation/screens/sos_history_screen.dart';
+import '../../features/farm/domain/farm_booking_draft.dart';
+import '../../features/farm/presentation/screens/farm_payment_screen.dart';
+import '../../features/farm/presentation/screens/farm_schedule_screen.dart';
+import '../../features/farm/presentation/screens/farm_service_details_screen.dart';
+import '../../features/farm/presentation/screens/farm_services_screen.dart';
+import '../../features/messages/presentation/screens/conversation_screen.dart';
+import '../../features/messages/presentation/screens/messages_screen.dart';
 
 // AuthStateNotifier replaced by SessionController
 
@@ -83,6 +96,48 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: Routes.widgetbook,
         builder: (context, state) => const WidgetbookScreen(),
       ),
+
+      // Farm booking flow: catalog -> details -> schedule -> payment.
+      // Full-screen (outside the shell) so checkout owns the bottom edge.
+      GoRoute(
+        path: Routes.farm,
+        builder: (context, state) => const FarmServicesScreen(),
+        routes: [
+          GoRoute(
+            path: ':serviceId',
+            builder: (context, state) => FarmServiceDetailsScreen(
+              serviceId: state.pathParameters['serviceId']!,
+            ),
+            routes: [
+              GoRoute(
+                path: 'schedule',
+                builder: (context, state) => FarmScheduleScreen(
+                  serviceId: state.pathParameters['serviceId']!,
+                ),
+              ),
+              GoRoute(
+                path: 'payment',
+                builder: (context, state) => FarmPaymentScreen(
+                  draft: state.extra as FarmBookingDraft?,
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+      GoRoute(
+        path: Routes.bookingConfirmation,
+        builder: (context, state) => BookingConfirmationScreen(
+          receipt: state.extra as BookingReceipt?,
+        ),
+      ),
+      GoRoute(
+        path: '/chat/:threadId', // Routes.chat(id)
+        builder: (context, state) => ConversationScreen(
+          threadId: state.pathParameters['threadId']!,
+        ),
+      ),
+
       // ShellRoute for Bottom Navigation
       StatefulShellRoute.indexedStack(
         builder: (context, state, navigationShell) {
@@ -113,8 +168,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.bookings,
-                builder: (context, state) =>
-                    const Placeholder(child: Text('Bookings Tab')),
+                builder: (context, state) => const BookingsScreen(),
               ),
             ],
           ),
@@ -123,6 +177,23 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.careHome,
                 builder: (context, state) => const CareHomeScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'medicines', // Routes.careMedicines
+                    builder: (context, state) =>
+                        const MedicineRemindersScreen(),
+                  ),
+                  GoRoute(
+                    path: 'sos', // Routes.careSos
+                    builder: (context, state) => const EmergencySosScreen(),
+                    routes: [
+                      GoRoute(
+                        path: 'history', // Routes.careSosHistory
+                        builder: (context, state) => const SosHistoryScreen(),
+                      ),
+                    ],
+                  ),
+                ],
               ),
             ],
           ),
@@ -130,8 +201,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.messages,
-                builder: (context, state) =>
-                    const Placeholder(child: Text('Messages')),
+                builder: (context, state) => const MessagesScreen(),
               ),
             ],
           ),

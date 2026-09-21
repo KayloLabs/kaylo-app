@@ -6,50 +6,58 @@ class MockBookingsRepository implements BookingsRepository {
   final List<Booking> _mockBookings = [
     Booking(
       id: 'b1',
-      userId: 'u1',
+      userId: 'mock_uid_1',
       serviceId: '1', // Coconut Plucking
       workerId: 'w1',
       scheduledAt: DateTime(2026, 7, 14, 9),
       status: BookingStatus.completed,
       totalAmount: 1000,
+      notes: 'Thekkedath House, Kaloor',
     ),
     Booking(
       id: 'b2',
-      userId: 'u1',
+      userId: 'mock_uid_1',
       serviceId: '1', // Coconut Plucking again
       workerId: 'w2',
       scheduledAt: DateTime(2026, 8, 2, 10),
       status: BookingStatus.completed,
       totalAmount: 1000,
+      notes: 'Thekkedath House, Kaloor',
     ),
     Booking(
       id: 'b3',
-      userId: 'u1',
+      userId: 'mock_uid_1',
       serviceId: '4', // Plumbing
       workerId: 'w2',
-      scheduledAt: DateTime(2026, 8, 18, 15),
+      scheduledAt: DateTime(2026, 9, 24, 15),
       status: BookingStatus.confirmed,
       totalAmount: 500,
+      notes: 'Thekkedath House, Kaloor',
     ),
   ];
 
+  // The demo has a single customer, and the mock auth layer hands out a
+  // couple of different ids for them (fresh OTP login vs restored
+  // session), so the filter is deliberately not applied here.
   @override
   Future<List<Booking>> getUserBookings(String userId) async {
     await Future.delayed(const Duration(milliseconds: 600));
-    return _mockBookings.where((b) => b.userId == userId).toList();
+    return List.unmodifiable(_mockBookings);
   }
 
   @override
   Future<Booking> createBooking(Booking booking) async {
     await Future.delayed(const Duration(milliseconds: 600));
     final newBooking = Booking(
-      id: DateTime.now().millisecondsSinceEpoch.toString(),
+      id: 'KL-${DateTime.now().millisecondsSinceEpoch.toString().substring(7)}',
       userId: booking.userId,
       serviceId: booking.serviceId,
       workerId: booking.workerId,
       scheduledAt: booking.scheduledAt,
       status: booking.status,
       totalAmount: booking.totalAmount,
+      locationId: booking.locationId,
+      notes: booking.notes,
     );
     _mockBookings.add(newBooking);
     return newBooking;
@@ -69,6 +77,9 @@ class MockBookingsRepository implements BookingsRepository {
         scheduledAt: old.scheduledAt,
         status: status,
         totalAmount: old.totalAmount,
+        locationId: old.locationId,
+        notes: old.notes,
+        finalCost: old.finalCost,
       );
     }
   }

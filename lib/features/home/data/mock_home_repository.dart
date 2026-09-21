@@ -14,6 +14,8 @@ class MockHomeRepository implements HomeRepository {
     ServiceItem(id: '7', name: 'House Cleaning', category: 'home', description: 'Deep cleaning services', iconPath: 'assets_kaylo/3d_transparent/mode_home.png', basePrice: 600),
     ServiceItem(id: '8', name: 'Caregiver Visit', category: 'care', description: 'Trained caregivers for seniors', iconPath: 'assets_kaylo/3d_transparent/mode_care.png', basePrice: 700),
     ServiceItem(id: '9', name: 'Medicine Delivery', category: 'care', description: 'Medicines at your doorstep', iconPath: 'assets_kaylo/3d_transparent/mode_care.png', basePrice: 100),
+    ServiceItem(id: '10', name: 'Tree Pruning', category: 'farm', description: 'Overhanging branches trimmed safely near roofs and power lines', iconPath: 'assets_kaylo/3d_transparent/icon_garden.png', basePrice: 600, estimatedDurationMinutes: 90),
+    ServiceItem(id: '11', name: 'Plot Clearing', category: 'farm', description: 'Grass and bush cleared with brush cutters', iconPath: 'assets_kaylo/3d_transparent/mode_farm.png', basePrice: 350, estimatedDurationMinutes: 60),
   ];
 
   @override

@@ -259,4 +259,504 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get voiceMicDenied =>
       'Microphone access was denied. Allow it in your browser or phone settings to use voice search.';
+
+  @override
+  String get farmServices => 'Farm Services';
+
+  @override
+  String get farmServicesTagline =>
+      'Verified climbers, harvesters and farm hands, booked by the tree or by the hour.';
+
+  @override
+  String get noServicesTitle => 'No services yet';
+
+  @override
+  String get noServicesDescription =>
+      'Farm services will appear here as workers are onboarded.';
+
+  @override
+  String perUnit(String unit) {
+    return 'per $unit';
+  }
+
+  @override
+  String get unitTree => 'tree';
+
+  @override
+  String get unitHour => 'hour';
+
+  @override
+  String get unitVisit => 'visit';
+
+  @override
+  String unitTreeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count trees',
+      one: '1 tree',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitHourCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitVisitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count visits',
+      one: '1 visit',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get serviceStandards => 'What the worker commits to';
+
+  @override
+  String get standardSafetyHarness => 'Safety harness on every climb';
+
+  @override
+  String get standardBunchProtection =>
+      'Bunches lowered on ropes, never dropped';
+
+  @override
+  String get standardDebrisCleared => 'Fronds and husks cleared before leaving';
+
+  @override
+  String get standardGroundNets => 'Ground nets to protect crops below';
+
+  @override
+  String get standardPowerLineGuard => 'Safe clearance from power lines';
+
+  @override
+  String get standardWoodChipping => 'Cut branches chipped or stacked neatly';
+
+  @override
+  String get standardEcoCompost => 'Organic compost and mulch only';
+
+  @override
+  String get standardPestPrevention => 'Pest check on every visit';
+
+  @override
+  String get standardBoundaryClearing => 'Boundaries and drains cleared';
+
+  @override
+  String get standardVerifiedWorker => 'ID-verified worker';
+
+  @override
+  String get standardOnTimeArrival => 'Arrives in the booked time slot';
+
+  @override
+  String get standardFairPrice => 'Price agreed before work starts';
+
+  @override
+  String workersNearYou(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count verified workers near you',
+      one: '1 verified worker near you',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noWorkersYet => 'Workers for this service are being onboarded';
+
+  @override
+  String get liveTotalNote =>
+      'Your total updates live as you set the quantity on the next step.';
+
+  @override
+  String get bookNow => 'Book now';
+
+  @override
+  String get scheduleTitle => 'Schedule';
+
+  @override
+  String get selectDate => 'Date';
+
+  @override
+  String get change => 'Change';
+
+  @override
+  String get selectTimeSlot => 'Time slot';
+
+  @override
+  String get quantity => 'Quantity';
+
+  @override
+  String priceEach(String price) {
+    return '$price each';
+  }
+
+  @override
+  String get calculation => 'How it adds up';
+
+  @override
+  String breakdown(String price, String units) {
+    return '$price × $units';
+  }
+
+  @override
+  String get total => 'Total';
+
+  @override
+  String get farmAddress => 'Farm address';
+
+  @override
+  String get farmAddressHint => 'House name, street, town';
+
+  @override
+  String get addressRequired => 'Please enter the farm address';
+
+  @override
+  String get continueToPayment => 'Continue to payment';
+
+  @override
+  String get paymentTitle => 'Payment';
+
+  @override
+  String get orderSummary => 'Order summary';
+
+  @override
+  String get service => 'Service';
+
+  @override
+  String get date => 'Date';
+
+  @override
+  String get time => 'Time';
+
+  @override
+  String get rate => 'Rate';
+
+  @override
+  String get totalPayable => 'Total payable';
+
+  @override
+  String get paymentMethod => 'Payment method';
+
+  @override
+  String get payUpi => 'UPI';
+
+  @override
+  String get payUpiSubtitle => 'Google Pay, PhonePe, Paytm';
+
+  @override
+  String get payCard => 'Credit or debit card';
+
+  @override
+  String get payCardSubtitle => 'Visa, Mastercard, RuPay';
+
+  @override
+  String get payAfter => 'Pay after service';
+
+  @override
+  String get payAfterSubtitle => 'Pay the worker once the job is done';
+
+  @override
+  String confirmAndPay(String amount) {
+    return 'Confirm and pay $amount';
+  }
+
+  @override
+  String get confirmBooking => 'Confirm booking';
+
+  @override
+  String get paymentFailed =>
+      'The payment did not go through. Please try again.';
+
+  @override
+  String get draftMissing =>
+      'This step needs a booking in progress. Start again from Farm Services.';
+
+  @override
+  String get bookingConfirmed => 'Booking confirmed';
+
+  @override
+  String bookingConfirmedSubtitle(String date, String time) {
+    return 'Your worker will arrive on $date at $time';
+  }
+
+  @override
+  String get bookingId => 'Booking ID';
+
+  @override
+  String get status => 'Status';
+
+  @override
+  String get payment => 'Payment';
+
+  @override
+  String get viewMyBookings => 'View my bookings';
+
+  @override
+  String get backToHome => 'Back to home';
+
+  @override
+  String get statusPending => 'Pending';
+
+  @override
+  String get statusConfirmed => 'Confirmed';
+
+  @override
+  String get statusInProgress => 'In progress';
+
+  @override
+  String get statusCompleted => 'Completed';
+
+  @override
+  String get statusCancelled => 'Cancelled';
+
+  @override
+  String get noBookingsTitle => 'No bookings yet';
+
+  @override
+  String get noBookingsDescription =>
+      'Book a farm or home service and it will show up here.';
+
+  @override
+  String get bookAService => 'Book a service';
+
+  @override
+  String get upcoming => 'Upcoming';
+
+  @override
+  String get past => 'Past';
+
+  @override
+  String get somethingWentWrong => 'Something went wrong';
+
+  @override
+  String get messages => 'Messages';
+
+  @override
+  String get messagesSubtitle => 'Chat with the workers you have booked';
+
+  @override
+  String get noMessagesTitle => 'No conversations yet';
+
+  @override
+  String get noMessagesDescription =>
+      'Once you book a worker, you can message them here.';
+
+  @override
+  String get noMessagesInThread => 'Say hello to start the conversation';
+
+  @override
+  String get online => 'Online';
+
+  @override
+  String get offline => 'Offline';
+
+  @override
+  String get typeMessage => 'Type a message';
+
+  @override
+  String get todaysMedicines => 'Today\'s medicines';
+
+  @override
+  String get medicinesSubtitle => 'Tap the circle after you take a dose';
+
+  @override
+  String pendingDoses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count doses pending',
+      one: '1 dose pending',
+      zero: 'All doses taken',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextDose(String name, String time) {
+    return 'Next: $name at $time';
+  }
+
+  @override
+  String get addReminder => 'Add reminder';
+
+  @override
+  String get medicineName => 'Medicine name';
+
+  @override
+  String get medicineNameHint => 'e.g. BP tablet';
+
+  @override
+  String get dosage => 'Dosage';
+
+  @override
+  String get dosageHint => 'e.g. 1 tablet after breakfast';
+
+  @override
+  String get reminderTime => 'Reminder time';
+
+  @override
+  String get save => 'Save';
+
+  @override
+  String addedBy(String name) {
+    return 'Added by $name';
+  }
+
+  @override
+  String markedTaken(String name) {
+    return '$name marked as taken';
+  }
+
+  @override
+  String markedPending(String name) {
+    return '$name marked as pending';
+  }
+
+  @override
+  String get nameRequired => 'Please enter a name';
+
+  @override
+  String get phoneRequired => 'Please enter a phone number';
+
+  @override
+  String get noRemindersTitle => 'No reminders yet';
+
+  @override
+  String get noRemindersDescription =>
+      'Add your medicines and Kaylo will remind you at the right time.';
+
+  @override
+  String get pressAndHold => 'Press and hold';
+
+  @override
+  String get holdSeconds => 'Hold for 3 seconds';
+
+  @override
+  String secondsShort(int seconds) {
+    return '$seconds s';
+  }
+
+  @override
+  String get sosHoldHint =>
+      'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.';
+
+  @override
+  String get sosReleasedEarly => 'Keep holding for 3 seconds to send an alert';
+
+  @override
+  String get sosSentTitle => 'Help is on the way';
+
+  @override
+  String sosSentContacts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contacts alerted with your location',
+      one: '1 contact alerted with your location',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sosCallingPrimary(String name) {
+    return 'Calling $name';
+  }
+
+  @override
+  String get sosNoContacts =>
+      'Add an emergency contact first, so someone receives the alert.';
+
+  @override
+  String get dismiss => 'Dismiss';
+
+  @override
+  String get emergencyContacts => 'Emergency contacts';
+
+  @override
+  String get addContact => 'Add contact';
+
+  @override
+  String get contactName => 'Name';
+
+  @override
+  String get relationship => 'Relationship';
+
+  @override
+  String get relationshipHint => 'e.g. Daughter';
+
+  @override
+  String get phoneNumber => 'Phone number';
+
+  @override
+  String get primary => 'Primary';
+
+  @override
+  String get setAsPrimary => 'Set as primary';
+
+  @override
+  String get removeContact => 'Remove';
+
+  @override
+  String get sosHistory => 'SOS history';
+
+  @override
+  String alertsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count alerts sent',
+      one: '1 alert sent',
+      zero: 'No alerts sent',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noSosTitle => 'No alerts sent';
+
+  @override
+  String get noSosDescription =>
+      'Alerts you send will be listed here with who was notified.';
+
+  @override
+  String alertedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contacts notified',
+      one: '1 contact notified',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sosStatusOpen => 'Open';
+
+  @override
+  String get sosStatusAcknowledged => 'Acknowledged';
+
+  @override
+  String get sosStatusResolved => 'Resolved';
+
+  @override
+  String locationShared(String location) {
+    return 'Location shared: $location';
+  }
+
+  @override
+  String primaryContact(String name) {
+    return 'Primary contact: $name';
+  }
 }

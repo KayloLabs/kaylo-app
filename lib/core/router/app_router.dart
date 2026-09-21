@@ -8,13 +8,22 @@ import '../widgets/widgetbook_screen.dart';
 import '../../features/splash/presentation/screens/splash_screen.dart';
 import '../../features/onboarding/presentation/screens/onboarding_screen.dart';
 import '../../features/home/presentation/screens/dashboard_screen.dart';
+import '../../features/home/presentation/screens/home_services_screen.dart';
+import '../../features/home/presentation/screens/service_details_screen.dart';
+import '../../features/home/presentation/screens/search_screen.dart';
+import '../../features/workers/presentation/screens/worker_list_screen.dart';
+import '../../features/workers/presentation/screens/worker_profile_screen.dart';
 import '../../features/care/presentation/screens/care_home_screen.dart';
+import '../../features/care/presentation/screens/doctor_appointment_screen.dart';
+import '../../features/care/presentation/screens/caregiver_booking_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/settings_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/location_setup_screen.dart';
 import '../../features/auth/application/session_controller.dart';
+import '../models/service_item.dart';
+import '../models/worker.dart';
 
 // AuthStateNotifier replaced by SessionController
 
@@ -96,14 +105,69 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                 builder: (context, state) => const DashboardScreen(),
                 routes: [
                   GoRoute(
-                    path: Routes.serviceDetails,
-                    builder: (context, state) =>
-                        const Placeholder(child: Text('Service Details')),
+                    path: 'home-services',
+                    builder: (context, state) => const HomeServicesScreen(),
                   ),
                   GoRoute(
-                    path: Routes.workerList,
-                    builder: (context, state) =>
-                        const Placeholder(child: Text('Worker List')),
+                    path: 'service-details',
+                    builder: (context, state) {
+                      final id = state.uri.queryParameters['id'] ?? '';
+                      final service = state.extra as ServiceItem?;
+                      return ServiceDetailsScreen(
+                        serviceId: id,
+                        initialService: service,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'workers',
+                    builder: (context, state) {
+                      final serviceId =
+                          state.uri.queryParameters['serviceId'] ?? '';
+                      final serviceName =
+                          state.uri.queryParameters['serviceName'];
+                      return WorkerListScreen(
+                        serviceId: serviceId,
+                        serviceName: serviceName,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'worker-profile',
+                    builder: (context, state) {
+                      final workerId =
+                          state.uri.queryParameters['workerId'] ?? '';
+                      final serviceId =
+                          state.uri.queryParameters['serviceId'];
+                      final worker = state.extra as Worker?;
+                      return WorkerProfileScreen(
+                        workerId: workerId,
+                        serviceId: serviceId,
+                        initialWorker: worker,
+                      );
+                    },
+                  ),
+                  GoRoute(
+                    path: 'search',
+                    builder: (context, state) => const SearchScreen(),
+                  ),
+                  GoRoute(
+                    path: 'book-service',
+                    builder: (context, state) {
+                      final serviceId =
+                          state.uri.queryParameters['serviceId'] ?? '';
+                      final workerId =
+                          state.uri.queryParameters['workerId'] ?? '';
+                      return Scaffold(
+                        appBar: AppBar(title: const Text('Book Service')),
+                        body: Center(
+                          child: Text(
+                            'Booking Service: $serviceId\nWorker: $workerId\n(Handoff to M4)',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 ],
               ),
@@ -123,6 +187,18 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.careHome,
                 builder: (context, state) => const CareHomeScreen(),
+                routes: [
+                  GoRoute(
+                    path: 'doctor-appointment',
+                    builder: (context, state) =>
+                        const DoctorAppointmentScreen(),
+                  ),
+                  GoRoute(
+                    path: 'caregiver-booking',
+                    builder: (context, state) =>
+                        const CaregiverBookingScreen(),
+                  ),
+                ],
               ),
             ],
           ),

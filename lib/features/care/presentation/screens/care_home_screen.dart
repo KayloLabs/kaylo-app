@@ -1,24 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_theme.dart';
 import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../application/care_providers.dart';
 
-/// Kaylo Care hub shell (M1). Runs under [AppTheme.careTheme] — larger
-/// text, 56x56+ tap targets, high contrast, no glass effects: clarity
-/// beats decoration for senior users.
-///
-/// TODO(M5): replace the coming-soon actions with the real Medicine
-/// Reminders, SOS and Care flows. The scaffold, theme and cards are
-/// ready to receive them.
-class CareHomeScreen extends StatelessWidget {
+/// Kaylo Care hub. Runs under [AppTheme.careTheme] — larger text, 56x56+
+/// tap targets, high contrast, no glass effects: clarity beats decoration
+/// for senior users. Medicine Reminders and SOS are live; Doctor
+/// Appointment and Caregiver Booking arrive with M3's booking flows.
+class CareHomeScreen extends ConsumerWidget {
   const CareHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    final pendingDoses = ref
+        .watch(medicineRemindersProvider)
+        .whenOrNull(data: (list) => list.where((r) => !r.isTakenToday).length);
+
     return Theme(
       data: AppTheme.careTheme,
       child: Builder(
@@ -70,7 +75,13 @@ class CareHomeScreen extends StatelessWidget {
                   const SizedBox(height: AppSpacing.xxl),
 
                   // Emergency SOS gets the most prominent treatment.
-                  _SosCard(l10n: l10n),
+                  _SosCard(
+                    l10n: l10n,
+                    onTap: () {
+                      KayloFeedback.press();
+                      context.push(Routes.careSos);
+                    },
+                  ),
                   const SizedBox(height: AppSpacing.l),
 
                   _CareActionCard(
@@ -78,6 +89,13 @@ class CareHomeScreen extends StatelessWidget {
                     color: AppColors.careAccent,
                     title: l10n.medicineReminders,
                     subtitle: l10n.medicineRemindersSubtitle,
+                    badge: (pendingDoses ?? 0) > 0
+                        ? l10n.pendingDoses(pendingDoses!)
+                        : null,
+                    onTap: () {
+                      KayloFeedback.tap();
+                      context.push(Routes.careMedicines);
+                    },
                   ),
                   const SizedBox(height: AppSpacing.l),
                   _CareActionCard(
@@ -85,6 +103,10 @@ class CareHomeScreen extends StatelessWidget {
                     color: AppColors.homeAccent,
                     title: l10n.doctorAppointment,
                     subtitle: l10n.doctorAppointmentSubtitle,
+                    onTap: () {
+                      KayloFeedback.tap();
+                      KayloSnackbar.showInfo(context, l10n.comingSoon);
+                    },
                   ),
                   const SizedBox(height: AppSpacing.l),
                   _CareActionCard(
@@ -92,6 +114,10 @@ class CareHomeScreen extends StatelessWidget {
                     color: AppColors.brandPrimary,
                     title: l10n.caregiverBooking,
                     subtitle: l10n.caregiverBookingSubtitle,
+                    onTap: () {
+                      KayloFeedback.tap();
+                      KayloSnackbar.showInfo(context, l10n.comingSoon);
+                    },
                   ),
                 ],
               ),
@@ -105,8 +131,9 @@ class CareHomeScreen extends StatelessWidget {
 
 class _SosCard extends StatelessWidget {
   final AppLocalizations l10n;
+  final VoidCallback onTap;
 
-  const _SosCard({required this.l10n});
+  const _SosCard({required this.l10n, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -115,12 +142,7 @@ class _SosCard extends StatelessWidget {
       borderRadius: BorderRadius.circular(20),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        // TODO(M5): trigger the real SOS flow (sos_alerts insert + family
-        // notification) instead of the placeholder message.
-        onTap: () {
-          KayloFeedback.alert();
-          KayloSnackbar.showInfo(context, l10n.comingSoon);
-        },
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Row(
@@ -159,6 +181,8 @@ class _SosCard extends StatelessWidget {
                   ],
                 ),
               ),
+              const Icon(Icons.chevron_right_rounded,
+                  color: Colors.white, size: 32),
             ],
           ),
         ),
@@ -172,24 +196,24 @@ class _CareActionCard extends StatelessWidget {
   final Color color;
   final String title;
   final String subtitle;
+  final String? badge;
+  final VoidCallback onTap;
 
   const _CareActionCard({
     required this.icon,
     required this.color,
     required this.title,
     required this.subtitle,
+    required this.onTap,
+    this.badge,
   });
 
   @override
   Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          KayloFeedback.tap();
-          KayloSnackbar.showInfo(context, l10n.comingSoon);
-        },
+        onTap: onTap,
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Row(
@@ -217,6 +241,29 @@ class _CareActionCard extends StatelessWidget {
                       subtitle,
                       style: Theme.of(context).textTheme.bodySmall,
                     ),
+                    if (badge != null) ...[
+                      const SizedBox(height: AppSpacing.s),
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 10,
+                          vertical: 4,
+                        ),
+                        decoration: BoxDecoration(
+                          color: color.withValues(alpha: 0.14),
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        child: Text(
+                          badge!,
+                          style: Theme.of(context)
+                              .textTheme
+                              .labelSmall
+                              ?.copyWith(
+                                color: color,
+                                fontWeight: FontWeight.w700,
+                              ),
+                        ),
+                      ),
+                    ],
                   ],
                 ),
               ),

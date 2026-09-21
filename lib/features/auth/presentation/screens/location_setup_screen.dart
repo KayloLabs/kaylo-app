@@ -1,22 +1,55 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../core/services/feedback_service.dart';
+import '../../../../core/services/location_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/kaylo_button.dart';
 import '../../../../core/widgets/kaylo_card.dart';
-import '../../../../core/widgets/kaylo_snackbar.dart';
+import '../../../../core/widgets/use_my_location_button.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../home/application/user_location_provider.dart';
+import '../../../home/presentation/widgets/location_picker_sheet.dart';
 
-class LocationSetupScreen extends ConsumerWidget {
+/// First-run location capture, right after sign-in. GPS through the
+/// shared location service; a typed town as the fallback.
+class LocationSetupScreen extends ConsumerStatefulWidget {
   const LocationSetupScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<LocationSetupScreen> createState() =>
+      _LocationSetupScreenState();
+}
+
+class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
+  ResolvedLocation? _resolved;
+
+  Future<void> _confirm() async {
+    final resolved = _resolved;
+    if (resolved != null) {
+      await ref
+          .read(userLocationProvider.notifier)
+          .set(UserLocation.fromResolved(resolved));
+    }
+    if (mounted) context.go(Routes.dashboard);
+  }
+
+  Future<void> _enterManually() async {
+    final saved = await showLocationPickerSheet(context);
+    if (saved && mounted) context.go(Routes.dashboard);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+    final secondary =
+        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final resolved = _resolved;
+
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -25,79 +58,121 @@ class LocationSetupScreen extends ConsumerWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               const SizedBox(height: AppSpacing.xxl),
-              Icon(
+              const Icon(
                 Icons.location_on_rounded,
                 size: 80,
                 color: AppColors.brandPrimary,
               ),
               const SizedBox(height: AppSpacing.xl),
               Text(
-                'Enable Location',
+                l10n.enableLocation,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                ),
+                      fontWeight: FontWeight.bold,
+                    ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
-                'Kaylo needs your location to show services and professionals near you.',
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                  height: 1.5,
-                ),
+                l10n.enableLocationSubtitle,
+                style: Theme.of(context)
+                    .textTheme
+                    .bodyMedium
+                    ?.copyWith(color: secondary, height: 1.5),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xxxl),
               Expanded(
                 child: KayloCard(
-                  padding: EdgeInsets.zero,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20),
-                    child: Container(
-                      color: isDark ? Colors.grey[800] : Colors.grey[200],
-                      child: Stack(
-                        alignment: Alignment.center,
-                        children: [
-                          Icon(
-                            Icons.map_outlined,
-                            size: 100,
-                            color: isDark ? Colors.grey[700] : Colors.grey[400],
-                          ),
-                          // KayloButton fills its parent's width, so the
-                          // Positioned must bound it horizontally: with only
-                          // `bottom` set it gets unconstrained width, fails
-                          // layout, and breaks hit testing for the whole
-                          // screen (every button goes dead).
-                          Positioned(
-                            left: 20,
-                            right: 20,
-                            bottom: 20,
-                            child: KayloButton(
-                              text: 'Pick Manually',
-                              variant: KayloButtonVariant.secondary,
-                              onPressed: () => KayloSnackbar.showInfo(
-                                context,
-                                AppLocalizations.of(context)!.comingSoon,
+                  child: AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: resolved == null
+                        ? Column(
+                            key: const ValueKey('empty'),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Icon(Icons.map_outlined,
+                                  size: 88, color: secondary.withValues(alpha: 0.5)),
+                              const SizedBox(height: AppSpacing.m),
+                              Text(
+                                l10n.locationWillAppear,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .bodyMedium
+                                    ?.copyWith(color: secondary),
                               ),
-                            ),
+                            ],
+                          )
+                        : Column(
+                            key: const ValueKey('resolved'),
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Container(
+                                width: 72,
+                                height: 72,
+                                decoration: BoxDecoration(
+                                  color: AppColors.brandPrimary
+                                      .withValues(alpha: 0.12),
+                                  shape: BoxShape.circle,
+                                ),
+                                child: const Icon(Icons.place_rounded,
+                                    size: 40, color: AppColors.brandPrimary),
+                              ),
+                              const SizedBox(height: AppSpacing.l),
+                              Text(
+                                resolved.label,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context)
+                                    .textTheme
+                                    .titleLarge
+                                    ?.copyWith(fontWeight: FontWeight.w700),
+                              ),
+                              if (resolved.addressLine != null) ...[
+                                const SizedBox(height: AppSpacing.xs),
+                                Text(
+                                  resolved.addressLine!,
+                                  textAlign: TextAlign.center,
+                                  style: Theme.of(context)
+                                      .textTheme
+                                      .bodyMedium
+                                      ?.copyWith(color: secondary),
+                                ),
+                              ],
+                              const SizedBox(height: AppSpacing.l),
+                              TextButton.icon(
+                                onPressed: () {
+                                  KayloFeedback.tap();
+                                  setState(() => _resolved = null);
+                                },
+                                icon: const Icon(Icons.refresh_rounded, size: 18),
+                                label: Text(l10n.locateAgain),
+                              ),
+                            ],
                           ),
-                        ],
-                      ),
-                    ),
                   ),
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
-              KayloButton(
-                text: 'Enable Location',
-                onPressed: () => context.go(Routes.dashboard),
+              if (resolved == null)
+                UseMyLocationButton(
+                  compact: false,
+                  onResolved: (r) => setState(() => _resolved = r),
+                )
+              else
+                KayloButton(
+                  text: l10n.continueLabel,
+                  icon: Icons.arrow_forward_rounded,
+                  onPressed: _confirm,
+                ),
+              const SizedBox(height: AppSpacing.s),
+              TextButton(
+                onPressed: _enterManually,
+                child: Text(l10n.enterManually),
               ),
-              const SizedBox(height: AppSpacing.m),
               TextButton(
                 onPressed: () => context.go(Routes.dashboard),
-                child: const Text('Not now'),
+                child: Text(l10n.notNow),
               ),
-              const SizedBox(height: AppSpacing.l),
             ],
           ),
         ),

@@ -26,7 +26,7 @@ final dashboardControllerProvider = FutureProvider.autoDispose<DashboardState>((
 
   return DashboardState(
     userName: user?.firstName ?? '',
-    location: ref.watch(userLocationProvider),
+    location: ref.watch(userLocationProvider).label,
     popularServices: services,
   );
 });

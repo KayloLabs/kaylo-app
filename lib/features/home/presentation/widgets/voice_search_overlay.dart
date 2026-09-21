@@ -460,14 +460,11 @@ class _ResultsCard extends StatelessWidget {
               child: ListTile(
                 onTap: () {
                   KayloFeedback.tap();
-                  if (service.category == 'care') {
-                    // Care has a real destination already.
-                    context.go(Routes.careHome);
-                    Navigator.of(context).pop();
-                  } else {
-                    // TODO(M3): open the service detail screen.
-                    KayloSnackbar.showInfo(context, l10n.comingSoon);
-                  }
+                  // The overlay is its own route; grab the router before
+                  // popping so the push lands on a live context.
+                  final router = GoRouter.of(context);
+                  Navigator.of(context).pop();
+                  router.push(Routes.service(service.id));
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppRadius.card),

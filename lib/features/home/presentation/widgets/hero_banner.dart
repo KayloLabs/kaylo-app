@@ -1,10 +1,14 @@
 import 'dart:async';
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../application/home_providers.dart';
 
 class HeroSlideData {
   final String title;
@@ -12,22 +16,28 @@ class HeroSlideData {
   final String imagePath;
   final String buttonText;
 
+  /// Substring of the catalog service name this slide promotes; the
+  /// button opens that service, or a search for it if the catalog has
+  /// no such service yet.
+  final String serviceKeyword;
+
   HeroSlideData({
     required this.title,
     required this.subtitle,
     required this.imagePath,
     required this.buttonText,
+    required this.serviceKeyword,
   });
 }
 
-class HeroBanner extends StatefulWidget {
+class HeroBanner extends ConsumerStatefulWidget {
   const HeroBanner({super.key});
 
   @override
-  State<HeroBanner> createState() => _HeroBannerState();
+  ConsumerState<HeroBanner> createState() => _HeroBannerState();
 }
 
-class _HeroBannerState extends State<HeroBanner> {
+class _HeroBannerState extends ConsumerState<HeroBanner> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
   Timer? _timer;
@@ -40,18 +50,21 @@ class _HeroBannerState extends State<HeroBanner> {
         subtitle: l10n.heroCoconutSubtitle,
         imagePath: 'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
         buttonText: l10n.heroBookNow,
+        serviceKeyword: 'coconut',
       ),
       HeroSlideData(
         title: l10n.heroCleanTitle,
         subtitle: l10n.heroCleanSubtitle,
         imagePath: 'assets_kaylo/3d_transparent/hero_kerala_clay.png',
         buttonText: l10n.heroExplore,
+        serviceKeyword: 'clean',
       ),
       HeroSlideData(
         title: l10n.heroPlumberTitle,
         subtitle: l10n.heroPlumberSubtitle,
         imagePath: 'assets_kaylo/3d_transparent/hero_workers_clay.png',
         buttonText: l10n.heroHireNow,
+        serviceKeyword: 'plumb',
       ),
     ];
   }
@@ -83,6 +96,25 @@ class _HeroBannerState extends State<HeroBanner> {
     });
   }
 
+  Future<void> _openSlide(HeroSlideData slide) async {
+    KayloFeedback.press();
+    final router = GoRouter.of(context);
+    final keyword = slide.serviceKeyword;
+    try {
+      final catalog = await ref.read(fullCatalogProvider.future);
+      final match = catalog
+          .where((s) => s.name.toLowerCase().contains(keyword))
+          .firstOrNull;
+      if (match != null) {
+        router.push(Routes.service(match.id));
+        return;
+      }
+    } catch (_) {
+      // Fall through to search, which shows its own error state.
+    }
+    router.push('${Routes.search}?q=$keyword');
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
@@ -96,7 +128,7 @@ class _HeroBannerState extends State<HeroBanner> {
               borderRadius: BorderRadius.circular(AppRadius.card),
             ),
           ),
-          
+
           PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
@@ -141,7 +173,7 @@ class _HeroBannerState extends State<HeroBanner> {
                       ),
                     ),
                   ),
-                  
+
                   // Overlay Content
                   Padding(
                     padding: const EdgeInsets.all(AppSpacing.l),
@@ -185,14 +217,14 @@ class _HeroBannerState extends State<HeroBanner> {
                           ),
                         ),
                         const Spacer(),
-                        
+
                         // Button
                         Material(
                           color: Colors.white,
                           borderRadius: BorderRadius.circular(24),
                           child: InkWell(
                             borderRadius: BorderRadius.circular(24),
-                            onTap: () => KayloFeedback.press(),
+                            onTap: () => _openSlide(slide),
                             child: Padding(
                               padding: const EdgeInsets.symmetric(
                                 horizontal: AppSpacing.l,
@@ -227,7 +259,7 @@ class _HeroBannerState extends State<HeroBanner> {
               );
             },
           ),
-          
+
           // Pagination Dots
           Positioned(
             bottom: AppSpacing.m,

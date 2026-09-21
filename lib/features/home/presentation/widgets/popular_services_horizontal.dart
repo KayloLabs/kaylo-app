@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/models/service_item.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -29,7 +31,10 @@ class PopularServicesHorizontal extends StatelessWidget {
         SectionHeader(
           title: title ?? AppLocalizations.of(context)!.popularServices,
           actionText: '${AppLocalizations.of(context)!.seeAll} >',
-          onActionPressed: () {},
+          onActionPressed: () {
+            KayloFeedback.tap();
+            context.push(Routes.services('all'));
+          },
         ),
         const SizedBox(height: AppSpacing.m),
         SizedBox(
@@ -50,7 +55,13 @@ class PopularServicesHorizontal extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(AppRadius.card),
-                      onTap: () => KayloFeedback.tap(),
+                      onTap: () {
+                        KayloFeedback.tap();
+                        // "More" is a catalog affordance, not a service.
+                        context.push(service.basePrice > 0
+                            ? Routes.service(service.id)
+                            : Routes.services('all'));
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(AppSpacing.s),
                         child: Center(

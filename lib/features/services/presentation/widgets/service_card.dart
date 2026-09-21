@@ -8,23 +8,25 @@ import '../../../../core/widgets/kaylo_card.dart';
 import '../../../../core/widgets/price_tag.dart';
 import '../../../../core/widgets/rating_stars.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../application/farm_providers.dart';
-import '../../domain/farm_service_info.dart';
-import 'farm_labels.dart';
+import '../../application/service_providers.dart';
+import '../../domain/service_info.dart';
+import 'service_labels.dart';
 
-class FarmServiceCard extends ConsumerWidget {
+/// Catalog row used by category lists and search results.
+class ServiceCard extends ConsumerWidget {
   final ServiceItem service;
   final VoidCallback onTap;
 
-  const FarmServiceCard({super.key, required this.service, required this.onTap});
+  const ServiceCard({super.key, required this.service, required this.onTap});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final info = farmInfoFor(service);
+    final info = serviceInfoFor(service);
+    final accent = categoryAccent(service.category);
     final summary = ref
-        .watch(farmWorkersProvider(service.id))
+        .watch(serviceWorkersProvider(service.id))
         .whenOrNull(data: ratingSummary);
 
     return KayloCard(
@@ -37,7 +39,7 @@ class FarmServiceCard extends ConsumerWidget {
             height: 64,
             padding: const EdgeInsets.all(AppSpacing.s),
             decoration: BoxDecoration(
-              color: AppColors.farmAccent.withValues(alpha: isDark ? 0.18 : 0.12),
+              color: accent.withValues(alpha: isDark ? 0.18 : 0.12),
               borderRadius: BorderRadius.circular(18),
             ),
             child: Image.asset(service.iconPath, fit: BoxFit.contain),
@@ -78,7 +80,7 @@ class FarmServiceCard extends ConsumerWidget {
                 ],
                 PriceTag(
                   amount: service.basePrice,
-                  suffix: l10n.perUnit(farmUnitLabel(l10n, info.unit)),
+                  suffix: l10n.perUnit(serviceUnitLabel(l10n, info.unit)),
                 ),
               ],
             ),

@@ -14,33 +14,34 @@ import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/price_tag.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../../booking/domain/booking_receipt.dart';
-import '../../../booking/domain/payment_method.dart';
-import '../../application/farm_providers.dart';
-import '../../domain/farm_booking_draft.dart';
-import '../../domain/farm_service_info.dart';
-import '../widgets/farm_labels.dart';
+import '../../../services/domain/service_info.dart';
+import '../../../services/presentation/widgets/service_labels.dart';
+import '../../application/checkout_controller.dart';
+import '../../domain/booking_draft.dart';
+import '../../domain/booking_receipt.dart';
+import '../../domain/payment_method.dart';
 
-class FarmPaymentScreen extends ConsumerStatefulWidget {
+class PaymentScreen extends ConsumerStatefulWidget {
   /// Null when the route was reached without a draft (deep link, reload);
   /// the screen then offers a way back instead of crashing.
-  final FarmBookingDraft? draft;
+  final BookingDraft? draft;
 
-  const FarmPaymentScreen({super.key, required this.draft});
+  const PaymentScreen({super.key, required this.draft});
 
   @override
-  ConsumerState<FarmPaymentScreen> createState() => _FarmPaymentScreenState();
+  ConsumerState<PaymentScreen> createState() => _PaymentScreenState();
 }
 
-class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
+class _PaymentScreenState extends ConsumerState<PaymentScreen> {
   PaymentMethod _method = PaymentMethod.upi;
 
-  Future<void> _confirm(FarmBookingDraft draft) async {
+  Future<void> _confirm(BookingDraft draft) async {
     final l10n = AppLocalizations.of(context)!;
-    final unit = farmInfoFor(draft.service).unit;
+    final unit = serviceInfoFor(draft.service).unit;
+    final isFarm = draft.service.category == 'farm';
 
     final booking = await ref
-        .read(farmCheckoutControllerProvider.notifier)
+        .read(checkoutControllerProvider.notifier)
         .confirm(draft: draft, method: _method);
     if (!mounted) return;
 
@@ -58,8 +59,10 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         service: draft.service,
         paymentMethod: _method,
         extras: [
-          ReceiptLine(l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
-          ReceiptLine(l10n.farmAddress, draft.address),
+          ReceiptLine(
+              l10n.quantity, serviceUnitCount(l10n, unit, draft.quantity)),
+          ReceiptLine(
+              isFarm ? l10n.farmAddress : l10n.serviceAddress, draft.address),
         ],
       ),
     );
@@ -76,7 +79,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         body: ErrorState(
           title: l10n.somethingWentWrong,
           message: l10n.draftMissing,
-          onRetry: () => context.go(Routes.farm),
+          onRetry: () => context.go(Routes.services('all')),
         ),
       );
     }
@@ -85,8 +88,9 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
     final loc = MaterialLocalizations.of(context);
     final secondary =
         isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
-    final unit = farmInfoFor(draft.service).unit;
-    final isProcessing = ref.watch(farmCheckoutControllerProvider).isLoading;
+    final unit = serviceInfoFor(draft.service).unit;
+    final isFarm = draft.service.category == 'farm';
+    final isProcessing = ref.watch(checkoutControllerProvider).isLoading;
 
     Widget summaryRow(String label, String value) => Padding(
           padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
@@ -137,13 +141,14 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                 summaryRow(l10n.date, loc.formatMediumDate(draft.date)),
                 summaryRow(l10n.time, formatTimeSlot(context, draft.slot)),
                 summaryRow(
-                    l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
+                    l10n.quantity, serviceUnitCount(l10n, unit, draft.quantity)),
                 summaryRow(
                   l10n.rate,
                   '${formatRupees(draft.service.basePrice)} '
-                  '${l10n.perUnit(farmUnitLabel(l10n, unit))}',
+                  '${l10n.perUnit(serviceUnitLabel(l10n, unit))}',
                 ),
-                summaryRow(l10n.farmAddress, draft.address),
+                summaryRow(
+                    isFarm ? l10n.farmAddress : l10n.serviceAddress, draft.address),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
                   child: Divider(height: 1),

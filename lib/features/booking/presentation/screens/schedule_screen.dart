@@ -15,22 +15,25 @@ import '../../../../core/widgets/kaylo_loader.dart';
 import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/kaylo_text_field.dart';
 import '../../../../core/widgets/price_tag.dart';
+import '../../../../core/widgets/use_my_location_button.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../application/farm_providers.dart';
-import '../../domain/farm_booking_draft.dart';
-import '../../domain/farm_service_info.dart';
-import '../widgets/farm_labels.dart';
+import '../../../profile/application/addresses_providers.dart';
+import '../../../profile/domain/saved_address.dart';
+import '../../../services/application/service_providers.dart';
+import '../../../services/domain/service_info.dart';
+import '../../../services/presentation/widgets/service_labels.dart';
+import '../../domain/booking_draft.dart';
 import '../widgets/quantity_stepper.dart';
 
-class FarmScheduleScreen extends ConsumerWidget {
+class ScheduleScreen extends ConsumerWidget {
   final String serviceId;
 
-  const FarmScheduleScreen({super.key, required this.serviceId});
+  const ScheduleScreen({super.key, required this.serviceId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    return ref.watch(farmServiceProvider(serviceId)).when(
+    return ref.watch(serviceByIdProvider(serviceId)).when(
           data: (service) => _ScheduleForm(service: service),
           loading: () => Scaffold(
             appBar: AppBar(),
@@ -41,38 +44,44 @@ class FarmScheduleScreen extends ConsumerWidget {
             body: ErrorState(
               title: l10n.somethingWentWrong,
               message: error.toString(),
-              onRetry: () => ref.invalidate(farmServiceProvider(serviceId)),
+              onRetry: () => ref.invalidate(serviceByIdProvider(serviceId)),
             ),
           ),
         );
   }
 }
 
-class _ScheduleForm extends StatefulWidget {
+class _ScheduleForm extends ConsumerStatefulWidget {
   final ServiceItem service;
 
   const _ScheduleForm({required this.service});
 
   @override
-  State<_ScheduleForm> createState() => _ScheduleFormState();
+  ConsumerState<_ScheduleForm> createState() => _ScheduleFormState();
 }
 
-class _ScheduleFormState extends State<_ScheduleForm> {
-  late FarmBookingDraft _draft;
+class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
+  late BookingDraft _draft;
   final _addressController = TextEditingController();
+  bool _prefilled = false;
 
-  FarmServiceInfo get _info => farmInfoFor(widget.service);
+  ServiceInfo get _info => serviceInfoFor(widget.service);
 
   @override
   void initState() {
     super.initState();
     final now = DateTime.now();
-    _draft = FarmBookingDraft(
+    _draft = BookingDraft(
       service: widget.service,
       date: DateTime(now.year, now.month, now.day + 1),
-      slot: FarmTimeSlot.all[1],
-      // Trees are booked by the dozen or so; hourly work by the morning.
-      quantity: _info.unit == FarmUnit.tree ? 10 : 2,
+      slot: BookingTimeSlot.all[1],
+      // Trees are booked by the dozen or so; hourly work by the morning;
+      // a visit or an order is one.
+      quantity: switch (_info.unit) {
+        ServiceUnit.tree => 10,
+        ServiceUnit.hour => 2,
+        _ => 1,
+      },
       address: '',
     );
   }
@@ -102,7 +111,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
       return;
     }
     context.push(
-      Routes.farmPayment(widget.service.id),
+      Routes.servicePayment(widget.service.id),
       extra: _draft.copyWith(address: address),
     );
   }
@@ -119,6 +128,25 @@ class _ScheduleFormState extends State<_ScheduleForm> {
         .titleMedium
         ?.copyWith(fontWeight: FontWeight.w700);
     final unit = _info.unit;
+    final accent = categoryAccent(widget.service.category);
+    final isFarm = widget.service.category == 'farm';
+
+    // The default saved address fills the field once, but never
+    // overwrites something the customer typed. Written after the frame:
+    // the field's own listener must not fire mid-build.
+    final savedAsync = ref.watch(savedAddressesProvider);
+    final saved = savedAsync.whenOrNull(data: (l) => l) ?? const <SavedAddress>[];
+    if (!_prefilled && savedAsync.hasValue) {
+      _prefilled = true;
+      if (saved.isNotEmpty) {
+        final line = saved.first.line;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted && _addressController.text.isEmpty) {
+            _addressController.text = line;
+          }
+        });
+      }
+    }
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.scheduleTitle)),
@@ -133,7 +161,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
           Container(
             padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
-              color: AppColors.farmAccent.withValues(alpha: isDark ? 0.18 : 0.12),
+              color: accent.withValues(alpha: isDark ? 0.18 : 0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -151,7 +179,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
                 ),
                 PriceTag(
                   amount: widget.service.basePrice,
-                  suffix: l10n.perUnit(farmUnitLabel(l10n, unit)),
+                  suffix: l10n.perUnit(serviceUnitLabel(l10n, unit)),
                 ),
               ],
             ),
@@ -168,8 +196,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_rounded,
-                    color: AppColors.farmAccent, size: 20),
+                Icon(Icons.calendar_today_rounded, color: accent, size: 20),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: Text(
@@ -198,7 +225,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
             spacing: AppSpacing.s,
             runSpacing: AppSpacing.s,
             children: [
-              for (final slot in FarmTimeSlot.all)
+              for (final slot in BookingTimeSlot.all)
                 ChoiceChip(
                   label: Text(formatTimeSlot(context, slot)),
                   selected: identical(slot, _draft.slot),
@@ -234,7 +261,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      farmUnitCount(l10n, unit, _draft.quantity),
+                      serviceUnitCount(l10n, unit, _draft.quantity),
                       style: Theme.of(context)
                           .textTheme
                           .titleMedium
@@ -274,7 +301,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
                           Text(
                             l10n.breakdown(
                               formatRupees(widget.service.basePrice),
-                              farmUnitCount(l10n, unit, _draft.quantity),
+                              serviceUnitCount(l10n, unit, _draft.quantity),
                             ),
                             style: Theme.of(context)
                                 .textTheme
@@ -294,10 +321,32 @@ class _ScheduleFormState extends State<_ScheduleForm> {
           const SizedBox(height: AppSpacing.xl),
 
           KayloTextField(
-            label: l10n.farmAddress,
+            label: isFarm ? l10n.farmAddress : l10n.serviceAddress,
             hintText: l10n.farmAddressHint,
             controller: _addressController,
             prefixIcon: const Icon(Icons.pin_drop_rounded),
+          ),
+          const SizedBox(height: AppSpacing.s),
+          Wrap(
+            spacing: AppSpacing.s,
+            runSpacing: AppSpacing.s,
+            children: [
+              UseMyLocationButton(
+                onResolved: (resolved) => setState(() {
+                  _addressController.text =
+                      resolved.addressLine ?? resolved.label;
+                }),
+              ),
+              for (final address in saved)
+                ActionChip(
+                  avatar: Icon(_addressIcon(address.label), size: 18),
+                  label: Text(address.label),
+                  onPressed: () {
+                    KayloFeedback.tap();
+                    setState(() => _addressController.text = address.line);
+                  },
+                ),
+            ],
           ),
         ],
       ),
@@ -337,4 +386,12 @@ class _ScheduleFormState extends State<_ScheduleForm> {
       ),
     );
   }
+}
+
+IconData _addressIcon(String label) {
+  final l = label.toLowerCase();
+  if (l.contains('home') || l.contains('house')) return Icons.home_rounded;
+  if (l.contains('farm')) return Icons.agriculture_rounded;
+  if (l.contains('work') || l.contains('office')) return Icons.work_rounded;
+  return Icons.place_rounded;
 }

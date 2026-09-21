@@ -15,35 +15,33 @@ import '../../../../core/widgets/price_tag.dart';
 import '../../../../core/widgets/rating_stars.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../application/farm_providers.dart';
-import '../../domain/farm_service_info.dart';
-import '../widgets/farm_labels.dart';
+import '../../application/service_providers.dart';
+import '../../domain/service_info.dart';
+import '../widgets/service_labels.dart';
 
-class FarmServiceDetailsScreen extends ConsumerWidget {
+class ServiceDetailsScreen extends ConsumerWidget {
   final String serviceId;
 
-  const FarmServiceDetailsScreen({super.key, required this.serviceId});
+  const ServiceDetailsScreen({super.key, required this.serviceId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    final service = ref.watch(farmServiceProvider(serviceId));
-
-    return service.when(
-      data: (service) => _Details(service: service),
-      loading: () => Scaffold(
-        appBar: AppBar(),
-        body: const Center(child: KayloLoader()),
-      ),
-      error: (error, _) => Scaffold(
-        appBar: AppBar(),
-        body: ErrorState(
-          title: l10n.somethingWentWrong,
-          message: error.toString(),
-          onRetry: () => ref.invalidate(farmServiceProvider(serviceId)),
-        ),
-      ),
-    );
+    return ref.watch(serviceByIdProvider(serviceId)).when(
+          data: (service) => _Details(service: service),
+          loading: () => Scaffold(
+            appBar: AppBar(),
+            body: const Center(child: KayloLoader()),
+          ),
+          error: (error, _) => Scaffold(
+            appBar: AppBar(),
+            body: ErrorState(
+              title: l10n.somethingWentWrong,
+              message: error.toString(),
+              onRetry: () => ref.invalidate(serviceByIdProvider(serviceId)),
+            ),
+          ),
+        );
   }
 }
 
@@ -56,8 +54,9 @@ class _Details extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final info = farmInfoFor(service);
-    final workers = ref.watch(farmWorkersProvider(service.id));
+    final info = serviceInfoFor(service);
+    final accent = categoryAccent(service.category);
+    final workers = ref.watch(serviceWorkersProvider(service.id));
     final secondary =
         isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
 
@@ -71,25 +70,28 @@ class _Details extends ConsumerWidget {
           AppSpacing.xxl,
         ),
         children: [
-          Container(
-            height: 200,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(AppRadius.card),
-              gradient: LinearGradient(
-                begin: Alignment.topLeft,
-                end: Alignment.bottomRight,
-                colors: [
-                  AppColors.farmAccent.withValues(alpha: isDark ? 0.30 : 0.26),
-                  AppColors.farmAccent.withValues(alpha: isDark ? 0.08 : 0.05),
-                ],
+          Hero(
+            tag: 'service-${service.id}',
+            child: Container(
+              height: 200,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(AppRadius.card),
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [
+                    accent.withValues(alpha: isDark ? 0.30 : 0.26),
+                    accent.withValues(alpha: isDark ? 0.08 : 0.05),
+                  ],
+                ),
               ),
-            ),
-            child: Center(
-              child: Image.asset(
-                service.iconPath,
-                width: 140,
-                height: 140,
-                fit: BoxFit.contain,
+              child: Center(
+                child: Image.asset(
+                  service.iconPath,
+                  width: 140,
+                  height: 140,
+                  fit: BoxFit.contain,
+                ),
               ),
             ),
           ),
@@ -110,7 +112,7 @@ class _Details extends ConsumerWidget {
               PriceTag(
                 amount: service.basePrice,
                 isLarge: true,
-                suffix: l10n.perUnit(farmUnitLabel(l10n, info.unit)),
+                suffix: l10n.perUnit(serviceUnitLabel(l10n, info.unit)),
               ),
             ],
           ),
@@ -181,7 +183,7 @@ class _Details extends ConsumerWidget {
                         const SizedBox(width: AppSpacing.m),
                         Expanded(
                           child: Text(
-                            farmStandardLabel(l10n, standard),
+                            serviceStandardLabel(l10n, standard),
                             style: Theme.of(context).textTheme.bodyMedium,
                           ),
                         ),
@@ -228,7 +230,7 @@ class _Details extends ConsumerWidget {
         child: KayloButton(
           text: l10n.bookNow,
           icon: Icons.calendar_month_rounded,
-          onPressed: () => context.push(Routes.farmSchedule(service.id)),
+          onPressed: () => context.push(Routes.serviceSchedule(service.id)),
         ),
       ),
     );

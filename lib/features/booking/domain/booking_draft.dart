@@ -2,31 +2,45 @@ import '../../../core/models/service_item.dart';
 
 /// A window of the day a worker can be booked for, in minutes from
 /// midnight so the domain stays free of Flutter types.
-class FarmTimeSlot {
+class BookingTimeSlot {
   final int startMinutes;
   final int endMinutes;
 
-  const FarmTimeSlot(this.startMinutes, this.endMinutes);
+  const BookingTimeSlot(this.startMinutes, this.endMinutes);
 
-  static const List<FarmTimeSlot> all = [
-    FarmTimeSlot(7 * 60, 9 * 60),
-    FarmTimeSlot(8 * 60, 10 * 60),
-    FarmTimeSlot(10 * 60 + 30, 12 * 60 + 30),
-    FarmTimeSlot(14 * 60, 16 * 60),
-    FarmTimeSlot(16 * 60 + 30, 18 * 60 + 30),
+  static const List<BookingTimeSlot> all = [
+    BookingTimeSlot(7 * 60, 9 * 60),
+    BookingTimeSlot(8 * 60, 10 * 60),
+    BookingTimeSlot(10 * 60 + 30, 12 * 60 + 30),
+    BookingTimeSlot(14 * 60, 16 * 60),
+    BookingTimeSlot(16 * 60 + 30, 18 * 60 + 30),
   ];
+
+  /// The slot a booking's time falls in, or the closest one, so a
+  /// reschedule sheet can preselect it.
+  static BookingTimeSlot closestTo(DateTime dateTime) {
+    final minutes = dateTime.hour * 60 + dateTime.minute;
+    var best = all.first;
+    for (final slot in all) {
+      if ((slot.startMinutes - minutes).abs() <
+          (best.startMinutes - minutes).abs()) {
+        best = slot;
+      }
+    }
+    return best;
+  }
 }
 
 /// Everything the customer has chosen on the way to payment. Immutable;
 /// the schedule screen builds it up with [copyWith].
-class FarmBookingDraft {
+class BookingDraft {
   final ServiceItem service;
   final DateTime date;
-  final FarmTimeSlot slot;
+  final BookingTimeSlot slot;
   final int quantity;
   final String address;
 
-  const FarmBookingDraft({
+  const BookingDraft({
     required this.service,
     required this.date,
     required this.slot,
@@ -44,13 +58,13 @@ class FarmBookingDraft {
         slot.startMinutes % 60,
       );
 
-  FarmBookingDraft copyWith({
+  BookingDraft copyWith({
     DateTime? date,
-    FarmTimeSlot? slot,
+    BookingTimeSlot? slot,
     int? quantity,
     String? address,
   }) {
-    return FarmBookingDraft(
+    return BookingDraft(
       service: service,
       date: date ?? this.date,
       slot: slot ?? this.slot,

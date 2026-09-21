@@ -17,6 +17,25 @@ class Routes {
   static const String messages = '/messages';
   static const String profile = '/profile';
   
+  // Farm flow: full-screen, outside the tab shell so checkout has no
+  // bottom nav competing with its own primary button.
+  static const String farm = '/farm';
+  static String farmService(String serviceId) => '/farm/$serviceId';
+  static String farmSchedule(String serviceId) => '/farm/$serviceId/schedule';
+  static String farmPayment(String serviceId) => '/farm/$serviceId/payment';
+
+  // Shared by every booking flow (farm today, home services when M3/M4
+  // land theirs). Takes a BookingReceipt as `extra`.
+  static const String bookingConfirmation = '/booking/confirmation';
+
+  // One conversation, pushed over the shell.
+  static String chat(String threadId) => '/chat/$threadId';
+
+  // Care flows, nested under the Care tab.
+  static const String careMedicines = '/care/medicines';
+  static const String careSos = '/care/sos';
+  static const String careSosHistory = '/care/sos/history';
+
   // Feature screens
   static const String serviceDetails = 'service-details'; // relative to dashboard tab
   static const String workerList = 'workers';

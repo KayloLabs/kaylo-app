@@ -7,6 +7,7 @@ class SearchBarField extends StatelessWidget {
   final ValueChanged<String>? onChanged;
   final VoidCallback? onTap;
   final bool readOnly;
+  final bool autofocus;
 
   /// Trailing widget shown while the field is empty (the clear button
   /// takes over once there is text). Used for the voice search mic.
@@ -19,6 +20,7 @@ class SearchBarField extends StatelessWidget {
     this.onChanged,
     this.onTap,
     this.readOnly = false,
+    this.autofocus = false,
     this.suffix,
   });
 
@@ -31,6 +33,8 @@ class SearchBarField extends StatelessWidget {
       onChanged: onChanged,
       onTap: onTap,
       readOnly: readOnly,
+      autofocus: autofocus,
+      textInputAction: TextInputAction.search,
       style: TextStyle(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
       decoration: InputDecoration(
         hintText: hintText,

@@ -37,14 +37,19 @@ class Routes {
   static const String careSosHistory = '/care/sos/history';
 
   // Feature screens
-  static const String serviceDetails = 'service-details'; // relative to dashboard tab
-  static const String workerList = 'workers';
-  static const String bookService = 'book-service';
-  static const String payment = 'payment';
-  static const String confirmation = 'confirmation';
-  static const String tracking = 'tracking';
-  static const String review = 'review';
-  static const String farmServices = 'farm-services';
-  static const String familyDashboard = 'family-dashboard';
+  static const String homeServices = '/dashboard/home-services';
+  static const String serviceDetails = '/dashboard/service-details';
+  static const String workerList = '/dashboard/workers';
+  static const String workerProfile = '/dashboard/worker-profile';
+  static const String search = '/dashboard/search';
+  static const String bookService = '/dashboard/book-service';
+  static const String payment = '/dashboard/payment';
+  static const String confirmation = '/dashboard/confirmation';
+  static const String tracking = '/dashboard/tracking';
+  static const String review = '/dashboard/review';
+  static const String farmServices = '/dashboard/farm-services';
+  static const String familyDashboard = '/dashboard/family-dashboard';
   static const String settings = 'settings';
+  static const String doctorAppointment = '/care/doctor-appointment';
+  static const String caregiverBooking = '/care/caregiver-booking';
 }

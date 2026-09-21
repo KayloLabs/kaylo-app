@@ -7,7 +7,6 @@ import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_theme.dart';
-import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/care_providers.dart';
 
@@ -105,7 +104,7 @@ class CareHomeScreen extends ConsumerWidget {
                     subtitle: l10n.doctorAppointmentSubtitle,
                     onTap: () {
                       KayloFeedback.tap();
-                      KayloSnackbar.showInfo(context, l10n.comingSoon);
+                      context.push(Routes.doctorAppointment);
                     },
                   ),
                   const SizedBox(height: AppSpacing.l),
@@ -116,7 +115,7 @@ class CareHomeScreen extends ConsumerWidget {
                     subtitle: l10n.caregiverBookingSubtitle,
                     onTap: () {
                       KayloFeedback.tap();
-                      KayloSnackbar.showInfo(context, l10n.comingSoon);
+                      context.push(Routes.caregiverBooking);
                     },
                   ),
                 ],

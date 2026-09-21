@@ -261,6 +261,222 @@ class AppLocalizationsEn extends AppLocalizations {
       'Microphone access was denied. Allow it in your browser or phone settings to use voice search.';
 
   @override
+  String get homeServices => 'Home Services';
+
+  @override
+  String get allHomeServices => 'All Home Services';
+
+  @override
+  String get exploreHomeServices =>
+      'Explore verified home service professionals';
+
+  @override
+  String get serviceDetails => 'Service Details';
+
+  @override
+  String get professionalAtDoorstep => 'Professional services at your doorstep';
+
+  @override
+  String get popularSubServices => 'Popular Sub-services';
+
+  @override
+  String get selectSubServices => 'Select sub-services';
+
+  @override
+  String get startingFrom => 'Starts from';
+
+  @override
+  String get bookNow => 'Book now';
+
+  @override
+  String get bookService => 'Book Service';
+
+  @override
+  String get workersAvailable => 'workers available';
+
+  @override
+  String get availableWorkers => 'Available Workers';
+
+  @override
+  String get sortAndFilter => 'Sort & Filter';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get rating => 'Rating';
+
+  @override
+  String get priceLowToHigh => 'Price: Low to High';
+
+  @override
+  String get priceHighToLow => 'Price: High to Low';
+
+  @override
+  String get experience => 'Experience';
+
+  @override
+  String get distance => 'Distance';
+
+  @override
+  String get filter => 'Filter';
+
+  @override
+  String get priceRange => 'Price Range';
+
+  @override
+  String get availability => 'Availability';
+
+  @override
+  String get availableToday => 'Available Today';
+
+  @override
+  String get minRating => 'Minimum Rating';
+
+  @override
+  String get verifiedOnly => 'Verified Only';
+
+  @override
+  String get apply => 'Apply';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get noWorkersFound => 'No workers found matching your criteria';
+
+  @override
+  String get workerProfile => 'Worker Profile';
+
+  @override
+  String get completedJobs => 'Completed Jobs';
+
+  @override
+  String get yearsExperience => 'Years Experience';
+
+  @override
+  String get trustScore => 'Trust Score';
+
+  @override
+  String get responseTime => 'Response Time';
+
+  @override
+  String get certifications => 'Certifications';
+
+  @override
+  String get reviews => 'Reviews';
+
+  @override
+  String get customerReviews => 'Customer Reviews';
+
+  @override
+  String get verifiedProfessional => 'Verified Professional';
+
+  @override
+  String get searchServicesOrWorkers => 'Search services or professionals…';
+
+  @override
+  String get recentSearches => 'Recent Searches';
+
+  @override
+  String get clearAll => 'Clear All';
+
+  @override
+  String get services => 'Services';
+
+  @override
+  String get professionals => 'Professionals';
+
+  @override
+  String get noResultsFound => 'No results found for';
+
+  @override
+  String get tryDifferentSearch =>
+      'Try searching for another service or professional';
+
+  @override
+  String get selectSpecialty => 'Select Specialty';
+
+  @override
+  String get availableDoctors => 'Available Doctors';
+
+  @override
+  String get consultationFee => 'Consultation Fee';
+
+  @override
+  String get selectDate => 'Date';
+
+  @override
+  String get selectTimeSlot => 'Time slot';
+
+  @override
+  String get morning => 'Morning';
+
+  @override
+  String get afternoon => 'Afternoon';
+
+  @override
+  String get evening => 'Evening';
+
+  @override
+  String get consultationType => 'Consultation Type';
+
+  @override
+  String get homeVisit => 'Home Visit';
+
+  @override
+  String get teleconsult => 'Video Teleconsult';
+
+  @override
+  String get confirmAppointment => 'Confirm Appointment';
+
+  @override
+  String get upcomingAppointments => 'Upcoming Appointments';
+
+  @override
+  String get appointmentConfirmed => 'Appointment Confirmed!';
+
+  @override
+  String get appointmentDetails => 'Your appointment has been scheduled.';
+
+  @override
+  String get selectCaregiver => 'Select Caregiver';
+
+  @override
+  String get hours => 'Hours';
+
+  @override
+  String get selectHours => 'Select Hours';
+
+  @override
+  String get careType => 'Care Type';
+
+  @override
+  String get elderlyCare => 'Elderly Care';
+
+  @override
+  String get postOpCare => 'Post-operative Care';
+
+  @override
+  String get companionship => 'Companionship';
+
+  @override
+  String get mobilityAssistance => 'Mobility Assistance';
+
+  @override
+  String get totalAmount => 'Total Amount';
+
+  @override
+  String get caregiverBooked => 'Caregiver Booked!';
+
+  @override
+  String get caregiverBookingSuccess =>
+      'Your caregiver request has been submitted.';
+
+  @override
+  String get nearYou => 'Near you';
+
+  @override
   String get farmServices => 'Farm Services';
 
   @override
@@ -380,19 +596,10 @@ class AppLocalizationsEn extends AppLocalizations {
       'Your total updates live as you set the quantity on the next step.';
 
   @override
-  String get bookNow => 'Book now';
-
-  @override
   String get scheduleTitle => 'Schedule';
 
   @override
-  String get selectDate => 'Date';
-
-  @override
   String get change => 'Change';
-
-  @override
-  String get selectTimeSlot => 'Time slot';
 
   @override
   String get quantity => 'Quantity';

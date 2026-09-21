@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/config/app_env.dart';
+import '../../../core/models/service_item.dart';
 import '../../../core/network/supabase_providers.dart';
 import '../data/mock_home_repository.dart';
 import '../data/supabase_home_repository.dart';
@@ -32,4 +33,21 @@ final fullCatalogProvider = FutureProvider.autoDispose((ref) async {
       for (final service in list)
         if (seen.add(service.id)) service,
   ];
+});
+
+final serviceListProvider =
+    FutureProvider.family<List<ServiceItem>, String>((ref, category) async {
+  final repo = ref.watch(homeRepositoryProvider);
+  return repo.getServicesByCategory(category);
+});
+
+final serviceDetailProvider =
+    FutureProvider.family<ServiceItem?, String>((ref, id) async {
+  final repo = ref.watch(homeRepositoryProvider);
+  return repo.getServiceById(id);
+});
+
+final popularServicesProvider = FutureProvider<List<ServiceItem>>((ref) async {
+  final repo = ref.watch(homeRepositoryProvider);
+  return repo.getPopularServices();
 });

@@ -267,6 +267,223 @@ class AppLocalizationsTa extends AppLocalizations {
       'மைக்ரோஃபோன் அனுமதி மறுக்கப்பட்டது. குரல் தேடலுக்கு உலாவி அல்லது ஃபோன் அமைப்புகளில் அனுமதிக்கவும்.';
 
   @override
+  String get homeServices => 'வீட்டு சேவைகள்';
+
+  @override
+  String get allHomeServices => 'அனைத்து வீட்டு சேவைகள்';
+
+  @override
+  String get exploreHomeServices =>
+      'சரிபார்க்கப்பட்ட வீட்டு சேவை நிபுணர்களை ஆராயுங்கள்';
+
+  @override
+  String get serviceDetails => 'சேவை விவரங்கள்';
+
+  @override
+  String get professionalAtDoorstep =>
+      'உங்கள் வீட்டு வாசலில் தொழில்முறை சேவைகள்';
+
+  @override
+  String get popularSubServices => 'பிரபலமான துணை சேவைகள்';
+
+  @override
+  String get selectSubServices => 'துணை சேவைகளைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get startingFrom => 'தொடக்க விலை';
+
+  @override
+  String get bookNow => 'இப்போது புக் செய்';
+
+  @override
+  String get bookService => 'சேவை புக் செய்க';
+
+  @override
+  String get workersAvailable => 'பணியாளர்கள் உள்ளனர்';
+
+  @override
+  String get availableWorkers => 'கிடைக்கும் பணியாளர்கள்';
+
+  @override
+  String get sortAndFilter => 'வரிசைப்படுத்து & வடிகட்டு';
+
+  @override
+  String get sortBy => 'இதன்படி வரிசைப்படுத்து';
+
+  @override
+  String get rating => 'மதிப்பீடு';
+
+  @override
+  String get priceLowToHigh => 'விலை: குறைவிலிருந்து அதிகம்';
+
+  @override
+  String get priceHighToLow => 'விலை: அதிகத்திலிருந்து குறைவு';
+
+  @override
+  String get experience => 'அனுபவம்';
+
+  @override
+  String get distance => 'தூரம்';
+
+  @override
+  String get filter => 'வடிகட்டி';
+
+  @override
+  String get priceRange => 'விலை வரம்பு';
+
+  @override
+  String get availability => 'இருப்பு';
+
+  @override
+  String get availableToday => 'இன்று கிடைக்கும்';
+
+  @override
+  String get minRating => 'குறைந்தபட்ச மதிப்பீடு';
+
+  @override
+  String get verifiedOnly => 'சரிபார்க்கப்பட்டவர்கள் மட்டும்';
+
+  @override
+  String get apply => 'பயன்படுத்து';
+
+  @override
+  String get reset => 'மீட்டமை';
+
+  @override
+  String get noWorkersFound => 'பணியாளர்கள் யாரும் கிடைக்கவில்லை';
+
+  @override
+  String get workerProfile => 'சுயவிவரம்';
+
+  @override
+  String get completedJobs => 'முடித்த வேலைகள்';
+
+  @override
+  String get yearsExperience => 'ஆண்டுகள் அனுபவம்';
+
+  @override
+  String get trustScore => 'நம்பகத்தன்மை மதிப்பெண்';
+
+  @override
+  String get responseTime => 'பதில் நேரம்';
+
+  @override
+  String get certifications => 'சான்றிதழ்கள்';
+
+  @override
+  String get reviews => 'மதிப்புரைகள்';
+
+  @override
+  String get customerReviews => 'வாடிக்கையாளர் மதிப்புரைகள்';
+
+  @override
+  String get verifiedProfessional => 'சரிபார்க்கப்பட்ட நிபுணர்';
+
+  @override
+  String get searchServicesOrWorkers =>
+      'சேவைகள் அல்லது நிபுணர்களைத் தேடுங்கள்…';
+
+  @override
+  String get recentSearches => 'சமீபத்திய தேடல்கள்';
+
+  @override
+  String get clearAll => 'அனைத்தையும் அழி';
+
+  @override
+  String get services => 'சேவைகள்';
+
+  @override
+  String get professionals => 'நிபுணர்கள்';
+
+  @override
+  String get noResultsFound => 'முடிவுகள் எதுவும் இல்லை';
+
+  @override
+  String get tryDifferentSearch =>
+      'வேறு சேவை அல்லது நிபுணரைத் தேட முயற்சிக்கவும்';
+
+  @override
+  String get selectSpecialty => 'சிறப்புத் துறையைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get availableDoctors => 'கிடைக்கும் மருத்துவர்கள்';
+
+  @override
+  String get consultationFee => 'ஆலோசனைக் கட்டணம்';
+
+  @override
+  String get selectDate => 'தேதி';
+
+  @override
+  String get selectTimeSlot => 'நேரம்';
+
+  @override
+  String get morning => 'காலை';
+
+  @override
+  String get afternoon => 'மதியம்';
+
+  @override
+  String get evening => 'மாலை';
+
+  @override
+  String get consultationType => 'ஆலோசனை வகை';
+
+  @override
+  String get homeVisit => 'வீட்டு வருகை';
+
+  @override
+  String get teleconsult => 'வீடியோ டெலிகன்சல்ட்';
+
+  @override
+  String get confirmAppointment => 'சந்திப்பை உறுதிப்படுத்தவும்';
+
+  @override
+  String get upcomingAppointments => 'வரவிருக்கும் சந்திப்புகள்';
+
+  @override
+  String get appointmentConfirmed => 'சந்திப்பு உறுதி செய்யப்பட்டது!';
+
+  @override
+  String get appointmentDetails => 'உங்கள் சந்திப்பு திட்டமிடப்பட்டுள்ளது.';
+
+  @override
+  String get selectCaregiver => 'பராமரிப்பாளரைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get hours => 'மணிநேரம்';
+
+  @override
+  String get selectHours => 'மணிநேரங்களைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get careType => 'பராமரிப்பு வகை';
+
+  @override
+  String get elderlyCare => 'முதியோர் பராமரிப்பு';
+
+  @override
+  String get postOpCare => 'அறுவை சிகிச்சைக்குப் பின் பராமரிப்பு';
+
+  @override
+  String get companionship => 'துணை';
+
+  @override
+  String get mobilityAssistance => 'இயக்க உதவி';
+
+  @override
+  String get totalAmount => 'மொத்த தொகை';
+
+  @override
+  String get caregiverBooked => 'பராமரிப்பாளர் புக் செய்யப்பட்டார்!';
+
+  @override
+  String get caregiverBookingSuccess => 'உங்கள் கோரிக்கை சமர்ப்பிக்கப்பட்டது.';
+
+  @override
+  String get nearYou => 'உங்கள் அருகில்';
+
+  @override
   String get farmServices => 'விவசாய சேவைகள்';
 
   @override
@@ -389,19 +606,10 @@ class AppLocalizationsTa extends AppLocalizations {
       'அடுத்த படியில் எண்ணிக்கையைத் தேர்வு செய்யும்போது மொத்தம் உடனே மாறும்.';
 
   @override
-  String get bookNow => 'இப்போது புக் செய்';
-
-  @override
   String get scheduleTitle => 'அட்டவணை';
 
   @override
-  String get selectDate => 'தேதி';
-
-  @override
   String get change => 'மாற்று';
-
-  @override
-  String get selectTimeSlot => 'நேரம்';
 
   @override
   String get quantity => 'எண்ணிக்கை';

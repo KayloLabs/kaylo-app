@@ -43,7 +43,10 @@ class ModeSwitcherSection extends StatelessWidget {
                 subtitle: AppLocalizations.of(context)!.farmSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
                 colorOverlay: Colors.green.withValues(alpha: 0.15), // Green tint
-                onTap: () {},
+                onTap: () {
+                  KayloFeedback.tap();
+                  context.push(Routes.farm);
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.s),

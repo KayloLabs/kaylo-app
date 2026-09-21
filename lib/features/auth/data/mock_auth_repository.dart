@@ -17,11 +17,13 @@ class MockAuthRepository implements AuthRepository {
   Future<void> _checkPersistedSession() async {
     final token = await _storage.getToken();
     if (token != null) {
+      // Same identity as a fresh OTP login, so a reload does not turn
+      // the demo user into someone else.
       _currentUser = AppUser(
-        id: 'mock_uid',
-        firstName: 'Mock',
+        id: 'mock_uid_1',
+        firstName: 'Nimal',
         lastName: 'User',
-        phone: '+91 9999999999',
+        phone: '+91 9847012345',
       );
       _authStateController.add(_currentUser);
     }

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
+import '../utils/money.dart';
 
 class PriceTag extends StatelessWidget {
   final double amount;
@@ -32,7 +33,7 @@ class PriceTag extends StatelessWidget {
       TextSpan(
         children: [
           if (prefix != null) TextSpan(text: prefix),
-          TextSpan(text: amount.toStringAsFixed(amount.truncateToDouble() == amount ? 0 : 2)),
+          TextSpan(text: formatIndianNumber(amount)),
           if (suffix != null) TextSpan(
             text: ' $suffix',
             style: TextStyle(

@@ -9,7 +9,8 @@ row-level security on every table and read-optimized views for the app.
 supabase/
 ├── migrations/
 │   ├── 0001_initial_schema.sql   # tables, enums, indexes, triggers, views
-│   └── 0002_rls_policies.sql     # RLS enablement + policies + auth helpers
+│   ├── 0002_rls_policies.sql     # RLS enablement + policies + auth helpers
+│   └── 0003_care_contacts_and_logs.sql  # emergency contacts, dose logs, SOS columns
 └── seed.sql                      # roles, categories, services, demo workers
 ```
 
@@ -34,6 +35,10 @@ feature's `data/` folder implement them, so no UI code knows the difference.
    1. `supabase/migrations/0001_initial_schema.sql`
    2. `supabase/migrations/0002_rls_policies.sql`
    3. `supabase/seed.sql`
+   4. `supabase/migrations/0003_care_contacts_and_logs.sql`
+
+   A project that already ran the first three only needs step 4 (it is
+   also appended to `setup_all.sql` for fresh projects).
 3. Grab the project URL and anon key from **Settings → API**.
 4. Run the app:
 

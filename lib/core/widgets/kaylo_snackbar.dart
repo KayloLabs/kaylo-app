@@ -36,12 +36,16 @@ class KayloSnackbar {
               children: [
                 Icon(icon, color: color, size: 18),
                 const SizedBox(width: 8),
-                Text(
-                  message,
-                  style: TextStyle(
-                    color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, 
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14,
+                // Long messages (validation errors, Tamil and Malayalam
+                // copy) wrap inside the pill instead of overflowing it.
+                Flexible(
+                  child: Text(
+                    message,
+                    style: TextStyle(
+                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 14,
+                    ),
                   ),
                 ),
               ],

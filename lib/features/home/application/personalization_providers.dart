@@ -2,11 +2,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/models/service_item.dart';
 import '../../../core/network/supabase_providers.dart';
+import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import 'home_providers.dart';
-
-// TODO(M2): replace with the real session user once auth lands.
-const _mockUserId = 'u1';
 
 /// Services for the dashboard rail, ranked by the user's booking history:
 /// a service they booked before scores highest, then services sharing a
@@ -20,9 +18,12 @@ final recommendedServicesProvider = FutureProvider.autoDispose<
 
   final pool = await homeRepo.getPopularServices();
 
+  final userId = ref.watch(currentUserIdProvider);
   List bookings;
   try {
-    bookings = await bookingsRepo.getUserBookings(_mockUserId);
+    bookings = userId == null
+        ? const []
+        : await bookingsRepo.getUserBookings(userId);
   } catch (_) {
     bookings = const []; // e.g. RLS-scoped live query without a session
   }

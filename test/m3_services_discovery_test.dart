@@ -3,9 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kaylo/features/home/data/mock_home_repository.dart';
 import 'package:kaylo/features/home/domain/home_repository.dart';
-import 'package:kaylo/features/home/application/home_providers.dart';
 import 'package:kaylo/features/workers/data/mock_workers_repository.dart';
-import 'package:kaylo/features/workers/domain/models/worker_filter.dart';
 import 'package:kaylo/features/workers/application/workers_providers.dart';
 import 'package:kaylo/features/care/data/mock_care_repository.dart';
 import 'package:kaylo/features/care/domain/models/appointment.dart';

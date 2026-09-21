@@ -14,6 +14,7 @@ class MockWorkersRepository implements WorkersRepository {
     Worker(id: 'w7', name: 'Vijayan C.', profileImageUrl: '', rating: 4.9, reviewsCount: 180, skillIds: ['10', '11'], location: 'Aluva', trustScore: 96, isVerified: true, hourlyRate: 450, totalJobs: 190),
     Worker(id: 'w8', name: 'Santhosh N.', profileImageUrl: '', rating: 4.3, reviewsCount: 30, skillIds: ['7', '12'], location: 'Kochi', trustScore: 82, isVerified: false, hourlyRate: 220, totalJobs: 38),
     Worker(id: 'w9', name: 'Deepak S.', profileImageUrl: '', rating: 4.8, reviewsCount: 95, skillIds: ['13', '5'], location: 'Kochi', trustScore: 94, isVerified: true, hourlyRate: 380, totalJobs: 112),
+    Worker(id: 'w10', name: 'Biju T.', profileImageUrl: '', rating: 4.7, reviewsCount: 64, skillIds: ['2', '10', '11'], location: 'Kannur', trustScore: 91, isVerified: true, hourlyRate: 320, totalJobs: 78),
   ];
 
   final Map<String, List<WorkerReview>> _mockReviews = {

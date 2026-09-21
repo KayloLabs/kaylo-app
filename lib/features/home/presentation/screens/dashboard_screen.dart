@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../application/dashboard_controller.dart';
 import '../../application/personalization_providers.dart';
+import '../../../notifications/application/notifications_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../widgets/greeting_header.dart';
 import '../widgets/dashboard_search_bar.dart';
@@ -39,8 +40,7 @@ class DashboardScreen extends ConsumerWidget {
                   sliver: SliverToBoxAdapter(
                     child: GreetingHeader(
                       location: state.location,
-                      notificationCount:
-                          unreadCount.whenOrNull(data: (c) => c) ?? 0,
+                      notificationCount: unreadCount,
                       userName: state.userName,
                     ),
                   ),

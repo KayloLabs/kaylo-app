@@ -7,6 +7,7 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class ModeSwitcherSection extends StatelessWidget {
@@ -30,7 +31,12 @@ class ModeSwitcherSection extends StatelessWidget {
                 subtitle: AppLocalizations.of(context)!.homeSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
                 colorOverlay: Colors.amber.withValues(alpha: 0.15), // Gold tint
-                onTap: () {},
+                // TODO(M3): route to the home services list.
+                onTap: () {
+                  KayloFeedback.tap();
+                  KayloSnackbar.showInfo(
+                      context, AppLocalizations.of(context)!.comingSoon);
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.s),
@@ -40,7 +46,10 @@ class ModeSwitcherSection extends StatelessWidget {
                 subtitle: AppLocalizations.of(context)!.farmSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
                 colorOverlay: Colors.green.withValues(alpha: 0.15), // Green tint
-                onTap: () {},
+                onTap: () {
+                  KayloFeedback.tap();
+                  context.push(Routes.farm);
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.s),

@@ -28,7 +28,9 @@ insert into services (service_id, category_id, service_name, description, base_p
   ('20000000-0000-4000-8000-000000000005', '10000000-0000-4000-8000-000000000001', 'Electrical',          'Electrical repairs and wiring',         400, 60,  'assets_kaylo/3d_transparent/icon_electric.png', true),
   ('20000000-0000-4000-8000-000000000006', '10000000-0000-4000-8000-000000000001', 'House Cleaning',      'Deep cleaning by trained staff',        600, 180, 'assets_kaylo/3d_transparent/icon_more.png',     false),
   ('20000000-0000-4000-8000-000000000007', '10000000-0000-4000-8000-000000000003', 'Medicine Delivery',   'Doorstep delivery from local pharmacies', 50, 45, 'assets_kaylo/3d_transparent/icon_more.png',     false),
-  ('20000000-0000-4000-8000-000000000008', '10000000-0000-4000-8000-000000000003', 'Caregiver Visit',     'Trained caregiver home visits',        700, 120, 'assets_kaylo/3d_transparent/icon_more.png',     false)
+  ('20000000-0000-4000-8000-000000000008', '10000000-0000-4000-8000-000000000003', 'Caregiver Visit',     'Trained caregiver home visits',        700, 120, 'assets_kaylo/3d_transparent/icon_more.png',     false),
+  ('20000000-0000-4000-8000-000000000009', '10000000-0000-4000-8000-000000000002', 'Tree Pruning',        'Overhanging branches trimmed safely near roofs and power lines', 600, 90, 'assets_kaylo/3d_transparent/icon_garden.png', false),
+  ('20000000-0000-4000-8000-000000000010', '10000000-0000-4000-8000-000000000002', 'Plot Clearing',       'Grass and bush cleared with brush cutters', 350, 60, 'assets_kaylo/3d_transparent/mode_farm.png', false)
 on conflict (service_id) do nothing;
 
 -- ---------- Demo workers (persons 3xxx, workers 4xxx, locations 5xxx) ----------

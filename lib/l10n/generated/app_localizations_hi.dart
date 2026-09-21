@@ -260,4 +260,218 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get voiceMicDenied =>
       'माइक्रोफ़ोन की अनुमति नहीं मिली। वॉइस खोज के लिए ब्राउज़र या फ़ोन सेटिंग्स में अनुमति दें।';
+
+  @override
+  String get homeServices => 'घरेलू सेवाएं';
+
+  @override
+  String get allHomeServices => 'सभी घरेलू सेवाएं';
+
+  @override
+  String get exploreHomeServices => 'सत्यापित पेशेवरों को खोजें';
+
+  @override
+  String get serviceDetails => 'सेवा विवरण';
+
+  @override
+  String get professionalAtDoorstep => 'आपके दरवाजे पर पेशेवर सेवाएं';
+
+  @override
+  String get popularSubServices => 'लोकप्रिय उप-सेवाएं';
+
+  @override
+  String get selectSubServices => 'उप-सेवाएं चुनें';
+
+  @override
+  String get startingFrom => 'शुरुआती मूल्य';
+
+  @override
+  String get bookNow => 'अभी बुक करें';
+
+  @override
+  String get bookService => 'सेवा बुक करें';
+
+  @override
+  String get workersAvailable => 'सहायक उपलब्ध हैं';
+
+  @override
+  String get availableWorkers => 'उपलब्ध पेशेवर';
+
+  @override
+  String get sortAndFilter => 'क्रमबद्ध करें और फ़िल्टर';
+
+  @override
+  String get sortBy => 'इसके अनुसार क्रमबद्ध करें';
+
+  @override
+  String get rating => 'रेटिंग';
+
+  @override
+  String get priceLowToHigh => 'मूल्य: कम से अधिक';
+
+  @override
+  String get priceHighToLow => 'मूल्य: अधिक से कम';
+
+  @override
+  String get experience => 'अनुभव';
+
+  @override
+  String get distance => 'दूरी';
+
+  @override
+  String get filter => 'फ़िल्टर';
+
+  @override
+  String get priceRange => 'मूल्य सीमा';
+
+  @override
+  String get availability => 'उपलब्धता';
+
+  @override
+  String get availableToday => 'आज उपलब्ध';
+
+  @override
+  String get minRating => 'न्यूनतम रेटिंग';
+
+  @override
+  String get verifiedOnly => 'केवल सत्यापित';
+
+  @override
+  String get apply => 'लागू करें';
+
+  @override
+  String get reset => 'रीसेट';
+
+  @override
+  String get noWorkersFound => 'कोई पेशेवर नहीं मिला';
+
+  @override
+  String get workerProfile => 'प्रोफ़ाइल';
+
+  @override
+  String get completedJobs => 'पूर्ण किए गए कार्य';
+
+  @override
+  String get yearsExperience => 'वर्षों का अनुभव';
+
+  @override
+  String get trustScore => 'विश्वसनीयता स्कोर';
+
+  @override
+  String get responseTime => 'प्रतिक्रिया समय';
+
+  @override
+  String get certifications => 'प्रमाणपत्र';
+
+  @override
+  String get reviews => 'समीक्षाएं';
+
+  @override
+  String get customerReviews => 'ग्राहक समीक्षाएं';
+
+  @override
+  String get verifiedProfessional => 'सत्यापित पेशेवर';
+
+  @override
+  String get searchServicesOrWorkers => 'सेवाएं या पेशेवर खोजें…';
+
+  @override
+  String get recentSearches => 'हाल की खोजें';
+
+  @override
+  String get clearAll => 'सभी हटाएं';
+
+  @override
+  String get services => 'सेवाएं';
+
+  @override
+  String get professionals => 'पेशेवर';
+
+  @override
+  String get noResultsFound => 'कोई परिणाम नहीं मिला';
+
+  @override
+  String get tryDifferentSearch =>
+      'किसी अन्य सेवा या पेशेवर को खोजने का प्रयास करें';
+
+  @override
+  String get selectSpecialty => 'विशेषज्ञता चुनें';
+
+  @override
+  String get availableDoctors => 'उपलब्ध डॉक्टर्स';
+
+  @override
+  String get consultationFee => 'परामर्श शुल्क';
+
+  @override
+  String get selectDate => 'तारीख चुनें';
+
+  @override
+  String get selectTimeSlot => 'समय स्लॉट चुनें';
+
+  @override
+  String get morning => 'सुबह';
+
+  @override
+  String get afternoon => 'दोपहर';
+
+  @override
+  String get evening => 'शाम';
+
+  @override
+  String get consultationType => 'परामर्श प्रकार';
+
+  @override
+  String get homeVisit => 'होम विज़िट';
+
+  @override
+  String get teleconsult => 'वीडियो टेलीकंसल्ट';
+
+  @override
+  String get confirmAppointment => 'अपॉइंटमेंट की पुष्टि करें';
+
+  @override
+  String get upcomingAppointments => 'आगामी अपॉइंटमेंट्स';
+
+  @override
+  String get appointmentConfirmed => 'अपॉइंटमेंट सुनिश्चित हुई!';
+
+  @override
+  String get appointmentDetails => 'आपकी अपॉइंटमेंट निर्धारित कर दी गई है।';
+
+  @override
+  String get selectCaregiver => 'देखभालकर्ता चुनें';
+
+  @override
+  String get hours => 'घंटे';
+
+  @override
+  String get selectHours => 'घंटे चुनें';
+
+  @override
+  String get careType => 'देखभाल का प्रकार';
+
+  @override
+  String get elderlyCare => 'बुजुर्गों की देखभाल';
+
+  @override
+  String get postOpCare => 'सर्जरी के बाद की देखभाल';
+
+  @override
+  String get companionship => 'साथी';
+
+  @override
+  String get mobilityAssistance => 'गतिशीलता सहायता';
+
+  @override
+  String get totalAmount => 'कुल राशि';
+
+  @override
+  String get caregiverBooked => 'देखभालकर्ता बुक हो गया!';
+
+  @override
+  String get caregiverBookingSuccess => 'आपका अनुरोध सफलतापूर्वक जमा हो गया।';
+
+  @override
+  String get nearYou => 'आपके निकट';
 }

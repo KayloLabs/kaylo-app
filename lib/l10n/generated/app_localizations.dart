@@ -599,6 +599,432 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Microphone access was denied. Allow it in your browser or phone settings to use voice search.'**
   String get voiceMicDenied;
+
+  /// No description provided for @homeServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Services'**
+  String get homeServices;
+
+  /// No description provided for @allHomeServices.
+  ///
+  /// In en, this message translates to:
+  /// **'All Home Services'**
+  String get allHomeServices;
+
+  /// No description provided for @exploreHomeServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore verified home service professionals'**
+  String get exploreHomeServices;
+
+  /// No description provided for @serviceDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Service Details'**
+  String get serviceDetails;
+
+  /// No description provided for @professionalAtDoorstep.
+  ///
+  /// In en, this message translates to:
+  /// **'Professional services at your doorstep'**
+  String get professionalAtDoorstep;
+
+  /// No description provided for @popularSubServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular Sub-services'**
+  String get popularSubServices;
+
+  /// No description provided for @selectSubServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Select sub-services'**
+  String get selectSubServices;
+
+  /// No description provided for @startingFrom.
+  ///
+  /// In en, this message translates to:
+  /// **'Starts from'**
+  String get startingFrom;
+
+  /// No description provided for @bookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Now'**
+  String get bookNow;
+
+  /// No description provided for @bookService.
+  ///
+  /// In en, this message translates to:
+  /// **'Book Service'**
+  String get bookService;
+
+  /// No description provided for @workersAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'workers available'**
+  String get workersAvailable;
+
+  /// No description provided for @availableWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Workers'**
+  String get availableWorkers;
+
+  /// No description provided for @sortAndFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort & Filter'**
+  String get sortAndFilter;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// No description provided for @rating.
+  ///
+  /// In en, this message translates to:
+  /// **'Rating'**
+  String get rating;
+
+  /// No description provided for @priceLowToHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: Low to High'**
+  String get priceLowToHigh;
+
+  /// No description provided for @priceHighToLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: High to Low'**
+  String get priceHighToLow;
+
+  /// No description provided for @experience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience'**
+  String get experience;
+
+  /// No description provided for @distance.
+  ///
+  /// In en, this message translates to:
+  /// **'Distance'**
+  String get distance;
+
+  /// No description provided for @filter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter'**
+  String get filter;
+
+  /// No description provided for @priceRange.
+  ///
+  /// In en, this message translates to:
+  /// **'Price Range'**
+  String get priceRange;
+
+  /// No description provided for @availability.
+  ///
+  /// In en, this message translates to:
+  /// **'Availability'**
+  String get availability;
+
+  /// No description provided for @availableToday.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Today'**
+  String get availableToday;
+
+  /// No description provided for @minRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Minimum Rating'**
+  String get minRating;
+
+  /// No description provided for @verifiedOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Only'**
+  String get verifiedOnly;
+
+  /// No description provided for @apply.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get apply;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @noWorkersFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No workers found matching your criteria'**
+  String get noWorkersFound;
+
+  /// No description provided for @workerProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker Profile'**
+  String get workerProfile;
+
+  /// No description provided for @completedJobs.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed Jobs'**
+  String get completedJobs;
+
+  /// No description provided for @yearsExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Years Experience'**
+  String get yearsExperience;
+
+  /// No description provided for @trustScore.
+  ///
+  /// In en, this message translates to:
+  /// **'Trust Score'**
+  String get trustScore;
+
+  /// No description provided for @responseTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Response Time'**
+  String get responseTime;
+
+  /// No description provided for @certifications.
+  ///
+  /// In en, this message translates to:
+  /// **'Certifications'**
+  String get certifications;
+
+  /// No description provided for @reviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviews;
+
+  /// No description provided for @customerReviews.
+  ///
+  /// In en, this message translates to:
+  /// **'Customer Reviews'**
+  String get customerReviews;
+
+  /// No description provided for @verifiedProfessional.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified Professional'**
+  String get verifiedProfessional;
+
+  /// No description provided for @searchServicesOrWorkers.
+  ///
+  /// In en, this message translates to:
+  /// **'Search services or professionals…'**
+  String get searchServicesOrWorkers;
+
+  /// No description provided for @recentSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Recent Searches'**
+  String get recentSearches;
+
+  /// No description provided for @clearAll.
+  ///
+  /// In en, this message translates to:
+  /// **'Clear All'**
+  String get clearAll;
+
+  /// No description provided for @services.
+  ///
+  /// In en, this message translates to:
+  /// **'Services'**
+  String get services;
+
+  /// No description provided for @professionals.
+  ///
+  /// In en, this message translates to:
+  /// **'Professionals'**
+  String get professionals;
+
+  /// No description provided for @noResultsFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No results found for'**
+  String get noResultsFound;
+
+  /// No description provided for @tryDifferentSearch.
+  ///
+  /// In en, this message translates to:
+  /// **'Try searching for another service or professional'**
+  String get tryDifferentSearch;
+
+  /// No description provided for @selectSpecialty.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Specialty'**
+  String get selectSpecialty;
+
+  /// No description provided for @availableDoctors.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Doctors'**
+  String get availableDoctors;
+
+  /// No description provided for @consultationFee.
+  ///
+  /// In en, this message translates to:
+  /// **'Consultation Fee'**
+  String get consultationFee;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Date'**
+  String get selectDate;
+
+  /// No description provided for @selectTimeSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Time Slot'**
+  String get selectTimeSlot;
+
+  /// No description provided for @morning.
+  ///
+  /// In en, this message translates to:
+  /// **'Morning'**
+  String get morning;
+
+  /// No description provided for @afternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Afternoon'**
+  String get afternoon;
+
+  /// No description provided for @evening.
+  ///
+  /// In en, this message translates to:
+  /// **'Evening'**
+  String get evening;
+
+  /// No description provided for @consultationType.
+  ///
+  /// In en, this message translates to:
+  /// **'Consultation Type'**
+  String get consultationType;
+
+  /// No description provided for @homeVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Visit'**
+  String get homeVisit;
+
+  /// No description provided for @teleconsult.
+  ///
+  /// In en, this message translates to:
+  /// **'Video Teleconsult'**
+  String get teleconsult;
+
+  /// No description provided for @confirmAppointment.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm Appointment'**
+  String get confirmAppointment;
+
+  /// No description provided for @upcomingAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming Appointments'**
+  String get upcomingAppointments;
+
+  /// No description provided for @appointmentConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment Confirmed!'**
+  String get appointmentConfirmed;
+
+  /// No description provided for @appointmentDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Your appointment has been scheduled.'**
+  String get appointmentDetails;
+
+  /// No description provided for @selectCaregiver.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Caregiver'**
+  String get selectCaregiver;
+
+  /// No description provided for @hours.
+  ///
+  /// In en, this message translates to:
+  /// **'Hours'**
+  String get hours;
+
+  /// No description provided for @selectHours.
+  ///
+  /// In en, this message translates to:
+  /// **'Select Hours'**
+  String get selectHours;
+
+  /// No description provided for @careType.
+  ///
+  /// In en, this message translates to:
+  /// **'Care Type'**
+  String get careType;
+
+  /// No description provided for @elderlyCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Elderly Care'**
+  String get elderlyCare;
+
+  /// No description provided for @postOpCare.
+  ///
+  /// In en, this message translates to:
+  /// **'Post-operative Care'**
+  String get postOpCare;
+
+  /// No description provided for @companionship.
+  ///
+  /// In en, this message translates to:
+  /// **'Companionship'**
+  String get companionship;
+
+  /// No description provided for @mobilityAssistance.
+  ///
+  /// In en, this message translates to:
+  /// **'Mobility Assistance'**
+  String get mobilityAssistance;
+
+  /// No description provided for @totalAmount.
+  ///
+  /// In en, this message translates to:
+  /// **'Total Amount'**
+  String get totalAmount;
+
+  /// No description provided for @caregiverBooked.
+  ///
+  /// In en, this message translates to:
+  /// **'Caregiver Booked!'**
+  String get caregiverBooked;
+
+  /// No description provided for @caregiverBookingSuccess.
+  ///
+  /// In en, this message translates to:
+  /// **'Your caregiver request has been submitted.'**
+  String get caregiverBookingSuccess;
+
+  /// No description provided for @nearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'Near you'**
+  String get nearYou;
 }
 
 class _AppLocalizationsDelegate

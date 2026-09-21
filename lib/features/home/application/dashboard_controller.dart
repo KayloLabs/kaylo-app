@@ -1,6 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../../core/models/service_item.dart';
+import '../../auth/application/current_user_provider.dart';
 import 'home_providers.dart';
+import 'user_location_provider.dart';
 
 class DashboardState {
   final String userName;
@@ -19,13 +21,12 @@ final dashboardControllerProvider = FutureProvider.autoDispose<DashboardState>((
 ) async {
   final repo = ref.watch(homeRepositoryProvider);
 
-  // Fetch popular services
   final services = await repo.getPopularServices();
+  final user = ref.watch(currentUserProvider);
 
-  // Mocking M2's user data for R1
   return DashboardState(
-    userName: 'Nimal',
-    location: 'Kannur, Kerala',
+    userName: user?.firstName ?? '',
+    location: ref.watch(userLocationProvider),
     popularServices: services,
   );
 });

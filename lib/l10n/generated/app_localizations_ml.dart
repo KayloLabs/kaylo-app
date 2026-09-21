@@ -980,4 +980,403 @@ class AppLocalizationsMl extends AppLocalizations {
   String primaryContact(String name) {
     return 'പ്രധാന ബന്ധം: $name';
   }
+
+  @override
+  String get unitOrder => 'ഓർഡർ';
+
+  @override
+  String unitOrderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ഓർഡറുകൾ',
+      one: '1 ഓർഡർ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get standardPartsQuoted =>
+      'സ്പെയർ പാർട്സിന്റെ വില മുൻകൂട്ടി അറിയിക്കും';
+
+  @override
+  String get standardCleanupAfter => 'പോകുംമുമ്പ് ജോലിസ്ഥലം വൃത്തിയാക്കും';
+
+  @override
+  String get standardBackgroundChecked => 'പശ്ചാത്തലം പരിശോധിച്ച കെയർഗിവർ';
+
+  @override
+  String get standardPrescriptionChecked =>
+      'കുറിപ്പടി ഫാർമസിസ്റ്റ് പരിശോധിക്കും';
+
+  @override
+  String get homeServices => 'വീട്ടുസേവനങ്ങൾ';
+
+  @override
+  String get careServices => 'കെയർ സേവനങ്ങൾ';
+
+  @override
+  String get allServices => 'എല്ലാ സേവനങ്ങളും';
+
+  @override
+  String get homeServicesTagline =>
+      'കൃത്യസമയത്ത് എത്തി, ജോലി കഴിഞ്ഞ് വൃത്തിയാക്കുന്ന പ്ലംബർമാരും ഇലക്ട്രീഷ്യന്മാരും ക്ലീനർമാരും.';
+
+  @override
+  String get careServicesTagline =>
+      'നിങ്ങൾ പരിപാലിക്കുന്നവർക്കായി പരിശീലനം നേടിയ കെയർഗിവർമാരും വീട്ടുപടിക്കൽ മരുന്നും.';
+
+  @override
+  String get allServicesTagline =>
+      'വീട്, കൃഷി, കെയർ എന്നിവയിലായി കെയ്‌ലോ നൽകുന്ന എല്ലാ സേവനങ്ങളും.';
+
+  @override
+  String get serviceAddress => 'സേവന വിലാസം';
+
+  @override
+  String get useMyLocation => 'എന്റെ ലൊക്കേഷൻ ഉപയോഗിക്കുക';
+
+  @override
+  String get locating => 'കണ്ടെത്തുന്നു…';
+
+  @override
+  String get locationServicesOff =>
+      'ലൊക്കേഷൻ സേവനങ്ങൾ ഓണാക്കി വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get locationDenied => 'ലൊക്കേഷൻ അനുമതി നൽകിയില്ല.';
+
+  @override
+  String get locationDeniedForever =>
+      'കെയ്‌ലോയ്ക്ക് ലൊക്കേഷൻ തടഞ്ഞിരിക്കുന്നു. ഉപകരണ ക്രമീകരണങ്ങളിൽ അനുവദിക്കുക.';
+
+  @override
+  String get locationTimeout =>
+      'GPS ലഭിച്ചില്ല. തുറന്ന സ്ഥലത്തേക്ക് മാറി വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get locationUnavailable => 'ലൊക്കേഷൻ ഇപ്പോൾ ലഭ്യമല്ല.';
+
+  @override
+  String get markAllRead => 'എല്ലാം വായിച്ചതായി അടയാളപ്പെടുത്തുക';
+
+  @override
+  String get noNotificationsTitle => 'പുതിയതൊന്നുമില്ല';
+
+  @override
+  String get noNotificationsDescription =>
+      'ബുക്കിംഗ് അപ്ഡേറ്റുകളും സന്ദേശങ്ങളും ഓർമ്മപ്പെടുത്തലുകളും ഇവിടെ കാണാം.';
+
+  @override
+  String get today => 'ഇന്ന്';
+
+  @override
+  String get earlier => 'മുമ്പ്';
+
+  @override
+  String get justNow => 'ഇപ്പോൾ';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മിനിറ്റ് മുമ്പ്',
+      one: '1 മിനിറ്റ് മുമ്പ്',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മണിക്കൂർ മുമ്പ്',
+      one: '1 മണിക്കൂർ മുമ്പ്',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ദിവസം മുമ്പ്',
+      one: 'ഇന്നലെ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookingDetails => 'ബുക്കിംഗ് വിവരങ്ങൾ';
+
+  @override
+  String get cancelBookingTitle => 'ഈ ബുക്കിംഗ് റദ്ദാക്കണോ?';
+
+  @override
+  String get cancelBookingMessage =>
+      'തൊഴിലാളിയെ ഒഴിവാക്കും. എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ബുക്ക് ചെയ്യാം.';
+
+  @override
+  String get keepBooking => 'ബുക്കിംഗ് നിലനിർത്തുക';
+
+  @override
+  String get cancelBooking => 'ബുക്കിംഗ് റദ്ദാക്കുക';
+
+  @override
+  String get bookingCancelled => 'ബുക്കിംഗ് റദ്ദാക്കി';
+
+  @override
+  String get bookingCancelledBanner => 'ഈ ബുക്കിംഗ് റദ്ദാക്കിയതാണ്.';
+
+  @override
+  String get stepRequested => 'അഭ്യർത്ഥിച്ചു';
+
+  @override
+  String get stepConfirmed => 'ഉറപ്പായി';
+
+  @override
+  String get stepInProgress => 'നടക്കുന്നു';
+
+  @override
+  String get stepCompleted => 'പൂർത്തിയായി';
+
+  @override
+  String get assignedWorker => 'നിങ്ങളുടെ തൊഴിലാളി';
+
+  @override
+  String get noWorkerYet => 'സന്ദർശനത്തിന് മുമ്പ് ഒരു തൊഴിലാളിയെ നിയോഗിക്കും.';
+
+  @override
+  String get messageWorker => 'സന്ദേശം';
+
+  @override
+  String get reschedule => 'സമയം മാറ്റുക';
+
+  @override
+  String get bookingRescheduled => 'ബുക്കിംഗ് സമയം മാറ്റി';
+
+  @override
+  String get filters => 'ഫിൽട്ടറുകൾ';
+
+  @override
+  String get reset => 'പുനഃസജ്ജമാക്കുക';
+
+  @override
+  String get category => 'വിഭാഗം';
+
+  @override
+  String get sortBy => 'ക്രമപ്പെടുത്തുക';
+
+  @override
+  String get applyFilters => 'പ്രയോഗിക്കുക';
+
+  @override
+  String get sortRelevance => 'പ്രസക്തി';
+
+  @override
+  String get sortPriceLowHigh => 'വില: കുറഞ്ഞത് മുതൽ';
+
+  @override
+  String get sortPriceHighLow => 'വില: കൂടിയത് മുതൽ';
+
+  @override
+  String get allCategories => 'എല്ലാം';
+
+  @override
+  String get noResultsTitle => 'സേവനങ്ങളൊന്നും കണ്ടെത്തിയില്ല';
+
+  @override
+  String get noResultsDescription =>
+      'മറ്റൊരു വാക്ക് ശ്രമിക്കൂ, അല്ലെങ്കിൽ പ്രശ്നം പറയൂ: \"പൈപ്പ് ചോരുന്നു\" എന്നും തിരയാം.';
+
+  @override
+  String resultsFor(int count, String query) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '\"$query\" എന്നതിന് $count ഫലങ്ങൾ',
+      one: '\"$query\" എന്നതിന് 1 ഫലം',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourLocation => 'നിങ്ങളുടെ ലൊക്കേഷൻ';
+
+  @override
+  String get or => 'അല്ലെങ്കിൽ';
+
+  @override
+  String get townOrCity => 'പട്ടണം അല്ലെങ്കിൽ നഗരം';
+
+  @override
+  String get townHint => 'ഉദാ. കണ്ണൂർ';
+
+  @override
+  String get saveLocation => 'ലൊക്കേഷൻ സേവ് ചെയ്യുക';
+
+  @override
+  String get townRequired => 'പട്ടണമോ നഗരമോ നൽകുക';
+
+  @override
+  String locationUpdated(String label) {
+    return 'ലൊക്കേഷൻ $label ആയി സജ്ജമാക്കി';
+  }
+
+  @override
+  String get enableLocation => 'ലൊക്കേഷൻ ഓണാക്കുക';
+
+  @override
+  String get enableLocationSubtitle =>
+      'അടുത്തുള്ള തൊഴിലാളികളെ കാണിക്കാനും SOS അലേർട്ടിൽ പങ്കിടാനും കെയ്‌ലോ നിങ്ങളുടെ ലൊക്കേഷൻ ഉപയോഗിക്കുന്നു.';
+
+  @override
+  String get locationWillAppear => 'നിങ്ങളുടെ ലൊക്കേഷൻ ഇവിടെ കാണാം';
+
+  @override
+  String get locateAgain => 'വീണ്ടും കണ്ടെത്തുക';
+
+  @override
+  String get continueLabel => 'തുടരുക';
+
+  @override
+  String get enterManually => 'സ്വയം നൽകുക';
+
+  @override
+  String get notNow => 'ഇപ്പോൾ വേണ്ട';
+
+  @override
+  String get noAddressesTitle => 'സേവ് ചെയ്ത വിലാസങ്ങളില്ല';
+
+  @override
+  String get noAddressesDescription =>
+      'വീടോ കൃഷിയിടമോ ഒരിക്കൽ സേവ് ചെയ്താൽ ബുക്ക് ചെയ്യുമ്പോൾ ഒറ്റ ടാപ്പിൽ തിരഞ്ഞെടുക്കാം.';
+
+  @override
+  String get addAddress => 'വിലാസം ചേർക്കുക';
+
+  @override
+  String get defaultLabel => 'സ്ഥിരം';
+
+  @override
+  String get setAsDefault => 'സ്ഥിരമാക്കുക';
+
+  @override
+  String get removeAddress => 'നീക്കം ചെയ്യുക';
+
+  @override
+  String get addressLabel => 'ലേബൽ';
+
+  @override
+  String get labelHome => 'വീട്';
+
+  @override
+  String get labelFarm => 'കൃഷിയിടം';
+
+  @override
+  String get labelWork => 'ജോലിസ്ഥലം';
+
+  @override
+  String get labelOther => 'മറ്റുള്ളവ';
+
+  @override
+  String get labelOtherHint => 'ഉദാ. അമ്മയുടെ വീട്';
+
+  @override
+  String get addressLine => 'വിലാസം';
+
+  @override
+  String get addressSaved => 'വിലാസം സേവ് ചെയ്തു';
+
+  @override
+  String get contactUs => 'ഞങ്ങളെ ബന്ധപ്പെടുക';
+
+  @override
+  String get emailUs => 'ഇമെയിൽ അയയ്ക്കുക';
+
+  @override
+  String get reportProblem => 'പ്രശ്നം അറിയിക്കുക';
+
+  @override
+  String get reportProblemSubtitle => 'എന്താണ് തെറ്റിയതെന്ന് പറയൂ';
+
+  @override
+  String get reportProblemTemplate =>
+      'എന്ത് സംഭവിച്ചു:\nആപ്പിൽ എവിടെ:\nഫോൺ മോഡൽ:';
+
+  @override
+  String get faq => 'പതിവ് ചോദ്യങ്ങൾ';
+
+  @override
+  String get faqBookQ => 'എങ്ങനെ സേവനം ബുക്ക് ചെയ്യാം?';
+
+  @override
+  String get faqBookA =>
+      'ഹോം സ്ക്രീനിൽ നിന്നോ തിരയലിൽ നിന്നോ സേവനം തിരഞ്ഞെടുത്ത്, തീയതി, സമയം, എണ്ണം എന്നിവ നൽകി, വിലാസം ചേർത്ത് ഉറപ്പിക്കുക. ഉടൻ ബുക്കിംഗ് ഐഡി ലഭിക്കും; ബുക്കിംഗുകളിൽ ട്രാക്ക് ചെയ്യാം.';
+
+  @override
+  String get faqPayQ => 'എങ്ങനെ പണം അടയ്ക്കാം?';
+
+  @override
+  String get faqPayA =>
+      'UPI, കാർഡ് എന്നിവ ഉറപ്പിക്കുമ്പോൾ ഈടാക്കും. ജോലി കഴിഞ്ഞ് തൊഴിലാളിക്ക് നേരിട്ട് നൽകാൻ \"സേവനത്തിന് ശേഷം അടയ്ക്കാം\" തിരഞ്ഞെടുക്കുക.';
+
+  @override
+  String get faqCancelQ => 'റദ്ദാക്കാനോ സമയം മാറ്റാനോ കഴിയുമോ?';
+
+  @override
+  String get faqCancelA =>
+      'കഴിയും. ബുക്കിംഗുകളിൽ ബുക്കിംഗ് തുറന്ന് സമയം മാറ്റുകയോ റദ്ദാക്കുകയോ ചെയ്യുക. തൊഴിലാളി പുറപ്പെടുന്നതുവരെ രണ്ടും സൗജന്യമാണ്.';
+
+  @override
+  String get faqWorkersQ => 'തൊഴിലാളികളെ എങ്ങനെ പരിശോധിക്കുന്നു?';
+
+  @override
+  String get faqWorkersA =>
+      'ലിസ്റ്റ് ചെയ്യുംമുമ്പ് ഓരോ തൊഴിലാളിയുടെയും ഐഡി പരിശോധിക്കും; ബുക്കിംഗ് പൂർത്തിയാക്കിയ ഉപഭോക്താക്കളിൽ നിന്ന് മാത്രമാണ് റേറ്റിംഗ്.';
+
+  @override
+  String get faqCareQ => 'കെയർ മോഡ് എന്താണ്?';
+
+  @override
+  String get faqCareA =>
+      'മുതിർന്നവർക്കായി വലിയ അക്ഷരങ്ങളും ഉയർന്ന കോൺട്രാസ്റ്റുമുള്ള രൂപത്തിലേക്ക് ആപ്പ് മാറ്റുന്നു; മരുന്ന് ഓർമ്മപ്പെടുത്തലും ഒറ്റ അമർത്തലിൽ SOS ഉം ഉണ്ട്.';
+
+  @override
+  String get faqSosQ => 'SOS എങ്ങനെ പ്രവർത്തിക്കുന്നു?';
+
+  @override
+  String get faqSosA =>
+      'SOS ബട്ടൺ മൂന്ന് സെക്കൻഡ് അമർത്തിപ്പിടിക്കുക. എല്ലാ അടിയന്തര ബന്ധങ്ങൾക്കും ലൊക്കേഷൻ ലഭിക്കും; പ്രധാന ബന്ധത്തെ വിളിക്കും.';
+
+  @override
+  String get helpFooter =>
+      'കേരളത്തിലെ ഒരു ചെറിയ ടീമാണ് കെയ്‌ലോ നിർമ്മിക്കുന്നത്. എല്ലാ സന്ദേശങ്ങളും വായിക്കും.';
+
+  @override
+  String get couldNotOpenEmail => 'ഇമെയിൽ ആപ്പ് തുറക്കാനായില്ല.';
+
+  @override
+  String get rateTitle => 'കെയ്‌ലോ എങ്ങനെയുണ്ട്?';
+
+  @override
+  String get rateSubtitle =>
+      'നിങ്ങളുടെ റേറ്റിംഗ് ടീമിന് അടുത്ത ശ്രദ്ധ എവിടെ വേണമെന്ന് പറയുന്നു.';
+
+  @override
+  String get rateComment => 'മെച്ചപ്പെടുത്തേണ്ടത് എന്തെങ്കിലും? (നിർബന്ധമില്ല)';
+
+  @override
+  String get submitRating => 'സമർപ്പിക്കുക';
+
+  @override
+  String get pickAStar => 'ആദ്യം ഒരു നക്ഷത്ര റേറ്റിംഗ് തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String youRated(int stars) {
+    return 'നിങ്ങൾ കെയ്‌ലോയ്ക്ക് 5-ൽ $stars നൽകി';
+  }
 }

@@ -63,6 +63,18 @@ class SupabaseBookingsRepository implements BookingsRepository {
     }
   }
 
+  @override
+  Future<void> rescheduleBooking(String bookingId, DateTime scheduledAt) async {
+    try {
+      await _client.from('bookings').update({
+        'booking_date': _dateString(scheduledAt),
+        'booking_time': _timeString(scheduledAt),
+      }).eq('booking_id', bookingId);
+    } catch (e) {
+      throw mapSupabaseError(e);
+    }
+  }
+
   Booking _bookingFromRow(Map<String, dynamic> row) {
     return Booking(
       id: row['booking_id'] as String,

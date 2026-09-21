@@ -30,7 +30,10 @@ class ModeSwitcherSection extends StatelessWidget {
                 subtitle: AppLocalizations.of(context)!.homeSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
                 colorOverlay: Colors.amber.withValues(alpha: 0.15), // Gold tint
-                onTap: () {},
+                onTap: () {
+                  KayloFeedback.tap();
+                  context.push(Routes.homeServices);
+                },
               ),
             ),
             const SizedBox(width: AppSpacing.s),

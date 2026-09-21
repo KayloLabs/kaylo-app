@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/routes.dart';
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/search_bar_field.dart';
@@ -21,6 +24,11 @@ class DashboardSearchBar extends ConsumerWidget {
             borderRadius: 24.0,
             child: SearchBarField(
               hintText: l10n.searchServices,
+              readOnly: true,
+              onTap: () {
+                KayloFeedback.tap();
+                context.push(Routes.search);
+              },
               suffix: IconButton(
                 tooltip: l10n.voiceSearch,
                 icon: const Icon(

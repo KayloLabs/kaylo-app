@@ -1391,6 +1391,672 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Primary contact: {name}'**
   String primaryContact(String name);
+
+  /// No description provided for @unitOrder.
+  ///
+  /// In en, this message translates to:
+  /// **'order'**
+  String get unitOrder;
+
+  /// No description provided for @unitOrderCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 order} other{{count} orders}}'**
+  String unitOrderCount(int count);
+
+  /// No description provided for @standardPartsQuoted.
+  ///
+  /// In en, this message translates to:
+  /// **'Spare parts quoted before fitting'**
+  String get standardPartsQuoted;
+
+  /// No description provided for @standardCleanupAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Work area cleaned before leaving'**
+  String get standardCleanupAfter;
+
+  /// No description provided for @standardBackgroundChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Background-checked caregiver'**
+  String get standardBackgroundChecked;
+
+  /// No description provided for @standardPrescriptionChecked.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription checked by a pharmacist'**
+  String get standardPrescriptionChecked;
+
+  /// No description provided for @homeServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Home Services'**
+  String get homeServices;
+
+  /// No description provided for @careServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Care Services'**
+  String get careServices;
+
+  /// No description provided for @allServices.
+  ///
+  /// In en, this message translates to:
+  /// **'All services'**
+  String get allServices;
+
+  /// No description provided for @homeServicesTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbers, electricians and cleaners who show up on time and clean up after.'**
+  String get homeServicesTagline;
+
+  /// No description provided for @careServicesTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Trained caregivers and doorstep medicines for the people you look after.'**
+  String get careServicesTagline;
+
+  /// No description provided for @allServicesTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everything Kaylo offers, across home, farm and care.'**
+  String get allServicesTagline;
+
+  /// No description provided for @serviceAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Service address'**
+  String get serviceAddress;
+
+  /// No description provided for @useMyLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Use my location'**
+  String get useMyLocation;
+
+  /// No description provided for @locating.
+  ///
+  /// In en, this message translates to:
+  /// **'Locating…'**
+  String get locating;
+
+  /// No description provided for @locationServicesOff.
+  ///
+  /// In en, this message translates to:
+  /// **'Turn on location services and try again.'**
+  String get locationServicesOff;
+
+  /// No description provided for @locationDenied.
+  ///
+  /// In en, this message translates to:
+  /// **'Location permission was not granted.'**
+  String get locationDenied;
+
+  /// No description provided for @locationDeniedForever.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is blocked for Kaylo. Allow it in your device settings.'**
+  String get locationDeniedForever;
+
+  /// No description provided for @locationTimeout.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not get a GPS fix. Move to open sky and try again.'**
+  String get locationTimeout;
+
+  /// No description provided for @locationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is unavailable right now.'**
+  String get locationUnavailable;
+
+  /// No description provided for @markAllRead.
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get markAllRead;
+
+  /// No description provided for @noNotificationsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'You\'re all caught up'**
+  String get noNotificationsTitle;
+
+  /// No description provided for @noNotificationsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking updates, messages and reminders will show up here.'**
+  String get noNotificationsDescription;
+
+  /// No description provided for @today.
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get today;
+
+  /// No description provided for @earlier.
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get earlier;
+
+  /// No description provided for @justNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Just now'**
+  String get justNow;
+
+  /// No description provided for @minutesAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 minute ago} other{{count} minutes ago}}'**
+  String minutesAgo(int count);
+
+  /// No description provided for @hoursAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour ago} other{{count} hours ago}}'**
+  String hoursAgo(int count);
+
+  /// No description provided for @daysAgo.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{Yesterday} other{{count} days ago}}'**
+  String daysAgo(int count);
+
+  /// No description provided for @bookingDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking details'**
+  String get bookingDetails;
+
+  /// No description provided for @cancelBookingTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel this booking?'**
+  String get cancelBookingTitle;
+
+  /// No description provided for @cancelBookingMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'The worker will be released. You can book again anytime.'**
+  String get cancelBookingMessage;
+
+  /// No description provided for @keepBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep booking'**
+  String get keepBooking;
+
+  /// No description provided for @cancelBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancel booking'**
+  String get cancelBooking;
+
+  /// No description provided for @bookingCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking cancelled'**
+  String get bookingCancelled;
+
+  /// No description provided for @bookingCancelledBanner.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking was cancelled.'**
+  String get bookingCancelledBanner;
+
+  /// No description provided for @stepRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Requested'**
+  String get stepRequested;
+
+  /// No description provided for @stepConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get stepConfirmed;
+
+  /// No description provided for @stepInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get stepInProgress;
+
+  /// No description provided for @stepCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get stepCompleted;
+
+  /// No description provided for @assignedWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Your worker'**
+  String get assignedWorker;
+
+  /// No description provided for @noWorkerYet.
+  ///
+  /// In en, this message translates to:
+  /// **'A worker will be assigned before the visit.'**
+  String get noWorkerYet;
+
+  /// No description provided for @messageWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'Message'**
+  String get messageWorker;
+
+  /// No description provided for @reschedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Reschedule'**
+  String get reschedule;
+
+  /// No description provided for @bookingRescheduled.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking rescheduled'**
+  String get bookingRescheduled;
+
+  /// No description provided for @filters.
+  ///
+  /// In en, this message translates to:
+  /// **'Filters'**
+  String get filters;
+
+  /// No description provided for @reset.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset'**
+  String get reset;
+
+  /// No description provided for @category.
+  ///
+  /// In en, this message translates to:
+  /// **'Category'**
+  String get category;
+
+  /// No description provided for @sortBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Sort by'**
+  String get sortBy;
+
+  /// No description provided for @applyFilters.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyFilters;
+
+  /// No description provided for @sortRelevance.
+  ///
+  /// In en, this message translates to:
+  /// **'Relevance'**
+  String get sortRelevance;
+
+  /// No description provided for @sortPriceLowHigh.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: low to high'**
+  String get sortPriceLowHigh;
+
+  /// No description provided for @sortPriceHighLow.
+  ///
+  /// In en, this message translates to:
+  /// **'Price: high to low'**
+  String get sortPriceHighLow;
+
+  /// No description provided for @allCategories.
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get allCategories;
+
+  /// No description provided for @noResultsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No services match'**
+  String get noResultsTitle;
+
+  /// No description provided for @noResultsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Try another word, or describe the problem: \"tap is leaking\" works too.'**
+  String get noResultsDescription;
+
+  /// No description provided for @resultsFor.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 result for \"{query}\"} other{{count} results for \"{query}\"}}'**
+  String resultsFor(int count, String query);
+
+  /// No description provided for @yourLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location'**
+  String get yourLocation;
+
+  /// No description provided for @or.
+  ///
+  /// In en, this message translates to:
+  /// **'or'**
+  String get or;
+
+  /// No description provided for @townOrCity.
+  ///
+  /// In en, this message translates to:
+  /// **'Town or city'**
+  String get townOrCity;
+
+  /// No description provided for @townHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Kannur'**
+  String get townHint;
+
+  /// No description provided for @saveLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Save location'**
+  String get saveLocation;
+
+  /// No description provided for @townRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a town or city'**
+  String get townRequired;
+
+  /// No description provided for @locationUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Location set to {label}'**
+  String locationUpdated(String label);
+
+  /// No description provided for @enableLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Enable location'**
+  String get enableLocation;
+
+  /// No description provided for @enableLocationSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo uses your location to show workers near you and to share it in an SOS alert.'**
+  String get enableLocationSubtitle;
+
+  /// No description provided for @locationWillAppear.
+  ///
+  /// In en, this message translates to:
+  /// **'Your location will appear here'**
+  String get locationWillAppear;
+
+  /// No description provided for @locateAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Locate again'**
+  String get locateAgain;
+
+  /// No description provided for @continueLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get continueLabel;
+
+  /// No description provided for @enterManually.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter manually'**
+  String get enterManually;
+
+  /// No description provided for @notNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Not now'**
+  String get notNow;
+
+  /// No description provided for @noAddressesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved addresses'**
+  String get noAddressesTitle;
+
+  /// No description provided for @noAddressesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save your home or farm once and pick it in a tap when booking.'**
+  String get noAddressesDescription;
+
+  /// No description provided for @addAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Add address'**
+  String get addAddress;
+
+  /// No description provided for @defaultLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultLabel;
+
+  /// No description provided for @setAsDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default'**
+  String get setAsDefault;
+
+  /// No description provided for @removeAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeAddress;
+
+  /// No description provided for @addressLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Label'**
+  String get addressLabel;
+
+  /// No description provided for @labelHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Home'**
+  String get labelHome;
+
+  /// No description provided for @labelFarm.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm'**
+  String get labelFarm;
+
+  /// No description provided for @labelWork.
+  ///
+  /// In en, this message translates to:
+  /// **'Work'**
+  String get labelWork;
+
+  /// No description provided for @labelOther.
+  ///
+  /// In en, this message translates to:
+  /// **'Other'**
+  String get labelOther;
+
+  /// No description provided for @labelOtherHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Amma\'s house'**
+  String get labelOtherHint;
+
+  /// No description provided for @addressLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Address'**
+  String get addressLine;
+
+  /// No description provided for @addressSaved.
+  ///
+  /// In en, this message translates to:
+  /// **'Address saved'**
+  String get addressSaved;
+
+  /// No description provided for @contactUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact us'**
+  String get contactUs;
+
+  /// No description provided for @emailUs.
+  ///
+  /// In en, this message translates to:
+  /// **'Email us'**
+  String get emailUs;
+
+  /// No description provided for @reportProblem.
+  ///
+  /// In en, this message translates to:
+  /// **'Report a problem'**
+  String get reportProblem;
+
+  /// No description provided for @reportProblemSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tell us what went wrong'**
+  String get reportProblemSubtitle;
+
+  /// No description provided for @reportProblemTemplate.
+  ///
+  /// In en, this message translates to:
+  /// **'What happened:\nWhere in the app:\nPhone model:'**
+  String get reportProblemTemplate;
+
+  /// No description provided for @faq.
+  ///
+  /// In en, this message translates to:
+  /// **'Frequently asked questions'**
+  String get faq;
+
+  /// No description provided for @faqBookQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I book a service?'**
+  String get faqBookQ;
+
+  /// No description provided for @faqBookA.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a service from the home screen or search, choose a date, time slot and quantity, add the address, and confirm. You get a booking ID right away and can track it under Bookings.'**
+  String get faqBookA;
+
+  /// No description provided for @faqPayQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How do I pay?'**
+  String get faqPayQ;
+
+  /// No description provided for @faqPayA.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI and cards are charged when you confirm. Choose \"Pay after service\" to pay the worker directly once the job is done.'**
+  String get faqPayA;
+
+  /// No description provided for @faqCancelQ.
+  ///
+  /// In en, this message translates to:
+  /// **'Can I cancel or reschedule?'**
+  String get faqCancelQ;
+
+  /// No description provided for @faqCancelA.
+  ///
+  /// In en, this message translates to:
+  /// **'Yes. Open the booking under Bookings and use Reschedule or Cancel. Both are free until the worker is on the way.'**
+  String get faqCancelA;
+
+  /// No description provided for @faqWorkersQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How are workers verified?'**
+  String get faqWorkersQ;
+
+  /// No description provided for @faqWorkersA.
+  ///
+  /// In en, this message translates to:
+  /// **'Every worker\'s ID is checked before they are listed, and ratings come only from customers who completed a booking.'**
+  String get faqWorkersA;
+
+  /// No description provided for @faqCareQ.
+  ///
+  /// In en, this message translates to:
+  /// **'What is Care Mode?'**
+  String get faqCareQ;
+
+  /// No description provided for @faqCareA.
+  ///
+  /// In en, this message translates to:
+  /// **'Care Mode turns the whole app into a large-text, high-contrast layout for seniors, with medicine reminders and one-hold SOS.'**
+  String get faqCareA;
+
+  /// No description provided for @faqSosQ.
+  ///
+  /// In en, this message translates to:
+  /// **'How does SOS work?'**
+  String get faqSosQ;
+
+  /// No description provided for @faqSosA.
+  ///
+  /// In en, this message translates to:
+  /// **'Press and hold the SOS button for three seconds. Every emergency contact receives your location, and the primary contact is called.'**
+  String get faqSosA;
+
+  /// No description provided for @helpFooter.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo is built by a small team in Kerala. Every message is read.'**
+  String get helpFooter;
+
+  /// No description provided for @couldNotOpenEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open your email app.'**
+  String get couldNotOpenEmail;
+
+  /// No description provided for @rateTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'How is Kaylo working for you?'**
+  String get rateTitle;
+
+  /// No description provided for @rateSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rating tells the team where to focus next.'**
+  String get rateSubtitle;
+
+  /// No description provided for @rateComment.
+  ///
+  /// In en, this message translates to:
+  /// **'Anything we should improve? (optional)'**
+  String get rateComment;
+
+  /// No description provided for @submitRating.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit'**
+  String get submitRating;
+
+  /// No description provided for @pickAStar.
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a star rating first'**
+  String get pickAStar;
+
+  /// No description provided for @youRated.
+  ///
+  /// In en, this message translates to:
+  /// **'You rated Kaylo {stars} of 5'**
+  String youRated(int stars);
 }
 
 class _AppLocalizationsDelegate

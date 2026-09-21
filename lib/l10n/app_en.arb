@@ -370,5 +370,168 @@
         "type": "String"
       }
     }
+  },
+  "unitOrder": "order",
+  "unitOrderCount": "{count, plural, =1{1 order} other{{count} orders}}",
+  "@unitOrderCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "standardPartsQuoted": "Spare parts quoted before fitting",
+  "standardCleanupAfter": "Work area cleaned before leaving",
+  "standardBackgroundChecked": "Background-checked caregiver",
+  "standardPrescriptionChecked": "Prescription checked by a pharmacist",
+  "homeServices": "Home Services",
+  "careServices": "Care Services",
+  "allServices": "All services",
+  "homeServicesTagline": "Plumbers, electricians and cleaners who show up on time and clean up after.",
+  "careServicesTagline": "Trained caregivers and doorstep medicines for the people you look after.",
+  "allServicesTagline": "Everything Kaylo offers, across home, farm and care.",
+  "serviceAddress": "Service address",
+  "useMyLocation": "Use my location",
+  "locating": "Locating…",
+  "locationServicesOff": "Turn on location services and try again.",
+  "locationDenied": "Location permission was not granted.",
+  "locationDeniedForever": "Location is blocked for Kaylo. Allow it in your device settings.",
+  "locationTimeout": "Could not get a GPS fix. Move to open sky and try again.",
+  "locationUnavailable": "Location is unavailable right now.",
+  "markAllRead": "Mark all read",
+  "noNotificationsTitle": "You're all caught up",
+  "noNotificationsDescription": "Booking updates, messages and reminders will show up here.",
+  "today": "Today",
+  "earlier": "Earlier",
+  "justNow": "Just now",
+  "minutesAgo": "{count, plural, =1{1 minute ago} other{{count} minutes ago}}",
+  "@minutesAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "hoursAgo": "{count, plural, =1{1 hour ago} other{{count} hours ago}}",
+  "@hoursAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "daysAgo": "{count, plural, =1{Yesterday} other{{count} days ago}}",
+  "@daysAgo": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "bookingDetails": "Booking details",
+  "cancelBookingTitle": "Cancel this booking?",
+  "cancelBookingMessage": "The worker will be released. You can book again anytime.",
+  "keepBooking": "Keep booking",
+  "cancelBooking": "Cancel booking",
+  "bookingCancelled": "Booking cancelled",
+  "bookingCancelledBanner": "This booking was cancelled.",
+  "stepRequested": "Requested",
+  "stepConfirmed": "Confirmed",
+  "stepInProgress": "In progress",
+  "stepCompleted": "Completed",
+  "assignedWorker": "Your worker",
+  "noWorkerYet": "A worker will be assigned before the visit.",
+  "messageWorker": "Message",
+  "reschedule": "Reschedule",
+  "bookingRescheduled": "Booking rescheduled",
+  "filters": "Filters",
+  "reset": "Reset",
+  "category": "Category",
+  "sortBy": "Sort by",
+  "applyFilters": "Apply",
+  "sortRelevance": "Relevance",
+  "sortPriceLowHigh": "Price: low to high",
+  "sortPriceHighLow": "Price: high to low",
+  "allCategories": "All",
+  "noResultsTitle": "No services match",
+  "noResultsDescription": "Try another word, or describe the problem: \"tap is leaking\" works too.",
+  "resultsFor": "{count, plural, =1{1 result for \"{query}\"} other{{count} results for \"{query}\"}}",
+  "@resultsFor": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "query": {
+        "type": "String"
+      }
+    }
+  },
+  "yourLocation": "Your location",
+  "or": "or",
+  "townOrCity": "Town or city",
+  "townHint": "e.g. Kannur",
+  "saveLocation": "Save location",
+  "townRequired": "Please enter a town or city",
+  "locationUpdated": "Location set to {label}",
+  "@locationUpdated": {
+    "placeholders": {
+      "label": {
+        "type": "String"
+      }
+    }
+  },
+  "enableLocation": "Enable location",
+  "enableLocationSubtitle": "Kaylo uses your location to show workers near you and to share it in an SOS alert.",
+  "locationWillAppear": "Your location will appear here",
+  "locateAgain": "Locate again",
+  "continueLabel": "Continue",
+  "enterManually": "Enter manually",
+  "notNow": "Not now",
+  "noAddressesTitle": "No saved addresses",
+  "noAddressesDescription": "Save your home or farm once and pick it in a tap when booking.",
+  "addAddress": "Add address",
+  "defaultLabel": "Default",
+  "setAsDefault": "Set as default",
+  "removeAddress": "Remove",
+  "addressLabel": "Label",
+  "labelHome": "Home",
+  "labelFarm": "Farm",
+  "labelWork": "Work",
+  "labelOther": "Other",
+  "labelOtherHint": "e.g. Amma's house",
+  "addressLine": "Address",
+  "addressSaved": "Address saved",
+  "contactUs": "Contact us",
+  "emailUs": "Email us",
+  "reportProblem": "Report a problem",
+  "reportProblemSubtitle": "Tell us what went wrong",
+  "reportProblemTemplate": "What happened:\nWhere in the app:\nPhone model:",
+  "faq": "Frequently asked questions",
+  "faqBookQ": "How do I book a service?",
+  "faqBookA": "Pick a service from the home screen or search, choose a date, time slot and quantity, add the address, and confirm. You get a booking ID right away and can track it under Bookings.",
+  "faqPayQ": "How do I pay?",
+  "faqPayA": "UPI and cards are charged when you confirm. Choose \"Pay after service\" to pay the worker directly once the job is done.",
+  "faqCancelQ": "Can I cancel or reschedule?",
+  "faqCancelA": "Yes. Open the booking under Bookings and use Reschedule or Cancel. Both are free until the worker is on the way.",
+  "faqWorkersQ": "How are workers verified?",
+  "faqWorkersA": "Every worker's ID is checked before they are listed, and ratings come only from customers who completed a booking.",
+  "faqCareQ": "What is Care Mode?",
+  "faqCareA": "Care Mode turns the whole app into a large-text, high-contrast layout for seniors, with medicine reminders and one-hold SOS.",
+  "faqSosQ": "How does SOS work?",
+  "faqSosA": "Press and hold the SOS button for three seconds. Every emergency contact receives your location, and the primary contact is called.",
+  "helpFooter": "Kaylo is built by a small team in Kerala. Every message is read.",
+  "couldNotOpenEmail": "Could not open your email app.",
+  "rateTitle": "How is Kaylo working for you?",
+  "rateSubtitle": "Your rating tells the team where to focus next.",
+  "rateComment": "Anything we should improve? (optional)",
+  "submitRating": "Submit",
+  "pickAStar": "Pick a star rating first",
+  "youRated": "You rated Kaylo {stars} of 5",
+  "@youRated": {
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      }
+    }
   }
 }

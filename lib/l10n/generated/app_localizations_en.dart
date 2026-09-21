@@ -759,4 +759,400 @@ class AppLocalizationsEn extends AppLocalizations {
   String primaryContact(String name) {
     return 'Primary contact: $name';
   }
+
+  @override
+  String get unitOrder => 'order';
+
+  @override
+  String unitOrderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count orders',
+      one: '1 order',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get standardPartsQuoted => 'Spare parts quoted before fitting';
+
+  @override
+  String get standardCleanupAfter => 'Work area cleaned before leaving';
+
+  @override
+  String get standardBackgroundChecked => 'Background-checked caregiver';
+
+  @override
+  String get standardPrescriptionChecked =>
+      'Prescription checked by a pharmacist';
+
+  @override
+  String get homeServices => 'Home Services';
+
+  @override
+  String get careServices => 'Care Services';
+
+  @override
+  String get allServices => 'All services';
+
+  @override
+  String get homeServicesTagline =>
+      'Plumbers, electricians and cleaners who show up on time and clean up after.';
+
+  @override
+  String get careServicesTagline =>
+      'Trained caregivers and doorstep medicines for the people you look after.';
+
+  @override
+  String get allServicesTagline =>
+      'Everything Kaylo offers, across home, farm and care.';
+
+  @override
+  String get serviceAddress => 'Service address';
+
+  @override
+  String get useMyLocation => 'Use my location';
+
+  @override
+  String get locating => 'Locating…';
+
+  @override
+  String get locationServicesOff => 'Turn on location services and try again.';
+
+  @override
+  String get locationDenied => 'Location permission was not granted.';
+
+  @override
+  String get locationDeniedForever =>
+      'Location is blocked for Kaylo. Allow it in your device settings.';
+
+  @override
+  String get locationTimeout =>
+      'Could not get a GPS fix. Move to open sky and try again.';
+
+  @override
+  String get locationUnavailable => 'Location is unavailable right now.';
+
+  @override
+  String get markAllRead => 'Mark all read';
+
+  @override
+  String get noNotificationsTitle => 'You\'re all caught up';
+
+  @override
+  String get noNotificationsDescription =>
+      'Booking updates, messages and reminders will show up here.';
+
+  @override
+  String get today => 'Today';
+
+  @override
+  String get earlier => 'Earlier';
+
+  @override
+  String get justNow => 'Just now';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count minutes ago',
+      one: '1 minute ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours ago',
+      one: '1 hour ago',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count days ago',
+      one: 'Yesterday',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookingDetails => 'Booking details';
+
+  @override
+  String get cancelBookingTitle => 'Cancel this booking?';
+
+  @override
+  String get cancelBookingMessage =>
+      'The worker will be released. You can book again anytime.';
+
+  @override
+  String get keepBooking => 'Keep booking';
+
+  @override
+  String get cancelBooking => 'Cancel booking';
+
+  @override
+  String get bookingCancelled => 'Booking cancelled';
+
+  @override
+  String get bookingCancelledBanner => 'This booking was cancelled.';
+
+  @override
+  String get stepRequested => 'Requested';
+
+  @override
+  String get stepConfirmed => 'Confirmed';
+
+  @override
+  String get stepInProgress => 'In progress';
+
+  @override
+  String get stepCompleted => 'Completed';
+
+  @override
+  String get assignedWorker => 'Your worker';
+
+  @override
+  String get noWorkerYet => 'A worker will be assigned before the visit.';
+
+  @override
+  String get messageWorker => 'Message';
+
+  @override
+  String get reschedule => 'Reschedule';
+
+  @override
+  String get bookingRescheduled => 'Booking rescheduled';
+
+  @override
+  String get filters => 'Filters';
+
+  @override
+  String get reset => 'Reset';
+
+  @override
+  String get category => 'Category';
+
+  @override
+  String get sortBy => 'Sort by';
+
+  @override
+  String get applyFilters => 'Apply';
+
+  @override
+  String get sortRelevance => 'Relevance';
+
+  @override
+  String get sortPriceLowHigh => 'Price: low to high';
+
+  @override
+  String get sortPriceHighLow => 'Price: high to low';
+
+  @override
+  String get allCategories => 'All';
+
+  @override
+  String get noResultsTitle => 'No services match';
+
+  @override
+  String get noResultsDescription =>
+      'Try another word, or describe the problem: \"tap is leaking\" works too.';
+
+  @override
+  String resultsFor(int count, String query) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count results for \"$query\"',
+      one: '1 result for \"$query\"',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourLocation => 'Your location';
+
+  @override
+  String get or => 'or';
+
+  @override
+  String get townOrCity => 'Town or city';
+
+  @override
+  String get townHint => 'e.g. Kannur';
+
+  @override
+  String get saveLocation => 'Save location';
+
+  @override
+  String get townRequired => 'Please enter a town or city';
+
+  @override
+  String locationUpdated(String label) {
+    return 'Location set to $label';
+  }
+
+  @override
+  String get enableLocation => 'Enable location';
+
+  @override
+  String get enableLocationSubtitle =>
+      'Kaylo uses your location to show workers near you and to share it in an SOS alert.';
+
+  @override
+  String get locationWillAppear => 'Your location will appear here';
+
+  @override
+  String get locateAgain => 'Locate again';
+
+  @override
+  String get continueLabel => 'Continue';
+
+  @override
+  String get enterManually => 'Enter manually';
+
+  @override
+  String get notNow => 'Not now';
+
+  @override
+  String get noAddressesTitle => 'No saved addresses';
+
+  @override
+  String get noAddressesDescription =>
+      'Save your home or farm once and pick it in a tap when booking.';
+
+  @override
+  String get addAddress => 'Add address';
+
+  @override
+  String get defaultLabel => 'Default';
+
+  @override
+  String get setAsDefault => 'Set as default';
+
+  @override
+  String get removeAddress => 'Remove';
+
+  @override
+  String get addressLabel => 'Label';
+
+  @override
+  String get labelHome => 'Home';
+
+  @override
+  String get labelFarm => 'Farm';
+
+  @override
+  String get labelWork => 'Work';
+
+  @override
+  String get labelOther => 'Other';
+
+  @override
+  String get labelOtherHint => 'e.g. Amma\'s house';
+
+  @override
+  String get addressLine => 'Address';
+
+  @override
+  String get addressSaved => 'Address saved';
+
+  @override
+  String get contactUs => 'Contact us';
+
+  @override
+  String get emailUs => 'Email us';
+
+  @override
+  String get reportProblem => 'Report a problem';
+
+  @override
+  String get reportProblemSubtitle => 'Tell us what went wrong';
+
+  @override
+  String get reportProblemTemplate =>
+      'What happened:\nWhere in the app:\nPhone model:';
+
+  @override
+  String get faq => 'Frequently asked questions';
+
+  @override
+  String get faqBookQ => 'How do I book a service?';
+
+  @override
+  String get faqBookA =>
+      'Pick a service from the home screen or search, choose a date, time slot and quantity, add the address, and confirm. You get a booking ID right away and can track it under Bookings.';
+
+  @override
+  String get faqPayQ => 'How do I pay?';
+
+  @override
+  String get faqPayA =>
+      'UPI and cards are charged when you confirm. Choose \"Pay after service\" to pay the worker directly once the job is done.';
+
+  @override
+  String get faqCancelQ => 'Can I cancel or reschedule?';
+
+  @override
+  String get faqCancelA =>
+      'Yes. Open the booking under Bookings and use Reschedule or Cancel. Both are free until the worker is on the way.';
+
+  @override
+  String get faqWorkersQ => 'How are workers verified?';
+
+  @override
+  String get faqWorkersA =>
+      'Every worker\'s ID is checked before they are listed, and ratings come only from customers who completed a booking.';
+
+  @override
+  String get faqCareQ => 'What is Care Mode?';
+
+  @override
+  String get faqCareA =>
+      'Care Mode turns the whole app into a large-text, high-contrast layout for seniors, with medicine reminders and one-hold SOS.';
+
+  @override
+  String get faqSosQ => 'How does SOS work?';
+
+  @override
+  String get faqSosA =>
+      'Press and hold the SOS button for three seconds. Every emergency contact receives your location, and the primary contact is called.';
+
+  @override
+  String get helpFooter =>
+      'Kaylo is built by a small team in Kerala. Every message is read.';
+
+  @override
+  String get couldNotOpenEmail => 'Could not open your email app.';
+
+  @override
+  String get rateTitle => 'How is Kaylo working for you?';
+
+  @override
+  String get rateSubtitle => 'Your rating tells the team where to focus next.';
+
+  @override
+  String get rateComment => 'Anything we should improve? (optional)';
+
+  @override
+  String get submitRating => 'Submit';
+
+  @override
+  String get pickAStar => 'Pick a star rating first';
+
+  @override
+  String youRated(int stars) {
+    return 'You rated Kaylo $stars of 5';
+  }
 }

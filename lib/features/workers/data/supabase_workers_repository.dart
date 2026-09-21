@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/models/worker.dart';
 import '../../../core/network/app_failure.dart';
 import '../../../core/network/supabase_providers.dart';
+import '../domain/models/worker_review.dart';
 import '../domain/workers_repository.dart';
 
 /// Reads worker listings from the `worker_profiles` view (worker joined
@@ -39,6 +40,37 @@ class SupabaseWorkersRepository implements WorkersRepository {
         throw ServerFailure('Worker not found', code: 'not-found');
       }
       return _workerFromRow(row);
+    } catch (e) {
+      throw mapSupabaseError(e);
+    }
+  }
+
+  @override
+  Future<List<WorkerReview>> getReviewsForWorker(String workerId) async {
+    try {
+      final rows = await _client
+          .from('reviews')
+          .select('review_id, worker_id, rating, review, created_at, customers(persons(full_name))')
+          .eq('worker_id', workerId)
+          .order('created_at', ascending: false);
+      return rows.map((r) {
+        String customerName = 'Verified Customer';
+        try {
+          final cust = r['customers'] as Map<String, dynamic>?;
+          final person = cust?['persons'] as Map<String, dynamic>?;
+          if (person?['full_name'] != null) {
+            customerName = person!['full_name'] as String;
+          }
+        } catch (_) {}
+        return WorkerReview(
+          id: r['review_id'] as String,
+          workerId: r['worker_id'] as String,
+          customerName: customerName,
+          rating: ((r['rating'] as num?) ?? 5).toDouble(),
+          comment: (r['review'] as String?) ?? '',
+          createdAt: DateTime.tryParse(r['created_at'] as String? ?? '') ?? DateTime.now(),
+        );
+      }).toList();
     } catch (e) {
       throw mapSupabaseError(e);
     }

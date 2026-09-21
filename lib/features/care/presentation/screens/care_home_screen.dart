@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 
+import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -85,6 +87,10 @@ class CareHomeScreen extends StatelessWidget {
                     color: AppColors.homeAccent,
                     title: l10n.doctorAppointment,
                     subtitle: l10n.doctorAppointmentSubtitle,
+                    onTap: () {
+                      KayloFeedback.tap();
+                      context.push(Routes.doctorAppointment);
+                    },
                   ),
                   const SizedBox(height: AppSpacing.l),
                   _CareActionCard(
@@ -92,6 +98,10 @@ class CareHomeScreen extends StatelessWidget {
                     color: AppColors.brandPrimary,
                     title: l10n.caregiverBooking,
                     subtitle: l10n.caregiverBookingSubtitle,
+                    onTap: () {
+                      KayloFeedback.tap();
+                      context.push(Routes.caregiverBooking);
+                    },
                   ),
                 ],
               ),
@@ -172,12 +182,14 @@ class _CareActionCard extends StatelessWidget {
   final Color color;
   final String title;
   final String subtitle;
+  final VoidCallback? onTap;
 
   const _CareActionCard({
     required this.icon,
     required this.color,
     required this.title,
     required this.subtitle,
+    this.onTap,
   });
 
   @override
@@ -186,10 +198,11 @@ class _CareActionCard extends StatelessWidget {
     return Card(
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
-        onTap: () {
-          KayloFeedback.tap();
-          KayloSnackbar.showInfo(context, l10n.comingSoon);
-        },
+        onTap: onTap ??
+            () {
+              KayloFeedback.tap();
+              KayloSnackbar.showInfo(context, l10n.comingSoon);
+            },
         child: Padding(
           padding: const EdgeInsets.all(AppSpacing.xl),
           child: Row(

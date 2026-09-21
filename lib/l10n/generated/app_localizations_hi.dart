@@ -260,4 +260,503 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get voiceMicDenied =>
       'माइक्रोफ़ोन की अनुमति नहीं मिली। वॉइस खोज के लिए ब्राउज़र या फ़ोन सेटिंग्स में अनुमति दें।';
+
+  @override
+  String get farmServices => 'खेती सेवाएँ';
+
+  @override
+  String get farmServicesTagline =>
+      'सत्यापित पेड़ चढ़ने वाले, कटाई करने वाले और खेत मज़दूर। पेड़ या घंटे के हिसाब से बुक करें।';
+
+  @override
+  String get noServicesTitle => 'अभी कोई सेवा नहीं';
+
+  @override
+  String get noServicesDescription =>
+      'जैसे-जैसे कामगार जुड़ेंगे, खेती सेवाएँ यहाँ दिखेंगी।';
+
+  @override
+  String perUnit(String unit) {
+    return 'प्रति $unit';
+  }
+
+  @override
+  String get unitTree => 'पेड़';
+
+  @override
+  String get unitHour => 'घंटा';
+
+  @override
+  String get unitVisit => 'विज़िट';
+
+  @override
+  String unitTreeCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count पेड़',
+      one: '1 पेड़',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitHourCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count घंटे',
+      one: '1 घंटा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String unitVisitCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count विज़िट',
+      one: '1 विज़िट',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get serviceStandards => 'कामगार की गारंटी';
+
+  @override
+  String get standardSafetyHarness => 'हर चढ़ाई पर सेफ्टी हार्नेस';
+
+  @override
+  String get standardBunchProtection =>
+      'गुच्छे रस्सी से उतारे जाते हैं, गिराए नहीं';
+
+  @override
+  String get standardDebrisCleared => 'जाने से पहले पत्ते और छिलके साफ़';
+
+  @override
+  String get standardGroundNets => 'नीचे की फ़सल बचाने के लिए जाल';
+
+  @override
+  String get standardPowerLineGuard => 'बिजली की लाइनों से सुरक्षित दूरी';
+
+  @override
+  String get standardWoodChipping => 'कटी डालियाँ छोटी करके रखी जाती हैं';
+
+  @override
+  String get standardEcoCompost => 'सिर्फ़ जैविक खाद और मल्च';
+
+  @override
+  String get standardPestPrevention => 'हर विज़िट पर कीट जाँच';
+
+  @override
+  String get standardBoundaryClearing => 'सीमाएँ और नालियाँ साफ़';
+
+  @override
+  String get standardVerifiedWorker => 'आईडी-सत्यापित कामगार';
+
+  @override
+  String get standardOnTimeArrival => 'बुक किए समय पर पहुँचता है';
+
+  @override
+  String get standardFairPrice => 'काम शुरू होने से पहले दाम तय';
+
+  @override
+  String workersNearYou(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: 'आपके पास $count सत्यापित कामगार',
+      one: 'आपके पास 1 सत्यापित कामगार',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noWorkersYet => 'इस सेवा के कामगार जोड़े जा रहे हैं';
+
+  @override
+  String get liveTotalNote =>
+      'अगले चरण में मात्रा चुनते ही कुल राशि तुरंत बदलेगी।';
+
+  @override
+  String get bookNow => 'अभी बुक करें';
+
+  @override
+  String get scheduleTitle => 'शेड्यूल';
+
+  @override
+  String get selectDate => 'तारीख़';
+
+  @override
+  String get change => 'बदलें';
+
+  @override
+  String get selectTimeSlot => 'समय';
+
+  @override
+  String get quantity => 'मात्रा';
+
+  @override
+  String priceEach(String price) {
+    return '$price प्रति';
+  }
+
+  @override
+  String get calculation => 'हिसाब';
+
+  @override
+  String breakdown(String price, String units) {
+    return '$price × $units';
+  }
+
+  @override
+  String get total => 'कुल';
+
+  @override
+  String get farmAddress => 'खेत का पता';
+
+  @override
+  String get farmAddressHint => 'घर का नाम, गली, कस्बा';
+
+  @override
+  String get addressRequired => 'कृपया खेत का पता भरें';
+
+  @override
+  String get continueToPayment => 'भुगतान पर जाएँ';
+
+  @override
+  String get paymentTitle => 'भुगतान';
+
+  @override
+  String get orderSummary => 'ऑर्डर सारांश';
+
+  @override
+  String get service => 'सेवा';
+
+  @override
+  String get date => 'तारीख़';
+
+  @override
+  String get time => 'समय';
+
+  @override
+  String get rate => 'दर';
+
+  @override
+  String get totalPayable => 'देय राशि';
+
+  @override
+  String get paymentMethod => 'भुगतान का तरीका';
+
+  @override
+  String get payUpi => 'UPI';
+
+  @override
+  String get payUpiSubtitle => 'Google Pay, PhonePe, Paytm';
+
+  @override
+  String get payCard => 'क्रेडिट या डेबिट कार्ड';
+
+  @override
+  String get payCardSubtitle => 'Visa, Mastercard, RuPay';
+
+  @override
+  String get payAfter => 'सेवा के बाद भुगतान';
+
+  @override
+  String get payAfterSubtitle => 'काम पूरा होने पर कामगार को दें';
+
+  @override
+  String confirmAndPay(String amount) {
+    return '$amount चुकाएँ और पक्का करें';
+  }
+
+  @override
+  String get confirmBooking => 'बुकिंग पक्की करें';
+
+  @override
+  String get paymentFailed => 'भुगतान पूरा नहीं हुआ। फिर से कोशिश करें।';
+
+  @override
+  String get draftMissing =>
+      'इस चरण के लिए एक बुकिंग चालू होनी चाहिए। खेती सेवाओं से दोबारा शुरू करें।';
+
+  @override
+  String get bookingConfirmed => 'बुकिंग पक्की हुई';
+
+  @override
+  String bookingConfirmedSubtitle(String date, String time) {
+    return 'आपका कामगार $date को $time बजे पहुँचेगा';
+  }
+
+  @override
+  String get bookingId => 'बुकिंग आईडी';
+
+  @override
+  String get status => 'स्थिति';
+
+  @override
+  String get payment => 'भुगतान';
+
+  @override
+  String get viewMyBookings => 'मेरी बुकिंग देखें';
+
+  @override
+  String get backToHome => 'होम पर वापस';
+
+  @override
+  String get statusPending => 'लंबित';
+
+  @override
+  String get statusConfirmed => 'पक्की';
+
+  @override
+  String get statusInProgress => 'चल रही है';
+
+  @override
+  String get statusCompleted => 'पूरी हुई';
+
+  @override
+  String get statusCancelled => 'रद्द';
+
+  @override
+  String get noBookingsTitle => 'अभी कोई बुकिंग नहीं';
+
+  @override
+  String get noBookingsDescription =>
+      'खेती या घर की सेवा बुक करें, वह यहाँ दिखेगी।';
+
+  @override
+  String get bookAService => 'सेवा बुक करें';
+
+  @override
+  String get upcoming => 'आगामी';
+
+  @override
+  String get past => 'पिछली';
+
+  @override
+  String get somethingWentWrong => 'कुछ गड़बड़ हो गई';
+
+  @override
+  String get messages => 'संदेश';
+
+  @override
+  String get messagesSubtitle => 'बुक किए कामगारों से चैट करें';
+
+  @override
+  String get noMessagesTitle => 'अभी कोई बातचीत नहीं';
+
+  @override
+  String get noMessagesDescription =>
+      'कामगार बुक करने के बाद यहाँ उन्हें संदेश भेज सकते हैं।';
+
+  @override
+  String get noMessagesInThread => 'बातचीत शुरू करने के लिए नमस्ते कहें';
+
+  @override
+  String get online => 'ऑनलाइन';
+
+  @override
+  String get offline => 'ऑफ़लाइन';
+
+  @override
+  String get typeMessage => 'संदेश लिखें';
+
+  @override
+  String get todaysMedicines => 'आज की दवाएँ';
+
+  @override
+  String get medicinesSubtitle => 'खुराक लेने के बाद गोले पर टैप करें';
+
+  @override
+  String pendingDoses(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count खुराक बाकी',
+      one: '1 खुराक बाकी',
+      zero: 'सभी खुराक ली गईं',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String nextDose(String name, String time) {
+    return 'अगली: $time बजे $name';
+  }
+
+  @override
+  String get addReminder => 'रिमाइंडर जोड़ें';
+
+  @override
+  String get medicineName => 'दवा का नाम';
+
+  @override
+  String get medicineNameHint => 'जैसे BP की गोली';
+
+  @override
+  String get dosage => 'खुराक';
+
+  @override
+  String get dosageHint => 'जैसे नाश्ते के बाद 1 गोली';
+
+  @override
+  String get reminderTime => 'रिमाइंडर समय';
+
+  @override
+  String get save => 'सहेजें';
+
+  @override
+  String addedBy(String name) {
+    return '$name ने जोड़ा';
+  }
+
+  @override
+  String markedTaken(String name) {
+    return '$name ली गई के रूप में दर्ज';
+  }
+
+  @override
+  String markedPending(String name) {
+    return '$name बाकी के रूप में दर्ज';
+  }
+
+  @override
+  String get nameRequired => 'कृपया नाम भरें';
+
+  @override
+  String get phoneRequired => 'कृपया फ़ोन नंबर भरें';
+
+  @override
+  String get noRemindersTitle => 'अभी कोई रिमाइंडर नहीं';
+
+  @override
+  String get noRemindersDescription =>
+      'अपनी दवाएँ जोड़ें, कायलो सही समय पर याद दिलाएगा।';
+
+  @override
+  String get pressAndHold => 'दबाकर रखें';
+
+  @override
+  String get holdSeconds => '3 सेकंड दबाए रखें';
+
+  @override
+  String secondsShort(int seconds) {
+    return '$seconds से';
+  }
+
+  @override
+  String get sosHoldHint =>
+      'बटन को 3 सेकंड दबाकर रखें। आपके आपातकालीन संपर्कों को तुरंत आपकी लोकेशन मिलेगी।';
+
+  @override
+  String get sosReleasedEarly => 'अलर्ट भेजने के लिए 3 सेकंड दबाए रखें';
+
+  @override
+  String get sosSentTitle => 'मदद आ रही है';
+
+  @override
+  String sosSentContacts(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count संपर्कों को लोकेशन के साथ अलर्ट भेजा',
+      one: '1 संपर्क को लोकेशन के साथ अलर्ट भेजा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String sosCallingPrimary(String name) {
+    return '$name को कॉल किया जा रहा है';
+  }
+
+  @override
+  String get sosNoContacts =>
+      'पहले एक आपातकालीन संपर्क जोड़ें, ताकि अलर्ट किसी को मिले।';
+
+  @override
+  String get dismiss => 'बंद करें';
+
+  @override
+  String get emergencyContacts => 'आपातकालीन संपर्क';
+
+  @override
+  String get addContact => 'संपर्क जोड़ें';
+
+  @override
+  String get contactName => 'नाम';
+
+  @override
+  String get relationship => 'रिश्ता';
+
+  @override
+  String get relationshipHint => 'जैसे बेटी';
+
+  @override
+  String get phoneNumber => 'फ़ोन नंबर';
+
+  @override
+  String get primary => 'मुख्य';
+
+  @override
+  String get setAsPrimary => 'मुख्य बनाएँ';
+
+  @override
+  String get removeContact => 'हटाएँ';
+
+  @override
+  String get sosHistory => 'SOS इतिहास';
+
+  @override
+  String alertsCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count अलर्ट भेजे',
+      one: '1 अलर्ट भेजा',
+      zero: 'कोई अलर्ट नहीं भेजा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get noSosTitle => 'कोई अलर्ट नहीं भेजा';
+
+  @override
+  String get noSosDescription =>
+      'भेजे गए अलर्ट और किसे सूचना मिली, यहाँ दिखेगा।';
+
+  @override
+  String alertedCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count संपर्कों को सूचना दी',
+      one: '1 संपर्क को सूचना दी',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get sosStatusOpen => 'खुला';
+
+  @override
+  String get sosStatusAcknowledged => 'देखा गया';
+
+  @override
+  String get sosStatusResolved => 'सुलझा';
+
+  @override
+  String locationShared(String location) {
+    return 'लोकेशन साझा: $location';
+  }
+
+  @override
+  String primaryContact(String name) {
+    return 'मुख्य संपर्क: $name';
+  }
 }

@@ -82,5 +82,293 @@
   "voiceNoMatch": "No matching service found. Try again?",
   "voiceUnavailable": "Voice search is not available on this device",
   "voiceTryAgain": "Try again",
-  "voiceMicDenied": "Microphone access was denied. Allow it in your browser or phone settings to use voice search."
+  "voiceMicDenied": "Microphone access was denied. Allow it in your browser or phone settings to use voice search.",
+  "farmServices": "Farm Services",
+  "farmServicesTagline": "Verified climbers, harvesters and farm hands, booked by the tree or by the hour.",
+  "noServicesTitle": "No services yet",
+  "noServicesDescription": "Farm services will appear here as workers are onboarded.",
+  "perUnit": "per {unit}",
+  "@perUnit": {
+    "placeholders": {
+      "unit": {
+        "type": "String"
+      }
+    }
+  },
+  "unitTree": "tree",
+  "unitHour": "hour",
+  "unitVisit": "visit",
+  "unitTreeCount": "{count, plural, =1{1 tree} other{{count} trees}}",
+  "@unitTreeCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitHourCount": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@unitHourCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "unitVisitCount": "{count, plural, =1{1 visit} other{{count} visits}}",
+  "@unitVisitCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "serviceStandards": "What the worker commits to",
+  "standardSafetyHarness": "Safety harness on every climb",
+  "standardBunchProtection": "Bunches lowered on ropes, never dropped",
+  "standardDebrisCleared": "Fronds and husks cleared before leaving",
+  "standardGroundNets": "Ground nets to protect crops below",
+  "standardPowerLineGuard": "Safe clearance from power lines",
+  "standardWoodChipping": "Cut branches chipped or stacked neatly",
+  "standardEcoCompost": "Organic compost and mulch only",
+  "standardPestPrevention": "Pest check on every visit",
+  "standardBoundaryClearing": "Boundaries and drains cleared",
+  "standardVerifiedWorker": "ID-verified worker",
+  "standardOnTimeArrival": "Arrives in the booked time slot",
+  "standardFairPrice": "Price agreed before work starts",
+  "workersNearYou": "{count, plural, =1{1 verified worker near you} other{{count} verified workers near you}}",
+  "@workersNearYou": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noWorkersYet": "Workers for this service are being onboarded",
+  "liveTotalNote": "Your total updates live as you set the quantity on the next step.",
+  "bookNow": "Book now",
+  "scheduleTitle": "Schedule",
+  "selectDate": "Date",
+  "change": "Change",
+  "selectTimeSlot": "Time slot",
+  "quantity": "Quantity",
+  "priceEach": "{price} each",
+  "@priceEach": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      }
+    }
+  },
+  "calculation": "How it adds up",
+  "breakdown": "{price} × {units}",
+  "@breakdown": {
+    "placeholders": {
+      "price": {
+        "type": "String"
+      },
+      "units": {
+        "type": "String"
+      }
+    }
+  },
+  "total": "Total",
+  "farmAddress": "Farm address",
+  "farmAddressHint": "House name, street, town",
+  "addressRequired": "Please enter the farm address",
+  "continueToPayment": "Continue to payment",
+  "paymentTitle": "Payment",
+  "orderSummary": "Order summary",
+  "service": "Service",
+  "date": "Date",
+  "time": "Time",
+  "rate": "Rate",
+  "totalPayable": "Total payable",
+  "paymentMethod": "Payment method",
+  "payUpi": "UPI",
+  "payUpiSubtitle": "Google Pay, PhonePe, Paytm",
+  "payCard": "Credit or debit card",
+  "payCardSubtitle": "Visa, Mastercard, RuPay",
+  "payAfter": "Pay after service",
+  "payAfterSubtitle": "Pay the worker once the job is done",
+  "confirmAndPay": "Confirm and pay {amount}",
+  "@confirmAndPay": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "confirmBooking": "Confirm booking",
+  "paymentFailed": "The payment did not go through. Please try again.",
+  "draftMissing": "This step needs a booking in progress. Start again from Farm Services.",
+  "bookingConfirmed": "Booking confirmed",
+  "bookingConfirmedSubtitle": "Your worker will arrive on {date} at {time}",
+  "@bookingConfirmedSubtitle": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingId": "Booking ID",
+  "status": "Status",
+  "payment": "Payment",
+  "viewMyBookings": "View my bookings",
+  "backToHome": "Back to home",
+  "statusPending": "Pending",
+  "statusConfirmed": "Confirmed",
+  "statusInProgress": "In progress",
+  "statusCompleted": "Completed",
+  "statusCancelled": "Cancelled",
+  "noBookingsTitle": "No bookings yet",
+  "noBookingsDescription": "Book a farm or home service and it will show up here.",
+  "bookAService": "Book a service",
+  "upcoming": "Upcoming",
+  "past": "Past",
+  "somethingWentWrong": "Something went wrong",
+  "messages": "Messages",
+  "messagesSubtitle": "Chat with the workers you have booked",
+  "noMessagesTitle": "No conversations yet",
+  "noMessagesDescription": "Once you book a worker, you can message them here.",
+  "noMessagesInThread": "Say hello to start the conversation",
+  "online": "Online",
+  "offline": "Offline",
+  "typeMessage": "Type a message",
+  "todaysMedicines": "Today's medicines",
+  "medicinesSubtitle": "Tap the circle after you take a dose",
+  "pendingDoses": "{count, plural, =0{All doses taken} =1{1 dose pending} other{{count} doses pending}}",
+  "@pendingDoses": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "nextDose": "Next: {name} at {time}",
+  "@nextDose": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "addReminder": "Add reminder",
+  "medicineName": "Medicine name",
+  "medicineNameHint": "e.g. BP tablet",
+  "dosage": "Dosage",
+  "dosageHint": "e.g. 1 tablet after breakfast",
+  "reminderTime": "Reminder time",
+  "save": "Save",
+  "addedBy": "Added by {name}",
+  "@addedBy": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "markedTaken": "{name} marked as taken",
+  "@markedTaken": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "markedPending": "{name} marked as pending",
+  "@markedPending": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "nameRequired": "Please enter a name",
+  "phoneRequired": "Please enter a phone number",
+  "noRemindersTitle": "No reminders yet",
+  "noRemindersDescription": "Add your medicines and Kaylo will remind you at the right time.",
+  "pressAndHold": "Press and hold",
+  "holdSeconds": "Hold for 3 seconds",
+  "secondsShort": "{seconds} s",
+  "@secondsShort": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "sosHoldHint": "Press and hold the button for 3 seconds. Your emergency contacts get your location right away.",
+  "sosReleasedEarly": "Keep holding for 3 seconds to send an alert",
+  "sosSentTitle": "Help is on the way",
+  "sosSentContacts": "{count, plural, =1{1 contact alerted with your location} other{{count} contacts alerted with your location}}",
+  "@sosSentContacts": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sosCallingPrimary": "Calling {name}",
+  "@sosCallingPrimary": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "sosNoContacts": "Add an emergency contact first, so someone receives the alert.",
+  "dismiss": "Dismiss",
+  "emergencyContacts": "Emergency contacts",
+  "addContact": "Add contact",
+  "contactName": "Name",
+  "relationship": "Relationship",
+  "relationshipHint": "e.g. Daughter",
+  "phoneNumber": "Phone number",
+  "primary": "Primary",
+  "setAsPrimary": "Set as primary",
+  "removeContact": "Remove",
+  "sosHistory": "SOS history",
+  "alertsCount": "{count, plural, =0{No alerts sent} =1{1 alert sent} other{{count} alerts sent}}",
+  "@alertsCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "noSosTitle": "No alerts sent",
+  "noSosDescription": "Alerts you send will be listed here with who was notified.",
+  "alertedCount": "{count, plural, =1{1 contact notified} other{{count} contacts notified}}",
+  "@alertedCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "sosStatusOpen": "Open",
+  "sosStatusAcknowledged": "Acknowledged",
+  "sosStatusResolved": "Resolved",
+  "locationShared": "Location shared: {location}",
+  "@locationShared": {
+    "placeholders": {
+      "location": {
+        "type": "String"
+      }
+    }
+  },
+  "primaryContact": "Primary contact: {name}",
+  "@primaryContact": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  }
 }

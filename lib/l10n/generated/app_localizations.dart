@@ -599,6 +599,798 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Microphone access was denied. Allow it in your browser or phone settings to use voice search.'**
   String get voiceMicDenied;
+
+  /// No description provided for @farmServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm Services'**
+  String get farmServices;
+
+  /// No description provided for @farmServicesTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified climbers, harvesters and farm hands, booked by the tree or by the hour.'**
+  String get farmServicesTagline;
+
+  /// No description provided for @noServicesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No services yet'**
+  String get noServicesTitle;
+
+  /// No description provided for @noServicesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm services will appear here as workers are onboarded.'**
+  String get noServicesDescription;
+
+  /// No description provided for @perUnit.
+  ///
+  /// In en, this message translates to:
+  /// **'per {unit}'**
+  String perUnit(String unit);
+
+  /// No description provided for @unitTree.
+  ///
+  /// In en, this message translates to:
+  /// **'tree'**
+  String get unitTree;
+
+  /// No description provided for @unitHour.
+  ///
+  /// In en, this message translates to:
+  /// **'hour'**
+  String get unitHour;
+
+  /// No description provided for @unitVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'visit'**
+  String get unitVisit;
+
+  /// No description provided for @unitTreeCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 tree} other{{count} trees}}'**
+  String unitTreeCount(int count);
+
+  /// No description provided for @unitHourCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String unitHourCount(int count);
+
+  /// No description provided for @unitVisitCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 visit} other{{count} visits}}'**
+  String unitVisitCount(int count);
+
+  /// No description provided for @serviceStandards.
+  ///
+  /// In en, this message translates to:
+  /// **'What the worker commits to'**
+  String get serviceStandards;
+
+  /// No description provided for @standardSafetyHarness.
+  ///
+  /// In en, this message translates to:
+  /// **'Safety harness on every climb'**
+  String get standardSafetyHarness;
+
+  /// No description provided for @standardBunchProtection.
+  ///
+  /// In en, this message translates to:
+  /// **'Bunches lowered on ropes, never dropped'**
+  String get standardBunchProtection;
+
+  /// No description provided for @standardDebrisCleared.
+  ///
+  /// In en, this message translates to:
+  /// **'Fronds and husks cleared before leaving'**
+  String get standardDebrisCleared;
+
+  /// No description provided for @standardGroundNets.
+  ///
+  /// In en, this message translates to:
+  /// **'Ground nets to protect crops below'**
+  String get standardGroundNets;
+
+  /// No description provided for @standardPowerLineGuard.
+  ///
+  /// In en, this message translates to:
+  /// **'Safe clearance from power lines'**
+  String get standardPowerLineGuard;
+
+  /// No description provided for @standardWoodChipping.
+  ///
+  /// In en, this message translates to:
+  /// **'Cut branches chipped or stacked neatly'**
+  String get standardWoodChipping;
+
+  /// No description provided for @standardEcoCompost.
+  ///
+  /// In en, this message translates to:
+  /// **'Organic compost and mulch only'**
+  String get standardEcoCompost;
+
+  /// No description provided for @standardPestPrevention.
+  ///
+  /// In en, this message translates to:
+  /// **'Pest check on every visit'**
+  String get standardPestPrevention;
+
+  /// No description provided for @standardBoundaryClearing.
+  ///
+  /// In en, this message translates to:
+  /// **'Boundaries and drains cleared'**
+  String get standardBoundaryClearing;
+
+  /// No description provided for @standardVerifiedWorker.
+  ///
+  /// In en, this message translates to:
+  /// **'ID-verified worker'**
+  String get standardVerifiedWorker;
+
+  /// No description provided for @standardOnTimeArrival.
+  ///
+  /// In en, this message translates to:
+  /// **'Arrives in the booked time slot'**
+  String get standardOnTimeArrival;
+
+  /// No description provided for @standardFairPrice.
+  ///
+  /// In en, this message translates to:
+  /// **'Price agreed before work starts'**
+  String get standardFairPrice;
+
+  /// No description provided for @workersNearYou.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 verified worker near you} other{{count} verified workers near you}}'**
+  String workersNearYou(int count);
+
+  /// No description provided for @noWorkersYet.
+  ///
+  /// In en, this message translates to:
+  /// **'Workers for this service are being onboarded'**
+  String get noWorkersYet;
+
+  /// No description provided for @liveTotalNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Your total updates live as you set the quantity on the next step.'**
+  String get liveTotalNote;
+
+  /// No description provided for @bookNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Book now'**
+  String get bookNow;
+
+  /// No description provided for @scheduleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get scheduleTitle;
+
+  /// No description provided for @selectDate.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get selectDate;
+
+  /// No description provided for @change.
+  ///
+  /// In en, this message translates to:
+  /// **'Change'**
+  String get change;
+
+  /// No description provided for @selectTimeSlot.
+  ///
+  /// In en, this message translates to:
+  /// **'Time slot'**
+  String get selectTimeSlot;
+
+  /// No description provided for @quantity.
+  ///
+  /// In en, this message translates to:
+  /// **'Quantity'**
+  String get quantity;
+
+  /// No description provided for @priceEach.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} each'**
+  String priceEach(String price);
+
+  /// No description provided for @calculation.
+  ///
+  /// In en, this message translates to:
+  /// **'How it adds up'**
+  String get calculation;
+
+  /// No description provided for @breakdown.
+  ///
+  /// In en, this message translates to:
+  /// **'{price} × {units}'**
+  String breakdown(String price, String units);
+
+  /// No description provided for @total.
+  ///
+  /// In en, this message translates to:
+  /// **'Total'**
+  String get total;
+
+  /// No description provided for @farmAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Farm address'**
+  String get farmAddress;
+
+  /// No description provided for @farmAddressHint.
+  ///
+  /// In en, this message translates to:
+  /// **'House name, street, town'**
+  String get farmAddressHint;
+
+  /// No description provided for @addressRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the farm address'**
+  String get addressRequired;
+
+  /// No description provided for @continueToPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue to payment'**
+  String get continueToPayment;
+
+  /// No description provided for @paymentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get paymentTitle;
+
+  /// No description provided for @orderSummary.
+  ///
+  /// In en, this message translates to:
+  /// **'Order summary'**
+  String get orderSummary;
+
+  /// No description provided for @service.
+  ///
+  /// In en, this message translates to:
+  /// **'Service'**
+  String get service;
+
+  /// No description provided for @date.
+  ///
+  /// In en, this message translates to:
+  /// **'Date'**
+  String get date;
+
+  /// No description provided for @time.
+  ///
+  /// In en, this message translates to:
+  /// **'Time'**
+  String get time;
+
+  /// No description provided for @rate.
+  ///
+  /// In en, this message translates to:
+  /// **'Rate'**
+  String get rate;
+
+  /// No description provided for @totalPayable.
+  ///
+  /// In en, this message translates to:
+  /// **'Total payable'**
+  String get totalPayable;
+
+  /// No description provided for @paymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method'**
+  String get paymentMethod;
+
+  /// No description provided for @payUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI'**
+  String get payUpi;
+
+  /// No description provided for @payUpiSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Google Pay, PhonePe, Paytm'**
+  String get payUpiSubtitle;
+
+  /// No description provided for @payCard.
+  ///
+  /// In en, this message translates to:
+  /// **'Credit or debit card'**
+  String get payCard;
+
+  /// No description provided for @payCardSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Visa, Mastercard, RuPay'**
+  String get payCardSubtitle;
+
+  /// No description provided for @payAfter.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay after service'**
+  String get payAfter;
+
+  /// No description provided for @payAfterSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the worker once the job is done'**
+  String get payAfterSubtitle;
+
+  /// No description provided for @confirmAndPay.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm and pay {amount}'**
+  String confirmAndPay(String amount);
+
+  /// No description provided for @confirmBooking.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm booking'**
+  String get confirmBooking;
+
+  /// No description provided for @paymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'The payment did not go through. Please try again.'**
+  String get paymentFailed;
+
+  /// No description provided for @draftMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This step needs a booking in progress. Start again from Farm Services.'**
+  String get draftMissing;
+
+  /// No description provided for @bookingConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking confirmed'**
+  String get bookingConfirmed;
+
+  /// No description provided for @bookingConfirmedSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your worker will arrive on {date} at {time}'**
+  String bookingConfirmedSubtitle(String date, String time);
+
+  /// No description provided for @bookingId.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking ID'**
+  String get bookingId;
+
+  /// No description provided for @status.
+  ///
+  /// In en, this message translates to:
+  /// **'Status'**
+  String get status;
+
+  /// No description provided for @payment.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment'**
+  String get payment;
+
+  /// No description provided for @viewMyBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'View my bookings'**
+  String get viewMyBookings;
+
+  /// No description provided for @backToHome.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to home'**
+  String get backToHome;
+
+  /// No description provided for @statusPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Pending'**
+  String get statusPending;
+
+  /// No description provided for @statusConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirmed'**
+  String get statusConfirmed;
+
+  /// No description provided for @statusInProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'In progress'**
+  String get statusInProgress;
+
+  /// No description provided for @statusCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statusCompleted;
+
+  /// No description provided for @statusCancelled.
+  ///
+  /// In en, this message translates to:
+  /// **'Cancelled'**
+  String get statusCancelled;
+
+  /// No description provided for @noBookingsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No bookings yet'**
+  String get noBookingsTitle;
+
+  /// No description provided for @noBookingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a farm or home service and it will show up here.'**
+  String get noBookingsDescription;
+
+  /// No description provided for @bookAService.
+  ///
+  /// In en, this message translates to:
+  /// **'Book a service'**
+  String get bookAService;
+
+  /// No description provided for @upcoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Upcoming'**
+  String get upcoming;
+
+  /// No description provided for @past.
+  ///
+  /// In en, this message translates to:
+  /// **'Past'**
+  String get past;
+
+  /// No description provided for @somethingWentWrong.
+  ///
+  /// In en, this message translates to:
+  /// **'Something went wrong'**
+  String get somethingWentWrong;
+
+  /// No description provided for @messages.
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get messages;
+
+  /// No description provided for @messagesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Chat with the workers you have booked'**
+  String get messagesSubtitle;
+
+  /// No description provided for @noMessagesTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No conversations yet'**
+  String get noMessagesTitle;
+
+  /// No description provided for @noMessagesDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Once you book a worker, you can message them here.'**
+  String get noMessagesDescription;
+
+  /// No description provided for @noMessagesInThread.
+  ///
+  /// In en, this message translates to:
+  /// **'Say hello to start the conversation'**
+  String get noMessagesInThread;
+
+  /// No description provided for @online.
+  ///
+  /// In en, this message translates to:
+  /// **'Online'**
+  String get online;
+
+  /// No description provided for @offline.
+  ///
+  /// In en, this message translates to:
+  /// **'Offline'**
+  String get offline;
+
+  /// No description provided for @typeMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Type a message'**
+  String get typeMessage;
+
+  /// No description provided for @todaysMedicines.
+  ///
+  /// In en, this message translates to:
+  /// **'Today\'s medicines'**
+  String get todaysMedicines;
+
+  /// No description provided for @medicinesSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap the circle after you take a dose'**
+  String get medicinesSubtitle;
+
+  /// No description provided for @pendingDoses.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{All doses taken} =1{1 dose pending} other{{count} doses pending}}'**
+  String pendingDoses(int count);
+
+  /// No description provided for @nextDose.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {name} at {time}'**
+  String nextDose(String name, String time);
+
+  /// No description provided for @addReminder.
+  ///
+  /// In en, this message translates to:
+  /// **'Add reminder'**
+  String get addReminder;
+
+  /// No description provided for @medicineName.
+  ///
+  /// In en, this message translates to:
+  /// **'Medicine name'**
+  String get medicineName;
+
+  /// No description provided for @medicineNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. BP tablet'**
+  String get medicineNameHint;
+
+  /// No description provided for @dosage.
+  ///
+  /// In en, this message translates to:
+  /// **'Dosage'**
+  String get dosage;
+
+  /// No description provided for @dosageHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. 1 tablet after breakfast'**
+  String get dosageHint;
+
+  /// No description provided for @reminderTime.
+  ///
+  /// In en, this message translates to:
+  /// **'Reminder time'**
+  String get reminderTime;
+
+  /// No description provided for @save.
+  ///
+  /// In en, this message translates to:
+  /// **'Save'**
+  String get save;
+
+  /// No description provided for @addedBy.
+  ///
+  /// In en, this message translates to:
+  /// **'Added by {name}'**
+  String addedBy(String name);
+
+  /// No description provided for @markedTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} marked as taken'**
+  String markedTaken(String name);
+
+  /// No description provided for @markedPending.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} marked as pending'**
+  String markedPending(String name);
+
+  /// No description provided for @nameRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a name'**
+  String get nameRequired;
+
+  /// No description provided for @phoneRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter a phone number'**
+  String get phoneRequired;
+
+  /// No description provided for @noRemindersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No reminders yet'**
+  String get noRemindersTitle;
+
+  /// No description provided for @noRemindersDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Add your medicines and Kaylo will remind you at the right time.'**
+  String get noRemindersDescription;
+
+  /// No description provided for @pressAndHold.
+  ///
+  /// In en, this message translates to:
+  /// **'Press and hold'**
+  String get pressAndHold;
+
+  /// No description provided for @holdSeconds.
+  ///
+  /// In en, this message translates to:
+  /// **'Hold for 3 seconds'**
+  String get holdSeconds;
+
+  /// No description provided for @secondsShort.
+  ///
+  /// In en, this message translates to:
+  /// **'{seconds} s'**
+  String secondsShort(int seconds);
+
+  /// No description provided for @sosHoldHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.'**
+  String get sosHoldHint;
+
+  /// No description provided for @sosReleasedEarly.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep holding for 3 seconds to send an alert'**
+  String get sosReleasedEarly;
+
+  /// No description provided for @sosSentTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Help is on the way'**
+  String get sosSentTitle;
+
+  /// No description provided for @sosSentContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 contact alerted with your location} other{{count} contacts alerted with your location}}'**
+  String sosSentContacts(int count);
+
+  /// No description provided for @sosCallingPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Calling {name}'**
+  String sosCallingPrimary(String name);
+
+  /// No description provided for @sosNoContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Add an emergency contact first, so someone receives the alert.'**
+  String get sosNoContacts;
+
+  /// No description provided for @dismiss.
+  ///
+  /// In en, this message translates to:
+  /// **'Dismiss'**
+  String get dismiss;
+
+  /// No description provided for @emergencyContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Emergency contacts'**
+  String get emergencyContacts;
+
+  /// No description provided for @addContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Add contact'**
+  String get addContact;
+
+  /// No description provided for @contactName.
+  ///
+  /// In en, this message translates to:
+  /// **'Name'**
+  String get contactName;
+
+  /// No description provided for @relationship.
+  ///
+  /// In en, this message translates to:
+  /// **'Relationship'**
+  String get relationship;
+
+  /// No description provided for @relationshipHint.
+  ///
+  /// In en, this message translates to:
+  /// **'e.g. Daughter'**
+  String get relationshipHint;
+
+  /// No description provided for @phoneNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get phoneNumber;
+
+  /// No description provided for @primary.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary'**
+  String get primary;
+
+  /// No description provided for @setAsPrimary.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as primary'**
+  String get setAsPrimary;
+
+  /// No description provided for @removeContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeContact;
+
+  /// No description provided for @sosHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'SOS history'**
+  String get sosHistory;
+
+  /// No description provided for @alertsCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =0{No alerts sent} =1{1 alert sent} other{{count} alerts sent}}'**
+  String alertsCount(int count);
+
+  /// No description provided for @noSosTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'No alerts sent'**
+  String get noSosTitle;
+
+  /// No description provided for @noSosDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts you send will be listed here with who was notified.'**
+  String get noSosDescription;
+
+  /// No description provided for @alertedCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 contact notified} other{{count} contacts notified}}'**
+  String alertedCount(int count);
+
+  /// No description provided for @sosStatusOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Open'**
+  String get sosStatusOpen;
+
+  /// No description provided for @sosStatusAcknowledged.
+  ///
+  /// In en, this message translates to:
+  /// **'Acknowledged'**
+  String get sosStatusAcknowledged;
+
+  /// No description provided for @sosStatusResolved.
+  ///
+  /// In en, this message translates to:
+  /// **'Resolved'**
+  String get sosStatusResolved;
+
+  /// No description provided for @locationShared.
+  ///
+  /// In en, this message translates to:
+  /// **'Location shared: {location}'**
+  String locationShared(String location);
+
+  /// No description provided for @primaryContact.
+  ///
+  /// In en, this message translates to:
+  /// **'Primary contact: {name}'**
+  String primaryContact(String name);
 }
 
 class _AppLocalizationsDelegate

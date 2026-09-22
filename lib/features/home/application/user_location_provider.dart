@@ -31,31 +31,31 @@ class UserLocation {
   bool get isFallback => identical(this, fallback);
 
   factory UserLocation.fromResolved(ResolvedLocation resolved) => UserLocation(
-        label: resolved.label,
-        addressLine: resolved.addressLine,
-        latitude: resolved.latitude,
-        longitude: resolved.longitude,
-      );
+    label: resolved.label,
+    addressLine: resolved.addressLine,
+    latitude: resolved.latitude,
+    longitude: resolved.longitude,
+  );
 
   factory UserLocation.fromJson(Map<String, dynamic> json) => UserLocation(
-        label: json['label'] as String,
-        addressLine: json['addressLine'] as String?,
-        latitude: (json['latitude'] as num?)?.toDouble(),
-        longitude: (json['longitude'] as num?)?.toDouble(),
-      );
+    label: json['label'] as String,
+    addressLine: json['addressLine'] as String?,
+    latitude: (json['latitude'] as num?)?.toDouble(),
+    longitude: (json['longitude'] as num?)?.toDouble(),
+  );
 
   Map<String, dynamic> toJson() => {
-        'label': label,
-        'addressLine': addressLine,
-        'latitude': latitude,
-        'longitude': longitude,
-      };
+    'label': label,
+    'addressLine': addressLine,
+    'latitude': latitude,
+    'longitude': longitude,
+  };
 }
 
 final userLocationProvider =
     NotifierProvider<UserLocationNotifier, UserLocation>(
-  UserLocationNotifier.new,
-);
+      UserLocationNotifier.new,
+    );
 
 class UserLocationNotifier extends Notifier<UserLocation> {
   @override
@@ -63,7 +63,9 @@ class UserLocationNotifier extends Notifier<UserLocation> {
     // Widget tests build screens without SharedPreferences; the fallback
     // keeps them (and a fresh install) working.
     try {
-      final raw = ref.read(sharedPreferencesProvider).getString('active_location');
+      final raw = ref
+          .read(sharedPreferencesProvider)
+          .getString('active_location');
       if (raw != null) {
         return UserLocation.fromJson(jsonDecode(raw) as Map<String, dynamic>);
       }
@@ -73,9 +75,9 @@ class UserLocationNotifier extends Notifier<UserLocation> {
 
   Future<void> set(UserLocation location) async {
     state = location;
-    await ref.read(storageServiceProvider).saveActiveLocation(
-          jsonEncode(location.toJson()),
-        );
+    await ref
+        .read(storageServiceProvider)
+        .saveActiveLocation(jsonEncode(location.toJson()));
   }
 
   Future<void> setLabel(String label) => set(UserLocation(label: label));

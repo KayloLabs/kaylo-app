@@ -5,13 +5,13 @@ abstract class StorageService {
   Future<void> saveToken(String token);
   Future<String?> getToken();
   Future<void> removeToken();
-  
+
   Future<void> setCareMode(bool enabled);
   Future<bool> getCareMode();
-  
+
   Future<void> setOnboardingSeen(bool seen);
   Future<bool> getOnboardingSeen();
-  
+
   Future<void> saveLanguageCode(String code);
   Future<String?> getLanguageCode();
 
@@ -49,7 +49,8 @@ class SharedPreferencesStorageService implements StorageService {
   Future<String?> getToken() async => _prefs.getString(_tokenKey);
 
   @override
-  Future<void> saveToken(String token) async => await _prefs.setString(_tokenKey, token);
+  Future<void> saveToken(String token) async =>
+      await _prefs.setString(_tokenKey, token);
 
   @override
   Future<void> removeToken() async => await _prefs.remove(_tokenKey);
@@ -58,28 +59,34 @@ class SharedPreferencesStorageService implements StorageService {
   Future<bool> getCareMode() async => _prefs.getBool(_careModeKey) ?? false;
 
   @override
-  Future<void> setCareMode(bool enabled) async => await _prefs.setBool(_careModeKey, enabled);
+  Future<void> setCareMode(bool enabled) async =>
+      await _prefs.setBool(_careModeKey, enabled);
 
   @override
-  Future<bool> getOnboardingSeen() async => _prefs.getBool(_onboardingKey) ?? false;
+  Future<bool> getOnboardingSeen() async =>
+      _prefs.getBool(_onboardingKey) ?? false;
 
   @override
-  Future<void> setOnboardingSeen(bool seen) async => await _prefs.setBool(_onboardingKey, seen);
+  Future<void> setOnboardingSeen(bool seen) async =>
+      await _prefs.setBool(_onboardingKey, seen);
 
   @override
   Future<String?> getLanguageCode() async => _prefs.getString(_languageKey);
 
   @override
-  Future<void> saveLanguageCode(String code) async => await _prefs.setString(_languageKey, code);
+  Future<void> saveLanguageCode(String code) async =>
+      await _prefs.setString(_languageKey, code);
 
   @override
   Future<String?> getThemeMode() async => _prefs.getString(_themeModeKey);
 
   @override
-  Future<void> saveThemeMode(String mode) async => await _prefs.setString(_themeModeKey, mode);
+  Future<void> saveThemeMode(String mode) async =>
+      await _prefs.setString(_themeModeKey, mode);
 
   @override
-  Future<String?> getActiveLocation() async => _prefs.getString(_activeLocationKey);
+  Future<String?> getActiveLocation() async =>
+      _prefs.getString(_activeLocationKey);
 
   @override
   Future<void> saveActiveLocation(String json) async =>

@@ -35,14 +35,18 @@ final fullCatalogProvider = FutureProvider.autoDispose((ref) async {
   ];
 });
 
-final serviceListProvider =
-    FutureProvider.family<List<ServiceItem>, String>((ref, category) async {
+final serviceListProvider = FutureProvider.family<List<ServiceItem>, String>((
+  ref,
+  category,
+) async {
   final repo = ref.watch(homeRepositoryProvider);
   return repo.getServicesByCategory(category);
 });
 
-final serviceDetailProvider =
-    FutureProvider.family<ServiceItem?, String>((ref, id) async {
+final serviceDetailProvider = FutureProvider.family<ServiceItem?, String>((
+  ref,
+  id,
+) async {
   final repo = ref.watch(homeRepositoryProvider);
   return repo.getServiceById(id);
 });

@@ -19,14 +19,18 @@ final careRepositoryProvider = Provider<CareRepository>((ref) {
 });
 
 // --- M3 Providers (Doctors & Caregivers) ---
-final doctorsListProvider =
-    FutureProvider.family<List<Doctor>, String?>((ref, specialty) async {
+final doctorsListProvider = FutureProvider.family<List<Doctor>, String?>((
+  ref,
+  specialty,
+) async {
   final repo = ref.watch(careRepositoryProvider);
   return repo.getDoctors(specialty: specialty);
 });
 
-final doctorDetailProvider =
-    FutureProvider.family<Doctor?, String>((ref, doctorId) async {
+final doctorDetailProvider = FutureProvider.family<Doctor?, String>((
+  ref,
+  doctorId,
+) async {
   final repo = ref.watch(careRepositoryProvider);
   return repo.getDoctorById(doctorId);
 });
@@ -49,10 +53,10 @@ class DoctorAppointmentsNotifier
   }
 }
 
-final doctorAppointmentsProvider = AsyncNotifierProvider<
-    DoctorAppointmentsNotifier, List<DoctorAppointment>>(
-  DoctorAppointmentsNotifier.new,
-);
+final doctorAppointmentsProvider =
+    AsyncNotifierProvider<DoctorAppointmentsNotifier, List<DoctorAppointment>>(
+      DoctorAppointmentsNotifier.new,
+    );
 
 final caregiversListProvider = FutureProvider<List<Caregiver>>((ref) async {
   final repo = ref.watch(careRepositoryProvider);
@@ -77,31 +81,34 @@ class CaregiverBookingsNotifier
   }
 }
 
-final caregiverBookingsProvider = AsyncNotifierProvider<
-    CaregiverBookingsNotifier, List<CaregiverBookingRecord>>(
-  CaregiverBookingsNotifier.new,
-);
+final caregiverBookingsProvider =
+    AsyncNotifierProvider<
+      CaregiverBookingsNotifier,
+      List<CaregiverBookingRecord>
+    >(CaregiverBookingsNotifier.new);
 
 // --- M5 Providers (Reminders, Contacts & SOS) ---
 /// Today's reminders in time order.
 final medicineRemindersProvider =
     FutureProvider.autoDispose<List<MedicineReminder>>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return const [];
-  final reminders =
-      await ref.watch(careRepositoryProvider).getReminders(userId);
-  return [...reminders]..sort((a, b) => a.minutesOfDay - b.minutesOfDay);
-});
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) return const [];
+      final reminders = await ref
+          .watch(careRepositoryProvider)
+          .getReminders(userId);
+      return [...reminders]..sort((a, b) => a.minutesOfDay - b.minutesOfDay);
+    });
 
 final emergencyContactsProvider =
     FutureProvider.autoDispose<List<EmergencyContact>>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return const [];
-  return ref.watch(careRepositoryProvider).getContacts(userId);
-});
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) return const [];
+      return ref.watch(careRepositoryProvider).getContacts(userId);
+    });
 
-final sosHistoryProvider =
-    FutureProvider.autoDispose<List<SosAlert>>((ref) async {
+final sosHistoryProvider = FutureProvider.autoDispose<List<SosAlert>>((
+  ref,
+) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return const [];
   return ref.watch(careRepositoryProvider).getSosHistory(userId);
@@ -147,7 +154,12 @@ class CareController {
     required String relation,
     required String phone,
   }) async {
-    await _repo.addContact(_userId, name: name, relation: relation, phone: phone);
+    await _repo.addContact(
+      _userId,
+      name: name,
+      relation: relation,
+      phone: phone,
+    );
     _ref.invalidate(emergencyContactsProvider);
   }
 

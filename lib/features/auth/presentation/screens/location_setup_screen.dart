@@ -46,8 +46,9 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final resolved = _resolved;
 
     return Scaffold(
@@ -67,17 +68,16 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
               Text(
                 l10n.enableLocation,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                    ),
+                  fontWeight: FontWeight.bold,
+                ),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
                 l10n.enableLocationSubtitle,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: secondary, height: 1.5),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: secondary, height: 1.5),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: AppSpacing.xxxl),
@@ -90,15 +90,16 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
                             key: const ValueKey('empty'),
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
-                              Icon(Icons.map_outlined,
-                                  size: 88, color: secondary.withValues(alpha: 0.5)),
+                              Icon(
+                                Icons.map_outlined,
+                                size: 88,
+                                color: secondary.withValues(alpha: 0.5),
+                              ),
                               const SizedBox(height: AppSpacing.m),
                               Text(
                                 l10n.locationWillAppear,
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .bodyMedium
+                                style: Theme.of(context).textTheme.bodyMedium
                                     ?.copyWith(color: secondary),
                               ),
                             ],
@@ -111,20 +112,22 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
                                 width: 72,
                                 height: 72,
                                 decoration: BoxDecoration(
-                                  color: AppColors.brandPrimary
-                                      .withValues(alpha: 0.12),
+                                  color: AppColors.brandPrimary.withValues(
+                                    alpha: 0.12,
+                                  ),
                                   shape: BoxShape.circle,
                                 ),
-                                child: const Icon(Icons.place_rounded,
-                                    size: 40, color: AppColors.brandPrimary),
+                                child: const Icon(
+                                  Icons.place_rounded,
+                                  size: 40,
+                                  color: AppColors.brandPrimary,
+                                ),
                               ),
                               const SizedBox(height: AppSpacing.l),
                               Text(
                                 resolved.label,
                                 textAlign: TextAlign.center,
-                                style: Theme.of(context)
-                                    .textTheme
-                                    .titleLarge
+                                style: Theme.of(context).textTheme.titleLarge
                                     ?.copyWith(fontWeight: FontWeight.w700),
                               ),
                               if (resolved.addressLine != null) ...[
@@ -132,9 +135,7 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
                                 Text(
                                   resolved.addressLine!,
                                   textAlign: TextAlign.center,
-                                  style: Theme.of(context)
-                                      .textTheme
-                                      .bodyMedium
+                                  style: Theme.of(context).textTheme.bodyMedium
                                       ?.copyWith(color: secondary),
                                 ),
                               ],
@@ -144,7 +145,10 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
                                   KayloFeedback.tap();
                                   setState(() => _resolved = null);
                                 },
-                                icon: const Icon(Icons.refresh_rounded, size: 18),
+                                icon: const Icon(
+                                  Icons.refresh_rounded,
+                                  size: 18,
+                                ),
                                 label: Text(l10n.locateAgain),
                               ),
                             ],

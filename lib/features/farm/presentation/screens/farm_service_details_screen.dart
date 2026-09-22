@@ -58,8 +58,9 @@ class _Details extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final info = farmInfoFor(service);
     final workers = ref.watch(farmWorkersProvider(service.id));
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Scaffold(
       appBar: AppBar(title: Text(service.name)),
@@ -100,10 +101,9 @@ class _Details extends ConsumerWidget {
               Expanded(
                 child: Text(
                   service.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .headlineSmall
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(context).textTheme.headlineSmall?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
               ),
               const SizedBox(width: AppSpacing.m),
@@ -117,10 +117,9 @@ class _Details extends ConsumerWidget {
           const SizedBox(height: AppSpacing.m),
           Text(
             service.description,
-            style: Theme.of(context)
-                .textTheme
-                .bodyMedium
-                ?.copyWith(color: secondary, height: 1.5),
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(color: secondary, height: 1.5),
           ),
           const SizedBox(height: AppSpacing.l),
 
@@ -143,10 +142,9 @@ class _Details extends ConsumerWidget {
                       list.isEmpty
                           ? l10n.noWorkersYet
                           : l10n.workersNearYou(list.length),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                   if (summary != null)
@@ -201,16 +199,18 @@ class _Details extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.info_outline_rounded,
-                    color: AppColors.homeAccent),
+                const Icon(
+                  Icons.info_outline_rounded,
+                  color: AppColors.homeAccent,
+                ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: Text(
                     l10n.liveTotalNote,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: secondary, height: 1.4),
+                    style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                      color: secondary,
+                      height: 1.4,
+                    ),
                   ),
                 ),
               ],

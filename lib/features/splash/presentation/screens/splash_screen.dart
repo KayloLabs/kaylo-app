@@ -19,7 +19,8 @@ class RevealClipper extends CustomClipper<Rect> {
   }
 
   @override
-  bool shouldReclip(RevealClipper oldClipper) => oldClipper.progress != progress;
+  bool shouldReclip(RevealClipper oldClipper) =>
+      oldClipper.progress != progress;
 }
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -67,7 +68,11 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _dotScale = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.566, 0.660, curve: Curves.easeOutBack), // 1500-1750ms
+      curve: const Interval(
+        0.566,
+        0.660,
+        curve: Curves.easeOutBack,
+      ), // 1500-1750ms
     );
 
     _textFade = CurvedAnimation(
@@ -75,18 +80,22 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       curve: const Interval(0.660, 0.774, curve: Curves.easeIn), // 1750-2050ms
     );
 
-    _textSlide = Tween<Offset>(
-      begin: const Offset(0, 0.1),
-      end: Offset.zero,
-    ).animate(CurvedAnimation(
-      parent: _controller,
-      curve: const Interval(0.660, 0.774, curve: Curves.easeOutCubic),
-    ));
+    _textSlide = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
+        .animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.660, 0.774, curve: Curves.easeOutCubic),
+          ),
+        );
 
     // Light sweep across the assembled logo during the closing hold.
     _shimmer = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.790, 0.980, curve: Curves.easeInOut), // 2090-2600ms
+      curve: const Interval(
+        0.790,
+        0.980,
+        curve: Curves.easeInOut,
+      ), // 2090-2600ms
     );
 
     _taglineFade = CurvedAnimation(
@@ -107,7 +116,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     }
 
     // Start initialization logic concurrently with animation
-    final initFuture = ref.read(splashControllerProvider.notifier).initializeApp();
+    final initFuture = ref
+        .read(splashControllerProvider.notifier)
+        .initializeApp();
 
     // Wait for the app state to initialize
     await initFuture;
@@ -154,10 +165,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final logoColor =
-        isDark ? AppColors.brandPrimaryBright : AppColors.brandPrimaryDark;
-    final backgroundColor =
-        isDark ? AppColors.surfaceMutedDark : AppColors.surfaceTint;
+    final logoColor = isDark
+        ? AppColors.brandPrimaryBright
+        : AppColors.brandPrimaryDark;
+    final backgroundColor = isDark
+        ? AppColors.surfaceMutedDark
+        : AppColors.surfaceTint;
 
     return Scaffold(
       backgroundColor: backgroundColor,
@@ -203,7 +216,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                   width: 250,
                                   height: 250,
                                   colorFilter: ColorFilter.mode(
-                                      logoColor, BlendMode.srcIn),
+                                    logoColor,
+                                    BlendMode.srcIn,
+                                  ),
                                 ),
                               ),
 
@@ -217,7 +232,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                     width: 250,
                                     height: 250,
                                     colorFilter: ColorFilter.mode(
-                                        logoColor, BlendMode.srcIn),
+                                      logoColor,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -232,7 +249,9 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                                     width: 250,
                                     height: 250,
                                     colorFilter: ColorFilter.mode(
-                                        logoColor, BlendMode.srcIn),
+                                      logoColor,
+                                      BlendMode.srcIn,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -252,9 +271,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
                         offset: Offset(0, 8 * (1 - _taglineFade.value)),
                         child: Text(
                           'Home · Farm · Care',
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: isDark
                                     ? AppColors.textSecondaryDark
@@ -327,10 +344,12 @@ class _AmbientGlowPainter extends CustomPainter {
       canvas.drawCircle(center, radius, paint);
     }
 
-    final green = AppColors.brandPrimaryBright
-        .withValues(alpha: isDark ? 0.10 : 0.16);
-    final amber =
-        AppColors.secondaryAccent.withValues(alpha: isDark ? 0.05 : 0.10);
+    final green = AppColors.brandPrimaryBright.withValues(
+      alpha: isDark ? 0.10 : 0.16,
+    );
+    final amber = AppColors.secondaryAccent.withValues(
+      alpha: isDark ? 0.05 : 0.10,
+    );
 
     glow(
       Offset(

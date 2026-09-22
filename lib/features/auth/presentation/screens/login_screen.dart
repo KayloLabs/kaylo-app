@@ -19,11 +19,12 @@ class LoginScreen extends ConsumerStatefulWidget {
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProviderStateMixin {
+class _LoginScreenState extends ConsumerState<LoginScreen>
+    with SingleTickerProviderStateMixin {
   final _phoneController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
-  
+
   bool _isLoading = false;
   bool _isSignUp = false; // Toggle between Sign In and Sign Up
 
@@ -42,10 +43,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
       parent: _animController,
       curve: Curves.easeInOutCubic,
     );
-    _fadeAnim = CurvedAnimation(
-      parent: _animController,
-      curve: Curves.easeIn,
-    );
+    _fadeAnim = CurvedAnimation(parent: _animController, curve: Curves.easeIn);
   }
 
   @override
@@ -74,7 +72,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
       KayloSnackbar.showError(context, 'Please enter a valid phone number');
       return;
     }
-    
+
     if (_isSignUp) {
       final firstName = _firstNameController.text.trim();
       if (firstName.isEmpty) {
@@ -82,7 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
         return;
       }
     }
-    
+
     final formattedPhone = phone.startsWith('+') ? phone : '+91$phone';
 
     setState(() => _isLoading = true);
@@ -97,12 +95,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
       if (mounted) setState(() => _isLoading = false);
     }
   }
-  
+
   Future<void> _handleSocial(Future<void> Function() authMethod) async {
     setState(() => _isLoading = true);
     try {
       await authMethod();
-      await Future.delayed(const Duration(milliseconds: 100)); // Wait for stream propagation
+      await Future.delayed(
+        const Duration(milliseconds: 100),
+      ); // Wait for stream propagation
       if (mounted) context.go(Routes.location);
     } catch (e) {
       if (mounted) KayloSnackbar.showError(context, e.toString());
@@ -125,7 +125,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: isDark 
+                  colors: isDark
                       ? [const Color(0xFF0F1713), const Color(0xFF16211B)]
                       : [const Color(0xFFF0FDF4), const Color(0xFFF8FAFC)],
                 ),
@@ -141,41 +141,53 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.brandPrimary.withValues(alpha: isDark ? 0.15 : 0.2),
+                color: AppColors.brandPrimary.withValues(
+                  alpha: isDark ? 0.15 : 0.2,
+                ),
               ),
             ),
           ),
-          
+
           SafeArea(
             child: Center(
               child: SingleChildScrollView(
-                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.xl, vertical: AppSpacing.m),
+                padding: const EdgeInsets.symmetric(
+                  horizontal: AppSpacing.xl,
+                  vertical: AppSpacing.m,
+                ),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.center,
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     const Center(
-                      child: SizedBox(width: 72, height: 72, child: KayloLogo()),
+                      child: SizedBox(
+                        width: 72,
+                        height: 72,
+                        child: KayloLogo(),
+                      ),
                     ),
                     const SizedBox(height: AppSpacing.xl),
                     Text(
                       'Welcome to Kaylo',
-                      style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.5,
-                      ),
+                      style: Theme.of(context).textTheme.headlineMedium
+                          ?.copyWith(
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: -0.5,
+                          ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xs),
                     Text(
                       'Your home, farm, and care companion',
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                        color: isDark
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondary,
                       ),
                       textAlign: TextAlign.center,
                     ),
                     const SizedBox(height: AppSpacing.xxxl),
-                    
+
                     // Glassmorphic Auth Card
                     KayloLiquidGlass(
                       borderRadius: 32,
@@ -194,20 +206,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                 AnimatedPositioned(
                                   duration: const Duration(milliseconds: 300),
                                   curve: Curves.easeOutCubic,
-                                  left: _isSignUp ? MediaQuery.of(context).size.width / 2 - AppSpacing.xl * 2 - 4 : 4,
-                                  right: _isSignUp ? 4 : MediaQuery.of(context).size.width / 2 - AppSpacing.xl * 2 - 4,
+                                  left: _isSignUp
+                                      ? MediaQuery.of(context).size.width / 2 -
+                                            AppSpacing.xl * 2 -
+                                            4
+                                      : 4,
+                                  right: _isSignUp
+                                      ? 4
+                                      : MediaQuery.of(context).size.width / 2 -
+                                            AppSpacing.xl * 2 -
+                                            4,
                                   top: 4,
                                   bottom: 4,
                                   child: Container(
                                     decoration: BoxDecoration(
-                                      color: isDark ? AppColors.surfaceDark : AppColors.surface,
+                                      color: isDark
+                                          ? AppColors.surfaceDark
+                                          : AppColors.surface,
                                       borderRadius: BorderRadius.circular(20),
                                       boxShadow: [
                                         BoxShadow(
-                                          color: Colors.black.withValues(alpha: 0.05),
+                                          color: Colors.black.withValues(
+                                            alpha: 0.05,
+                                          ),
                                           blurRadius: 8,
                                           offset: const Offset(0, 2),
-                                        )
+                                        ),
                                       ],
                                     ),
                                   ),
@@ -217,15 +241,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     Expanded(
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.opaque,
-                                        onTap: _isSignUp ? _toggleAuthMode : null,
+                                        onTap: _isSignUp
+                                            ? _toggleAuthMode
+                                            : null,
                                         child: Center(
                                           child: Text(
                                             'Sign In',
                                             style: TextStyle(
-                                              fontWeight: !_isSignUp ? FontWeight.w700 : FontWeight.w500,
-                                              color: !_isSignUp 
-                                                  ? (isDark ? Colors.white : Colors.black)
-                                                  : (isDark ? Colors.grey[500] : Colors.grey[600]),
+                                              fontWeight: !_isSignUp
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                              color: !_isSignUp
+                                                  ? (isDark
+                                                        ? Colors.white
+                                                        : Colors.black)
+                                                  : (isDark
+                                                        ? Colors.grey[500]
+                                                        : Colors.grey[600]),
                                             ),
                                           ),
                                         ),
@@ -234,15 +266,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                     Expanded(
                                       child: GestureDetector(
                                         behavior: HitTestBehavior.opaque,
-                                        onTap: !_isSignUp ? _toggleAuthMode : null,
+                                        onTap: !_isSignUp
+                                            ? _toggleAuthMode
+                                            : null,
                                         child: Center(
                                           child: Text(
                                             'Sign Up',
                                             style: TextStyle(
-                                              fontWeight: _isSignUp ? FontWeight.w700 : FontWeight.w500,
-                                              color: _isSignUp 
-                                                  ? (isDark ? Colors.white : Colors.black)
-                                                  : (isDark ? Colors.grey[500] : Colors.grey[600]),
+                                              fontWeight: _isSignUp
+                                                  ? FontWeight.w700
+                                                  : FontWeight.w500,
+                                              color: _isSignUp
+                                                  ? (isDark
+                                                        ? Colors.white
+                                                        : Colors.black)
+                                                  : (isDark
+                                                        ? Colors.grey[500]
+                                                        : Colors.grey[600]),
                                             ),
                                           ),
                                         ),
@@ -254,7 +294,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xxl),
-                          
+
                           // Expandable fields for Sign Up
                           SizeTransition(
                             sizeFactor: _formHeightAnim,
@@ -291,7 +331,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                               ),
                             ),
                           ),
-                          
+
                           KayloTextField(
                             label: 'Phone Number',
                             hintText: 'e.g. 98470 12345',
@@ -306,31 +346,52 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                             isLoading: _isLoading,
                           ),
                           const SizedBox(height: AppSpacing.xl),
-                          
+
                           Row(
                             children: [
-                              Expanded(child: Divider(color: isDark ? AppColors.borderDark : AppColors.border)),
-                              Padding(
-                                padding: const EdgeInsets.symmetric(horizontal: AppSpacing.m),
-                                child: Text(
-                                  'OR',
-                                  style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                                    color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                                  ),
+                              Expanded(
+                                child: Divider(
+                                  color: isDark
+                                      ? AppColors.borderDark
+                                      : AppColors.border,
                                 ),
                               ),
-                              Expanded(child: Divider(color: isDark ? AppColors.borderDark : AppColors.border)),
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                  horizontal: AppSpacing.m,
+                                ),
+                                child: Text(
+                                  'OR',
+                                  style: Theme.of(context).textTheme.labelSmall
+                                      ?.copyWith(
+                                        color: isDark
+                                            ? AppColors.textSecondaryDark
+                                            : AppColors.textSecondary,
+                                      ),
+                                ),
+                              ),
+                              Expanded(
+                                child: Divider(
+                                  color: isDark
+                                      ? AppColors.borderDark
+                                      : AppColors.border,
+                                ),
+                              ),
                             ],
                           ),
                           const SizedBox(height: AppSpacing.xl),
-                          
+
                           Row(
                             children: [
                               Expanded(
                                 child: KayloButton(
                                   text: 'Google',
                                   variant: KayloButtonVariant.secondary,
-                                  onPressed: () => _handleSocial(() => ref.read(authRepositoryProvider).signInWithGoogle()),
+                                  onPressed: () => _handleSocial(
+                                    () => ref
+                                        .read(authRepositoryProvider)
+                                        .signInWithGoogle(),
+                                  ),
                                 ),
                               ),
                               const SizedBox(width: AppSpacing.m),
@@ -338,7 +399,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> with SingleTickerProv
                                 child: KayloButton(
                                   text: 'Apple',
                                   variant: KayloButtonVariant.secondary,
-                                  onPressed: () => _handleSocial(() => ref.read(authRepositoryProvider).signInWithApple()),
+                                  onPressed: () => _handleSocial(
+                                    () => ref
+                                        .read(authRepositoryProvider)
+                                        .signInWithApple(),
+                                  ),
                                 ),
                               ),
                             ],

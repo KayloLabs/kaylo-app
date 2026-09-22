@@ -20,7 +20,9 @@ class ShimmerBox extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return Shimmer.fromColors(
       baseColor: isDark ? AppColors.borderDark : AppColors.border,
-      highlightColor: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
+      highlightColor: isDark
+          ? AppColors.surfaceTintDark
+          : AppColors.surfaceTint,
       child: Container(
         width: width,
         height: height,

@@ -27,17 +27,21 @@ final paymentServiceProvider = Provider<PaymentService>((ref) {
 
 /// The signed-in user's bookings, newest scheduled first. Invalidate it
 /// after creating a booking so the Bookings tab picks the new row up.
-final userBookingsProvider =
-    FutureProvider.autoDispose<List<Booking>>((ref) async {
+final userBookingsProvider = FutureProvider.autoDispose<List<Booking>>((
+  ref,
+) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return const [];
-  final bookings =
-      await ref.watch(bookingsRepositoryProvider).getUserBookings(userId);
+  final bookings = await ref
+      .watch(bookingsRepositoryProvider)
+      .getUserBookings(userId);
   return [...bookings]..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
 });
 
-final bookingByIdProvider =
-    FutureProvider.autoDispose.family<Booking, String>((ref, id) async {
+final bookingByIdProvider = FutureProvider.autoDispose.family<Booking, String>((
+  ref,
+  id,
+) async {
   final bookings = await ref.watch(userBookingsProvider.future);
   return bookings.firstWhere(
     (b) => b.id == id,
@@ -46,10 +50,11 @@ final bookingByIdProvider =
 });
 
 /// The worker assigned to a booking, for the details screen.
-final bookingWorkerProvider =
-    FutureProvider.autoDispose.family<Worker, String>((ref, workerId) {
-  return ref.watch(workersRepositoryProvider).getWorkerById(workerId);
-});
+final bookingWorkerProvider = FutureProvider.autoDispose.family<Worker, String>(
+  (ref, workerId) {
+    return ref.watch(workersRepositoryProvider).getWorkerById(workerId);
+  },
+);
 
 final bookingsControllerProvider = Provider<BookingsController>((ref) {
   return BookingsController(ref);

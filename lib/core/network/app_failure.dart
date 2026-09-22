@@ -4,7 +4,7 @@ abstract class AppFailure {
   final Object? originalError;
 
   AppFailure(this.message, {this.code, this.originalError});
-  
+
   @override
   String toString() => 'AppFailure: $message (code: $code)';
 }

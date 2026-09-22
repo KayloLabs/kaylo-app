@@ -10,7 +10,9 @@ class SupabaseAuthRepository implements AuthRepository {
   AppUser? _currentUser;
 
   SupabaseAuthRepository() {
-    _authStateSubscription = _client.auth.onAuthStateChange.listen((data) async {
+    _authStateSubscription = _client.auth.onAuthStateChange.listen((
+      data,
+    ) async {
       final session = data.session;
       if (session != null) {
         // Fetch user profile from the persons table. Column names match
@@ -42,7 +44,7 @@ class SupabaseAuthRepository implements AuthRepository {
           }
         } catch (e) {
           // Fallback if db fails
-           _currentUser = AppUser(
+          _currentUser = AppUser(
             id: session.user.id,
             firstName: 'Kaylo',
             lastName: 'User',
@@ -64,9 +66,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithPhone(String phone) async {
-    await _client.auth.signInWithOtp(
-      phone: phone,
-    );
+    await _client.auth.signInWithOtp(phone: phone);
   }
 
   @override
@@ -81,16 +81,12 @@ class SupabaseAuthRepository implements AuthRepository {
   @override
   Future<void> signInWithGoogle() async {
     // Requires configuration in Supabase Dashboard
-    await _client.auth.signInWithOAuth(
-      supabase.OAuthProvider.google,
-    );
+    await _client.auth.signInWithOAuth(supabase.OAuthProvider.google);
   }
 
   @override
   Future<void> signInWithApple() async {
-    await _client.auth.signInWithOAuth(
-      supabase.OAuthProvider.apple,
-    );
+    await _client.auth.signInWithOAuth(supabase.OAuthProvider.apple);
   }
 
   @override

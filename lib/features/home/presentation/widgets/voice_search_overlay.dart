@@ -54,8 +54,7 @@ class VoiceSearchOverlay extends ConsumerStatefulWidget {
   const VoiceSearchOverlay({super.key});
 
   @override
-  ConsumerState<VoiceSearchOverlay> createState() =>
-      _VoiceSearchOverlayState();
+  ConsumerState<VoiceSearchOverlay> createState() => _VoiceSearchOverlayState();
 }
 
 class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
@@ -85,8 +84,7 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
 
   void _tick() {
     if (!_hasLevels && _phase == _VoicePhase.listening) {
-      _energyTarget =
-          0.42 + 0.22 * math.sin(_wave.value * 2 * math.pi * 4.5);
+      _energyTarget = 0.42 + 0.22 * math.sin(_wave.value * 2 * math.pi * 4.5);
     }
     final eased = lerpDouble(_energy, _energyTarget, 0.12)!;
     if ((eased - _energy).abs() > 0.001) {
@@ -226,8 +224,11 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
                   Align(
                     alignment: Alignment.topRight,
                     child: IconButton(
-                      icon: const Icon(Icons.close_rounded,
-                          color: Colors.white, size: 28),
+                      icon: const Icon(
+                        Icons.close_rounded,
+                        color: Colors.white,
+                        size: 28,
+                      ),
                       onPressed: () => Navigator.pop(context),
                     ),
                   ),
@@ -235,38 +236,39 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
                     child: switch (_phase) {
-                      _VoicePhase.listening =>
-                        _ListeningContent(transcript: _transcript, l10n: l10n),
+                      _VoicePhase.listening => _ListeningContent(
+                        transcript: _transcript,
+                        l10n: l10n,
+                      ),
                       _VoicePhase.matching => const Padding(
-                          key: ValueKey('matching'),
-                          padding: EdgeInsets.all(AppSpacing.xl),
-                          child:
-                              CircularProgressIndicator(color: Colors.white),
-                        ),
+                        key: ValueKey('matching'),
+                        padding: EdgeInsets.all(AppSpacing.xl),
+                        child: CircularProgressIndicator(color: Colors.white),
+                      ),
                       _VoicePhase.results => _ResultsCard(
-                          transcript: _transcript,
-                          matches: _matches,
-                          l10n: l10n,
-                          onRetry: _startListening,
-                        ),
+                        transcript: _transcript,
+                        matches: _matches,
+                        l10n: l10n,
+                        onRetry: _startListening,
+                      ),
                       _VoicePhase.noMatch => _MessageCard(
-                          key: const ValueKey('noMatch'),
-                          icon: Icons.search_off_rounded,
-                          transcript: _transcript,
-                          message: l10n.voiceNoMatch,
-                          retryLabel: l10n.voiceTryAgain,
-                          l10n: l10n,
-                          onRetry: _startListening,
-                        ),
+                        key: const ValueKey('noMatch'),
+                        icon: Icons.search_off_rounded,
+                        transcript: _transcript,
+                        message: l10n.voiceNoMatch,
+                        retryLabel: l10n.voiceTryAgain,
+                        l10n: l10n,
+                        onRetry: _startListening,
+                      ),
                       _VoicePhase.micDenied => _MessageCard(
-                          key: const ValueKey('micDenied'),
-                          icon: Icons.mic_off_rounded,
-                          transcript: '',
-                          message: l10n.voiceMicDenied,
-                          retryLabel: l10n.voiceTryAgain,
-                          l10n: l10n,
-                          onRetry: _startListening,
-                        ),
+                        key: const ValueKey('micDenied'),
+                        icon: Icons.mic_off_rounded,
+                        transcript: '',
+                        message: l10n.voiceMicDenied,
+                        retryLabel: l10n.voiceTryAgain,
+                        l10n: l10n,
+                        onRetry: _startListening,
+                      ),
                     },
                   ),
                   const Spacer(),
@@ -286,8 +288,11 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
                               width: 1.5,
                             ),
                           ),
-                          child: const Icon(Icons.mic_rounded,
-                              color: Colors.white, size: 34),
+                          child: const Icon(
+                            Icons.mic_rounded,
+                            color: Colors.white,
+                            size: 34,
+                          ),
                         ),
                       ),
                     ),
@@ -327,7 +332,11 @@ class SiriEdgePainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     const inset = 2.0;
     final rect = Rect.fromLTWH(
-        inset, inset, size.width - inset * 2, size.height - inset * 2);
+      inset,
+      inset,
+      size.width - inset * 2,
+      size.height - inset * 2,
+    );
     final base = Path()
       ..addRRect(RRect.fromRectAndRadius(rect, const Radius.circular(48)));
     final metric = base.computeMetrics().first;
@@ -350,7 +359,8 @@ class SiriEdgePainter extends CustomPainter {
       if (glow < 0.06) continue;
 
       // Orbs sway gently in and out of the edge as the field moves.
-      final sway = normal *
+      final sway =
+          normal *
           (3 + 6 * energy) *
           math.sin(2 * math.pi * (phase * 2 + t * 0.6));
       final centre = tangent.position + sway;
@@ -368,8 +378,7 @@ class SiriEdgePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(SiriEdgePainter old) =>
-      old.t != t || old.energy != energy;
+  bool shouldRepaint(SiriEdgePainter old) => old.t != t || old.energy != energy;
 }
 
 class _ListeningContent extends StatelessWidget {
@@ -403,12 +412,11 @@ class _ListeningContent extends StatelessWidget {
             style: TextStyle(
               color: Colors.white,
               fontSize: transcript.isEmpty ? 18 : 26,
-              fontWeight:
-                  transcript.isEmpty ? FontWeight.w400 : FontWeight.w700,
+              fontWeight: transcript.isEmpty
+                  ? FontWeight.w400
+                  : FontWeight.w700,
               height: 1.3,
-              shadows: const [
-                Shadow(color: Colors.black45, blurRadius: 12),
-              ],
+              shadows: const [Shadow(color: Colors.black45, blurRadius: 12)],
             ),
           ),
         ),
@@ -449,9 +457,9 @@ class _ResultsCard extends StatelessWidget {
             '${l10n.voiceYouSaid}: "$transcript"',
             maxLines: 2,
             overflow: TextOverflow.ellipsis,
-            style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                  color: AppColors.textSecondary,
-                ),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.m),
           for (final service in matches.take(3))
@@ -473,11 +481,15 @@ class _ResultsCard extends StatelessWidget {
                   ),
                 ),
                 leading: service.iconPath.isEmpty
-                    ? const Icon(Icons.handyman_rounded,
-                        color: AppColors.brandPrimary)
+                    ? const Icon(
+                        Icons.handyman_rounded,
+                        color: AppColors.brandPrimary,
+                      )
                     : Image.asset(service.iconPath, width: 40, height: 40),
-                title: Text(service.name,
-                    style: const TextStyle(fontWeight: FontWeight.w600)),
+                title: Text(
+                  service.name,
+                  style: const TextStyle(fontWeight: FontWeight.w600),
+                ),
                 trailing: const Icon(Icons.chevron_right_rounded),
               ),
             ),
@@ -536,9 +548,9 @@ class _MessageCard extends StatelessWidget {
               textAlign: TextAlign.center,
               maxLines: 2,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: AppColors.textSecondary,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
             ),
             const SizedBox(height: AppSpacing.xs),
           ],

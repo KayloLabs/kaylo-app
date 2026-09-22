@@ -65,8 +65,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final thread = ref.watch(chatThreadProvider(widget.threadId));
     final messages = ref.watch(chatMessagesProvider(widget.threadId));
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Scaffold(
       appBar: AppBar(
@@ -84,10 +85,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                       t.workerName,
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Row(
                       children: [
@@ -102,10 +102,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                         const SizedBox(width: 6),
                         Text(
                           t.isOnline ? l10n.online : l10n.offline,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
-                              ?.copyWith(color: secondary),
+                          style: Theme.of(
+                            context,
+                          ).textTheme.labelSmall?.copyWith(color: secondary),
                         ),
                       ],
                     ),
@@ -126,10 +125,9 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
                   return Center(
                     child: Text(
                       l10n.noMessagesInThread,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(color: secondary),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(color: secondary),
                     ),
                   );
                 }
@@ -157,11 +155,7 @@ class _ConversationScreenState extends ConsumerState<ConversationScreen> {
               ),
             ),
           ),
-          _Composer(
-            controller: _controller,
-            canSend: _canSend,
-            onSend: _send,
-          ),
+          _Composer(controller: _controller, canSend: _canSend, onSend: _send),
         ],
       ),
     );
@@ -213,15 +207,15 @@ class _Bubble extends StatelessWidget {
           ),
         ),
         child: Column(
-          crossAxisAlignment:
-              mine ? CrossAxisAlignment.end : CrossAxisAlignment.start,
+          crossAxisAlignment: mine
+              ? CrossAxisAlignment.end
+              : CrossAxisAlignment.start,
           children: [
             Text(
               message.text,
-              style: Theme.of(context)
-                  .textTheme
-                  .bodyMedium
-                  ?.copyWith(color: textColor, height: 1.35),
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: textColor, height: 1.35),
             ),
             const SizedBox(height: AppSpacing.xs),
             Row(
@@ -229,15 +223,16 @@ class _Bubble extends StatelessWidget {
               children: [
                 Text(
                   loc.formatTimeOfDay(TimeOfDay.fromDateTime(message.sentAt)),
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall
-                      ?.copyWith(color: metaColor),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: metaColor),
                 ),
                 if (mine) ...[
                   const SizedBox(width: 4),
                   Icon(
-                    message.isRead ? Icons.done_all_rounded : Icons.done_rounded,
+                    message.isRead
+                        ? Icons.done_all_rounded
+                        : Icons.done_rounded,
                     size: 15,
                     color: message.isRead ? Colors.white : metaColor,
                   ),

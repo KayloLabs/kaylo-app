@@ -8,7 +8,9 @@ import '../data/supabase_notifications_repository.dart';
 import '../domain/app_notification.dart';
 import '../domain/notifications_repository.dart';
 
-final notificationsRepositoryProvider = Provider<NotificationsRepository>((ref) {
+final notificationsRepositoryProvider = Provider<NotificationsRepository>((
+  ref,
+) {
   if (useMockData) {
     return MockNotificationsRepository();
   }
@@ -16,14 +18,16 @@ final notificationsRepositoryProvider = Provider<NotificationsRepository>((ref) 
 });
 
 /// Newest first.
-final notificationsProvider =
-    FutureProvider.autoDispose<List<AppNotification>>((ref) async {
-  final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return const [];
-  final items =
-      await ref.watch(notificationsRepositoryProvider).getNotifications(userId);
-  return [...items]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
-});
+final notificationsProvider = FutureProvider.autoDispose<List<AppNotification>>(
+  (ref) async {
+    final userId = ref.watch(currentUserIdProvider);
+    if (userId == null) return const [];
+    final items = await ref
+        .watch(notificationsRepositoryProvider)
+        .getNotifications(userId);
+    return [...items]..sort((a, b) => b.createdAt.compareTo(a.createdAt));
+  },
+);
 
 /// Unread count for the dashboard bell; zero while loading or signed out.
 final unreadNotificationsCountProvider = Provider.autoDispose<int>((ref) {
@@ -33,7 +37,9 @@ final unreadNotificationsCountProvider = Provider.autoDispose<int>((ref) {
       0;
 });
 
-final notificationsControllerProvider = Provider<NotificationsController>((ref) {
+final notificationsControllerProvider = Provider<NotificationsController>((
+  ref,
+) {
   return NotificationsController(ref);
 });
 

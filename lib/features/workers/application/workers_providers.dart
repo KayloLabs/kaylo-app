@@ -19,23 +19,28 @@ final workersRepositoryProvider = Provider<WorkersRepository>((ref) {
   return SupabaseWorkersRepository(ref.watch(supabaseClientProvider));
 });
 
-final workerListProvider =
-    FutureProvider.family<List<Worker>, String>((ref, serviceId) async {
+final workerListProvider = FutureProvider.family<List<Worker>, String>((
+  ref,
+  serviceId,
+) async {
   final repo = ref.watch(workersRepositoryProvider);
   return repo.getWorkersByServiceId(serviceId);
 });
 
-final workerDetailProvider =
-    FutureProvider.family<Worker, String>((ref, workerId) async {
+final workerDetailProvider = FutureProvider.family<Worker, String>((
+  ref,
+  workerId,
+) async {
   final repo = ref.watch(workersRepositoryProvider);
   return repo.getWorkerById(workerId);
 });
 
-final workerReviewsProvider =
-    FutureProvider.family<List<WorkerReview>, String>((ref, workerId) async {
-  final repo = ref.watch(workersRepositoryProvider);
-  return repo.getReviewsForWorker(workerId);
-});
+final workerReviewsProvider = FutureProvider.family<List<WorkerReview>, String>(
+  (ref, workerId) async {
+    final repo = ref.watch(workersRepositoryProvider);
+    return repo.getReviewsForWorker(workerId);
+  },
+);
 
 class WorkerFilterSortState {
   final WorkerSort sort;
@@ -46,10 +51,7 @@ class WorkerFilterSortState {
     this.filter = const WorkerFilter(),
   });
 
-  WorkerFilterSortState copyWith({
-    WorkerSort? sort,
-    WorkerFilter? filter,
-  }) {
+  WorkerFilterSortState copyWith({WorkerSort? sort, WorkerFilter? filter}) {
     return WorkerFilterSortState(
       sort: sort ?? this.sort,
       filter: filter ?? this.filter,
@@ -82,11 +84,13 @@ class WorkerFilterSortNotifier extends Notifier<WorkerFilterSortState> {
 
 final workerFilterSortProvider =
     NotifierProvider<WorkerFilterSortNotifier, WorkerFilterSortState>(
-  WorkerFilterSortNotifier.new,
-);
+      WorkerFilterSortNotifier.new,
+    );
 
-final filteredWorkersProvider =
-    FutureProvider.family<List<Worker>, String>((ref, serviceId) async {
+final filteredWorkersProvider = FutureProvider.family<List<Worker>, String>((
+  ref,
+  serviceId,
+) async {
   final workers = await ref.watch(workerListProvider(serviceId).future);
   final filterSort = ref.watch(workerFilterSortProvider);
   final filter = filterSort.filter;

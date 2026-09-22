@@ -52,7 +52,10 @@ class _UseMyLocationButtonState extends ConsumerState<UseMyLocationButton> {
       widget.onResolved(resolved);
     } on LocationFailure catch (failure) {
       if (mounted) {
-        KayloSnackbar.showError(context, locationErrorMessage(l10n, failure.code));
+        KayloSnackbar.showError(
+          context,
+          locationErrorMessage(l10n, failure.code),
+        );
       }
     } catch (_) {
       if (mounted) KayloSnackbar.showError(context, l10n.locationUnavailable);
@@ -77,8 +80,11 @@ class _UseMyLocationButtonState extends ConsumerState<UseMyLocationButton> {
       return ActionChip(
         avatar: _busy
             ? spinner
-            : const Icon(Icons.my_location_rounded,
-                size: 18, color: AppColors.brandPrimary),
+            : const Icon(
+                Icons.my_location_rounded,
+                size: 18,
+                color: AppColors.brandPrimary,
+              ),
         label: Text(_busy ? l10n.locating : l10n.useMyLocation),
         onPressed: _busy ? null : _locate,
       );

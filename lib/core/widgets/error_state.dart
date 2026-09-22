@@ -31,7 +31,11 @@ class ErrorState extends StatelessWidget {
                 color: AppColors.error.withValues(alpha: 0.1),
                 shape: BoxShape.circle,
               ),
-              child: const Icon(Icons.error_outline, size: 48, color: AppColors.error),
+              child: const Icon(
+                Icons.error_outline,
+                size: 48,
+                color: AppColors.error,
+              ),
             ),
             const SizedBox(height: AppSpacing.xl),
             Text(
@@ -42,7 +46,11 @@ class ErrorState extends StatelessWidget {
             const SizedBox(height: AppSpacing.s),
             Text(
               message,
-              style: TextStyle(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+              style: TextStyle(
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: AppSpacing.xl),

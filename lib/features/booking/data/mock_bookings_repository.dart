@@ -71,7 +71,10 @@ class MockBookingsRepository implements BookingsRepository {
   }
 
   @override
-  Future<void> updateBookingStatus(String bookingId, BookingStatus status) async {
+  Future<void> updateBookingStatus(
+    String bookingId,
+    BookingStatus status,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 400));
     _replace(bookingId, (old) => _copy(old, status: status));
   }

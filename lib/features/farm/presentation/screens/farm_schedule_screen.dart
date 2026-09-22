@@ -31,16 +31,14 @@ class FarmScheduleScreen extends ConsumerWidget {
   final String serviceId;
   final String? workerId;
 
-  const FarmScheduleScreen({
-    super.key,
-    required this.serviceId,
-    this.workerId,
-  });
+  const FarmScheduleScreen({super.key, required this.serviceId, this.workerId});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
-    return ref.watch(farmServiceProvider(serviceId)).when(
+    return ref
+        .watch(farmServiceProvider(serviceId))
+        .when(
           data: (service) =>
               _ScheduleForm(service: service, workerId: workerId),
           loading: () => Scaffold(
@@ -134,12 +132,12 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final loc = MaterialLocalizations.of(context);
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
-    final labelStyle = Theme.of(context)
-        .textTheme
-        .titleMedium
-        ?.copyWith(fontWeight: FontWeight.w700);
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700);
     final unit = _info.unit;
     final accent = _isFarm ? AppColors.farmAccent : AppColors.brandPrimary;
 
@@ -166,10 +164,9 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                 Expanded(
                   child: Text(
                     widget.service.name,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.w700),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.w700,
+                    ),
                   ),
                 ),
                 PriceTag(
@@ -196,10 +193,9 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                 Expanded(
                   child: Text(
                     loc.formatFullDate(_draft.date),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 Text(
@@ -231,8 +227,8 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                     color: identical(slot, _draft.slot)
                         ? Colors.white
                         : (isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary),
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimary),
                   ),
                   shape: const StadiumBorder(),
                   side: BorderSide(
@@ -257,17 +253,15 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                   children: [
                     Text(
                       farmUnitCount(l10n, unit, _draft.quantity),
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       l10n.priceEach(formatRupees(widget.service.basePrice)),
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: secondary),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: secondary),
                     ),
                   ],
                 ),
@@ -288,19 +282,16 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                         children: [
                           Text(
                             l10n.calculation,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodySmall
-                                ?.copyWith(color: secondary),
+                            style: Theme.of(
+                              context,
+                            ).textTheme.bodySmall?.copyWith(color: secondary),
                           ),
                           Text(
                             l10n.breakdown(
                               formatRupees(widget.service.basePrice),
                               farmUnitCount(l10n, unit, _draft.quantity),
                             ),
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),
                         ],
@@ -334,10 +325,11 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                       resolved.addressLine ?? resolved.label;
                 }),
               ),
-              for (final address in ref
-                      .watch(savedAddressesProvider)
-                      .whenOrNull(data: (list) => list) ??
-                  const [])
+              for (final address
+                  in ref
+                          .watch(savedAddressesProvider)
+                          .whenOrNull(data: (list) => list) ??
+                      const [])
                 ActionChip(
                   avatar: Icon(_addressIcon(address.label), size: 18),
                   label: Text(address.label),
@@ -365,10 +357,9 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
               children: [
                 Text(
                   l10n.total,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: secondary),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.bodySmall?.copyWith(color: secondary),
                 ),
                 PriceTag(amount: _draft.total, isLarge: true),
               ],

@@ -112,11 +112,15 @@ class _AddressCard extends ConsumerWidget {
             width: 44,
             height: 44,
             decoration: BoxDecoration(
-              color: AppColors.brandPrimary.withValues(alpha: isDark ? 0.2 : 0.12),
+              color: AppColors.brandPrimary.withValues(
+                alpha: isDark ? 0.2 : 0.12,
+              ),
               borderRadius: BorderRadius.circular(14),
             ),
-            child: Icon(addressIcon(address.label),
-                color: AppColors.brandPrimary),
+            child: Icon(
+              addressIcon(address.label),
+              color: AppColors.brandPrimary,
+            ),
           ),
           const SizedBox(width: AppSpacing.m),
           Expanded(
@@ -130,9 +134,7 @@ class _AddressCard extends ConsumerWidget {
                         address.label,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                     ),
@@ -150,11 +152,11 @@ class _AddressCard extends ConsumerWidget {
                 Text(
                   address.line,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                        height: 1.35,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                    height: 1.35,
+                  ),
                 ),
               ],
             ),
@@ -211,11 +213,11 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
   }
 
   String _presetLabel(AppLocalizations l10n, String preset) => switch (preset) {
-        'Home' => l10n.labelHome,
-        'Farm' => l10n.labelFarm,
-        'Work' => l10n.labelWork,
-        _ => l10n.labelOther,
-      };
+    'Home' => l10n.labelHome,
+    'Farm' => l10n.labelFarm,
+    'Work' => l10n.labelWork,
+    _ => l10n.labelOther,
+  };
 
   void _applyLocation(ResolvedLocation resolved) {
     setState(() {
@@ -228,7 +230,9 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
   Future<void> _save() async {
     final l10n = AppLocalizations.of(context)!;
     final line = _line.text.trim();
-    final label = _isCustom ? _customLabel.text.trim() : _presetLabel(l10n, _label);
+    final label = _isCustom
+        ? _customLabel.text.trim()
+        : _presetLabel(l10n, _label);
     if (line.isEmpty) {
       KayloSnackbar.showError(context, l10n.addressRequired);
       return;
@@ -239,12 +243,9 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
     }
     setState(() => _saving = true);
     try {
-      await ref.read(addressesControllerProvider).add(
-            label: label,
-            line: line,
-            latitude: _lat,
-            longitude: _lng,
-          );
+      await ref
+          .read(addressesControllerProvider)
+          .add(label: label, line: line, latitude: _lat, longitude: _lng);
       if (!mounted) return;
       KayloFeedback.press();
       Navigator.of(context).pop();
@@ -274,15 +275,18 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
-            Text(l10n.addAddress, style: Theme.of(context).textTheme.titleLarge),
+            Text(
+              l10n.addAddress,
+              style: Theme.of(context).textTheme.titleLarge,
+            ),
             const SizedBox(height: AppSpacing.l),
             Text(
               l10n.addressLabel,
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
-                  ),
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
+              ),
             ),
             const SizedBox(height: AppSpacing.s),
             Wrap(

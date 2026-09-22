@@ -14,7 +14,7 @@ class SessionController extends _$SessionController {
   @override
   FutureOr<AppUser?> build() async {
     _authRepo = ref.watch(authRepositoryProvider);
-    
+
     // Listen to changes in auth state and update this provider's state
     _subscription = _authRepo.authStateChanges.listen((user) {
       state = AsyncData(user);
@@ -24,7 +24,7 @@ class SessionController extends _$SessionController {
     // Return current user initially
     return _authRepo.currentUser;
   }
-  
+
   Future<void> signOut() async {
     state = const AsyncLoading();
     try {

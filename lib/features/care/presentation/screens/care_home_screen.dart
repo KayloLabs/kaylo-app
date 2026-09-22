@@ -68,8 +68,8 @@ class CareHomeScreen extends ConsumerWidget {
                   Text(
                     l10n.careHomeGreeting,
                     style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                          color: AppColors.textSecondary,
-                        ),
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
 
@@ -166,22 +166,25 @@ class _SosCard extends StatelessWidget {
                   children: [
                     Text(
                       l10n.emergencySos,
-                      style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            color: Colors.white,
-                          ),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.titleLarge?.copyWith(color: Colors.white),
                     ),
                     const SizedBox(height: 4),
                     Text(
                       l10n.emergencySosSubtitle,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                            color: Colors.white.withValues(alpha: 0.9),
-                          ),
+                        color: Colors.white.withValues(alpha: 0.9),
+                      ),
                     ),
                   ],
                 ),
               ),
-              const Icon(Icons.chevron_right_rounded,
-                  color: Colors.white, size: 32),
+              const Icon(
+                Icons.chevron_right_rounded,
+                color: Colors.white,
+                size: 32,
+              ),
             ],
           ),
         ),
@@ -231,10 +234,7 @@ class _CareActionCard extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      title,
-                      style: Theme.of(context).textTheme.titleMedium,
-                    ),
+                    Text(title, style: Theme.of(context).textTheme.titleMedium),
                     const SizedBox(height: 4),
                     Text(
                       subtitle,
@@ -253,9 +253,7 @@ class _CareActionCard extends StatelessWidget {
                         ),
                         child: Text(
                           badge!,
-                          style: Theme.of(context)
-                              .textTheme
-                              .labelSmall
+                          style: Theme.of(context).textTheme.labelSmall
                               ?.copyWith(
                                 color: color,
                                 fontWeight: FontWeight.w700,

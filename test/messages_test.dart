@@ -20,15 +20,11 @@ Widget app({required String initialLocation}) {
   final router = GoRouter(
     initialLocation: initialLocation,
     routes: [
-      GoRoute(
-        path: Routes.messages,
-        builder: (_, _) => const MessagesScreen(),
-      ),
+      GoRoute(path: Routes.messages, builder: (_, _) => const MessagesScreen()),
       GoRoute(
         path: '/chat/:threadId',
-        builder: (_, state) => ConversationScreen(
-          threadId: state.pathParameters['threadId']!,
-        ),
+        builder: (_, state) =>
+            ConversationScreen(threadId: state.pathParameters['threadId']!),
       ),
     ],
   );
@@ -52,8 +48,9 @@ Widget app({required String initialLocation}) {
 }
 
 void main() {
-  testWidgets('thread list shows workers and opens a conversation',
-      (tester) async {
+  testWidgets('thread list shows workers and opens a conversation', (
+    tester,
+  ) async {
     await tester.pumpWidget(app(initialLocation: Routes.messages));
     await settle(tester);
 
@@ -68,8 +65,9 @@ void main() {
     expect(find.text('Online'), findsOneWidget);
   });
 
-  testWidgets('sending a message shows it and the worker replies',
-      (tester) async {
+  testWidgets('sending a message shows it and the worker replies', (
+    tester,
+  ) async {
     await tester.pumpWidget(app(initialLocation: Routes.chat('t1')));
     await settle(tester);
 

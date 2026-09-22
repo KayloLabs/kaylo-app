@@ -10,7 +10,6 @@ import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/widgets/kaylo_card.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/widgets/kaylo_list_tile.dart';
-import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -27,7 +26,9 @@ class _NotificationsNotifier extends Notifier<bool> {
 
   Future<void> setEnabled(bool enabled) async {
     state = enabled;
-    await ref.read(sharedPreferencesProvider).setBool(_notificationsKey, enabled);
+    await ref
+        .read(sharedPreferencesProvider)
+        .setBool(_notificationsKey, enabled);
   }
 }
 
@@ -61,8 +62,10 @@ class SettingsScreen extends ConsumerWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(l10n.theme,
-                    style: Theme.of(context).textTheme.titleMedium),
+                Text(
+                  l10n.theme,
+                  style: Theme.of(context).textTheme.titleMedium,
+                ),
                 const SizedBox(height: AppSpacing.m),
                 // Care Mode forces the always-light careTheme, so the
                 // selector is locked while it's on.
@@ -83,8 +86,8 @@ class SettingsScreen extends ConsumerWidget {
                   Text(
                     l10n.themeCareOverride,
                     style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: AppColors.careAccent,
-                        ),
+                      color: AppColors.careAccent,
+                    ),
                   ),
                 ],
               ],
@@ -179,12 +182,53 @@ class SettingsScreen extends ConsumerWidget {
                 ),
                 KayloListTile(
                   leading: const _SettingIcon(
-                    icon: Icons.description_rounded,
+                    icon: Icons.gavel_rounded,
                     color: AppColors.textSecondary,
                   ),
-                  title: Text(l10n.termsPrivacy),
+                  title: const Text('Terms of Service'),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => KayloSnackbar.showInfo(context, l10n.comingSoon),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Terms of Service'),
+                      content: const Text(
+                        'These are the terms of service. By using this app, you agree to our terms.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                Divider(
+                  height: 1,
+                  color: isDark ? AppColors.borderDark : AppColors.border,
+                ),
+                KayloListTile(
+                  leading: const _SettingIcon(
+                    icon: Icons.privacy_tip_rounded,
+                    color: AppColors.textSecondary,
+                  ),
+                  title: const Text('Privacy Policy'),
+                  trailing: const Icon(Icons.chevron_right_rounded),
+                  onTap: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                      title: const Text('Privacy Policy'),
+                      content: const Text(
+                        'Your privacy is important to us. We do not share your personal information with third parties without your consent.',
+                      ),
+                      actions: [
+                        TextButton(
+                          onPressed: () => Navigator.pop(context),
+                          child: const Text('Close'),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -292,7 +336,9 @@ class _ThemeModeSelector extends StatelessWidget {
                     },
                     child: Padding(
                       padding: const EdgeInsets.symmetric(
-                          vertical: 10, horizontal: 4),
+                        vertical: 10,
+                        horizontal: 4,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         mainAxisSize: MainAxisSize.min,
@@ -303,8 +349,8 @@ class _ThemeModeSelector extends StatelessWidget {
                             color: mode == selected
                                 ? AppColors.brandPrimary
                                 : (isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondary),
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondary),
                           ),
                           const SizedBox(width: 6),
                           Flexible(
@@ -313,9 +359,7 @@ class _ThemeModeSelector extends StatelessWidget {
                               maxLines: 1,
                               overflow: TextOverflow.fade,
                               softWrap: false,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .labelLarge
+                              style: Theme.of(context).textTheme.labelLarge
                                   ?.copyWith(
                                     fontWeight: mode == selected
                                         ? FontWeight.w600

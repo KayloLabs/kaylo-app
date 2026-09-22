@@ -34,14 +34,17 @@ class PriceTag extends StatelessWidget {
         children: [
           if (prefix != null) TextSpan(text: prefix),
           TextSpan(text: formatIndianNumber(amount)),
-          if (suffix != null) TextSpan(
-            text: ' $suffix',
-            style: TextStyle(
-              fontSize: isLarge ? 14 : 12,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-              fontWeight: FontWeight.normal,
+          if (suffix != null)
+            TextSpan(
+              text: ' $suffix',
+              style: TextStyle(
+                fontSize: isLarge ? 14 : 12,
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
+                fontWeight: FontWeight.normal,
+              ),
             ),
-          ),
         ],
       ),
       style: style,

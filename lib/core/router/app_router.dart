@@ -71,12 +71,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
 
       // Basic Auth guard
       if (!isLoggedIn && !isGoingToLogin) {
-         return Routes.login;
+        return Routes.login;
       }
 
       // If logged in and trying to access login, redirect to dashboard
       if (isLoggedIn && isGoingToLogin) {
-         return Routes.dashboard;
+        return Routes.dashboard;
       }
 
       return null;
@@ -116,10 +116,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       // Full-screen (outside the shell) so checkout owns the bottom edge.
       GoRoute(
         path: Routes.farm,
-        pageBuilder: (context, state) => kayloPage(
-          state: state,
-          child: const FarmServicesScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            kayloPage(state: state, child: const FarmServicesScreen()),
         routes: [
           GoRoute(
             path: ':serviceId',
@@ -166,10 +164,8 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       // search. Full-screen like the farm flow; the dashboard pushes in.
       GoRoute(
         path: Routes.homeServices,
-        pageBuilder: (context, state) => kayloPage(
-          state: state,
-          child: const HomeServicesScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            kayloPage(state: state, child: const HomeServicesScreen()),
       ),
       GoRoute(
         path: Routes.serviceDetails,
@@ -225,18 +221,15 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             state: state,
             child: FarmScheduleScreen(
               serviceId: state.uri.queryParameters['serviceId'] ?? '',
-              workerId:
-                  workerId == null || workerId.isEmpty ? null : workerId,
+              workerId: workerId == null || workerId.isEmpty ? null : workerId,
             ),
           );
         },
       ),
       GoRoute(
         path: Routes.notifications,
-        pageBuilder: (context, state) => kayloPage(
-          state: state,
-          child: const NotificationsScreen(),
-        ),
+        pageBuilder: (context, state) =>
+            kayloPage(state: state, child: const NotificationsScreen()),
       ),
       GoRoute(
         path: '/chat/:threadId', // Routes.chat(id)
@@ -340,15 +333,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.profile,
-                builder: (context, state) =>
-                    const ProfileScreen(),
+                builder: (context, state) => const ProfileScreen(),
                 routes: [
                   GoRoute(
                     path: Routes.settings,
-                    pageBuilder: (context, state) => kayloPage(
-                      state: state,
-                      child: const SettingsScreen(),
-                    ),
+                    pageBuilder: (context, state) =>
+                        kayloPage(state: state, child: const SettingsScreen()),
                   ),
                   GoRoute(
                     path: 'addresses', // Routes.addresses

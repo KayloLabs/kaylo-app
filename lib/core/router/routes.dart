@@ -6,17 +6,17 @@ class Routes {
   static const String otp = '/otp';
   static const String loginOtp = '/login/otp';
   static const String location = '/location';
-  
+
   // Dev Routes
   static const String widgetbook = '/dev/widgetbook';
-  
+
   // Dashboard Tabs (ShellRoute)
   static const String dashboard = '/dashboard'; // default tab (home)
   static const String bookings = '/bookings';
   static const String careHome = '/care';
   static const String messages = '/messages';
   static const String profile = '/profile';
-  
+
   // Farm flow: full-screen, outside the tab shell so checkout has no
   // bottom nav competing with its own primary button.
   static const String farm = '/farm';

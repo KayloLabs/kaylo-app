@@ -19,13 +19,13 @@ final _routes = <RouteBase>[
 ];
 
 void main() {
-  testWidgets('location screen lays out and Not now goes to the dashboard',
-      (tester) async {
+  testWidgets('location screen lays out and Not now goes to the dashboard', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.location,
-      routes: _routes,
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.location, routes: _routes),
+    );
     await settle(tester);
 
     expect(tester.takeException(), isNull);
@@ -37,26 +37,29 @@ void main() {
     expect(find.text('dashboard-stub'), findsOneWidget);
   });
 
-  testWidgets('GPS fills the card and Continue saves the location',
-      (tester) async {
+  testWidgets('GPS fills the card and Continue saves the location', (
+    tester,
+  ) async {
     useTallPhone(tester);
     late ProviderContainer container;
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.location,
-      routes: [
-        GoRoute(
-          path: Routes.location,
-          builder: (context, _) {
-            container = ProviderScope.containerOf(context);
-            return const LocationSetupScreen();
-          },
-        ),
-        stubRoute(Routes.dashboard, 'dashboard-stub'),
-      ],
-      overrides: [
-        locationServiceProvider.overrideWithValue(FakeLocationService()),
-      ],
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.location,
+        routes: [
+          GoRoute(
+            path: Routes.location,
+            builder: (context, _) {
+              container = ProviderScope.containerOf(context);
+              return const LocationSetupScreen();
+            },
+          ),
+          stubRoute(Routes.dashboard, 'dashboard-stub'),
+        ],
+        overrides: [
+          locationServiceProvider.overrideWithValue(FakeLocationService()),
+        ],
+      ),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Use my location'));
@@ -69,27 +72,34 @@ void main() {
     await settle(tester);
 
     expect(find.text('dashboard-stub'), findsOneWidget);
-    expect(container.read(userLocationProvider).addressLine,
-        'Fort Road, Kannur, Kannur, 670001');
+    expect(
+      container.read(userLocationProvider).addressLine,
+      'Fort Road, Kannur, Kannur, 670001',
+    );
   });
 
   testWidgets('blocked permission explains how to fix it', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.location,
-      routes: _routes,
-      overrides: [
-        locationServiceProvider
-            .overrideWithValue(FailingLocationService('denied-forever')),
-      ],
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.location,
+        routes: _routes,
+        overrides: [
+          locationServiceProvider.overrideWithValue(
+            FailingLocationService('denied-forever'),
+          ),
+        ],
+      ),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Use my location'));
     await settle(tester);
 
     expect(
-      find.text('Location is blocked for Kaylo. Allow it in your device settings.'),
+      find.text(
+        'Location is blocked for Kaylo. Allow it in your device settings.',
+      ),
       findsOneWidget,
     );
     expect(find.text('Continue'), findsNothing);

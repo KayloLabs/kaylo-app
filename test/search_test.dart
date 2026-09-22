@@ -10,41 +10,40 @@ import 'support/test_app.dart';
 List<RouteBase> _routes({
   String initialQuery = '',
   SearchFilters? initialFilters,
-}) =>
-    [
-      GoRoute(
-        path: Routes.search,
-        builder: (_, _) => SearchScreen(
-          initialQuery: initialQuery,
-          initialFilters: initialFilters,
-        ),
-      ),
-      stubRoute(Routes.serviceDetails, 'home-details-stub'),
-      stubRoute('/farm/:serviceId', 'farm-details-stub'),
-      stubRoute(Routes.workerProfile, 'worker-stub'),
-    ];
+}) => [
+  GoRoute(
+    path: Routes.search,
+    builder: (_, _) => SearchScreen(
+      initialQuery: initialQuery,
+      initialFilters: initialFilters,
+    ),
+  ),
+  stubRoute(Routes.serviceDetails, 'home-details-stub'),
+  stubRoute('/farm/:serviceId', 'farm-details-stub'),
+  stubRoute(Routes.workerProfile, 'worker-stub'),
+];
 
 void main() {
-  testWidgets('opens on recent and popular searches, not stale results',
-      (tester) async {
+  testWidgets('opens on recent and popular searches, not stale results', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(),
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.search, routes: _routes()),
+    );
     await settle(tester);
 
     expect(find.text('Popular searches'), findsOneWidget);
     expect(find.text('Services (15)'), findsNothing);
   });
 
-  testWidgets('typing finds services by name and by plain language',
-      (tester) async {
+  testWidgets('typing finds services by name and by plain language', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(),
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.search, routes: _routes()),
+    );
     await settle(tester);
 
     await tester.enterText(find.byType(TextFormField), 'tap is leaking');
@@ -55,13 +54,13 @@ void main() {
     expect(find.text('Coconut Plucking'), findsNothing);
   });
 
-  testWidgets('a name query lists professionals from the workers list',
-      (tester) async {
+  testWidgets('a name query lists professionals from the workers list', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(),
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.search, routes: _routes()),
+    );
     await settle(tester);
 
     await tester.enterText(find.byType(TextFormField), 'raju');
@@ -75,13 +74,13 @@ void main() {
     expect(find.text('worker-stub'), findsOneWidget);
   });
 
-  testWidgets('a category chip on its own browses that category',
-      (tester) async {
+  testWidgets('a category chip on its own browses that category', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(),
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.search, routes: _routes()),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Farm'));
@@ -97,15 +96,18 @@ void main() {
     expect(find.text('farm-details-stub'), findsOneWidget);
   });
 
-  testWidgets('the tune button hands over filters and a sort order',
-      (tester) async {
+  testWidgets('the tune button hands over filters and a sort order', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(
-        initialFilters: (category: 'home', sort: SearchSort.priceLowHigh),
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.search,
+        routes: _routes(
+          initialFilters: (category: 'home', sort: SearchSort.priceLowHigh),
+        ),
       ),
-    ));
+    );
     await settle(tester);
 
     expect(find.text('Plumbing'), findsOneWidget);
@@ -118,13 +120,16 @@ void main() {
     expect(electrical.dy, lessThan(plumbing.dy));
   });
 
-  testWidgets('no match explains itself; a hero deep link searches',
-      (tester) async {
+  testWidgets('no match explains itself; a hero deep link searches', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.search,
-      routes: _routes(initialQuery: 'plumb'),
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.search,
+        routes: _routes(initialQuery: 'plumb'),
+      ),
+    );
     await settle(tester);
     expect(find.text('Plumbing'), findsOneWidget);
 

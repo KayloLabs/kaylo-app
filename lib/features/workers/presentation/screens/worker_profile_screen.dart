@@ -40,9 +40,9 @@ class WorkerProfileScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           l10n.workerProfile,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -83,9 +83,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                           children: [
                             Text(
                               w.name,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .headlineSmall
+                              style: Theme.of(context).textTheme.headlineSmall
                                   ?.copyWith(fontWeight: FontWeight.bold),
                             ),
                             if (w.isVerified) ...[
@@ -101,9 +99,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                         const SizedBox(height: 4),
                         Text(
                           w.location,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: AppSpacing.s),
@@ -120,7 +116,9 @@ class WorkerProfileScreen extends ConsumerWidget {
                             vertical: 6,
                           ),
                           decoration: BoxDecoration(
-                            color: AppColors.brandPrimary.withValues(alpha: 0.12),
+                            color: AppColors.brandPrimary.withValues(
+                              alpha: 0.12,
+                            ),
                             borderRadius: BorderRadius.circular(20),
                           ),
                           child: Row(
@@ -161,7 +159,8 @@ class WorkerProfileScreen extends ConsumerWidget {
                       const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: _StatCard(
-                          title: '${(w.trustScore / 15).clamp(3, 15).toInt()}+ yrs',
+                          title:
+                              '${(w.trustScore / 15).clamp(3, 15).toInt()}+ yrs',
                           subtitle: l10n.yearsExperience,
                           icon: Icons.work_outline_rounded,
                         ),
@@ -181,20 +180,18 @@ class WorkerProfileScreen extends ConsumerWidget {
                   // About / Bio Section
                   Text(
                     l10n.about,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.s),
                   KayloCard(
                     padding: const EdgeInsets.all(AppSpacing.m),
                     child: Text(
                       'Dedicated and experienced service professional with a track record of delivering clean, punctual, and high-quality work. Fluent in Malayalam and English with full verification and safety clearance.',
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(height: 1.5),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodyMedium?.copyWith(height: 1.5),
                     ),
                   ),
                   const SizedBox(height: AppSpacing.l),
@@ -202,10 +199,9 @@ class WorkerProfileScreen extends ConsumerWidget {
                   // Certifications Section
                   Text(
                     l10n.certifications,
-                    style: Theme.of(context)
-                        .textTheme
-                        .titleMedium
-                        ?.copyWith(fontWeight: FontWeight.bold),
+                    style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.s),
                   KayloCard(
@@ -240,9 +236,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                     children: [
                       Text(
                         l10n.customerReviews,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.bold),
                       ),
                       Text(
@@ -273,13 +267,13 @@ class WorkerProfileScreen extends ConsumerWidget {
                       }
 
                       return Column(
-                        children: reviews.map((r) => _buildReviewCard(r, context)).toList(),
+                        children: reviews
+                            .map((r) => _buildReviewCard(r, context))
+                            .toList(),
                       );
                     },
-                    loading: () => const ShimmerBox(
-                      width: double.infinity,
-                      height: 100,
-                    ),
+                    loading: () =>
+                        const ShimmerBox(width: double.infinity, height: 100),
                     error: (_, _) => const SizedBox.shrink(),
                   ),
                 ],
@@ -298,9 +292,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                     AppSpacing.l,
                   ),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.surfaceDark
-                        : AppColors.surface,
+                    color: isDark ? AppColors.surfaceDark : AppColors.surface,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -362,10 +354,7 @@ class WorkerProfileScreen extends ConsumerWidget {
           );
         },
         loading: () => const Center(
-          child: ShimmerBox(
-            width: double.infinity,
-            height: double.infinity,
-          ),
+          child: ShimmerBox(width: double.infinity, height: double.infinity),
         ),
         error: (err, stack) => ErrorState(
           message: err.toString(),
@@ -412,11 +401,7 @@ class WorkerProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const Icon(
-          Icons.check_circle_rounded,
-          color: Colors.green,
-          size: 18,
-        ),
+        const Icon(Icons.check_circle_rounded, color: Colors.green, size: 18),
       ],
     );
   }
@@ -464,7 +449,9 @@ class WorkerProfileScreen extends ConsumerWidget {
             const SizedBox(height: AppSpacing.s),
             Text(
               review.comment,
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(height: 1.3),
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(height: 1.3),
             ),
           ],
         ),
@@ -497,10 +484,7 @@ class _StatCard extends StatelessWidget {
           const SizedBox(height: 4),
           Text(
             title,
-            style: const TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 15,
-            ),
+            style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 15),
           ),
           const SizedBox(height: 2),
           Text(

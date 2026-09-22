@@ -31,9 +31,8 @@ final _routes = <RouteBase>[
           ),
           GoRoute(
             path: 'payment',
-            builder: (_, state) => FarmPaymentScreen(
-              draft: state.extra as FarmBookingDraft?,
-            ),
+            builder: (_, state) =>
+                FarmPaymentScreen(draft: state.extra as FarmBookingDraft?),
           ),
         ],
       ),
@@ -41,9 +40,8 @@ final _routes = <RouteBase>[
   ),
   GoRoute(
     path: Routes.bookingConfirmation,
-    builder: (_, state) => BookingConfirmationScreen(
-      receipt: state.extra as BookingReceipt?,
-    ),
+    builder: (_, state) =>
+        BookingConfirmationScreen(receipt: state.extra as BookingReceipt?),
   ),
   stubRoute(Routes.bookings, 'bookings-stub'),
   stubRoute(Routes.dashboard, 'dashboard-stub'),
@@ -53,12 +51,17 @@ void main() {
   testWidgets('catalog lists farm services and opens details', (tester) async {
     useTallPhone(tester);
     await tester.pumpWidget(
-        await testApp(initialLocation: Routes.farm, routes: _routes));
+      await testApp(initialLocation: Routes.farm, routes: _routes),
+    );
     await settle(tester);
 
     expect(find.text('Coconut Plucking'), findsOneWidget);
     expect(find.text('Tree Pruning'), findsOneWidget);
-    expect(find.text('Plumbing'), findsNothing, reason: 'home services stay out');
+    expect(
+      find.text('Plumbing'),
+      findsNothing,
+      reason: 'home services stay out',
+    );
 
     await tester.tap(find.text('Coconut Plucking'));
     await settle(tester);
@@ -68,10 +71,13 @@ void main() {
     expect(find.text('Safety harness on every climb'), findsOneWidget);
   });
 
-  testWidgets('schedule recomputes the total from the quantity', (tester) async {
+  testWidgets('schedule recomputes the total from the quantity', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-        initialLocation: Routes.farmSchedule('1'), routes: _routes));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.farmSchedule('1'), routes: _routes),
+    );
     await settle(tester);
 
     // 10 trees x 1000 to start with.
@@ -87,8 +93,9 @@ void main() {
 
   testWidgets('address is required before payment', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-        initialLocation: Routes.farmSchedule('1'), routes: _routes));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.farmSchedule('1'), routes: _routes),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Continue to payment'));
@@ -100,8 +107,9 @@ void main() {
 
   testWidgets('a saved address fills the field in one tap', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-        initialLocation: Routes.farmSchedule('1'), routes: _routes));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.farmSchedule('1'), routes: _routes),
+    );
     await settle(tester);
 
     expect(find.text('Use my location'), findsOneWidget);
@@ -114,8 +122,9 @@ void main() {
 
   testWidgets('payment records the booking and confirms it', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-        initialLocation: Routes.farmSchedule('1'), routes: _routes));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.farmSchedule('1'), routes: _routes),
+    );
     await settle(tester);
 
     await tester.enterText(find.byType(TextFormField), 'Thekkedath House');

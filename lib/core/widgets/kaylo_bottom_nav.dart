@@ -15,7 +15,8 @@ class KayloBottomNav extends StatefulWidget {
   State<KayloBottomNav> createState() => _KayloBottomNavState();
 }
 
-class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProviderStateMixin {
+class _KayloBottomNavState extends State<KayloBottomNav>
+    with SingleTickerProviderStateMixin {
   late final AnimationController _hideController;
   late final Animation<Offset> _hideAnimation;
 
@@ -26,13 +27,13 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
       vsync: this,
       duration: const Duration(milliseconds: 300),
     );
-    _hideAnimation = Tween<Offset>(
-      begin: Offset.zero,
-      end: const Offset(0, 1.5), // Slide down completely out of view
-    ).animate(CurvedAnimation(
-      parent: _hideController,
-      curve: Curves.easeInOut,
-    ));
+    _hideAnimation =
+        Tween<Offset>(
+          begin: Offset.zero,
+          end: const Offset(0, 1.5), // Slide down completely out of view
+        ).animate(
+          CurvedAnimation(parent: _hideController, curve: Curves.easeInOut),
+        );
   }
 
   @override
@@ -72,7 +73,7 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
       }
     }
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return Scaffold(
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
@@ -94,8 +95,10 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final itemWidth = constraints.maxWidth / 5;
-                  final bgColor = isDark ? Colors.white.withValues(alpha: 0.15) : AppColors.brandPrimary.withValues(alpha: 0.15);
-                  
+                  final bgColor = isDark
+                      ? Colors.white.withValues(alpha: 0.15)
+                      : AppColors.brandPrimary.withValues(alpha: 0.15);
+
                   return Stack(
                     alignment: Alignment.centerLeft,
                     children: [
@@ -162,7 +165,7 @@ class _KayloBottomNavState extends State<KayloBottomNav> with SingleTickerProvid
                       ),
                     ],
                   );
-                }
+                },
               ),
             ),
           ),

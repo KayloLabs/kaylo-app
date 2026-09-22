@@ -5,11 +5,7 @@ class GooglePayTick extends StatefulWidget {
   final double size;
   final Color color;
 
-  const GooglePayTick({
-    super.key,
-    this.size = 104,
-    this.color = Colors.green,
-  });
+  const GooglePayTick({super.key, this.size = 104, this.color = Colors.green});
 
   @override
   State<GooglePayTick> createState() => _GooglePayTickState();
@@ -44,15 +40,16 @@ class _GooglePayTickState extends State<GooglePayTick>
       ),
     );
 
-    _scaleAnimation = TweenSequence([
-      TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.15), weight: 1),
-      TweenSequenceItem(tween: Tween(begin: 1.15, end: 1.0), weight: 1),
-    ]).animate(
-      CurvedAnimation(
-        parent: _controller,
-        curve: const Interval(0.7, 1.0, curve: Curves.easeInOut),
-      ),
-    );
+    _scaleAnimation =
+        TweenSequence([
+          TweenSequenceItem(tween: Tween(begin: 1.0, end: 1.15), weight: 1),
+          TweenSequenceItem(tween: Tween(begin: 1.15, end: 1.0), weight: 1),
+        ]).animate(
+          CurvedAnimation(
+            parent: _controller,
+            curve: const Interval(0.7, 1.0, curve: Curves.easeInOut),
+          ),
+        );
 
     _controller.forward();
   }

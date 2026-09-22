@@ -8,13 +8,13 @@ import '../data/supabase_auth_repository.dart';
 abstract class AuthRepository {
   Stream<AppUser?> get authStateChanges;
   AppUser? get currentUser;
-  
+
   Future<void> signInWithPhone(String phone);
   Future<void> verifyOtp(String phone, String otp);
-  
+
   Future<void> signInWithGoogle();
   Future<void> signInWithApple();
-  
+
   Future<void> signOut();
 }
 

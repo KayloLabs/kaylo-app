@@ -35,7 +35,9 @@ class SearchBarField extends StatelessWidget {
       readOnly: readOnly,
       autofocus: autofocus,
       textInputAction: TextInputAction.search,
-      style: TextStyle(color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
+      style: TextStyle(
+        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+      ),
       decoration: InputDecoration(
         hintText: hintText,
         filled: false,
@@ -43,19 +45,29 @@ class SearchBarField extends StatelessWidget {
           padding: const EdgeInsets.only(left: 16, right: 8),
           child: Icon(
             Icons.search,
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
           ),
         ),
-        prefixIconConstraints: const BoxConstraints(minWidth: 40, minHeight: 40),
+        prefixIconConstraints: const BoxConstraints(
+          minWidth: 40,
+          minHeight: 40,
+        ),
         suffixIcon: controller?.text.isNotEmpty == true
-          ? IconButton(
-              icon: Icon(Icons.clear, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
-              onPressed: () {
-                controller?.clear();
-                onChanged?.call('');
-              },
-            )
-          : suffix,
+            ? IconButton(
+                icon: Icon(
+                  Icons.clear,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
+                ),
+                onPressed: () {
+                  controller?.clear();
+                  onChanged?.call('');
+                },
+              )
+            : suffix,
       ),
     );
   }

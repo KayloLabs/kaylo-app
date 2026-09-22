@@ -8,23 +8,26 @@ import 'package:kaylo/features/notifications/presentation/screens/notifications_
 import 'support/test_app.dart';
 
 void main() {
-  testWidgets('notifications list, unread count, and mark all read',
-      (tester) async {
+  testWidgets('notifications list, unread count, and mark all read', (
+    tester,
+  ) async {
     useTallPhone(tester);
     late ProviderContainer container;
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.notifications,
-      routes: [
-        GoRoute(
-          path: Routes.notifications,
-          builder: (context, _) {
-            container = ProviderScope.containerOf(context);
-            return const NotificationsScreen();
-          },
-        ),
-        stubRoute(Routes.bookings, 'bookings-stub'),
-      ],
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.notifications,
+        routes: [
+          GoRoute(
+            path: Routes.notifications,
+            builder: (context, _) {
+              container = ProviderScope.containerOf(context);
+              return const NotificationsScreen();
+            },
+          ),
+          stubRoute(Routes.bookings, 'bookings-stub'),
+        ],
+      ),
+    );
     await settle(tester);
 
     expect(find.text('Booking confirmed'), findsOneWidget);
@@ -40,19 +43,22 @@ void main() {
     expect(find.text('Mark all read'), findsNothing);
   });
 
-  testWidgets('tapping a booking notification opens the bookings tab',
-      (tester) async {
+  testWidgets('tapping a booking notification opens the bookings tab', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.notifications,
-      routes: [
-        GoRoute(
-          path: Routes.notifications,
-          builder: (_, _) => const NotificationsScreen(),
-        ),
-        stubRoute(Routes.bookings, 'bookings-stub'),
-      ],
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.notifications,
+        routes: [
+          GoRoute(
+            path: Routes.notifications,
+            builder: (_, _) => const NotificationsScreen(),
+          ),
+          stubRoute(Routes.bookings, 'bookings-stub'),
+        ],
+      ),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Booking confirmed'));

@@ -31,7 +31,8 @@ class KayloLogo extends StatelessWidget {
     );
 
     if (isMono) {
-      final color = monoColor ?? Theme.of(context).iconTheme.color ?? Colors.black;
+      final color =
+          monoColor ?? Theme.of(context).iconTheme.color ?? Colors.black;
       image = ColorFiltered(
         colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
         child: image,
@@ -39,10 +40,7 @@ class KayloLogo extends StatelessWidget {
     }
 
     if (opacity < 1.0) {
-      image = Opacity(
-        opacity: opacity,
-        child: image,
-      );
+      image = Opacity(opacity: opacity, child: image);
     }
 
     return image;

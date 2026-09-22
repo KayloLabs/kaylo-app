@@ -42,7 +42,9 @@ class ModeSwitcherSection extends StatelessWidget {
                 title: AppLocalizations.of(context)!.farm,
                 subtitle: AppLocalizations.of(context)!.farmSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
-                colorOverlay: Colors.green.withValues(alpha: 0.15), // Green tint
+                colorOverlay: Colors.green.withValues(
+                  alpha: 0.15,
+                ), // Green tint
                 onTap: () {
                   KayloFeedback.tap();
                   context.push(Routes.farm);
@@ -55,7 +57,9 @@ class ModeSwitcherSection extends StatelessWidget {
                 title: AppLocalizations.of(context)!.care,
                 subtitle: AppLocalizations.of(context)!.careSubtitle,
                 imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
-                colorOverlay: Colors.deepPurpleAccent.withValues(alpha: 0.15), // Violet tint
+                colorOverlay: Colors.deepPurpleAccent.withValues(
+                  alpha: 0.15,
+                ), // Violet tint
                 onTap: () {
                   KayloFeedback.tap();
                   context.go(Routes.careHome);
@@ -87,7 +91,7 @@ class _ModeCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     return KayloLiquidGlass(
       borderRadius: AppRadius.card,
       colorOverlay: colorOverlay,
@@ -113,19 +117,21 @@ class _ModeCard extends StatelessWidget {
                 Text(
                   title,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w800,
-                        color: isDark ? Colors.white : AppColors.brandPrimaryDark,
-                        fontSize: 16,
-                      ),
+                    fontWeight: FontWeight.w800,
+                    color: isDark ? Colors.white : AppColors.brandPrimaryDark,
+                    fontSize: 16,
+                  ),
                 ),
                 const SizedBox(height: 2),
                 Text(
                   subtitle,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                        fontSize: 11,
-                        height: 1.2,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                    fontSize: 11,
+                    height: 1.2,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.s),
                 Align(
@@ -139,7 +145,9 @@ class _ModeCard extends StatelessWidget {
                     child: Icon(
                       Icons.arrow_forward_rounded,
                       size: 14,
-                      color: isDark ? Colors.grey[400] : AppColors.textSecondary,
+                      color: isDark
+                          ? Colors.grey[400]
+                          : AppColors.textSecondary,
                     ),
                   ),
                 ),

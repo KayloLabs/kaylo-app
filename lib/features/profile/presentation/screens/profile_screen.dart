@@ -27,7 +27,7 @@ class ProfileScreen extends ConsumerWidget {
     final user = sessionState.whenOrNull(data: (u) => u);
     final rating = ref.watch(appRatingProvider);
     final l10n = AppLocalizations.of(context)!;
-    
+
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
@@ -108,22 +108,28 @@ class ProfileScreen extends ConsumerWidget {
             Row(
               children: [
                 Expanded(
-                    child: _StatTile(
-                        value: '12',
-                        label: l10n.statBookings,
-                        icon: Icons.event_available_rounded)),
+                  child: _StatTile(
+                    value: '12',
+                    label: l10n.statBookings,
+                    icon: Icons.event_available_rounded,
+                  ),
+                ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
-                    child: _StatTile(
-                        value: '4.9',
-                        label: l10n.statRating,
-                        icon: Icons.star_rounded)),
+                  child: _StatTile(
+                    value: '4.9',
+                    label: l10n.statRating,
+                    icon: Icons.star_rounded,
+                  ),
+                ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
-                    child: _StatTile(
-                        value: '5',
-                        label: l10n.statSaved,
-                        icon: Icons.bookmark_rounded)),
+                  child: _StatTile(
+                    value: '5',
+                    label: l10n.statSaved,
+                    icon: Icons.bookmark_rounded,
+                  ),
+                ),
               ],
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -170,8 +176,7 @@ class ProfileScreen extends ConsumerWidget {
                 color: AppColors.textSecondary,
                 title: l10n.settings,
                 subtitle: l10n.settingsSubtitle,
-                onTap: () =>
-                    context.go('${Routes.profile}/${Routes.settings}'),
+                onTap: () => context.go('${Routes.profile}/${Routes.settings}'),
               ),
             ),
             const SizedBox(height: AppSpacing.xxl),
@@ -220,10 +225,10 @@ class ProfileScreen extends ConsumerWidget {
   }
 
   Widget _tileDivider(bool isDark) => Divider(
-        height: 1,
-        indent: AppSpacing.l + 40 + AppSpacing.l,
-        color: isDark ? AppColors.borderDark : AppColors.border,
-      );
+    height: 1,
+    indent: AppSpacing.l + 40 + AppSpacing.l,
+    color: isDark ? AppColors.borderDark : AppColors.border,
+  );
 
   Future<void> _confirmLogout(BuildContext context, WidgetRef ref) async {
     final l10n = AppLocalizations.of(context)!;
@@ -257,13 +262,19 @@ class _StatTile extends StatelessWidget {
   final String label;
   final IconData icon;
 
-  const _StatTile({required this.value, required this.label, required this.icon});
+  const _StatTile({
+    required this.value,
+    required this.label,
+    required this.icon,
+  });
 
   @override
   Widget build(BuildContext context) {
     return KayloCard(
       padding: const EdgeInsets.symmetric(
-          vertical: AppSpacing.l, horizontal: AppSpacing.s),
+        vertical: AppSpacing.l,
+        horizontal: AppSpacing.s,
+      ),
       child: Column(
         children: [
           Icon(icon, color: AppColors.brandPrimary, size: 20),

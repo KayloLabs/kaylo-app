@@ -25,7 +25,10 @@ class KayloChip extends StatelessWidget {
       decoration: BoxDecoration(
         color: colors.backgroundColor,
         borderRadius: BorderRadius.circular(100), // Clean capsule shape
-        border: Border.all(color: colors.borderColor, width: 0.5), // Subtle thin border
+        border: Border.all(
+          color: colors.borderColor,
+          width: 0.5,
+        ), // Subtle thin border
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -49,17 +52,25 @@ class KayloChip extends StatelessWidget {
 
   _ChipColors _getChipColors(bool isDark) {
     // Monochrome typography for a cleaner, premium look
-    final primaryText = isDark ? AppColors.textPrimaryDark : AppColors.textPrimary;
+    final primaryText = isDark
+        ? AppColors.textPrimaryDark
+        : AppColors.textPrimary;
     final baseBg = Colors.transparent;
     final baseBorder = isDark ? AppColors.borderDark : AppColors.border;
 
     switch (variant) {
       case KayloChipVariant.brand:
         return _ChipColors(
-          backgroundColor: isDark ? AppColors.brandPrimaryDark.withValues(alpha: 0.1) : AppColors.brandPrimary.withValues(alpha: 0.05),
-          borderColor: isDark ? AppColors.brandPrimaryDark.withValues(alpha: 0.3) : AppColors.brandPrimary.withValues(alpha: 0.2),
+          backgroundColor: isDark
+              ? AppColors.brandPrimaryDark.withValues(alpha: 0.1)
+              : AppColors.brandPrimary.withValues(alpha: 0.05),
+          borderColor: isDark
+              ? AppColors.brandPrimaryDark.withValues(alpha: 0.3)
+              : AppColors.brandPrimary.withValues(alpha: 0.2),
           textColor: primaryText,
-          iconColor: isDark ? AppColors.brandPrimaryDark : AppColors.brandPrimary,
+          iconColor: isDark
+              ? AppColors.brandPrimaryDark
+              : AppColors.brandPrimary,
         );
       case KayloChipVariant.success:
         return _ChipColors(
@@ -86,8 +97,12 @@ class KayloChip extends StatelessWidget {
         return _ChipColors(
           backgroundColor: baseBg,
           borderColor: baseBorder,
-          textColor: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-          iconColor: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          textColor: isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondary,
+          iconColor: isDark
+              ? AppColors.textSecondaryDark
+              : AppColors.textSecondary,
         );
     }
   }

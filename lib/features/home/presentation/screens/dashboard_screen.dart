@@ -70,16 +70,17 @@ class DashboardScreen extends ConsumerWidget {
                         // Personalized ranking when booking history
                         // exists; otherwise the plain popular list.
                         switch (recommended) {
-                          AsyncData(:final value) =>
-                            PopularServicesHorizontal(
-                              services: value.services,
-                              title: value.personalized
-                                  ? AppLocalizations.of(context)!
-                                      .recommendedForYou
-                                  : null,
-                            ),
+                          AsyncData(:final value) => PopularServicesHorizontal(
+                            services: value.services,
+                            title: value.personalized
+                                ? AppLocalizations.of(
+                                    context,
+                                  )!.recommendedForYou
+                                : null,
+                          ),
                           _ => PopularServicesHorizontal(
-                              services: state.popularServices),
+                            services: state.popularServices,
+                          ),
                         },
                         const SizedBox(height: AppSpacing.xl),
                         const BottomPromoBanner(),
@@ -94,9 +95,8 @@ class DashboardScreen extends ConsumerWidget {
           loading: () => const Center(
             child: CircularProgressIndicator(color: AppColors.brandPrimary),
           ),
-          error: (error, stack) => Center(
-            child: Text('Error loading dashboard: $error'),
-          ),
+          error: (error, stack) =>
+              Center(child: Text('Error loading dashboard: $error')),
         ),
       ),
     );
@@ -116,16 +116,16 @@ class _PinnedSearchBarDelegate extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    BuildContext context,
+    double shrinkOffset,
+    bool overlapsContent,
+  ) {
     return const Padding(
       padding: EdgeInsets.symmetric(
         horizontal: AppSpacing.l,
         vertical: AppSpacing.s,
       ),
-      child: Align(
-        alignment: Alignment.topCenter,
-        child: DashboardSearchBar(),
-      ),
+      child: Align(alignment: Alignment.topCenter, child: DashboardSearchBar()),
     );
   }
 

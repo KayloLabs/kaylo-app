@@ -14,13 +14,18 @@ import '../../../../l10n/generated/app_localizations.dart';
 class HelpSupportScreen extends StatelessWidget {
   const HelpSupportScreen({super.key});
 
-  Future<void> _mail(BuildContext context, {required String subject, String body = ''}) async {
+  Future<void> _mail(
+    BuildContext context, {
+    required String subject,
+    String body = '',
+  }) async {
     final l10n = AppLocalizations.of(context)!;
     KayloFeedback.tap();
     final uri = Uri(
       scheme: 'mailto',
       path: SupportContacts.email,
-      query: 'subject=${Uri.encodeComponent(subject)}'
+      query:
+          'subject=${Uri.encodeComponent(subject)}'
           '&body=${Uri.encodeComponent(body)}',
     );
     final opened = await launchUrl(uri, mode: LaunchMode.externalApplication);
@@ -60,7 +65,9 @@ class HelpSupportScreen extends StatelessWidget {
               children: [
                 KayloListTile(
                   leading: const _Icon(
-                      icon: Icons.mail_rounded, color: AppColors.homeAccent),
+                    icon: Icons.mail_rounded,
+                    color: AppColors.homeAccent,
+                  ),
                   title: Text(l10n.emailUs),
                   subtitle: const Text(SupportContacts.email),
                   trailing: const Icon(Icons.open_in_new_rounded, size: 20),
@@ -73,7 +80,9 @@ class HelpSupportScreen extends StatelessWidget {
                 ),
                 KayloListTile(
                   leading: const _Icon(
-                      icon: Icons.bug_report_rounded, color: AppColors.error),
+                    icon: Icons.bug_report_rounded,
+                    color: AppColors.error,
+                  ),
                   title: Text(l10n.reportProblem),
                   subtitle: Text(l10n.reportProblemSubtitle),
                   trailing: const Icon(Icons.open_in_new_rounded, size: 20),
@@ -93,7 +102,9 @@ class HelpSupportScreen extends StatelessWidget {
           KayloCard(
             padding: EdgeInsets.zero,
             child: Theme(
-              data: Theme.of(context).copyWith(dividerColor: Colors.transparent),
+              data: Theme.of(
+                context,
+              ).copyWith(dividerColor: Colors.transparent),
               child: Column(
                 children: [
                   for (final (index, (question, answer)) in faqs.indexed) ...[
@@ -114,9 +125,7 @@ class HelpSupportScreen extends StatelessWidget {
                           : AppColors.textSecondary,
                       title: Text(
                         question,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       onExpansionChanged: (_) => KayloFeedback.tap(),
@@ -125,9 +134,7 @@ class HelpSupportScreen extends StatelessWidget {
                           alignment: Alignment.centerLeft,
                           child: Text(
                             answer,
-                            style: Theme.of(context)
-                                .textTheme
-                                .bodyMedium
+                            style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(
                                   color: isDark
                                       ? AppColors.textSecondaryDark

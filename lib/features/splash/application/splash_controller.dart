@@ -15,7 +15,7 @@ class SplashController extends AsyncNotifier<SplashRouteDestination?> {
 
   Future<void> initializeApp() async {
     state = const AsyncValue.loading();
-    
+
     try {
       // Simulate Firebase/App initialization
       // TODO: await Firebase.initializeApp();
@@ -38,6 +38,7 @@ class SplashController extends AsyncNotifier<SplashRouteDestination?> {
   }
 }
 
-final splashControllerProvider = AsyncNotifierProvider<SplashController, SplashRouteDestination?>(
-  SplashController.new,
-);
+final splashControllerProvider =
+    AsyncNotifierProvider<SplashController, SplashRouteDestination?>(
+      SplashController.new,
+    );

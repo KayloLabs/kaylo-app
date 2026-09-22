@@ -8,10 +8,10 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/search_controller.dart';
 
 String sortLabel(AppLocalizations l10n, SearchSort sort) => switch (sort) {
-      SearchSort.relevance => l10n.sortRelevance,
-      SearchSort.priceLowHigh => l10n.sortPriceLowHigh,
-      SearchSort.priceHighLow => l10n.sortPriceHighLow,
-    };
+  SearchSort.relevance => l10n.sortRelevance,
+  SearchSort.priceLowHigh => l10n.sortPriceLowHigh,
+  SearchSort.priceHighLow => l10n.sortPriceHighLow,
+};
 
 String categoryLabel(AppLocalizations l10n, String? category) =>
     switch (category) {
@@ -54,10 +54,9 @@ class _FiltersSheetState extends State<_FiltersSheet> {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final labelStyle = Theme.of(context)
-        .textTheme
-        .titleMedium
-        ?.copyWith(fontWeight: FontWeight.w700);
+    final labelStyle = Theme.of(
+      context,
+    ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700);
 
     return SingleChildScrollView(
       padding: const EdgeInsets.all(AppSpacing.xl),
@@ -68,8 +67,10 @@ class _FiltersSheetState extends State<_FiltersSheet> {
           Row(
             children: [
               Expanded(
-                child: Text(l10n.filters,
-                    style: Theme.of(context).textTheme.titleLarge),
+                child: Text(
+                  l10n.filters,
+                  style: Theme.of(context).textTheme.titleLarge,
+                ),
               ),
               TextButton(
                 onPressed: () => setState(() {
@@ -97,8 +98,8 @@ class _FiltersSheetState extends State<_FiltersSheet> {
                     color: _category == category
                         ? Colors.white
                         : (isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary),
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimary),
                   ),
                   shape: const StadiumBorder(),
                   side: BorderSide(
@@ -127,8 +128,8 @@ class _FiltersSheetState extends State<_FiltersSheet> {
                 color: _sort == sort
                     ? AppColors.brandPrimary
                     : (isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary),
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary),
               ),
               title: Text(sortLabel(l10n, sort)),
               onTap: () {

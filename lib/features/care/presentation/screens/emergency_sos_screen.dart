@@ -67,7 +67,9 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
     setState(() => _holding = false);
     if (!cancelled) {
       KayloSnackbar.showInfo(
-          context, AppLocalizations.of(context)!.sosReleasedEarly);
+        context,
+        AppLocalizations.of(context)!.sosReleasedEarly,
+      );
     }
   }
 
@@ -79,7 +81,7 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
 
     final contacts =
         ref.read(emergencyContactsProvider).whenOrNull(data: (c) => c) ??
-            const <EmergencyContact>[];
+        const <EmergencyContact>[];
     if (contacts.isEmpty) {
       KayloSnackbar.showError(context, l10n.sosNoContacts);
       return;
@@ -89,8 +91,9 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
     setState(() => _sending = true);
     final location = ref.read(userLocationProvider).label;
     try {
-      final alert =
-          await ref.read(careControllerProvider).triggerSos(location: location);
+      final alert = await ref
+          .read(careControllerProvider)
+          .triggerSos(location: location);
       if (!mounted) return;
       await _showDispatched(alert);
     } catch (_) {
@@ -154,10 +157,9 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
         Text(
           l10n.sosHoldHint,
           textAlign: TextAlign.center,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge
-              ?.copyWith(color: AppColors.textSecondary),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xxl),
         Center(
@@ -231,21 +233,24 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
               padding: const EdgeInsets.all(AppSpacing.l),
               child: Row(
                 children: [
-                  const Icon(Icons.history_rounded, color: AppColors.careAccent),
+                  const Icon(
+                    Icons.history_rounded,
+                    color: AppColors.careAccent,
+                  ),
                   const SizedBox(width: AppSpacing.l),
                   Expanded(
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text(l10n.sosHistory,
-                            style: Theme.of(context).textTheme.titleMedium),
+                        Text(
+                          l10n.sosHistory,
+                          style: Theme.of(context).textTheme.titleMedium,
+                        ),
                         Text(
                           l10n.alertsCount(
                             history.whenOrNull(data: (h) => h.length) ?? 0,
                           ),
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
                       ],
@@ -286,9 +291,9 @@ class _DialogLine extends StatelessWidget {
             child: Text(
               text,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    fontWeight: emphasis ? FontWeight.w700 : null,
-                    color: emphasis ? AppColors.error : null,
-                  ),
+                fontWeight: emphasis ? FontWeight.w700 : null,
+                color: emphasis ? AppColors.error : null,
+              ),
             ),
           ),
         ],
@@ -373,8 +378,11 @@ class _SosHoldButton extends StatelessWidget {
                           : Column(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                const Icon(Icons.sos_rounded,
-                                    color: Colors.white, size: 56),
+                                const Icon(
+                                  Icons.sos_rounded,
+                                  color: Colors.white,
+                                  size: 56,
+                                ),
                                 const SizedBox(height: AppSpacing.xs),
                                 Text(
                                   l10n.pressAndHold,
@@ -472,10 +480,9 @@ class _ContactCard extends ConsumerWidget {
                     contact.relation.isEmpty
                         ? contact.phone
                         : '${contact.relation} · ${contact.phone}',
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.textSecondary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -548,7 +555,9 @@ class _AddContactSheetState extends ConsumerState<_AddContactSheet> {
     }
     setState(() => _saving = true);
     try {
-      await ref.read(careControllerProvider).addContact(
+      await ref
+          .read(careControllerProvider)
+          .addContact(
             name: name,
             relation: _relation.text.trim(),
             phone: phone,

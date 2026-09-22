@@ -19,19 +19,19 @@ class AppNotification {
   });
 
   AppNotification copyWith({bool? isRead}) => AppNotification(
-        id: id,
-        title: title,
-        message: message,
-        type: type,
-        isRead: isRead ?? this.isRead,
-        createdAt: createdAt,
-      );
+    id: id,
+    title: title,
+    message: message,
+    type: type,
+    isRead: isRead ?? this.isRead,
+    createdAt: createdAt,
+  );
 
   static NotificationType typeFrom(String? raw) => switch (raw) {
-        'booking' => NotificationType.booking,
-        'message' => NotificationType.message,
-        'care' => NotificationType.care,
-        'promo' => NotificationType.promo,
-        _ => NotificationType.system,
-      };
+    'booking' => NotificationType.booking,
+    'message' => NotificationType.message,
+    'care' => NotificationType.care,
+    'promo' => NotificationType.promo,
+    _ => NotificationType.system,
+  };
 }

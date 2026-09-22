@@ -141,14 +141,20 @@ class AppTheme {
           displaySmall: base.displaySmall?.copyWith(fontSize: 28),
           headlineMedium: base.headlineMedium?.copyWith(fontSize: 26),
           titleLarge: base.titleLarge?.copyWith(
-              fontSize: 24, fontWeight: FontWeight.w700),
+            fontSize: 24,
+            fontWeight: FontWeight.w700,
+          ),
           titleMedium: base.titleMedium?.copyWith(
-              fontSize: 20, fontWeight: FontWeight.w600),
+            fontSize: 20,
+            fontWeight: FontWeight.w600,
+          ),
           bodyLarge: base.bodyLarge?.copyWith(fontSize: 20, height: 1.4),
           bodyMedium: base.bodyMedium?.copyWith(fontSize: 18, height: 1.4),
           bodySmall: base.bodySmall?.copyWith(fontSize: 16, height: 1.35),
           labelLarge: base.labelLarge?.copyWith(
-              fontSize: 18, fontWeight: FontWeight.w700),
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+          ),
           labelSmall: base.labelSmall?.copyWith(fontSize: 16),
         )
         .apply(bodyColor: careText, displayColor: careText);

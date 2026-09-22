@@ -49,7 +49,8 @@ class _HeroBannerState extends ConsumerState<HeroBanner> {
       HeroSlideData(
         title: l10n.heroCoconutTitle,
         subtitle: l10n.heroCoconutSubtitle,
-        imagePath: 'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
+        imagePath:
+            'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
         buttonText: l10n.heroBookNow,
         serviceKeyword: 'coconut',
       ),
@@ -158,18 +159,17 @@ class _HeroBannerState extends ConsumerState<HeroBanner> {
                           return const LinearGradient(
                             begin: Alignment.centerLeft,
                             end: Alignment.centerRight,
-                            colors: [
-                              Colors.transparent,
-                              Colors.black,
-                            ],
+                            colors: [Colors.transparent, Colors.black],
                             stops: [0.0, 0.4],
                           ).createShader(rect);
                         },
                         blendMode: BlendMode.dstIn,
                         child: Image.asset(
                           slide.imagePath,
-                          fit: BoxFit.contain, // Changed to contain so it's not cut off
-                          alignment: Alignment.bottomRight, // Anchored to bottom right
+                          fit: BoxFit
+                              .contain, // Changed to contain so it's not cut off
+                          alignment:
+                              Alignment.bottomRight, // Anchored to bottom right
                         ),
                       ),
                     ),
@@ -193,7 +193,8 @@ class _HeroBannerState extends ConsumerState<HeroBanner> {
                               maxLines: 3,
                               minFontSize: 15,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                              style: Theme.of(context).textTheme.titleLarge
+                                  ?.copyWith(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
                                     height: 1.2,
@@ -210,7 +211,8 @@ class _HeroBannerState extends ConsumerState<HeroBanner> {
                               maxLines: 3,
                               minFontSize: 10,
                               overflow: TextOverflow.ellipsis,
-                              style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                              style: Theme.of(context).textTheme.labelMedium
+                                  ?.copyWith(
                                     color: Colors.white.withValues(alpha: 0.9),
                                     height: 1.4,
                                   ),
@@ -236,7 +238,10 @@ class _HeroBannerState extends ConsumerState<HeroBanner> {
                                 children: [
                                   Text(
                                     slide.buttonText,
-                                    style: Theme.of(context).textTheme.labelMedium?.copyWith(
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .labelMedium
+                                        ?.copyWith(
                                           color: Colors.black,
                                           fontWeight: FontWeight.w700,
                                         ),

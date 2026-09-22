@@ -14,7 +14,7 @@ import '../../../../core/widgets/kaylo_snackbar.dart';
 
 class OtpVerifyScreen extends ConsumerStatefulWidget {
   final String phone;
-  
+
   const OtpVerifyScreen({super.key, required this.phone});
 
   @override
@@ -32,7 +32,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
     super.initState();
     _startTimer();
   }
-  
+
   void _startTimer() {
     setState(() => _countdown = 25);
     _timer?.cancel();
@@ -58,11 +58,13 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
       KayloSnackbar.showError(context, 'Please enter a valid 4-digit code');
       return;
     }
-    
+
     setState(() => _isLoading = true);
     try {
       await ref.read(authRepositoryProvider).verifyOtp(widget.phone, otp);
-      await Future.delayed(const Duration(milliseconds: 100)); // Wait for stream propagation
+      await Future.delayed(
+        const Duration(milliseconds: 100),
+      ); // Wait for stream propagation
       if (mounted) {
         // After verifying OTP, check if location is set. For now, go to location setup.
         context.go(Routes.location);
@@ -75,10 +77,10 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
       if (mounted) setState(() => _isLoading = false);
     }
   }
-  
+
   Future<void> _resendOtp() async {
     if (_countdown > 0) return;
-    
+
     setState(() => _isLoading = true);
     try {
       await ref.read(authRepositoryProvider).signInWithPhone(widget.phone);
@@ -117,7 +119,9 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
               Text(
                 'We sent a 4-digit code to ${widget.phone}',
                 style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
@@ -148,16 +152,22 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
                   Text(
                     'Didn\'t receive the code? ',
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
                     ),
                   ),
                   TextButton(
                     onPressed: _countdown > 0 ? null : _resendOtp,
                     child: Text(
-                      _countdown > 0 ? 'Resend in 00:${_countdown.toString().padLeft(2, '0')}' : 'Resend',
+                      _countdown > 0
+                          ? 'Resend in 00:${_countdown.toString().padLeft(2, '0')}'
+                          : 'Resend',
                       style: TextStyle(
-                        color: _countdown > 0 
-                            ? (isDark ? AppColors.textSecondaryDark : AppColors.textSecondary)
+                        color: _countdown > 0
+                            ? (isDark
+                                  ? AppColors.textSecondaryDark
+                                  : AppColors.textSecondary)
                             : AppColors.brandPrimary,
                         fontWeight: FontWeight.w600,
                       ),

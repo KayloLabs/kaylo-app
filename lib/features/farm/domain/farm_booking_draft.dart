@@ -56,12 +56,12 @@ class FarmBookingDraft {
   double get total => service.basePrice * quantity;
 
   DateTime get scheduledAt => DateTime(
-        date.year,
-        date.month,
-        date.day,
-        slot.startMinutes ~/ 60,
-        slot.startMinutes % 60,
-      );
+    date.year,
+    date.month,
+    date.day,
+    slot.startMinutes ~/ 60,
+    slot.startMinutes % 60,
+  );
 
   FarmBookingDraft copyWith({
     DateTime? date,

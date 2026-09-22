@@ -8,7 +8,9 @@ abstract class CareRepository {
   Future<List<Doctor>> getDoctors({String? specialty});
   Future<Doctor?> getDoctorById(String doctorId);
   Future<List<DoctorAppointment>> getDoctorAppointments();
-  Future<DoctorAppointment> bookDoctorAppointment(DoctorAppointment appointment);
+  Future<DoctorAppointment> bookDoctorAppointment(
+    DoctorAppointment appointment,
+  );
 
   Future<List<Caregiver>> getCaregivers();
   Future<Caregiver?> getCaregiverById(String caregiverId);

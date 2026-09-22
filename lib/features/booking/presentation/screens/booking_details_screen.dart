@@ -102,8 +102,9 @@ class _Details extends ConsumerWidget {
     final l10n = AppLocalizations.of(context)!;
     final loc = MaterialLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final accent = categoryAccent(service?.category ?? 'home');
     final info = service == null ? null : farmInfoFor(service!);
     // Quantity is not stored on the booking; it falls out of the amount
@@ -113,37 +114,37 @@ class _Details extends ConsumerWidget {
         : (booking.totalAmount / service!.basePrice);
     final wholeQuantity =
         quantity != null && quantity == quantity.roundToDouble()
-            ? quantity.round()
-            : null;
+        ? quantity.round()
+        : null;
 
     Widget row(String label, Widget value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(label,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: secondary)),
-              ),
-              Expanded(
-                flex: 3,
-                child: Align(alignment: Alignment.centerRight, child: value),
-              ),
-            ],
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: secondary),
+            ),
           ),
-        );
+          Expanded(
+            flex: 3,
+            child: Align(alignment: Alignment.centerRight, child: value),
+          ),
+        ],
+      ),
+    );
     Widget text(String value) => Text(
-          value,
-          textAlign: TextAlign.end,
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium
-              ?.copyWith(fontWeight: FontWeight.w600),
-        );
+      value,
+      textAlign: TextAlign.end,
+      style: Theme.of(
+        context,
+      ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.bookingDetails)),
@@ -177,17 +178,14 @@ class _Details extends ConsumerWidget {
                     children: [
                       Text(
                         service?.name ?? l10n.service,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                       Text(
                         booking.id,
-                        style: Theme.of(context)
-                            .textTheme
-                            .bodySmall
-                            ?.copyWith(color: secondary),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: secondary),
                       ),
                     ],
                   ),
@@ -212,10 +210,9 @@ class _Details extends ConsumerWidget {
                   Expanded(
                     child: Text(
                       l10n.bookingCancelledBanner,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodyMedium
-                          ?.copyWith(fontWeight: FontWeight.w600),
+                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
                   ),
                 ],
@@ -233,12 +230,17 @@ class _Details extends ConsumerWidget {
                 row(l10n.date, text(loc.formatFullDate(booking.scheduledAt))),
                 row(
                   l10n.time,
-                  text(loc.formatTimeOfDay(
-                      TimeOfDay.fromDateTime(booking.scheduledAt))),
+                  text(
+                    loc.formatTimeOfDay(
+                      TimeOfDay.fromDateTime(booking.scheduledAt),
+                    ),
+                  ),
                 ),
                 if (wholeQuantity != null && info != null)
-                  row(l10n.quantity,
-                      text(farmUnitCount(l10n, info.unit, wholeQuantity))),
+                  row(
+                    l10n.quantity,
+                    text(farmUnitCount(l10n, info.unit, wholeQuantity)),
+                  ),
                 if (booking.notes != null && booking.notes!.isNotEmpty)
                   row(
                     service?.category == 'farm'
@@ -265,17 +267,24 @@ class _Details extends ConsumerWidget {
                   Icon(Icons.hourglass_top_rounded, color: secondary),
                   const SizedBox(width: AppSpacing.m),
                   Expanded(
-                    child: Text(l10n.noWorkerYet,
-                        style: Theme.of(context).textTheme.bodyMedium),
+                    child: Text(
+                      l10n.noWorkerYet,
+                      style: Theme.of(context).textTheme.bodyMedium,
+                    ),
                   ),
                 ],
               ),
             )
           else
-            ref.watch(bookingWorkerProvider(booking.workerId!)).when(
+            ref
+                .watch(bookingWorkerProvider(booking.workerId!))
+                .when(
                   data: (worker) => _WorkerCard(worker: worker),
                   loading: () => const KayloCard(
-                    child: SizedBox(height: 48, child: Center(child: KayloLoader(size: 28))),
+                    child: SizedBox(
+                      height: 48,
+                      child: Center(child: KayloLoader(size: 28)),
+                    ),
                   ),
                   error: (_, _) => const SizedBox.shrink(),
                 ),
@@ -307,8 +316,9 @@ class _Details extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.xs),
                   TextButton(
                     onPressed: () => _cancel(context, ref),
-                    style:
-                        TextButton.styleFrom(foregroundColor: AppColors.error),
+                    style: TextButton.styleFrom(
+                      foregroundColor: AppColors.error,
+                    ),
                     child: Text(l10n.cancelBooking),
                   ),
                 ],
@@ -360,28 +370,31 @@ class _StatusTimeline extends StatelessWidget {
                     color: i < current
                         ? AppColors.brandPrimary
                         : i == current
-                            ? AppColors.brandPrimary.withValues(alpha: 0.15)
-                            : Colors.transparent,
+                        ? AppColors.brandPrimary.withValues(alpha: 0.15)
+                        : Colors.transparent,
                     border: Border.all(
                       color: i <= current ? AppColors.brandPrimary : idle,
                       width: 2,
                     ),
                   ),
                   child: i < current
-                      ? const Icon(Icons.check_rounded,
-                          size: 16, color: Colors.white)
+                      ? const Icon(
+                          Icons.check_rounded,
+                          size: 16,
+                          color: Colors.white,
+                        )
                       : i == current
-                          ? Center(
-                              child: Container(
-                                width: 10,
-                                height: 10,
-                                decoration: const BoxDecoration(
-                                  shape: BoxShape.circle,
-                                  color: AppColors.brandPrimary,
-                                ),
-                              ),
-                            )
-                          : null,
+                      ? Center(
+                          child: Container(
+                            width: 10,
+                            height: 10,
+                            decoration: const BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: AppColors.brandPrimary,
+                            ),
+                          ),
+                        )
+                      : null,
                 ),
                 const SizedBox(height: AppSpacing.s),
                 Text(
@@ -389,16 +402,17 @@ class _StatusTimeline extends StatelessWidget {
                   textAlign: TextAlign.center,
                   maxLines: 2,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        fontWeight:
-                            i == current ? FontWeight.w700 : FontWeight.w500,
-                        color: i <= current
-                            ? (isDark
-                                ? AppColors.textPrimaryDark
-                                : AppColors.textPrimary)
-                            : (isDark
-                                ? AppColors.textSecondaryDark
-                                : AppColors.textSecondary),
-                      ),
+                    fontWeight: i == current
+                        ? FontWeight.w700
+                        : FontWeight.w500,
+                    color: i <= current
+                        ? (isDark
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimary)
+                        : (isDark
+                              ? AppColors.textSecondaryDark
+                              : AppColors.textSecondary),
+                  ),
                 ),
               ],
             ),
@@ -427,7 +441,9 @@ class _WorkerCard extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final thread = ref
         .watch(chatThreadsProvider)
-        .whenOrNull(data: (t) => t.where((x) => x.workerId == worker.id).firstOrNull);
+        .whenOrNull(
+          data: (t) => t.where((x) => x.workerId == worker.id).firstOrNull,
+        );
 
     return KayloCard(
       child: Row(
@@ -445,16 +461,17 @@ class _WorkerCard extends ConsumerWidget {
                         worker.name,
                         maxLines: 1,
                         overflow: TextOverflow.ellipsis,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w700),
                       ),
                     ),
                     if (worker.isVerified) ...[
                       const SizedBox(width: 4),
-                      const Icon(Icons.verified_rounded,
-                          size: 18, color: AppColors.brandPrimary),
+                      const Icon(
+                        Icons.verified_rounded,
+                        size: 18,
+                        color: AppColors.brandPrimary,
+                      ),
                     ],
                   ],
                 ),
@@ -467,10 +484,10 @@ class _WorkerCard extends ConsumerWidget {
                 Text(
                   worker.location,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                 ),
               ],
             ),
@@ -574,16 +591,18 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
             },
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_rounded,
-                    color: AppColors.brandPrimary, size: 20),
+                const Icon(
+                  Icons.calendar_today_rounded,
+                  color: AppColors.brandPrimary,
+                  size: 20,
+                ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: Text(
                     loc.formatFullDate(_date),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyLarge
-                        ?.copyWith(fontWeight: FontWeight.w600),
+                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                      fontWeight: FontWeight.w600,
+                    ),
                   ),
                 ),
                 Text(
@@ -612,8 +631,8 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
                     color: identical(slot, _slot)
                         ? Colors.white
                         : (isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary),
+                              ? AppColors.textPrimaryDark
+                              : AppColors.textPrimary),
                   ),
                   shape: const StadiumBorder(),
                   side: BorderSide(
@@ -627,11 +646,7 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          KayloButton(
-            text: l10n.save,
-            isLoading: _saving,
-            onPressed: _save,
-          ),
+          KayloButton(text: l10n.save, isLoading: _saving, onPressed: _save),
           const SizedBox(height: AppSpacing.s),
           TextButton(
             onPressed: () => Navigator.of(context).pop(),

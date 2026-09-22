@@ -28,7 +28,10 @@ class ServiceTile extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.button),
             ),
             // Placeholder for image loading from asset or network
-            child: Icon(_getIconForService(service.name), color: AppColors.brandPrimary),
+            child: Icon(
+              _getIconForService(service.name),
+              color: AppColors.brandPrimary,
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           Text(
@@ -41,7 +44,9 @@ class ServiceTile extends StatelessWidget {
           Text(
             'Starts from ₹${service.basePrice.toInt()}',
             style: TextStyle(
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
               fontSize: 12,
             ),
           ),

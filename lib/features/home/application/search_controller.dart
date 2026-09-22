@@ -23,10 +23,7 @@ class SearchResults {
   final List<ServiceItem> services;
   final List<Worker> workers;
 
-  const SearchResults({
-    this.services = const [],
-    this.workers = const [],
-  });
+  const SearchResults({this.services = const [], this.workers = const []});
 
   bool get isEmpty => services.isEmpty && workers.isEmpty;
   bool get isNotEmpty => !isEmpty;
@@ -239,5 +236,5 @@ class SearchNotifier extends Notifier<SearchState> {
 /// instead of showing a previous visit's results under an empty field.
 final searchControllerProvider =
     NotifierProvider.autoDispose<SearchNotifier, SearchState>(
-  SearchNotifier.new,
-);
+      SearchNotifier.new,
+    );

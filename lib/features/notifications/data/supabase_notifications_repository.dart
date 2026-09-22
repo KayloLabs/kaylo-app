@@ -41,7 +41,8 @@ class SupabaseNotificationsRepository implements NotificationsRepository {
     try {
       await _client
           .from('notifications')
-          .update({'is_read': true}).eq('notification_id', notificationId);
+          .update({'is_read': true})
+          .eq('notification_id', notificationId);
     } catch (e) {
       throw mapSupabaseError(e);
     }

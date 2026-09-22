@@ -32,7 +32,9 @@ class EmptyState extends StatelessWidget {
             Container(
               padding: const EdgeInsets.all(AppSpacing.l),
               decoration: BoxDecoration(
-                color: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
+                color: isDark
+                    ? AppColors.surfaceTintDark
+                    : AppColors.surfaceTint,
                 shape: BoxShape.circle,
               ),
               child: Icon(icon, size: 48, color: AppColors.brandPrimary),
@@ -46,7 +48,11 @@ class EmptyState extends StatelessWidget {
             const SizedBox(height: AppSpacing.s),
             Text(
               description,
-              style: TextStyle(color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+              style: TextStyle(
+                color: isDark
+                    ? AppColors.textSecondaryDark
+                    : AppColors.textSecondary,
+              ),
               textAlign: TextAlign.center,
             ),
             if (actionText != null && onActionPressed != null) ...[

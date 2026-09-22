@@ -16,7 +16,7 @@ class AppShadows {
 
   // Dark Mode Shadows (Subtle)
   static const BoxShadow shadowSmDark = BoxShadow(
-    color: Color(0x1A000000), 
+    color: Color(0x1A000000),
     blurRadius: 16,
     offset: Offset(0, 2),
   );
@@ -28,10 +28,14 @@ class AppShadows {
   );
 
   static BoxShadow getSm(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark ? shadowSmDark : shadowSm;
+    return Theme.of(context).brightness == Brightness.dark
+        ? shadowSmDark
+        : shadowSm;
   }
 
   static BoxShadow getMd(BuildContext context) {
-    return Theme.of(context).brightness == Brightness.dark ? shadowMdDark : shadowMd;
+    return Theme.of(context).brightness == Brightness.dark
+        ? shadowMdDark
+        : shadowMd;
   }
 }

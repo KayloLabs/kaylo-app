@@ -68,21 +68,27 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l10n.yourLocation, style: Theme.of(context).textTheme.titleLarge),
+          Text(
+            l10n.yourLocation,
+            style: Theme.of(context).textTheme.titleLarge,
+          ),
           const SizedBox(height: AppSpacing.xs),
           Row(
             children: [
-              const Icon(Icons.place_rounded,
-                  size: 18, color: AppColors.brandPrimary),
+              const Icon(
+                Icons.place_rounded,
+                size: 18,
+                color: AppColors.brandPrimary,
+              ),
               const SizedBox(width: AppSpacing.xs),
               Expanded(
                 child: Text(
                   current.addressLine ?? current.label,
                   style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                 ),
               ),
             ],

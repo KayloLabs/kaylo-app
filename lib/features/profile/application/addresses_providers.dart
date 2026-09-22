@@ -17,13 +17,16 @@ final addressesRepositoryProvider = Provider<AddressesRepository>((ref) {
 });
 
 /// Default address first.
-final savedAddressesProvider =
-    FutureProvider.autoDispose<List<SavedAddress>>((ref) async {
+final savedAddressesProvider = FutureProvider.autoDispose<List<SavedAddress>>((
+  ref,
+) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return const [];
-  final addresses =
-      await ref.watch(addressesRepositoryProvider).getAddresses(userId);
-  return [...addresses]..sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
+  final addresses = await ref
+      .watch(addressesRepositoryProvider)
+      .getAddresses(userId);
+  return [...addresses]
+    ..sort((a, b) => (b.isDefault ? 1 : 0) - (a.isDefault ? 1 : 0));
 });
 
 final addressesControllerProvider = Provider<AddressesController>((ref) {

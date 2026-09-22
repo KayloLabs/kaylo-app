@@ -17,7 +17,9 @@ class SupabaseAddressesRepository implements AddressesRepository {
     try {
       final rows = await _client
           .from('locations')
-          .select('location_id, nickname, street, district, pincode, latitude, longitude')
+          .select(
+            'location_id, nickname, street, district, pincode, latitude, longitude',
+          )
           .eq('person_id', userId)
           .order('location_id');
       return [
@@ -25,10 +27,11 @@ class SupabaseAddressesRepository implements AddressesRepository {
           SavedAddress(
             id: row['location_id'] as String,
             label: (row['nickname'] as String?) ?? 'Address',
-            line: [row['street'], row['district'], row['pincode']]
-                .whereType<String>()
-                .where((s) => s.isNotEmpty)
-                .join(', '),
+            line: [
+              row['street'],
+              row['district'],
+              row['pincode'],
+            ].whereType<String>().where((s) => s.isNotEmpty).join(', '),
             latitude: (row['latitude'] as num?)?.toDouble(),
             longitude: (row['longitude'] as num?)?.toDouble(),
             isDefault: index == 0,

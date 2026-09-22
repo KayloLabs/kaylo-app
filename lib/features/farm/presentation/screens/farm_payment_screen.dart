@@ -98,42 +98,41 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
 
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final loc = MaterialLocalizations.of(context);
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final unit = farmInfoFor(draft.service).unit;
     final isFarm = draft.service.category == 'farm';
     final workerName = _workerName(draft);
     final isProcessing = ref.watch(farmCheckoutControllerProvider).isLoading;
 
     Widget summaryRow(String label, String value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(
-                  label,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: secondary),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Text(
-                  value,
-                  textAlign: TextAlign.end,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: secondary),
+            ),
           ),
-        );
+          Expanded(
+            flex: 3,
+            child: Text(
+              value,
+              textAlign: TextAlign.end,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
+    );
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.paymentTitle)),
@@ -155,7 +154,9 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                 summaryRow(l10n.date, loc.formatMediumDate(draft.date)),
                 summaryRow(l10n.time, formatTimeSlot(context, draft.slot)),
                 summaryRow(
-                    l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
+                  l10n.quantity,
+                  farmUnitCount(l10n, unit, draft.quantity),
+                ),
                 summaryRow(
                   l10n.rate,
                   '${formatRupees(draft.service.basePrice)} '
@@ -174,10 +175,9 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                   children: [
                     Text(
                       l10n.totalPayable,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     PriceTag(amount: draft.total, isLarge: true),
                   ],
@@ -291,14 +291,14 @@ class _PaymentOption extends StatelessWidget {
                     children: [
                       Text(
                         title,
-                        style: Theme.of(context)
-                            .textTheme
-                            .titleMedium
+                        style: Theme.of(context).textTheme.titleMedium
                             ?.copyWith(fontWeight: FontWeight.w600),
                       ),
                       const SizedBox(height: 2),
-                      Text(subtitle,
-                          style: Theme.of(context).textTheme.bodySmall),
+                      Text(
+                        subtitle,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
                     ],
                   ),
                 ),
@@ -309,8 +309,8 @@ class _PaymentOption extends StatelessWidget {
                   color: isSelected
                       ? AppColors.brandPrimary
                       : (isDark
-                          ? AppColors.textSecondaryDark
-                          : AppColors.textSecondary),
+                            ? AppColors.textSecondaryDark
+                            : AppColors.textSecondary),
                 ),
               ],
             ),

@@ -40,24 +40,59 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
       return ['Tap Repair', 'Pipe Leakage', 'Drain Cleaning', 'Installation'];
     }
     if (lower.contains('electric')) {
-      return ['Switchboard Repair', 'Wiring Fix', 'Fan Installation', 'MCB Tripping'];
+      return [
+        'Switchboard Repair',
+        'Wiring Fix',
+        'Fan Installation',
+        'MCB Tripping',
+      ];
     }
     if (lower.contains('clean')) {
-      return ['Full Home Deep Clean', 'Kitchen Cleaning', 'Bathroom Scrub', 'Sofa Shampoo'];
+      return [
+        'Full Home Deep Clean',
+        'Kitchen Cleaning',
+        'Bathroom Scrub',
+        'Sofa Shampoo',
+      ];
     }
     if (lower.contains('carpent')) {
-      return ['Furniture Repair', 'Door & Window', 'Lock Installation', 'Custom Woodwork'];
+      return [
+        'Furniture Repair',
+        'Door & Window',
+        'Lock Installation',
+        'Custom Woodwork',
+      ];
     }
     if (lower.contains('paint')) {
-      return ['Interior Painting', 'Exterior Painting', 'Wall Putty & Primer', 'Waterproofing'];
+      return [
+        'Interior Painting',
+        'Exterior Painting',
+        'Wall Putty & Primer',
+        'Waterproofing',
+      ];
     }
     if (lower.contains('ac')) {
-      return ['Filter Cleaning', 'Gas Refill', 'Cooling Issue Repair', 'Installation/Uninstallation'];
+      return [
+        'Filter Cleaning',
+        'Gas Refill',
+        'Cooling Issue Repair',
+        'Installation/Uninstallation',
+      ];
     }
     if (lower.contains('appliance')) {
-      return ['Washing Machine', 'Refrigerator', 'Microwave', 'TV Mounting/Repair'];
+      return [
+        'Washing Machine',
+        'Refrigerator',
+        'Microwave',
+        'TV Mounting/Repair',
+      ];
     }
-    return ['General Inspection', 'Repair & Fix', 'New Installation', 'Maintenance'];
+    return [
+      'General Inspection',
+      'Repair & Fix',
+      'New Installation',
+      'Maintenance',
+    ];
   }
 
   @override
@@ -127,7 +162,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           ),
                         ),
                         child: Center(
-                          child: item.iconPath.isNotEmpty &&
+                          child:
+                              item.iconPath.isNotEmpty &&
                                   item.iconPath.startsWith('assets')
                               ? Image.asset(
                                   item.iconPath,
@@ -186,9 +222,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                         // Subtitle
                         Text(
                           l10n.professionalAtDoorstep,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodyMedium
+                          style: Theme.of(context).textTheme.bodyMedium
                               ?.copyWith(
                                 color: isDark
                                     ? AppColors.textSecondaryDark
@@ -203,10 +237,9 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                             padding: const EdgeInsets.all(AppSpacing.m),
                             child: Text(
                               item.description,
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodyMedium
-                                  ?.copyWith(height: 1.4),
+                              style: Theme.of(
+                                context,
+                              ).textTheme.bodyMedium?.copyWith(height: 1.4),
                             ),
                           ),
                           const SizedBox(height: AppSpacing.xl),
@@ -215,17 +248,13 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                         // Popular Sub-services Section
                         Text(
                           l10n.popularSubServices,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         const SizedBox(height: AppSpacing.s),
                         Text(
                           l10n.selectSubServices,
-                          style: Theme.of(context)
-                              .textTheme
-                              .bodySmall
+                          style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: AppSpacing.m),
@@ -234,8 +263,9 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           spacing: AppSpacing.s,
                           runSpacing: AppSpacing.s,
                           children: subServices.map((subService) {
-                            final isSelected =
-                                _selectedSubServices.contains(subService);
+                            final isSelected = _selectedSubServices.contains(
+                              subService,
+                            );
                             return FilterChip(
                               label: Text(subService),
                               selected: isSelected,
@@ -265,11 +295,10 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                 children: [
                                   Text(
                                     l10n.startingFrom,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodySmall
+                                    style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
-                                            color: AppColors.textSecondary),
+                                          color: AppColors.textSecondary,
+                                        ),
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
@@ -323,9 +352,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                     AppSpacing.l,
                   ),
                   decoration: BoxDecoration(
-                    color: isDark
-                        ? AppColors.surfaceDark
-                        : AppColors.surface,
+                    color: isDark ? AppColors.surfaceDark : AppColors.surface,
                     boxShadow: [
                       BoxShadow(
                         color: Colors.black.withValues(alpha: 0.08),
@@ -383,10 +410,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
         },
         loading: () => const SafeArea(
           child: Center(
-            child: ShimmerBox(
-              width: double.infinity,
-              height: double.infinity,
-            ),
+            child: ShimmerBox(width: double.infinity, height: double.infinity),
           ),
         ),
         error: (err, stack) => SafeArea(

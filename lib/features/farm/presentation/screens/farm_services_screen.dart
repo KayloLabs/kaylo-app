@@ -109,11 +109,11 @@ class _FarmIntro extends StatelessWidget {
             child: Text(
               l10n.farmServicesTagline,
               style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    height: 1.4,
-                    color: isDark
-                        ? AppColors.textPrimaryDark
-                        : AppColors.textPrimary,
-                  ),
+                height: 1.4,
+                color: isDark
+                    ? AppColors.textPrimaryDark
+                    : AppColors.textPrimary,
+              ),
             ),
           ),
         ],

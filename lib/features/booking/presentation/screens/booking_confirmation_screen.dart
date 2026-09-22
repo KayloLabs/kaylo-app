@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/google_pay_tick.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
@@ -24,14 +26,31 @@ class BookingConfirmationScreen extends StatefulWidget {
 }
 
 class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
+  AudioPlayer? _audioPlayer;
+
+  bool get _isTest => WidgetsBinding.instance.runtimeType.toString().contains('TestWidgetsFlutterBinding');
+
   @override
   void initState() {
     super.initState();
+    
+    if (!_isTest) {
+      _audioPlayer = AudioPlayer();
+    }
+
     if (widget.receipt == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) context.go(Routes.dashboard);
       });
+    } else {
+      _audioPlayer?.play(AssetSource('success.wav'));
     }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer?.dispose();
+    super.dispose();
   }
 
   @override
@@ -42,41 +61,41 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
     final l10n = AppLocalizations.of(context)!;
     final loc = MaterialLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final booking = receipt.booking;
     final scheduledTime = TimeOfDay.fromDateTime(booking.scheduledAt);
 
     Widget row(String label, Widget value) => Padding(
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Expanded(
-                flex: 2,
-                child: Text(
-                  label,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodyMedium
-                      ?.copyWith(color: secondary),
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Align(alignment: Alignment.centerRight, child: value),
-              ),
-            ],
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            flex: 2,
+            child: Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: secondary),
+            ),
           ),
-        );
+          Expanded(
+            flex: 3,
+            child: Align(alignment: Alignment.centerRight, child: value),
+          ),
+        ],
+      ),
+    );
 
     Widget text(String value, {bool bold = false}) => Text(
-          value,
-          textAlign: TextAlign.end,
-          style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                fontWeight: bold ? FontWeight.w700 : FontWeight.w600,
-              ),
-        );
+      value,
+      textAlign: TextAlign.end,
+      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+        fontWeight: bold ? FontWeight.w700 : FontWeight.w600,
+      ),
+    );
 
     return PopScope(
       canPop: false,
@@ -93,36 +112,16 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
               AppSpacing.xxl,
             ),
             children: [
-              Center(
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.4, end: 1),
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeOutBack,
-                  builder: (context, scale, child) =>
-                      Transform.scale(scale: scale, child: child),
-                  child: Container(
-                    width: 104,
-                    height: 104,
-                    decoration: BoxDecoration(
-                      color: AppColors.brandPrimary.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check_rounded,
-                      size: 60,
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
-                ),
+              const Center(
+                child: GooglePayTick(size: 104, color: AppColors.brandPrimary),
               ),
               const SizedBox(height: AppSpacing.xl),
               Text(
                 l10n.bookingConfirmed,
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .headlineMedium
-                    ?.copyWith(fontWeight: FontWeight.w700),
+                style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                  fontWeight: FontWeight.w700,
+                ),
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
@@ -131,10 +130,9 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                   loc.formatTimeOfDay(scheduledTime),
                 ),
                 textAlign: TextAlign.center,
-                style: Theme.of(context)
-                    .textTheme
-                    .bodyMedium
-                    ?.copyWith(color: secondary, height: 1.4),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: secondary, height: 1.4),
               ),
               const SizedBox(height: AppSpacing.xxl),
               KayloCard(
@@ -145,10 +143,14 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
                     row(l10n.service, text(receipt.service.name)),
                     for (final line in receipt.extras)
                       row(line.label, text(line.value)),
-                    row(l10n.total,
-                        text(formatRupees(booking.totalAmount), bold: true)),
-                    row(l10n.payment,
-                        text(paymentMethodLabel(l10n, receipt.paymentMethod))),
+                    row(
+                      l10n.total,
+                      text(formatRupees(booking.totalAmount), bold: true),
+                    ),
+                    row(
+                      l10n.payment,
+                      text(paymentMethodLabel(l10n, receipt.paymentMethod)),
+                    ),
                     row(l10n.status, BookingStatusChip(status: booking.status)),
                   ],
                 ),

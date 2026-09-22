@@ -9,11 +9,7 @@ class WorkerCard extends StatelessWidget {
   final Worker worker;
   final VoidCallback onTap;
 
-  const WorkerCard({
-    super.key,
-    required this.worker,
-    required this.onTap,
-  });
+  const WorkerCard({super.key, required this.worker, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -33,10 +29,15 @@ class WorkerCard extends StatelessWidget {
               children: [
                 Text(
                   worker.name,
-                  style: Theme.of(context).textTheme.titleMedium!.copyWith(fontWeight: FontWeight.w600),
+                  style: Theme.of(context).textTheme.titleMedium!.copyWith(
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
-                RatingStars(rating: worker.rating, reviewCount: worker.reviewsCount),
+                RatingStars(
+                  rating: worker.rating,
+                  reviewCount: worker.reviewsCount,
+                ),
               ],
             ),
           ),

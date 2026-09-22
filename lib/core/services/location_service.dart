@@ -30,7 +30,11 @@ class ResolvedLocation {
 /// Why locating failed. `code` is one of: services-disabled, denied,
 /// denied-forever, timeout, unavailable.
 class LocationFailure extends AppFailure {
-  LocationFailure(super.message, {required String super.code, super.originalError});
+  LocationFailure(
+    super.message, {
+    required String super.code,
+    super.originalError,
+  });
 }
 
 abstract class LocationService {
@@ -45,13 +49,15 @@ class GeolocatorLocationService implements LocationService {
   final http.Client _http;
 
   GeolocatorLocationService({http.Client? client})
-      : _http = client ?? http.Client();
+    : _http = client ?? http.Client();
 
   @override
   Future<ResolvedLocation> locate() async {
     if (!await Geolocator.isLocationServiceEnabled()) {
-      throw LocationFailure('Location services are turned off',
-          code: 'services-disabled');
+      throw LocationFailure(
+        'Location services are turned off',
+        code: 'services-disabled',
+      );
     }
 
     var permission = await Geolocator.checkPermission();
@@ -59,13 +65,17 @@ class GeolocatorLocationService implements LocationService {
       permission = await Geolocator.requestPermission();
     }
     if (permission == LocationPermission.deniedForever) {
-      throw LocationFailure('Location permission is blocked',
-          code: 'denied-forever');
+      throw LocationFailure(
+        'Location permission is blocked',
+        code: 'denied-forever',
+      );
     }
     if (permission == LocationPermission.denied ||
         permission == LocationPermission.unableToDetermine) {
-      throw LocationFailure('Location permission was not granted',
-          code: 'denied');
+      throw LocationFailure(
+        'Location permission was not granted',
+        code: 'denied',
+      );
     }
 
     final Position position;
@@ -79,8 +89,11 @@ class GeolocatorLocationService implements LocationService {
     } on TimeoutException {
       throw LocationFailure('Could not get a fix in time', code: 'timeout');
     } catch (e) {
-      throw LocationFailure('Location is unavailable right now',
-          code: 'unavailable', originalError: e);
+      throw LocationFailure(
+        'Location is unavailable right now',
+        code: 'unavailable',
+        originalError: e,
+      );
     }
 
     return reverseGeocode(position.latitude, position.longitude);
@@ -100,12 +113,17 @@ class GeolocatorLocationService implements LocationService {
         'zoom': '16',
         'addressdetails': '1',
       });
-      final response = await _http.get(uri, headers: {
-        'Accept': 'application/json',
-        // Nominatim's usage policy asks for an identifying agent; the
-        // browser sets its own on web and rejects a custom one.
-        if (!kIsWeb) 'User-Agent': 'Kaylo/1.0 (KayloLabs/kaylo-app)',
-      }).timeout(const Duration(seconds: 10));
+      final response = await _http
+          .get(
+            uri,
+            headers: {
+              'Accept': 'application/json',
+              // Nominatim's usage policy asks for an identifying agent; the
+              // browser sets its own on web and rejects a custom one.
+              if (!kIsWeb) 'User-Agent': 'Kaylo/1.0 (KayloLabs/kaylo-app)',
+            },
+          )
+          .timeout(const Duration(seconds: 10));
       if (response.statusCode != 200) return fallback;
 
       final json = jsonDecode(response.body) as Map<String, dynamic>;
@@ -120,9 +138,17 @@ class GeolocatorLocationService implements LocationService {
       }
 
       final locality = pick([
-        'village', 'town', 'city', 'municipality', 'suburb', 'county',
+        'village',
+        'town',
+        'city',
+        'municipality',
+        'suburb',
+        'county',
       ]);
-      final label = [locality, pick(['state'])].whereType<String>().join(', ');
+      final label = [
+        locality,
+        pick(['state']),
+      ].whereType<String>().join(', ');
       final line = [
         pick(['road', 'neighbourhood', 'hamlet']),
         pick(['suburb', 'village', 'town', 'city']),

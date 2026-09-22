@@ -8,12 +8,12 @@ void main() {
   // The hub reads the reminders provider for its pending-dose badge, so
   // it needs a ProviderScope; with no session it simply shows no badge.
   Widget wrap(Widget child) => ProviderScope(
-        child: MaterialApp(
-          localizationsDelegates: AppLocalizations.localizationsDelegates,
-          supportedLocales: AppLocalizations.supportedLocales,
-          home: child,
-        ),
-      );
+    child: MaterialApp(
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
+      home: child,
+    ),
+  );
 
   testWidgets('Care Home renders its core actions', (tester) async {
     await tester.pumpWidget(wrap(const CareHomeScreen()));
@@ -27,14 +27,16 @@ void main() {
   });
 
   testWidgets('Care Home renders in Malayalam', (tester) async {
-    await tester.pumpWidget(ProviderScope(
-      child: MaterialApp(
-        localizationsDelegates: AppLocalizations.localizationsDelegates,
-        supportedLocales: AppLocalizations.supportedLocales,
-        locale: const Locale('ml'),
-        home: const CareHomeScreen(),
+    await tester.pumpWidget(
+      ProviderScope(
+        child: MaterialApp(
+          localizationsDelegates: AppLocalizations.localizationsDelegates,
+          supportedLocales: AppLocalizations.supportedLocales,
+          locale: const Locale('ml'),
+          home: const CareHomeScreen(),
+        ),
       ),
-    ));
+    );
     await tester.pumpAndSettle();
 
     expect(find.text('കെയ്‌ലോ കെയർ'), findsOneWidget);

@@ -59,9 +59,9 @@ Future<Widget> testApp({
 }
 
 GoRoute stubRoute(String path, String text) => GoRoute(
-      path: path,
-      builder: (_, _) => Scaffold(body: Text(text)),
-    );
+  path: path,
+  builder: (_, _) => Scaffold(body: Text(text)),
+);
 
 /// GPS stand-in: resolves instantly to a fixed Kannur address.
 class FakeLocationService implements LocationService {

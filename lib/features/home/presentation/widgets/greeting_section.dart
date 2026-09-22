@@ -6,10 +6,7 @@ import '../../../../l10n/generated/app_localizations.dart';
 class GreetingSection extends StatelessWidget {
   final String userName;
 
-  const GreetingSection({
-    super.key,
-    required this.userName,
-  });
+  const GreetingSection({super.key, required this.userName});
 
   @override
   Widget build(BuildContext context) {
@@ -26,11 +23,11 @@ class GreetingSection extends StatelessWidget {
                 maxLines: 1,
                 overflow: TextOverflow.ellipsis,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      color: isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  color: isDark
+                      ? AppColors.textPrimaryDark
+                      : AppColors.textPrimary,
+                ),
               ),
             ),
             const SizedBox(width: 6),
@@ -49,8 +46,10 @@ class GreetingSection extends StatelessWidget {
           maxLines: 2,
           overflow: TextOverflow.ellipsis,
           style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-              ),
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
+          ),
         ),
       ],
     );

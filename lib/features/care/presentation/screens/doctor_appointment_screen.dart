@@ -73,9 +73,9 @@ class _DoctorAppointmentScreenState
               title: Text(
                 l10n.doctorAppointment,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -115,7 +115,9 @@ class _DoctorAppointmentScreenState
   }
 
   Widget _buildBookingTab(BuildContext context, AppLocalizations l10n) {
-    final specialtyQuery = _selectedSpecialty == 'All' ? null : _selectedSpecialty;
+    final specialtyQuery = _selectedSpecialty == 'All'
+        ? null
+        : _selectedSpecialty;
     final doctorsAsync = ref.watch(doctorsListProvider(specialtyQuery));
 
     return ListView(
@@ -125,9 +127,9 @@ class _DoctorAppointmentScreenState
         Text(
           l10n.selectSpecialty,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         const SizedBox(height: AppSpacing.m),
         SizedBox(
@@ -138,7 +140,8 @@ class _DoctorAppointmentScreenState
             separatorBuilder: (_, _) => const SizedBox(width: AppSpacing.s),
             itemBuilder: (context, index) {
               final spec = _specialties[index];
-              final isSelected = (_selectedSpecialty == null && spec == 'All') ||
+              final isSelected =
+                  (_selectedSpecialty == null && spec == 'All') ||
                   _selectedSpecialty == spec;
               return ChoiceChip(
                 label: Text(spec),
@@ -146,7 +149,9 @@ class _DoctorAppointmentScreenState
                 onSelected: (selected) {
                   KayloFeedback.tap();
                   setState(() {
-                    _selectedSpecialty = spec == 'All' ? null : (selected ? spec : null);
+                    _selectedSpecialty = spec == 'All'
+                        ? null
+                        : (selected ? spec : null);
                     _selectedDoctor = null;
                   });
                 },
@@ -160,9 +165,9 @@ class _DoctorAppointmentScreenState
         Text(
           l10n.availableDoctors,
           style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
+            fontWeight: FontWeight.bold,
+            fontSize: 18,
+          ),
         ),
         const SizedBox(height: AppSpacing.m),
 
@@ -267,14 +272,10 @@ class _DoctorAppointmentScreenState
               }).toList(),
             );
           },
-          loading: () => const ShimmerBox(
-            width: double.infinity,
-            height: 140,
-          ),
+          loading: () => const ShimmerBox(width: double.infinity, height: 140),
           error: (err, stack) => ErrorState(
             message: err.toString(),
-            onRetry: () =>
-                ref.invalidate(doctorsListProvider(specialtyQuery)),
+            onRetry: () => ref.invalidate(doctorsListProvider(specialtyQuery)),
           ),
         ),
 
@@ -284,9 +285,9 @@ class _DoctorAppointmentScreenState
           Text(
             l10n.selectDate,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           Row(
@@ -312,9 +313,9 @@ class _DoctorAppointmentScreenState
           Text(
             l10n.selectTimeSlot,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           Wrap(
@@ -340,9 +341,9 @@ class _DoctorAppointmentScreenState
           Text(
             l10n.consultationType,
             style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 18,
-                ),
+              fontWeight: FontWeight.bold,
+              fontSize: 18,
+            ),
           ),
           const SizedBox(height: AppSpacing.m),
           Row(
@@ -368,7 +369,8 @@ class _DoctorAppointmentScreenState
 
           // Confirm & Book Button
           KayloButton(
-            text: '${l10n.confirmAppointment} (₹${_selectedDoctor!.consultationFee.toInt()})',
+            text:
+                '${l10n.confirmAppointment} (₹${_selectedDoctor!.consultationFee.toInt()})',
             icon: Icons.check_circle_rounded,
             onPressed: () async {
               KayloFeedback.press();
@@ -406,7 +408,8 @@ class _DoctorAppointmentScreenState
   }
 
   Widget _buildDateChip({required String label, required DateTime date}) {
-    final isSelected = _selectedDate.day == date.day &&
+    final isSelected =
+        _selectedDate.day == date.day &&
         _selectedDate.month == date.month &&
         _selectedDate.year == date.year;
 
@@ -437,7 +440,9 @@ class _DoctorAppointmentScreenState
               label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? AppColors.careAccent : AppColors.textPrimary,
+                color: isSelected
+                    ? AppColors.careAccent
+                    : AppColors.textPrimary,
                 fontSize: 14,
               ),
             ),
@@ -484,7 +489,9 @@ class _DoctorAppointmentScreenState
               Icon(
                 icon,
                 size: 32,
-                color: isSelected ? AppColors.careAccent : AppColors.textSecondary,
+                color: isSelected
+                    ? AppColors.careAccent
+                    : AppColors.textSecondary,
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
@@ -493,7 +500,9 @@ class _DoctorAppointmentScreenState
                 style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 15,
-                  color: isSelected ? AppColors.careAccent : AppColors.textPrimary,
+                  color: isSelected
+                      ? AppColors.careAccent
+                      : AppColors.textPrimary,
                 ),
               ),
             ],
@@ -565,9 +574,9 @@ class _DoctorAppointmentScreenState
                     Text(
                       apt.doctorName,
                       style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 19,
-                          ),
+                        fontWeight: FontWeight.bold,
+                        fontSize: 19,
+                      ),
                     ),
                     Text(
                       '${apt.specialty} • ${apt.hospital}',

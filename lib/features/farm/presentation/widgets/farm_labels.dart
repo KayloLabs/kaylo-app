@@ -7,16 +7,16 @@ import '../../domain/farm_service_info.dart';
 
 /// Section accent for a catalog category.
 Color categoryAccent(String category) => switch (category) {
-      'farm' => AppColors.farmAccent,
-      'care' => AppColors.careAccent,
-      _ => AppColors.homeAccent,
-    };
+  'farm' => AppColors.farmAccent,
+  'care' => AppColors.careAccent,
+  _ => AppColors.homeAccent,
+};
 
 String farmUnitLabel(AppLocalizations l10n, FarmUnit unit) => switch (unit) {
-      FarmUnit.tree => l10n.unitTree,
-      FarmUnit.hour => l10n.unitHour,
-      FarmUnit.visit => l10n.unitVisit,
-    };
+  FarmUnit.tree => l10n.unitTree,
+  FarmUnit.hour => l10n.unitHour,
+  FarmUnit.visit => l10n.unitVisit,
+};
 
 String farmUnitCount(AppLocalizations l10n, FarmUnit unit, int count) =>
     switch (unit) {

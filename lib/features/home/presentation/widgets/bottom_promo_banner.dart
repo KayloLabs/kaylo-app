@@ -33,17 +33,21 @@ class BottomPromoBanner extends StatelessWidget {
                 Text(
                   AppLocalizations.of(context)!.promoTitle,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                        color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
-                      ),
+                    fontWeight: FontWeight.bold,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
                   AppLocalizations.of(context)!.promoSubtitle,
                   style: Theme.of(context).textTheme.labelSmall?.copyWith(
-                        color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
-                        height: 1.2,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                    height: 1.2,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.s),
                 KayloButton(

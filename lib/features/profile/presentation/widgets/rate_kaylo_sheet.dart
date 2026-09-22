@@ -72,10 +72,10 @@ class _RateKayloSheetState extends ConsumerState<RateKayloSheet> {
           Text(
             l10n.rateSubtitle,
             style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                  color: isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondary,
-                ),
+              color: isDark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
+            ),
           ),
           const SizedBox(height: AppSpacing.xl),
           Row(
@@ -92,10 +92,7 @@ class _RateKayloSheetState extends ConsumerState<RateKayloSheet> {
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
-          KayloTextField(
-            label: l10n.rateComment,
-            controller: _comment,
-          ),
+          KayloTextField(label: l10n.rateComment, controller: _comment),
           const SizedBox(height: AppSpacing.xl),
           KayloButton(text: l10n.submitRating, onPressed: _submit),
           const SizedBox(height: AppSpacing.s),

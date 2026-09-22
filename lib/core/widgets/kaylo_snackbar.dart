@@ -13,14 +13,24 @@ class KayloSnackbar {
 
   static void showInfo(BuildContext context, String message) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    _showSnackbar(context, message, isDark ? AppColors.textPrimaryDark : AppColors.textPrimary, Icons.info);
+    _showSnackbar(
+      context,
+      message,
+      isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+      Icons.info,
+    );
   }
 
-  static void _showSnackbar(BuildContext context, String message, Color color, IconData icon) {
+  static void _showSnackbar(
+    BuildContext context,
+    String message,
+    Color color,
+    IconData icon,
+  ) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    
+
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    
+
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
         backgroundColor: Colors.transparent,
@@ -42,7 +52,9 @@ class KayloSnackbar {
                   child: Text(
                     message,
                     style: TextStyle(
-                      color: isDark ? AppColors.textPrimaryDark : AppColors.textPrimary,
+                      color: isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary,
                       fontWeight: FontWeight.w500,
                       fontSize: 14,
                     ),

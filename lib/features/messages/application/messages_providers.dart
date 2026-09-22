@@ -18,25 +18,28 @@ final messagesRepositoryProvider = Provider<MessagesRepository>((ref) {
   return SupabaseMessagesRepository(ref.watch(supabaseClientProvider));
 });
 
-final chatThreadsProvider =
-    FutureProvider.autoDispose<List<ChatThread>>((ref) async {
+final chatThreadsProvider = FutureProvider.autoDispose<List<ChatThread>>((
+  ref,
+) async {
   final userId = ref.watch(currentUserIdProvider);
   if (userId == null) return const [];
   return ref.watch(messagesRepositoryProvider).getThreads(userId);
 });
 
-final chatThreadProvider =
-    FutureProvider.autoDispose.family<ChatThread, String>((ref, id) async {
-  final threads = await ref.watch(chatThreadsProvider.future);
-  return threads.firstWhere(
-    (t) => t.id == id,
-    orElse: () =>
-        throw ServerFailure('Conversation not found', code: 'not-found'),
-  );
-});
+final chatThreadProvider = FutureProvider.autoDispose
+    .family<ChatThread, String>((ref, id) async {
+      final threads = await ref.watch(chatThreadsProvider.future);
+      return threads.firstWhere(
+        (t) => t.id == id,
+        orElse: () =>
+            throw ServerFailure('Conversation not found', code: 'not-found'),
+      );
+    });
 
 final chatMessagesProvider = StreamProvider.autoDispose
     .family<List<ChatMessage>, String>((ref, threadId) {
-  final userId = ref.watch(currentUserIdProvider) ?? '';
-  return ref.watch(messagesRepositoryProvider).watchMessages(threadId, userId);
-});
+      final userId = ref.watch(currentUserIdProvider) ?? '';
+      return ref
+          .watch(messagesRepositoryProvider)
+          .watchMessages(threadId, userId);
+    });

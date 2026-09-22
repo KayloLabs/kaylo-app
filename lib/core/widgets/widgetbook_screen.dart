@@ -30,11 +30,14 @@ class WidgetbookScreen extends StatelessWidget {
         title: Row(
           children: [
             ClipRRect(
-              borderRadius: BorderRadius.circular(6), // Slight rounding for the jpeg
+              borderRadius: BorderRadius.circular(
+                6,
+              ), // Slight rounding for the jpeg
               child: Image.asset(
-                'assets_kaylo/kaylo.jpeg', 
-                height: 28, 
-                errorBuilder: (context, error, stackTrace) => const SizedBox.shrink(),
+                'assets_kaylo/kaylo.jpeg',
+                height: 28,
+                errorBuilder: (context, error, stackTrace) =>
+                    const SizedBox.shrink(),
               ),
             ),
             const SizedBox(width: 12),

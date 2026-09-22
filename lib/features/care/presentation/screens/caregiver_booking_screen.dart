@@ -59,9 +59,9 @@ class _CaregiverBookingScreenState
               title: Text(
                 l10n.caregiverBooking,
                 style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                      fontWeight: FontWeight.bold,
-                      fontSize: 22,
-                    ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 22,
+                ),
               ),
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -81,9 +81,9 @@ class _CaregiverBookingScreenState
                   Text(
                     l10n.careType,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   Wrap(
@@ -109,9 +109,9 @@ class _CaregiverBookingScreenState
                   Text(
                     l10n.selectCaregiver,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.m),
 
@@ -128,11 +128,14 @@ class _CaregiverBookingScreenState
                         children: caregivers.map((cg) {
                           final isSelected = _selectedCaregiver?.id == cg.id;
                           return Padding(
-                            padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                            padding: const EdgeInsets.only(
+                              bottom: AppSpacing.m,
+                            ),
                             child: Card(
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.card),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.card,
+                                ),
                                 side: BorderSide(
                                   color: isSelected
                                       ? AppColors.careAccent
@@ -141,8 +144,9 @@ class _CaregiverBookingScreenState
                                 ),
                               ),
                               child: InkWell(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.card),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.card,
+                                ),
                                 onTap: () {
                                   KayloFeedback.tap();
                                   setState(() {
@@ -222,7 +226,7 @@ class _CaregiverBookingScreenState
                                         isSelected
                                             ? Icons.check_circle_rounded
                                             : Icons
-                                                .radio_button_unchecked_rounded,
+                                                  .radio_button_unchecked_rounded,
                                         color: isSelected
                                             ? AppColors.careAccent
                                             : AppColors.textSecondary,
@@ -237,10 +241,8 @@ class _CaregiverBookingScreenState
                         }).toList(),
                       );
                     },
-                    loading: () => const ShimmerBox(
-                      width: double.infinity,
-                      height: 140,
-                    ),
+                    loading: () =>
+                        const ShimmerBox(width: double.infinity, height: 140),
                     error: (err, _) => ErrorState(
                       message: err.toString(),
                       onRetry: () => ref.invalidate(caregiversListProvider),
@@ -252,9 +254,9 @@ class _CaregiverBookingScreenState
                   Text(
                     l10n.selectHours,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   Row(
@@ -275,8 +277,9 @@ class _CaregiverBookingScreenState
                                 width: isSelected ? 2 : 1,
                               ),
                               shape: RoundedRectangleBorder(
-                                borderRadius:
-                                    BorderRadius.circular(AppRadius.button),
+                                borderRadius: BorderRadius.circular(
+                                  AppRadius.button,
+                                ),
                               ),
                               padding: const EdgeInsets.symmetric(
                                 vertical: AppSpacing.m,
@@ -309,21 +312,27 @@ class _CaregiverBookingScreenState
                   Text(
                     l10n.selectDate,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 18,
-                        ),
+                      fontWeight: FontWeight.bold,
+                      fontSize: 18,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.m),
                   Row(
                     children: [
-                      _buildDateChip('Tomorrow',
-                          DateTime.now().add(const Duration(days: 1))),
+                      _buildDateChip(
+                        'Tomorrow',
+                        DateTime.now().add(const Duration(days: 1)),
+                      ),
                       const SizedBox(width: AppSpacing.s),
-                      _buildDateChip('In 2 Days',
-                          DateTime.now().add(const Duration(days: 2))),
+                      _buildDateChip(
+                        'In 2 Days',
+                        DateTime.now().add(const Duration(days: 2)),
+                      ),
                       const SizedBox(width: AppSpacing.s),
-                      _buildDateChip('In 3 Days',
-                          DateTime.now().add(const Duration(days: 3))),
+                      _buildDateChip(
+                        'In 3 Days',
+                        DateTime.now().add(const Duration(days: 3)),
+                      ),
                     ],
                   ),
 
@@ -337,7 +346,8 @@ class _CaregiverBookingScreenState
                     icon: Icons.check_circle_rounded,
                     onPressed: () async {
                       KayloFeedback.press();
-                      final caregiver = _selectedCaregiver ??
+                      final caregiver =
+                          _selectedCaregiver ??
                           const Caregiver(
                             id: 'cg1',
                             name: 'Mary Varghese',
@@ -374,8 +384,9 @@ class _CaregiverBookingScreenState
 
                       // 2. Also register in M4's Bookings repository with category caregiver
                       try {
-                        final bookingsRepo =
-                            ref.read(bookingsRepositoryProvider);
+                        final bookingsRepo = ref.read(
+                          bookingsRepositoryProvider,
+                        );
                         await bookingsRepo.createBooking(
                           Booking(
                             id: record.id,
@@ -415,7 +426,8 @@ class _CaregiverBookingScreenState
   }
 
   Widget _buildDateChip(String label, DateTime date) {
-    final isSelected = _selectedDate.day == date.day &&
+    final isSelected =
+        _selectedDate.day == date.day &&
         _selectedDate.month == date.month &&
         _selectedDate.year == date.year;
 
@@ -446,7 +458,9 @@ class _CaregiverBookingScreenState
               label,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: isSelected ? AppColors.careAccent : AppColors.textPrimary,
+                color: isSelected
+                    ? AppColors.careAccent
+                    : AppColors.textPrimary,
                 fontSize: 14,
               ),
             ),

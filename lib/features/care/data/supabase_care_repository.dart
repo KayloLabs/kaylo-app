@@ -25,8 +25,10 @@ class SupabaseCareRepository implements CareRepository {
         .eq('person_id', personId)
         .maybeSingle();
     if (customer == null) {
-      throw ServerFailure('No customer profile for this account',
-          code: 'no-customer');
+      throw ServerFailure(
+        'No customer profile for this account',
+        code: 'no-customer',
+      );
     }
     final customerId = customer['customer_id'] as String;
 
@@ -66,7 +68,8 @@ class SupabaseCareRepository implements CareRepository {
       final rows = await _client
           .from('medicine_reminders')
           .select(
-              'reminder_id, medicine, dosage, remind_time, medicine_reminder_logs(taken_on)')
+            'reminder_id, medicine, dosage, remind_time, medicine_reminder_logs(taken_on)',
+          )
           .eq('senior_id', seniorId)
           .order('remind_time');
       final today = _today();
@@ -125,10 +128,10 @@ class SupabaseCareRepository implements CareRepository {
   Future<void> setReminderTaken(String reminderId, bool taken) async {
     try {
       if (taken) {
-        await _client.from('medicine_reminder_logs').upsert(
-          {'reminder_id': reminderId, 'taken_on': _today()},
-          onConflict: 'reminder_id,taken_on',
-        );
+        await _client.from('medicine_reminder_logs').upsert({
+          'reminder_id': reminderId,
+          'taken_on': _today(),
+        }, onConflict: 'reminder_id,taken_on');
       } else {
         await _client
             .from('medicine_reminder_logs')
@@ -194,10 +197,12 @@ class SupabaseCareRepository implements CareRepository {
       final seniorId = await _seniorIdFor(userId);
       await _client
           .from('emergency_contacts')
-          .update({'is_primary': false}).eq('senior_id', seniorId);
+          .update({'is_primary': false})
+          .eq('senior_id', seniorId);
       await _client
           .from('emergency_contacts')
-          .update({'is_primary': true}).eq('contact_id', contactId);
+          .update({'is_primary': true})
+          .eq('contact_id', contactId);
     } catch (e) {
       throw mapSupabaseError(e);
     }
@@ -206,7 +211,10 @@ class SupabaseCareRepository implements CareRepository {
   @override
   Future<void> removeContact(String contactId) async {
     try {
-      await _client.from('emergency_contacts').delete().eq('contact_id', contactId);
+      await _client
+          .from('emergency_contacts')
+          .delete()
+          .eq('contact_id', contactId);
     } catch (e) {
       throw mapSupabaseError(e);
     }
@@ -233,7 +241,8 @@ class SupabaseCareRepository implements CareRepository {
     try {
       final seniorId = await _seniorIdFor(userId);
       final contacts = await getContacts(userId);
-      final primary = contacts.where((c) => c.isPrimary).firstOrNull ??
+      final primary =
+          contacts.where((c) => c.isPrimary).firstOrNull ??
           contacts.firstOrNull;
       final row = await _client
           .from('sos_alerts')
@@ -291,20 +300,29 @@ class SupabaseCareRepository implements CareRepository {
           ? await query.eq('specialty', specialty)
           : await query;
       if (rows.isEmpty) return await _fallback.getDoctors(specialty: specialty);
-      return rows.map((r) => Doctor(
-        id: r['id'] as String,
-        name: r['name'] as String,
-        specialty: r['specialty'] as String,
-        hospital: r['hospital'] as String? ?? '',
-        experienceYears: (r['experience_years'] as num?)?.toInt() ?? 10,
-        rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
-        reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 50,
-        consultationFee: ((r['consultation_fee'] as num?) ?? 500).toDouble(),
-        availableDays: List<String>.from(r['available_days'] ?? ['Mon', 'Wed', 'Fri']),
-        timeSlots: List<String>.from(r['time_slots'] ?? ['10:00 AM', '02:00 PM']),
-        imageUrl: r['image_url'] as String? ?? '',
-        bio: r['bio'] as String? ?? '',
-      )).toList();
+      return rows
+          .map(
+            (r) => Doctor(
+              id: r['id'] as String,
+              name: r['name'] as String,
+              specialty: r['specialty'] as String,
+              hospital: r['hospital'] as String? ?? '',
+              experienceYears: (r['experience_years'] as num?)?.toInt() ?? 10,
+              rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
+              reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 50,
+              consultationFee: ((r['consultation_fee'] as num?) ?? 500)
+                  .toDouble(),
+              availableDays: List<String>.from(
+                r['available_days'] ?? ['Mon', 'Wed', 'Fri'],
+              ),
+              timeSlots: List<String>.from(
+                r['time_slots'] ?? ['10:00 AM', '02:00 PM'],
+              ),
+              imageUrl: r['image_url'] as String? ?? '',
+              bio: r['bio'] as String? ?? '',
+            ),
+          )
+          .toList();
     } catch (_) {
       return await _fallback.getDoctors(specialty: specialty);
     }
@@ -313,7 +331,11 @@ class SupabaseCareRepository implements CareRepository {
   @override
   Future<Doctor?> getDoctorById(String doctorId) async {
     try {
-      final row = await _client.from('doctors').select().eq('id', doctorId).maybeSingle();
+      final row = await _client
+          .from('doctors')
+          .select()
+          .eq('id', doctorId)
+          .maybeSingle();
       if (row == null) return await _fallback.getDoctorById(doctorId);
       return Doctor(
         id: row['id'] as String,
@@ -324,8 +346,12 @@ class SupabaseCareRepository implements CareRepository {
         rating: ((row['rating'] as num?) ?? 4.8).toDouble(),
         reviewsCount: (row['reviews_count'] as num?)?.toInt() ?? 50,
         consultationFee: ((row['consultation_fee'] as num?) ?? 500).toDouble(),
-        availableDays: List<String>.from(row['available_days'] ?? ['Mon', 'Wed', 'Fri']),
-        timeSlots: List<String>.from(row['time_slots'] ?? ['10:00 AM', '02:00 PM']),
+        availableDays: List<String>.from(
+          row['available_days'] ?? ['Mon', 'Wed', 'Fri'],
+        ),
+        timeSlots: List<String>.from(
+          row['time_slots'] ?? ['10:00 AM', '02:00 PM'],
+        ),
         imageUrl: row['image_url'] as String? ?? '',
         bio: row['bio'] as String? ?? '',
       );
@@ -337,28 +363,38 @@ class SupabaseCareRepository implements CareRepository {
   @override
   Future<List<DoctorAppointment>> getDoctorAppointments() async {
     try {
-      final rows = await _client.from('doctor_appointments').select().order('created_at', ascending: false);
+      final rows = await _client
+          .from('doctor_appointments')
+          .select()
+          .order('created_at', ascending: false);
       if (rows.isEmpty) return await _fallback.getDoctorAppointments();
-      return rows.map((r) => DoctorAppointment(
-        id: r['id'] as String,
-        doctorId: r['doctor_id'] as String,
-        doctorName: r['doctor_name'] as String,
-        specialty: r['specialty'] as String,
-        hospital: r['hospital'] as String? ?? '',
-        date: DateTime.parse(r['appointment_date'] as String),
-        timeSlot: r['time_slot'] as String,
-        consultationType: r['consultation_type'] as String? ?? 'homeVisit',
-        status: r['status'] as String? ?? 'confirmed',
-        patientName: r['patient_name'] as String? ?? 'Senior',
-        notes: r['notes'] as String?,
-      )).toList();
+      return rows
+          .map(
+            (r) => DoctorAppointment(
+              id: r['id'] as String,
+              doctorId: r['doctor_id'] as String,
+              doctorName: r['doctor_name'] as String,
+              specialty: r['specialty'] as String,
+              hospital: r['hospital'] as String? ?? '',
+              date: DateTime.parse(r['appointment_date'] as String),
+              timeSlot: r['time_slot'] as String,
+              consultationType:
+                  r['consultation_type'] as String? ?? 'homeVisit',
+              status: r['status'] as String? ?? 'confirmed',
+              patientName: r['patient_name'] as String? ?? 'Senior',
+              notes: r['notes'] as String?,
+            ),
+          )
+          .toList();
     } catch (_) {
       return await _fallback.getDoctorAppointments();
     }
   }
 
   @override
-  Future<DoctorAppointment> bookDoctorAppointment(DoctorAppointment appointment) async {
+  Future<DoctorAppointment> bookDoctorAppointment(
+    DoctorAppointment appointment,
+  ) async {
     try {
       await _client.from('doctor_appointments').insert({
         'id': appointment.id,
@@ -384,18 +420,24 @@ class SupabaseCareRepository implements CareRepository {
     try {
       final rows = await _client.from('caregivers').select();
       if (rows.isEmpty) return await _fallback.getCaregivers();
-      return rows.map((r) => Caregiver(
-        id: r['id'] as String,
-        name: r['name'] as String,
-        rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
-        reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 40,
-        hourlyRate: ((r['hourly_rate'] as num?) ?? 250).toDouble(),
-        experienceYears: (r['experience_years'] as num?)?.toInt() ?? 5,
-        isVerified: (r['is_verified'] as bool?) ?? true,
-        imageUrl: r['image_url'] as String? ?? '',
-        specialties: List<String>.from(r['specialties'] ?? ['Elderly Care']),
-        bio: r['bio'] as String? ?? '',
-      )).toList();
+      return rows
+          .map(
+            (r) => Caregiver(
+              id: r['id'] as String,
+              name: r['name'] as String,
+              rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
+              reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 40,
+              hourlyRate: ((r['hourly_rate'] as num?) ?? 250).toDouble(),
+              experienceYears: (r['experience_years'] as num?)?.toInt() ?? 5,
+              isVerified: (r['is_verified'] as bool?) ?? true,
+              imageUrl: r['image_url'] as String? ?? '',
+              specialties: List<String>.from(
+                r['specialties'] ?? ['Elderly Care'],
+              ),
+              bio: r['bio'] as String? ?? '',
+            ),
+          )
+          .toList();
     } catch (_) {
       return await _fallback.getCaregivers();
     }
@@ -412,7 +454,9 @@ class SupabaseCareRepository implements CareRepository {
   }
 
   @override
-  Future<CaregiverBookingRecord> bookCaregiver(CaregiverBookingRecord booking) async {
+  Future<CaregiverBookingRecord> bookCaregiver(
+    CaregiverBookingRecord booking,
+  ) async {
     return _fallback.bookCaregiver(booking);
   }
 }

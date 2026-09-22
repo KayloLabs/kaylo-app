@@ -31,21 +31,24 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     ),
     OnboardingSlideData(
       headline: 'Premium Home Services',
-      subtext: 'Top-rated professionals for plumbing, electrical, and cleaning. Book instantly, stress less.',
+      subtext:
+          'Top-rated professionals for plumbing, electrical, and cleaning. Book instantly, stress less.',
       accentColor: AppColors.homeAccent,
       imagePath: 'assets_kaylo/3d_transparent/hero_kerala_clay.png',
       fallbackIcon: Icons.home_rounded,
     ),
     OnboardingSlideData(
       headline: 'Expert Farm & Garden Care',
-      subtext: 'From skilled coconut climbers to expert gardeners. Nurture your land with trusted hands.',
+      subtext:
+          'From skilled coconut climbers to expert gardeners. Nurture your land with trusted hands.',
       accentColor: AppColors.farmAccent,
       imagePath: 'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
       fallbackIcon: Icons.agriculture_rounded,
     ),
     OnboardingSlideData(
       headline: 'Family Care, Reimagined',
-      subtext: 'Manage services, reminders, and support for your parents remotely. True peace of mind.',
+      subtext:
+          'Manage services, reminders, and support for your parents remotely. True peace of mind.',
       accentColor: AppColors.careAccent,
       imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
       fallbackIcon: Icons.favorite_rounded,
@@ -77,7 +80,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final isHero = _currentIndex == 0;
-    
+
     return Scaffold(
       backgroundColor: AppColors.surfaceTint,
       body: SafeArea(
@@ -85,15 +88,20 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           children: [
             // Top Nav Row
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.l, vertical: AppSpacing.m),
+              padding: const EdgeInsets.symmetric(
+                horizontal: AppSpacing.l,
+                vertical: AppSpacing.m,
+              ),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   // Logo on left only for non-hero slides
-                  isHero ? const SizedBox(width: 80) : const Padding(
-                    padding: EdgeInsets.only(left: AppSpacing.s),
-                    child: KayloLogo(width: 80),
-                  ),
+                  isHero
+                      ? const SizedBox(width: 80)
+                      : const Padding(
+                          padding: EdgeInsets.only(left: AppSpacing.s),
+                          child: KayloLogo(width: 80),
+                        ),
                   TextButton(
                     onPressed: _finishOnboarding,
                     style: TextButton.styleFrom(
@@ -104,7 +112,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 ],
               ),
             ),
-            
+
             // PageView
             Expanded(
               child: PageView.builder(
@@ -121,7 +129,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 },
               ),
             ),
-            
+
             // Bottom Controls
             Padding(
               padding: const EdgeInsets.all(AppSpacing.xl),
@@ -141,7 +149,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   SizedBox(
                     width: double.infinity,
                     child: KayloButton(
-                      text: _currentIndex == _slides.length - 1 ? 'Get Started' : 'Next',
+                      text: _currentIndex == _slides.length - 1
+                          ? 'Get Started'
+                          : 'Next',
                       onPressed: _nextPage,
                     ),
                   ),
@@ -161,12 +171,12 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const Spacer(),
-          
+
           // Centered Kaylo Logo (Swiggy Style)
           const KayloLogo(width: 120),
-          
+
           const SizedBox(height: AppSpacing.xxxl),
-          
+
           // Fanned Cards Graphic (Swiggy Style)
           SizedBox(
             height: 280,
@@ -178,7 +188,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   offset: const Offset(-80, 30),
                   child: Transform.rotate(
                     angle: -0.25,
-                    child: _buildWelcomeCard('assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png', AppColors.farmAccent),
+                    child: _buildWelcomeCard(
+                      'assets_kaylo/3d_transparent/hero_coconut_climber_clay_v2.png',
+                      AppColors.farmAccent,
+                    ),
                   ),
                 ),
                 // Right Card (Care)
@@ -186,7 +199,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   offset: const Offset(80, 30),
                   child: Transform.rotate(
                     angle: 0.25,
-                    child: _buildWelcomeCard('assets_kaylo/3d_transparent/hero_workers_clay.png', AppColors.careAccent),
+                    child: _buildWelcomeCard(
+                      'assets_kaylo/3d_transparent/hero_workers_clay.png',
+                      AppColors.careAccent,
+                    ),
                   ),
                 ),
                 // Center Card (Home)
@@ -194,15 +210,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   offset: const Offset(0, -10),
                   child: Transform.scale(
                     scale: 1.15,
-                    child: _buildWelcomeCard('assets_kaylo/3d_transparent/hero_kerala_clay.png', AppColors.homeAccent),
+                    child: _buildWelcomeCard(
+                      'assets_kaylo/3d_transparent/hero_kerala_clay.png',
+                      AppColors.homeAccent,
+                    ),
                   ),
                 ),
               ],
             ),
           ),
-          
+
           const SizedBox(height: AppSpacing.xxxl),
-          
+
           // Short, Memorable Tagline
           Text(
             'One app for home, farm & care in minutes!',
@@ -214,7 +233,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             ),
             textAlign: TextAlign.center,
           ),
-          
+
           const Spacer(flex: 2),
         ],
       ),
@@ -238,12 +257,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         ],
       ),
       padding: const EdgeInsets.all(AppSpacing.m),
-      child: Center(
-        child: Image.asset(
-          assetPath,
-          fit: BoxFit.contain,
-        ),
-      ),
+      child: Center(child: Image.asset(assetPath, fit: BoxFit.contain)),
     );
   }
 
@@ -276,7 +290,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
               ),
             ),
           ),
-          
+
           // Content
           Expanded(
             flex: 3,
@@ -285,13 +299,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                 const SizedBox(height: AppSpacing.l),
                 Text(
                   slide.headline,
-                  style: Theme.of(context).textTheme.displaySmall?.copyWith(color: AppColors.textPrimary, fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.displaySmall?.copyWith(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                  ),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(height: AppSpacing.m),
                 Text(
                   slide.subtext,
-                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                    color: AppColors.textSecondary,
+                  ),
                   textAlign: TextAlign.center,
                 ),
               ],
@@ -304,7 +323,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   Widget _buildDot(int index, bool isHero) {
     final isActive = _currentIndex == index;
-    
+
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       margin: const EdgeInsets.symmetric(horizontal: 4),

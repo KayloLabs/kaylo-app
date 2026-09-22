@@ -72,8 +72,9 @@ Widget app({required String initialLocation}) {
 }
 
 void main() {
-  testWidgets('hub shows pending doses and marking one taken updates it',
-      (tester) async {
+  testWidgets('hub shows pending doses and marking one taken updates it', (
+    tester,
+  ) async {
     useTallPhone(tester);
     await tester.pumpWidget(app(initialLocation: Routes.careHome));
     await settle(tester);
@@ -107,8 +108,9 @@ void main() {
     expect(find.text('Sugar tablet'), findsOneWidget);
   });
 
-  testWidgets('SOS lists contacts, and holding the button sends an alert',
-      (tester) async {
+  testWidgets('SOS lists contacts, and holding the button sends an alert', (
+    tester,
+  ) async {
     useTallPhone(tester);
     await tester.pumpWidget(app(initialLocation: Routes.careSos));
     await settle(tester);
@@ -119,8 +121,9 @@ void main() {
 
     // The guard ring is ticker-driven, so the hold must be pumped frame
     // by frame rather than skipped in one jump.
-    final gesture =
-        await tester.startGesture(tester.getCenter(find.text('Press and hold')));
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Press and hold')),
+    );
     for (var i = 0; i < 34; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -141,8 +144,9 @@ void main() {
     await tester.pumpWidget(app(initialLocation: Routes.careSos));
     await settle(tester);
 
-    final gesture =
-        await tester.startGesture(tester.getCenter(find.text('Press and hold')));
+    final gesture = await tester.startGesture(
+      tester.getCenter(find.text('Press and hold')),
+    );
     for (var i = 0; i < 8; i++) {
       await tester.pump(const Duration(milliseconds: 100));
     }
@@ -150,8 +154,10 @@ void main() {
     await settle(tester);
 
     expect(find.text('Help is on the way'), findsNothing);
-    expect(find.text('Keep holding for 3 seconds to send an alert'),
-        findsOneWidget);
+    expect(
+      find.text('Keep holding for 3 seconds to send an alert'),
+      findsOneWidget,
+    );
   });
 
   testWidgets('SOS history lists past alerts', (tester) async {

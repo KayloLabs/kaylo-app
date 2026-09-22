@@ -30,19 +30,16 @@ class SearchScreen extends ConsumerStatefulWidget {
   /// Filters to start with (the dashboard's tune button picks them).
   final SearchFilters? initialFilters;
 
-  const SearchScreen({
-    super.key,
-    this.initialQuery = '',
-    this.initialFilters,
-  });
+  const SearchScreen({super.key, this.initialQuery = '', this.initialFilters});
 
   @override
   ConsumerState<SearchScreen> createState() => _SearchScreenState();
 }
 
 class _SearchScreenState extends ConsumerState<SearchScreen> {
-  late final TextEditingController _textController =
-      TextEditingController(text: widget.initialQuery);
+  late final TextEditingController _textController = TextEditingController(
+    text: widget.initialQuery,
+  );
 
   @override
   void initState() {
@@ -68,8 +65,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
 
   void _search(String term) {
     _textController.text = term;
-    _textController.selection =
-        TextSelection.collapsed(offset: term.length);
+    _textController.selection = TextSelection.collapsed(offset: term.length);
     ref.read(searchControllerProvider.notifier).onQueryChanged(term);
   }
 
@@ -152,8 +148,8 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       ),
                     )
                   : searchState.hasQuery
-                      ? _buildResultsView(context, searchState, l10n, isDark)
-                      : _buildEmptyQueryView(context, searchState, l10n),
+                  ? _buildResultsView(context, searchState, l10n, isDark)
+                  : _buildEmptyQueryView(context, searchState, l10n),
             ),
           ],
         ),
@@ -178,10 +174,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
             children: [
               Text(
                 l10n.recentSearches,
-                style: Theme.of(context)
-                    .textTheme
-                    .titleMedium
-                    ?.copyWith(fontWeight: FontWeight.bold),
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
               ),
               TextButton(
                 onPressed: () {
@@ -218,34 +213,34 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         ],
         Text(
           l10n.popularSearches,
-          style: Theme.of(context)
-              .textTheme
-              .titleMedium
-              ?.copyWith(fontWeight: FontWeight.bold),
+          style: Theme.of(
+            context,
+          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
         ),
         const SizedBox(height: AppSpacing.m),
         Wrap(
           spacing: AppSpacing.s,
           runSpacing: AppSpacing.s,
-          children: [
-            'Plumbing',
-            'Electrical',
-            'House Cleaning',
-            'AC Service',
-            'Carpentry',
-            'Caregiver',
-            'Painting',
-          ].map((term) {
-            return ActionChip(
-              avatar: const Icon(Icons.trending_up_rounded, size: 16),
-              label: Text(term),
-              onPressed: () {
-                KayloFeedback.tap();
-                _search(term);
-                notifier.addRecentSearch(term);
-              },
-            );
-          }).toList(),
+          children:
+              [
+                'Plumbing',
+                'Electrical',
+                'House Cleaning',
+                'AC Service',
+                'Carpentry',
+                'Caregiver',
+                'Painting',
+              ].map((term) {
+                return ActionChip(
+                  avatar: const Icon(Icons.trending_up_rounded, size: 16),
+                  label: Text(term),
+                  onPressed: () {
+                    KayloFeedback.tap();
+                    _search(term);
+                    notifier.addRecentSearch(term);
+                  },
+                );
+              }).toList(),
         ),
       ],
     );
@@ -277,8 +272,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
       );
     }
 
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return ListView(
       padding: const EdgeInsets.all(AppSpacing.l),
@@ -286,10 +282,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         if (services.isNotEmpty) ...[
           Text(
             '${l10n.services} (${services.length})',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.m),
           ...services.map((service) {
@@ -366,10 +361,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         if (workers.isNotEmpty) ...[
           Text(
             '${l10n.professionals} (${workers.length})',
-            style: Theme.of(context)
-                .textTheme
-                .titleMedium
-                ?.copyWith(fontWeight: FontWeight.bold),
+            style: Theme.of(
+              context,
+            ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.bold),
           ),
           const SizedBox(height: AppSpacing.m),
           ...workers.map((worker) {
@@ -493,8 +487,8 @@ class _FilterChips extends ConsumerWidget {
                   color: filters.category == category
                       ? Colors.white
                       : (isDark
-                          ? AppColors.textPrimaryDark
-                          : AppColors.textPrimary),
+                            ? AppColors.textPrimaryDark
+                            : AppColors.textPrimary),
                 ),
                 shape: const StadiumBorder(),
                 side: BorderSide(
@@ -502,9 +496,7 @@ class _FilterChips extends ConsumerWidget {
                 ),
                 onSelected: (_) {
                   KayloFeedback.tap();
-                  notifier.setFilters(
-                    (category: category, sort: filters.sort),
-                  );
+                  notifier.setFilters((category: category, sort: filters.sort));
                 },
               ),
             ),
@@ -514,9 +506,10 @@ class _FilterChips extends ConsumerWidget {
               avatar: const Icon(Icons.swap_vert_rounded, size: 18),
               onDeleted: () {
                 KayloFeedback.tap();
-                notifier.setFilters(
-                  (category: filters.category, sort: SearchSort.relevance),
-                );
+                notifier.setFilters((
+                  category: filters.category,
+                  sort: SearchSort.relevance,
+                ));
               },
             ),
         ],

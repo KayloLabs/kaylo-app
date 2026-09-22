@@ -22,13 +22,13 @@ final _routes = <RouteBase>[
 ];
 
 void main() {
-  testWidgets('a booking card opens its details with the worker',
-      (tester) async {
+  testWidgets('a booking card opens its details with the worker', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.bookings,
-      routes: _routes,
-    ));
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.bookings, routes: _routes),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Plumbing'));
@@ -42,10 +42,12 @@ void main() {
 
   testWidgets('rescheduling updates the booking', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.bookingDetails('b3'),
-      routes: _routes,
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.bookingDetails('b3'),
+        routes: _routes,
+      ),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Reschedule'));
@@ -59,13 +61,16 @@ void main() {
     expect(find.text('4:30 PM'), findsOneWidget);
   });
 
-  testWidgets('cancelling asks first, then marks the booking cancelled',
-      (tester) async {
+  testWidgets('cancelling asks first, then marks the booking cancelled', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.bookingDetails('b3'),
-      routes: _routes,
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.bookingDetails('b3'),
+        routes: _routes,
+      ),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Cancel booking'));
@@ -88,10 +93,12 @@ void main() {
 
   testWidgets('a completed booking has no actions', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.bookingDetails('b1'),
-      routes: _routes,
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.bookingDetails('b1'),
+        routes: _routes,
+      ),
+    );
     await settle(tester);
 
     expect(find.text('Completed'), findsWidgets);

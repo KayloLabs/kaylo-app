@@ -16,7 +16,11 @@ class FarmServiceCard extends ConsumerWidget {
   final ServiceItem service;
   final VoidCallback onTap;
 
-  const FarmServiceCard({super.key, required this.service, required this.onTap});
+  const FarmServiceCard({
+    super.key,
+    required this.service,
+    required this.onTap,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -37,7 +41,9 @@ class FarmServiceCard extends ConsumerWidget {
             height: 64,
             padding: const EdgeInsets.all(AppSpacing.s),
             decoration: BoxDecoration(
-              color: AppColors.farmAccent.withValues(alpha: isDark ? 0.18 : 0.12),
+              color: AppColors.farmAccent.withValues(
+                alpha: isDark ? 0.18 : 0.12,
+              ),
               borderRadius: BorderRadius.circular(18),
             ),
             child: Image.asset(service.iconPath, fit: BoxFit.contain),
@@ -49,10 +55,9 @@ class FarmServiceCard extends ConsumerWidget {
               children: [
                 Text(
                   service.name,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.w700),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
@@ -60,10 +65,10 @@ class FarmServiceCard extends ConsumerWidget {
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.s),
                 // Stacked, not side by side: on narrow phones the stars
@@ -86,7 +91,9 @@ class FarmServiceCard extends ConsumerWidget {
           const SizedBox(width: AppSpacing.s),
           Icon(
             Icons.chevron_right_rounded,
-            color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+            color: isDark
+                ? AppColors.textSecondaryDark
+                : AppColors.textSecondary,
           ),
         ],
       ),

@@ -58,7 +58,8 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final tintColor = widget.colorOverlay ??
+    final tintColor =
+        widget.colorOverlay ??
         (isDark
             ? const Color(0xFF16211B).withValues(alpha: 0.15)
             : const Color(0xFFFAF8F3).withValues(alpha: 0.15));
@@ -168,10 +169,7 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
           ),
 
           // Content layer (sizes the Stack)
-          Container(
-            padding: widget.padding,
-            child: widget.child,
-          ),
+          Container(padding: widget.padding, child: widget.child),
         ],
       ),
     );
@@ -238,10 +236,26 @@ ui.ImageFilter _saturationFilter(double s) {
   final sg = (1 - s) * 0.7152;
   final sb = (1 - s) * 0.0722;
   return ColorFilter.matrix(<double>[
-    sr + s, sg, sb, 0, 0,
-    sr, sg + s, sb, 0, 0,
-    sr, sg, sb + s, 0, 0,
-    0, 0, 0, 1, 0,
+    sr + s,
+    sg,
+    sb,
+    0,
+    0,
+    sr,
+    sg + s,
+    sb,
+    0,
+    0,
+    sr,
+    sg,
+    sb + s,
+    0,
+    0,
+    0,
+    0,
+    0,
+    1,
+    0,
   ]);
 }
 
@@ -261,7 +275,9 @@ class _BackdropRefraction extends SingleChildRenderObjectWidget {
 
   @override
   void updateRenderObject(
-      BuildContext context, _RenderBackdropRefraction renderObject) {
+    BuildContext context,
+    _RenderBackdropRefraction renderObject,
+  ) {
     renderObject.scale = scale;
   }
 }
@@ -308,18 +324,21 @@ class _EdgeRingClipper extends CustomClipper<Path> {
 
   @override
   Path getClip(Size size) {
-    final thickness =
-        (size.shortestSide * 0.16).clamp(5.0, 16.0).toDouble();
+    final thickness = (size.shortestSide * 0.16).clamp(5.0, 16.0).toDouble();
     final outer = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        Offset.zero & size,
-        Radius.circular(borderRadius),
-      ));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          Offset.zero & size,
+          Radius.circular(borderRadius),
+        ),
+      );
     final inner = Path()
-      ..addRRect(RRect.fromRectAndRadius(
-        (Offset.zero & size).deflate(thickness),
-        Radius.circular((borderRadius - thickness * 0.75).clamp(0.0, 1000.0)),
-      ));
+      ..addRRect(
+        RRect.fromRectAndRadius(
+          (Offset.zero & size).deflate(thickness),
+          Radius.circular((borderRadius - thickness * 0.75).clamp(0.0, 1000.0)),
+        ),
+      );
     return Path.combine(PathOperation.difference, outer, inner);
   }
 

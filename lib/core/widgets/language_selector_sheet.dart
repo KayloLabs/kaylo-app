@@ -30,21 +30,50 @@ class LanguageSelectorSheet extends ConsumerWidget {
               children: [
                 Text(
                   AppLocalizations.of(context)!.languageSettings,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
                 ),
                 IconButton(
-                  icon: Icon(Icons.close, color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary),
+                  icon: Icon(
+                    Icons.close,
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                   onPressed: () => Navigator.pop(context),
                 ),
               ],
             ),
             const SizedBox(height: AppSpacing.m),
-            _buildLanguageOption(context, ref, 'English', 'en', currentLocale.languageCode),
-            _buildLanguageOption(context, ref, 'മലയാളം (Malayalam)', 'ml', currentLocale.languageCode),
-            _buildLanguageOption(context, ref, 'हिंदी (Hindi)', 'hi', currentLocale.languageCode),
-            _buildLanguageOption(context, ref, 'தமிழ் (Tamil)', 'ta', currentLocale.languageCode),
+            _buildLanguageOption(
+              context,
+              ref,
+              'English',
+              'en',
+              currentLocale.languageCode,
+            ),
+            _buildLanguageOption(
+              context,
+              ref,
+              'മലയാളം (Malayalam)',
+              'ml',
+              currentLocale.languageCode,
+            ),
+            _buildLanguageOption(
+              context,
+              ref,
+              'हिंदी (Hindi)',
+              'hi',
+              currentLocale.languageCode,
+            ),
+            _buildLanguageOption(
+              context,
+              ref,
+              'தமிழ் (Tamil)',
+              'ta',
+              currentLocale.languageCode,
+            ),
             const SizedBox(height: AppSpacing.l),
           ],
         ),
@@ -52,7 +81,13 @@ class LanguageSelectorSheet extends ConsumerWidget {
     );
   }
 
-  Widget _buildLanguageOption(BuildContext context, WidgetRef ref, String title, String code, String currentCode) {
+  Widget _buildLanguageOption(
+    BuildContext context,
+    WidgetRef ref,
+    String title,
+    String code,
+    String currentCode,
+  ) {
     final isSelected = code == currentCode;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
@@ -66,19 +101,17 @@ class LanguageSelectorSheet extends ConsumerWidget {
         title,
         style: TextStyle(
           fontWeight: isSelected ? FontWeight.bold : FontWeight.normal,
-          color: isSelected 
-              ? AppColors.brandPrimary 
+          color: isSelected
+              ? AppColors.brandPrimary
               : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary),
         ),
       ),
       trailing: isSelected
           ? const Icon(Icons.check_circle, color: AppColors.brandPrimary)
           : null,
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(12),
-      ),
-      tileColor: isSelected 
-          ? AppColors.brandPrimary.withValues(alpha: 0.1) 
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+      tileColor: isSelected
+          ? AppColors.brandPrimary.withValues(alpha: 0.1)
           : Colors.transparent,
     );
   }

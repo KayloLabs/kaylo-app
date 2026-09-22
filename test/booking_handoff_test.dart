@@ -29,15 +29,13 @@ final _routes = <RouteBase>[
   ),
   GoRoute(
     path: '/farm/:serviceId/payment',
-    builder: (_, state) => FarmPaymentScreen(
-      draft: state.extra as FarmBookingDraft?,
-    ),
+    builder: (_, state) =>
+        FarmPaymentScreen(draft: state.extra as FarmBookingDraft?),
   ),
   GoRoute(
     path: Routes.bookingConfirmation,
-    builder: (_, state) => BookingConfirmationScreen(
-      receipt: state.extra as BookingReceipt?,
-    ),
+    builder: (_, state) =>
+        BookingConfirmationScreen(receipt: state.extra as BookingReceipt?),
   ),
   stubRoute(Routes.bookings, 'bookings-stub'),
   stubRoute(Routes.dashboard, 'dashboard-stub'),
@@ -51,36 +49,42 @@ Future<Widget> _app(String location, MockBookingsRepository bookings) =>
     );
 
 void main() {
-  testWidgets('book-service opens the schedule for a home service',
-      (tester) async {
+  testWidgets('book-service opens the schedule for a home service', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await _app(
-      '${Routes.bookService}?serviceId=4&workerId=w1',
-      MockBookingsRepository(),
-    ));
+    await tester.pumpWidget(
+      await _app(
+        '${Routes.bookService}?serviceId=4&workerId=w1',
+        MockBookingsRepository(),
+      ),
+    );
     await settle(tester);
 
     expect(find.text('Plumbing'), findsOneWidget);
-    expect(find.text('1 visit'), findsOneWidget, reason: 'a callout is one visit');
+    expect(
+      find.text('1 visit'),
+      findsOneWidget,
+      reason: 'a callout is one visit',
+    );
     expect(find.text('Service address'), findsOneWidget);
     expect(find.text('Farm address'), findsNothing);
     expect(find.textContaining('Handoff to M4'), findsNothing);
   });
 
-  testWidgets('a home booking keeps the chosen worker through to the record',
-      (tester) async {
+  testWidgets('a home booking keeps the chosen worker through to the record', (
+    tester,
+  ) async {
     useTallPhone(tester);
     final bookings = MockBookingsRepository();
     // The mock answers after a real delay, so read it outside fake time.
     final before = (await tester.runAsync(
       () => bookings.getUserBookings('mock_uid_1'),
-    ))!
-        .length;
+    ))!.length;
 
-    await tester.pumpWidget(await _app(
-      '${Routes.bookService}?serviceId=4&workerId=w1',
-      bookings,
-    ));
+    await tester.pumpWidget(
+      await _app('${Routes.bookService}?serviceId=4&workerId=w1', bookings),
+    );
     await settle(tester);
 
     await tester.tap(find.text('Continue to payment'));
@@ -110,14 +114,14 @@ void main() {
     expect(after.last.workerId, 'w1');
   });
 
-  testWidgets('book-service without a worker leaves the assignment open',
-      (tester) async {
+  testWidgets('book-service without a worker leaves the assignment open', (
+    tester,
+  ) async {
     useTallPhone(tester);
     final bookings = MockBookingsRepository();
-    await tester.pumpWidget(await _app(
-      '${Routes.bookService}?serviceId=4',
-      bookings,
-    ));
+    await tester.pumpWidget(
+      await _app('${Routes.bookService}?serviceId=4', bookings),
+    );
     await settle(tester);
 
     await tester.enterText(find.byType(TextFormField), 'Kadavil House');
@@ -131,8 +135,7 @@ void main() {
 
     final created = (await tester.runAsync(
       () => bookings.getUserBookings('mock_uid_1'),
-    ))!
-        .last;
+    ))!.last;
     expect(created.serviceId, '4');
     expect(created.workerId, isNull);
   });

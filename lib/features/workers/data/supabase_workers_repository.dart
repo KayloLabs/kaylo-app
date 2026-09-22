@@ -67,7 +67,9 @@ class SupabaseWorkersRepository implements WorkersRepository {
     try {
       final rows = await _client
           .from('reviews')
-          .select('review_id, worker_id, rating, review, created_at, customers(persons(full_name))')
+          .select(
+            'review_id, worker_id, rating, review, created_at, customers(persons(full_name))',
+          )
           .eq('worker_id', workerId)
           .order('created_at', ascending: false);
       return rows.map((r) {
@@ -85,7 +87,9 @@ class SupabaseWorkersRepository implements WorkersRepository {
           customerName: customerName,
           rating: ((r['rating'] as num?) ?? 5).toDouble(),
           comment: (r['review'] as String?) ?? '',
-          createdAt: DateTime.tryParse(r['created_at'] as String? ?? '') ?? DateTime.now(),
+          createdAt:
+              DateTime.tryParse(r['created_at'] as String? ?? '') ??
+              DateTime.now(),
         );
       }).toList();
     } catch (e) {

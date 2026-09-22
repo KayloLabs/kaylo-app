@@ -131,18 +131,24 @@ class _NotificationTile extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final (icon, color) = switch (notification.type) {
-      NotificationType.booking =>
-        (Icons.event_available_rounded, AppColors.brandPrimary),
-      NotificationType.message =>
-        (Icons.chat_bubble_rounded, AppColors.homeAccent),
+      NotificationType.booking => (
+        Icons.event_available_rounded,
+        AppColors.brandPrimary,
+      ),
+      NotificationType.message => (
+        Icons.chat_bubble_rounded,
+        AppColors.homeAccent,
+      ),
       NotificationType.care => (Icons.favorite_rounded, AppColors.careAccent),
-      NotificationType.promo =>
-        (Icons.local_offer_rounded, AppColors.secondaryAccent),
-      NotificationType.system =>
-        (Icons.info_rounded, AppColors.textSecondary),
+      NotificationType.promo => (
+        Icons.local_offer_rounded,
+        AppColors.secondaryAccent,
+      ),
+      NotificationType.system => (Icons.info_rounded, AppColors.textSecondary),
     };
 
     return KayloCard(
@@ -184,7 +190,8 @@ class _NotificationTile extends ConsumerWidget {
                     Expanded(
                       child: Text(
                         notification.title,
-                        style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(
                               fontWeight: notification.isRead
                                   ? FontWeight.w600
                                   : FontWeight.w800,
@@ -208,18 +215,17 @@ class _NotificationTile extends ConsumerWidget {
                   notification.message,
                   maxLines: 2,
                   overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: secondary, height: 1.35),
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: secondary,
+                    height: 1.35,
+                  ),
                 ),
                 const SizedBox(height: AppSpacing.xs),
                 Text(
                   relativeTime(l10n, notification.createdAt),
-                  style: Theme.of(context)
-                      .textTheme
-                      .labelSmall
-                      ?.copyWith(color: secondary),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.labelSmall?.copyWith(color: secondary),
                 ),
               ],
             ),

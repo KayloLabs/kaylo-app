@@ -66,31 +66,36 @@ class _AlertCard extends StatelessWidget {
     final loc = MaterialLocalizations.of(context);
     final (label, variant) = switch (alert.status) {
       SosStatus.open => (l10n.sosStatusOpen, KayloChipVariant.error),
-      SosStatus.acknowledged =>
-        (l10n.sosStatusAcknowledged, KayloChipVariant.warning),
+      SosStatus.acknowledged => (
+        l10n.sosStatusAcknowledged,
+        KayloChipVariant.warning,
+      ),
       SosStatus.resolved => (l10n.sosStatusResolved, KayloChipVariant.success),
     };
 
     Widget line(IconData icon, String text, {bool emphasis = false}) => Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.s),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Icon(icon,
-                  size: 22, color: emphasis ? AppColors.error : AppColors.textSecondary),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                child: Text(
-                  text,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: emphasis ? FontWeight.w700 : null,
-                        color: emphasis ? AppColors.error : null,
-                      ),
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.only(top: AppSpacing.s),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(
+            icon,
+            size: 22,
+            color: emphasis ? AppColors.error : AppColors.textSecondary,
           ),
-        );
+          const SizedBox(width: AppSpacing.m),
+          Expanded(
+            child: Text(
+              text,
+              style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                fontWeight: emphasis ? FontWeight.w700 : null,
+                color: emphasis ? AppColors.error : null,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
 
     return Card(
       child: Padding(
@@ -110,7 +115,10 @@ class _AlertCard extends StatelessWidget {
                 KayloChip(label: label, variant: variant),
               ],
             ),
-            line(Icons.group_rounded, l10n.alertedCount(alert.notifiedContacts)),
+            line(
+              Icons.group_rounded,
+              l10n.alertedCount(alert.notifiedContacts),
+            ),
             if (alert.primaryContactName != null)
               line(
                 Icons.call_rounded,

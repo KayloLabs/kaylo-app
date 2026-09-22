@@ -41,16 +41,18 @@ class SupabaseMessagesRepository implements MessagesRepository {
         final person = worker?['persons'] as Map<String, dynamic>?;
         final service = row['services'] as Map<String, dynamic>?;
 
-        threads.add(ChatThread(
-          id: roomId,
-          workerId: (row['worker_id'] as String?) ?? '',
-          workerName: (person?['full_name'] as String?) ?? 'Worker',
-          workerRole: (service?['service_name'] as String?) ?? '',
-          lastMessage: last?['message'] as String?,
-          lastMessageAt: last == null
-              ? null
-              : DateTime.parse(last['sent_at'] as String).toLocal(),
-        ));
+        threads.add(
+          ChatThread(
+            id: roomId,
+            workerId: (row['worker_id'] as String?) ?? '',
+            workerName: (person?['full_name'] as String?) ?? 'Worker',
+            workerRole: (service?['service_name'] as String?) ?? '',
+            lastMessage: last?['message'] as String?,
+            lastMessageAt: last == null
+                ? null
+                : DateTime.parse(last['sent_at'] as String).toLocal(),
+          ),
+        );
       }
       threads.sort((a, b) {
         final at = a.lastMessageAt, bt = b.lastMessageAt;
@@ -80,17 +82,19 @@ class SupabaseMessagesRepository implements MessagesRepository {
         .stream(primaryKey: ['message_id'])
         .eq('room_id', threadId)
         .order('sent_at', ascending: true)
-        .map((rows) => [
-              for (final row in rows)
-                ChatMessage(
-                  id: row['message_id'] as String,
-                  threadId: threadId,
-                  senderId: row['sender_id'] as String,
-                  text: row['message'] as String,
-                  sentAt: DateTime.parse(row['sent_at'] as String).toLocal(),
-                  isMine: row['sender_id'] == userId,
-                ),
-            ]);
+        .map(
+          (rows) => [
+            for (final row in rows)
+              ChatMessage(
+                id: row['message_id'] as String,
+                threadId: threadId,
+                senderId: row['sender_id'] as String,
+                text: row['message'] as String,
+                sentAt: DateTime.parse(row['sent_at'] as String).toLocal(),
+                isMine: row['sender_id'] == userId,
+              ),
+          ],
+        );
   }
 
   @override

@@ -4,7 +4,7 @@ abstract class PaymentService {
     required String orderId,
     required String currency,
   });
-  
+
   Future<bool> processPayment();
 }
 

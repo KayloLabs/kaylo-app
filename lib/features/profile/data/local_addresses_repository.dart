@@ -31,8 +31,8 @@ class LocalAddressesRepository implements AddressesRepository {
   }
 
   Future<void> _save(List<SavedAddress> addresses) => _storage.saveAddresses(
-        jsonEncode([for (final a in addresses) a.toJson()]),
-      );
+    jsonEncode([for (final a in addresses) a.toJson()]),
+  );
 
   @override
   Future<List<SavedAddress>> getAddresses(String userId) => _load();

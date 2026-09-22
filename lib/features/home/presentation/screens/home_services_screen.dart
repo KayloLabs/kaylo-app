@@ -28,9 +28,9 @@ class HomeServicesScreen extends ConsumerWidget {
       appBar: AppBar(
         title: Text(
           l10n.homeServices,
-          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                fontWeight: FontWeight.bold,
-              ),
+          style: Theme.of(
+            context,
+          ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
         ),
         leading: IconButton(
           icon: const Icon(Icons.arrow_back_ios_new_rounded),
@@ -78,10 +78,8 @@ class HomeServicesScreen extends ConsumerWidget {
             itemCount: 6,
             separatorBuilder: (context, index) =>
                 const SizedBox(height: AppSpacing.m),
-            itemBuilder: (context, index) => const ShimmerBox(
-              width: double.infinity,
-              height: 84,
-            ),
+            itemBuilder: (context, index) =>
+                const ShimmerBox(width: double.infinity, height: 84),
           ),
           error: (err, stack) => ErrorState(
             message: err.toString(),
@@ -106,7 +104,10 @@ class _HomeServiceRow extends StatelessWidget {
     return KayloCard(
       onTap: () {
         KayloFeedback.tap();
-        context.push('${Routes.serviceDetails}?id=${service.id}', extra: service);
+        context.push(
+          '${Routes.serviceDetails}?id=${service.id}',
+          extra: service,
+        );
       },
       padding: const EdgeInsets.all(AppSpacing.m),
       child: Row(
@@ -119,7 +120,8 @@ class _HomeServiceRow extends StatelessWidget {
               borderRadius: BorderRadius.circular(AppRadius.button),
             ),
             child: Center(
-              child: service.iconPath.isNotEmpty &&
+              child:
+                  service.iconPath.isNotEmpty &&
                       service.iconPath.startsWith('assets')
                   ? Image.asset(
                       service.iconPath,
@@ -147,11 +149,11 @@ class _HomeServiceRow extends StatelessWidget {
                 Text(
                   service.name,
                   style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                        color: isDark
-                            ? AppColors.textPrimaryDark
-                            : AppColors.textPrimary,
-                      ),
+                    fontWeight: FontWeight.w600,
+                    color: isDark
+                        ? AppColors.textPrimaryDark
+                        : AppColors.textPrimary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(
@@ -161,10 +163,10 @@ class _HomeServiceRow extends StatelessWidget {
                   maxLines: 1,
                   overflow: TextOverflow.ellipsis,
                   style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
                 ),
                 const SizedBox(height: 4),
                 Text(

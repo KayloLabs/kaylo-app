@@ -19,7 +19,8 @@ class MockCareRepository implements CareRepository {
       availableDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       timeSlots: ['09:00 AM', '10:30 AM', '02:00 PM', '04:30 PM'],
       imageUrl: '',
-      bio: 'Senior consultant in family medicine with over 14 years of experience specializing in geriatric and adult wellness care.',
+      bio:
+          'Senior consultant in family medicine with over 14 years of experience specializing in geriatric and adult wellness care.',
     ),
     Doctor(
       id: 'doc2',
@@ -33,7 +34,8 @@ class MockCareRepository implements CareRepository {
       availableDays: ['Mon', 'Wed', 'Fri'],
       timeSlots: ['10:00 AM', '11:30 AM', '03:00 PM', '05:00 PM'],
       imageUrl: '',
-      bio: 'Interventional cardiologist focused on preventative heart care, hypertension management, and senior cardiac health.',
+      bio:
+          'Interventional cardiologist focused on preventative heart care, hypertension management, and senior cardiac health.',
     ),
     Doctor(
       id: 'doc3',
@@ -47,7 +49,8 @@ class MockCareRepository implements CareRepository {
       availableDays: ['Tue', 'Thu', 'Sat'],
       timeSlots: ['09:30 AM', '11:00 AM', '02:30 PM', '04:00 PM'],
       imageUrl: '',
-      bio: 'Orthopedic specialist treating joint pain, arthritis, mobility challenges, and post-fall recovery.',
+      bio:
+          'Orthopedic specialist treating joint pain, arthritis, mobility challenges, and post-fall recovery.',
     ),
     Doctor(
       id: 'doc4',
@@ -61,7 +64,8 @@ class MockCareRepository implements CareRepository {
       availableDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       timeSlots: ['09:00 AM', '11:00 AM', '03:00 PM'],
       imageUrl: '',
-      bio: 'Dedicated geriatrician focused on holistic elder care, polypharmacy management, and cognitive wellness.',
+      bio:
+          'Dedicated geriatrician focused on holistic elder care, polypharmacy management, and cognitive wellness.',
     ),
     Doctor(
       id: 'doc5',
@@ -75,7 +79,8 @@ class MockCareRepository implements CareRepository {
       availableDays: ['Mon', 'Tue', 'Thu', 'Fri', 'Sat'],
       timeSlots: ['10:00 AM', '02:00 PM', '04:00 PM'],
       imageUrl: '',
-      bio: 'Ayurvedic physician offering authentic therapeutic management for chronic ailments, joint stiffness, and rejuvenation.',
+      bio:
+          'Ayurvedic physician offering authentic therapeutic management for chronic ailments, joint stiffness, and rejuvenation.',
     ),
   ];
 
@@ -90,7 +95,8 @@ class MockCareRepository implements CareRepository {
       isVerified: true,
       imageUrl: '',
       specialties: ['Elderly Care', 'Mobility Assistance', 'Companionship'],
-      bio: 'Certified senior caregiver with 7 years of hospital and in-home care experience. Patient, warm, and attentive.',
+      bio:
+          'Certified senior caregiver with 7 years of hospital and in-home care experience. Patient, warm, and attentive.',
     ),
     Caregiver(
       id: 'cg2',
@@ -101,8 +107,13 @@ class MockCareRepository implements CareRepository {
       experienceYears: 5,
       isVerified: true,
       imageUrl: '',
-      specialties: ['Elderly Care', 'Post-operative Care', 'Medication Support'],
-      bio: 'Experienced in post-operative care, vital sign monitoring, and daily assistance for elderly individuals.',
+      specialties: [
+        'Elderly Care',
+        'Post-operative Care',
+        'Medication Support',
+      ],
+      bio:
+          'Experienced in post-operative care, vital sign monitoring, and daily assistance for elderly individuals.',
     ),
     Caregiver(
       id: 'cg3',
@@ -114,7 +125,8 @@ class MockCareRepository implements CareRepository {
       isVerified: true,
       imageUrl: '',
       specialties: ['Companionship', 'Mobility Assistance', 'Meal Prep'],
-      bio: 'Compassionate companion caregiver fluent in Malayalam and English. Expert in gentle physical assistance.',
+      bio:
+          'Compassionate companion caregiver fluent in Malayalam and English. Expert in gentle physical assistance.',
     ),
   ];
 
@@ -227,7 +239,9 @@ class MockCareRepository implements CareRepository {
   }
 
   @override
-  Future<DoctorAppointment> bookDoctorAppointment(DoctorAppointment appointment) async {
+  Future<DoctorAppointment> bookDoctorAppointment(
+    DoctorAppointment appointment,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 400));
     _appointments.insert(0, appointment);
     return appointment;
@@ -252,7 +266,9 @@ class MockCareRepository implements CareRepository {
   }
 
   @override
-  Future<CaregiverBookingRecord> bookCaregiver(CaregiverBookingRecord booking) async {
+  Future<CaregiverBookingRecord> bookCaregiver(
+    CaregiverBookingRecord booking,
+  ) async {
     await Future.delayed(const Duration(milliseconds: 400));
     _caregiverBookings.insert(0, booking);
     return booking;
@@ -323,7 +339,9 @@ class MockCareRepository implements CareRepository {
   Future<void> setPrimaryContact(String userId, String contactId) async {
     await Future.delayed(_latency);
     for (var i = 0; i < _contacts.length; i++) {
-      _contacts[i] = _contacts[i].copyWith(isPrimary: _contacts[i].id == contactId);
+      _contacts[i] = _contacts[i].copyWith(
+        isPrimary: _contacts[i].id == contactId,
+      );
     }
   }
 
@@ -345,7 +363,8 @@ class MockCareRepository implements CareRepository {
   @override
   Future<SosAlert> triggerSos(String userId, {String? location}) async {
     await Future.delayed(_latency);
-    final primary = _contacts.where((c) => c.isPrimary).firstOrNull ??
+    final primary =
+        _contacts.where((c) => c.isPrimary).firstOrNull ??
         _contacts.firstOrNull;
     final alert = SosAlert(
       id: 'sos-${DateTime.now().millisecondsSinceEpoch}',

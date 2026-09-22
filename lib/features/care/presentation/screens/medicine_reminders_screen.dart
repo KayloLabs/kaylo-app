@@ -25,15 +25,16 @@ class MedicineRemindersScreen extends ConsumerWidget {
     return CareScaffold(
       title: l10n.medicineReminders,
       children: [
-        Text(l10n.todaysMedicines,
-            style: Theme.of(context).textTheme.displaySmall),
+        Text(
+          l10n.todaysMedicines,
+          style: Theme.of(context).textTheme.displaySmall,
+        ),
         const SizedBox(height: AppSpacing.s),
         Text(
           l10n.medicinesSubtitle,
-          style: Theme.of(context)
-              .textTheme
-              .bodyLarge
-              ?.copyWith(color: AppColors.textSecondary),
+          style: Theme.of(
+            context,
+          ).textTheme.bodyLarge?.copyWith(color: AppColors.textSecondary),
         ),
         const SizedBox(height: AppSpacing.xl),
         ...reminders.when(
@@ -41,7 +42,8 @@ class MedicineRemindersScreen extends ConsumerWidget {
             final pending = list.where((r) => !r.isTakenToday).toList();
             final now = TimeOfDay.now();
             final nowMinutes = now.hour * 60 + now.minute;
-            final next = pending
+            final next =
+                pending
                     .where((r) => r.minutesOfDay >= nowMinutes)
                     .firstOrNull ??
                 pending.firstOrNull;
@@ -133,10 +135,9 @@ class _SummaryBanner extends StatelessWidget {
                         TimeOfDay(hour: next!.hour, minute: next!.minute),
                       ),
                     ),
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.textSecondary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ],
@@ -182,10 +183,14 @@ class _ReminderCard extends ConsumerWidget {
                   if (!context.mounted) return;
                   if (taken) {
                     KayloSnackbar.showInfo(
-                        context, l10n.markedPending(reminder.name));
+                      context,
+                      l10n.markedPending(reminder.name),
+                    );
                   } else {
                     KayloSnackbar.showSuccess(
-                        context, l10n.markedTaken(reminder.name));
+                      context,
+                      l10n.markedTaken(reminder.name),
+                    );
                   }
                 },
                 child: SizedBox(
@@ -209,17 +214,16 @@ class _ReminderCard extends ConsumerWidget {
                   Text(
                     reminder.name,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                          decoration: taken ? TextDecoration.lineThrough : null,
-                          color: taken ? AppColors.textSecondary : null,
-                        ),
+                      decoration: taken ? TextDecoration.lineThrough : null,
+                      color: taken ? AppColors.textSecondary : null,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.xs),
                   Text(
                     reminder.dosage,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodyMedium
-                        ?.copyWith(color: AppColors.textSecondary),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.s),
                   Wrap(
@@ -274,10 +278,10 @@ class _Pill extends StatelessWidget {
               text,
               maxLines: 1,
               overflow: TextOverflow.ellipsis,
-              style: Theme.of(context)
-                  .textTheme
-                  .labelSmall
-                  ?.copyWith(color: color, fontWeight: FontWeight.w700),
+              style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                color: color,
+                fontWeight: FontWeight.w700,
+              ),
             ),
           ),
         ],
@@ -315,7 +319,9 @@ class _AddReminderSheetState extends ConsumerState<_AddReminderSheet> {
     }
     setState(() => _saving = true);
     try {
-      await ref.read(careControllerProvider).addReminder(
+      await ref
+          .read(careControllerProvider)
+          .addReminder(
             name: name,
             dosage: _dosage.text.trim(),
             hour: _time.hour,
@@ -346,8 +352,7 @@ class _AddReminderSheetState extends ConsumerState<_AddReminderSheet> {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(l10n.addReminder,
-              style: Theme.of(context).textTheme.titleLarge),
+          Text(l10n.addReminder, style: Theme.of(context).textTheme.titleLarge),
           const SizedBox(height: AppSpacing.l),
           KayloTextField(
             label: l10n.medicineName,
@@ -363,10 +368,9 @@ class _AddReminderSheetState extends ConsumerState<_AddReminderSheet> {
           const SizedBox(height: AppSpacing.m),
           Text(
             l10n.reminderTime,
-            style: Theme.of(context)
-                .textTheme
-                .bodySmall
-                ?.copyWith(color: AppColors.textSecondary),
+            style: Theme.of(
+              context,
+            ).textTheme.bodySmall?.copyWith(color: AppColors.textSecondary),
           ),
           const SizedBox(height: AppSpacing.s),
           Card(
@@ -383,7 +387,10 @@ class _AddReminderSheetState extends ConsumerState<_AddReminderSheet> {
                 padding: const EdgeInsets.all(AppSpacing.l),
                 child: Row(
                   children: [
-                    const Icon(Icons.alarm_rounded, color: AppColors.careAccent),
+                    const Icon(
+                      Icons.alarm_rounded,
+                      color: AppColors.careAccent,
+                    ),
                     const SizedBox(width: AppSpacing.m),
                     Expanded(
                       child: Text(

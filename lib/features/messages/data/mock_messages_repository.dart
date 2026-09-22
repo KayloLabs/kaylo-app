@@ -32,16 +32,37 @@ class MockMessagesRepository implements MessagesRepository {
 
   late final Map<String, List<ChatMessage>> _messages = {
     't1': [
-      _msg('t1', 'w1', 'Namaskaram! I saw your booking for 10 coconut trees on Wednesday.',
-          minutesAgo: 25, isMine: false),
-      _msg('t1', _me, 'Namaskaram Raju, please bring extra nets for the bunches.',
-          minutesAgo: 18, isMine: true, isRead: true),
-      _msg('t1', 'w1', 'Sure sir, I will bring full safety rigging and ground nets by 8 AM.',
-          minutesAgo: 5, isMine: false),
+      _msg(
+        't1',
+        'w1',
+        'Namaskaram! I saw your booking for 10 coconut trees on Wednesday.',
+        minutesAgo: 25,
+        isMine: false,
+      ),
+      _msg(
+        't1',
+        _me,
+        'Namaskaram Raju, please bring extra nets for the bunches.',
+        minutesAgo: 18,
+        isMine: true,
+        isRead: true,
+      ),
+      _msg(
+        't1',
+        'w1',
+        'Sure sir, I will bring full safety rigging and ground nets by 8 AM.',
+        minutesAgo: 5,
+        isMine: false,
+      ),
     ],
     't2': [
-      _msg('t2', 'w2', 'The brush cutter is serviced. Ready for tomorrow morning.',
-          minutesAgo: 120, isMine: false),
+      _msg(
+        't2',
+        'w2',
+        'The brush cutter is serviced. Ready for tomorrow morning.',
+        minutesAgo: 120,
+        isMine: false,
+      ),
     ],
   };
 
@@ -94,20 +115,19 @@ class MockMessagesRepository implements MessagesRepository {
         else
           thread,
     ]..sort((a, b) {
-        final at = a.lastMessageAt, bt = b.lastMessageAt;
-        if (at == null || bt == null) return 0;
-        return bt.compareTo(at);
-      });
+      final at = a.lastMessageAt, bt = b.lastMessageAt;
+      if (at == null || bt == null) return 0;
+      return bt.compareTo(at);
+    });
   }
 
   @override
   Stream<List<ChatMessage>> watchMessages(String threadId, String userId) {
     return Stream.multi((listener) {
       listener.add(List.unmodifiable(_messages[threadId] ?? []));
-      final subscription = _controller(threadId).stream.listen(
-            listener.add,
-            onError: listener.addError,
-          );
+      final subscription = _controller(
+        threadId,
+      ).stream.listen(listener.add, onError: listener.addError);
       listener.onCancel = subscription.cancel;
     });
   }
@@ -115,33 +135,39 @@ class MockMessagesRepository implements MessagesRepository {
   @override
   Future<void> sendMessage(String threadId, String userId, String text) async {
     final list = _messages.putIfAbsent(threadId, () => []);
-    list.add(ChatMessage(
-      id: 'm-${DateTime.now().microsecondsSinceEpoch}',
-      threadId: threadId,
-      senderId: _me,
-      text: text,
-      sentAt: DateTime.now(),
-      isMine: true,
-    ));
+    list.add(
+      ChatMessage(
+        id: 'm-${DateTime.now().microsecondsSinceEpoch}',
+        threadId: threadId,
+        senderId: _me,
+        text: text,
+        sentAt: DateTime.now(),
+        isMine: true,
+      ),
+    );
     _emit(threadId);
 
     final thread = _threads.firstWhere((t) => t.id == threadId);
     final reply = _replies[_sent++ % _replies.length];
-    _timers.add(Timer(replyDelay, () {
-      // Mark everything of mine as read once the worker replies.
-      for (var i = 0; i < list.length; i++) {
-        if (list[i].isMine) list[i] = list[i].copyWith(isRead: true);
-      }
-      list.add(ChatMessage(
-        id: 'r-${DateTime.now().microsecondsSinceEpoch}',
-        threadId: threadId,
-        senderId: thread.workerId,
-        text: reply,
-        sentAt: DateTime.now(),
-        isMine: false,
-      ));
-      _emit(threadId);
-    }));
+    _timers.add(
+      Timer(replyDelay, () {
+        // Mark everything of mine as read once the worker replies.
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].isMine) list[i] = list[i].copyWith(isRead: true);
+        }
+        list.add(
+          ChatMessage(
+            id: 'r-${DateTime.now().microsecondsSinceEpoch}',
+            threadId: threadId,
+            senderId: thread.workerId,
+            text: reply,
+            sentAt: DateTime.now(),
+            isMine: false,
+          ),
+        );
+        _emit(threadId);
+      }),
+    );
   }
 
   @override

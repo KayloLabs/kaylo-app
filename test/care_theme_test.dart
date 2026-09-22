@@ -15,8 +15,7 @@ void main() {
     });
 
     test('buttons meet the 56x56 tap target minimum', () {
-      final size =
-          theme.elevatedButtonTheme.style!.minimumSize!.resolve({})!;
+      final size = theme.elevatedButtonTheme.style!.minimumSize!.resolve({})!;
       expect(size.width, greaterThanOrEqualTo(56));
       expect(size.height, greaterThanOrEqualTo(56));
       final textSize = theme.textButtonTheme.style!.minimumSize!.resolve({})!;

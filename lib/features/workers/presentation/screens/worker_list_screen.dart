@@ -45,9 +45,9 @@ class WorkerListScreen extends ConsumerWidget {
           children: [
             Text(
               serviceName ?? l10n.availableWorkers,
-              style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                    fontWeight: FontWeight.bold,
-                  ),
+              style: Theme.of(
+                context,
+              ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.bold),
             ),
             Row(
               children: [
@@ -144,8 +144,8 @@ class WorkerListScreen extends ConsumerWidget {
                         color: filterSortState.filter.hasActiveFilters
                             ? AppColors.brandPrimary
                             : (isDark
-                                ? Colors.grey.shade700
-                                : Colors.grey.shade300),
+                                  ? Colors.grey.shade700
+                                  : Colors.grey.shade300),
                       ),
                     ),
                     onPressed: () {
@@ -169,8 +169,12 @@ class WorkerListScreen extends ConsumerWidget {
                       _buildActiveFilterChip(
                         label: '★ ${filterSortState.filter.minRating}+',
                         onDeleted: () {
-                          ref.read(workerFilterSortProvider.notifier).updateFilter(
-                                filterSortState.filter.copyWith(minRating: null),
+                          ref
+                              .read(workerFilterSortProvider.notifier)
+                              .updateFilter(
+                                filterSortState.filter.copyWith(
+                                  minRating: null,
+                                ),
                               );
                         },
                       ),
@@ -178,7 +182,9 @@ class WorkerListScreen extends ConsumerWidget {
                       _buildActiveFilterChip(
                         label: '≤ ₹${filterSortState.filter.maxPrice!.toInt()}',
                         onDeleted: () {
-                          ref.read(workerFilterSortProvider.notifier).updateFilter(
+                          ref
+                              .read(workerFilterSortProvider.notifier)
+                              .updateFilter(
                                 filterSortState.filter.copyWith(maxPrice: null),
                               );
                         },
@@ -187,8 +193,12 @@ class WorkerListScreen extends ConsumerWidget {
                       _buildActiveFilterChip(
                         label: l10n.availableToday,
                         onDeleted: () {
-                          ref.read(workerFilterSortProvider.notifier).updateFilter(
-                                filterSortState.filter.copyWith(availableToday: false),
+                          ref
+                              .read(workerFilterSortProvider.notifier)
+                              .updateFilter(
+                                filterSortState.filter.copyWith(
+                                  availableToday: false,
+                                ),
                               );
                         },
                       ),
@@ -196,17 +206,26 @@ class WorkerListScreen extends ConsumerWidget {
                       _buildActiveFilterChip(
                         label: l10n.verifiedOnly,
                         onDeleted: () {
-                          ref.read(workerFilterSortProvider.notifier).updateFilter(
-                                filterSortState.filter.copyWith(verifiedOnly: false),
+                          ref
+                              .read(workerFilterSortProvider.notifier)
+                              .updateFilter(
+                                filterSortState.filter.copyWith(
+                                  verifiedOnly: false,
+                                ),
                               );
                         },
                       ),
                     TextButton(
                       onPressed: () {
                         KayloFeedback.tap();
-                        ref.read(workerFilterSortProvider.notifier).resetFilter();
+                        ref
+                            .read(workerFilterSortProvider.notifier)
+                            .resetFilter();
                       },
-                      child: Text(l10n.reset, style: const TextStyle(fontSize: 12)),
+                      child: Text(
+                        l10n.reset,
+                        style: const TextStyle(fontSize: 12),
+                      ),
                     ),
                   ],
                 ),
@@ -264,10 +283,8 @@ class WorkerListScreen extends ConsumerWidget {
                   itemCount: 4,
                   separatorBuilder: (context, index) =>
                       const SizedBox(height: AppSpacing.m),
-                  itemBuilder: (context, index) => const ShimmerBox(
-                    width: double.infinity,
-                    height: 120,
-                  ),
+                  itemBuilder: (context, index) =>
+                      const ShimmerBox(width: double.infinity, height: 120),
                 ),
                 error: (err, stack) => ErrorState(
                   message: err.toString(),
@@ -337,10 +354,9 @@ class WorkerListScreen extends ConsumerWidget {
                 padding: const EdgeInsets.all(AppSpacing.l),
                 child: Text(
                   l10n.sortBy,
-                  style: Theme.of(context)
-                      .textTheme
-                      .titleMedium
-                      ?.copyWith(fontWeight: FontWeight.bold),
+                  style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ),
               RadioGroup<WorkerSort>(
@@ -413,9 +429,7 @@ class WorkerListScreen extends ConsumerWidget {
                       children: [
                         Text(
                           l10n.filter,
-                          style: Theme.of(context)
-                              .textTheme
-                              .titleMedium
+                          style: Theme.of(context).textTheme.titleMedium
                               ?.copyWith(fontWeight: FontWeight.bold),
                         ),
                         TextButton(
@@ -553,10 +567,7 @@ class _WorkerCardRow extends StatelessWidget {
   final Worker worker;
   final String serviceId;
 
-  const _WorkerCardRow({
-    required this.worker,
-    required this.serviceId,
-  });
+  const _WorkerCardRow({required this.worker, required this.serviceId});
 
   @override
   Widget build(BuildContext context) {
@@ -591,9 +602,7 @@ class _WorkerCardRow extends StatelessWidget {
                         Flexible(
                           child: Text(
                             worker.name,
-                            style: Theme.of(context)
-                                .textTheme
-                                .titleMedium
+                            style: Theme.of(context).textTheme.titleMedium
                                 ?.copyWith(fontWeight: FontWeight.bold),
                             overflow: TextOverflow.ellipsis,
                           ),
@@ -611,10 +620,9 @@ class _WorkerCardRow extends StatelessWidget {
                     const SizedBox(height: 2),
                     Text(
                       worker.location,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: AppColors.textSecondary),
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                        color: AppColors.textSecondary,
+                      ),
                     ),
                     const SizedBox(height: 4),
                     RatingStars(

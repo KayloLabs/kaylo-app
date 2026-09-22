@@ -21,29 +21,29 @@ class SavedAddress {
   });
 
   SavedAddress copyWith({bool? isDefault}) => SavedAddress(
-        id: id,
-        label: label,
-        line: line,
-        latitude: latitude,
-        longitude: longitude,
-        isDefault: isDefault ?? this.isDefault,
-      );
+    id: id,
+    label: label,
+    line: line,
+    latitude: latitude,
+    longitude: longitude,
+    isDefault: isDefault ?? this.isDefault,
+  );
 
   factory SavedAddress.fromJson(Map<String, dynamic> json) => SavedAddress(
-        id: json['id'] as String,
-        label: json['label'] as String,
-        line: json['line'] as String,
-        latitude: (json['latitude'] as num?)?.toDouble(),
-        longitude: (json['longitude'] as num?)?.toDouble(),
-        isDefault: (json['isDefault'] as bool?) ?? false,
-      );
+    id: json['id'] as String,
+    label: json['label'] as String,
+    line: json['line'] as String,
+    latitude: (json['latitude'] as num?)?.toDouble(),
+    longitude: (json['longitude'] as num?)?.toDouble(),
+    isDefault: (json['isDefault'] as bool?) ?? false,
+  );
 
   Map<String, dynamic> toJson() => {
-        'id': id,
-        'label': label,
-        'line': line,
-        'latitude': latitude,
-        'longitude': longitude,
-        'isDefault': isDefault,
-      };
+    'id': id,
+    'label': label,
+    'line': line,
+    'latitude': latitude,
+    'longitude': longitude,
+    'isDefault': isDefault,
+  };
 }

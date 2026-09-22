@@ -8,21 +8,24 @@ import 'package:kaylo/features/profile/presentation/screens/saved_addresses_scre
 import 'support/test_app.dart';
 
 void main() {
-  testWidgets('saved addresses list the seed and add one from GPS',
-      (tester) async {
+  testWidgets('saved addresses list the seed and add one from GPS', (
+    tester,
+  ) async {
     useTallPhone(tester);
-    await tester.pumpWidget(await testApp(
-      initialLocation: Routes.addresses,
-      routes: [
-        GoRoute(
-          path: Routes.addresses,
-          builder: (_, _) => const SavedAddressesScreen(),
-        ),
-      ],
-      overrides: [
-        locationServiceProvider.overrideWithValue(FakeLocationService()),
-      ],
-    ));
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.addresses,
+        routes: [
+          GoRoute(
+            path: Routes.addresses,
+            builder: (_, _) => const SavedAddressesScreen(),
+          ),
+        ],
+        overrides: [
+          locationServiceProvider.overrideWithValue(FakeLocationService()),
+        ],
+      ),
+    );
     await settle(tester);
 
     expect(find.text('Home'), findsOneWidget);

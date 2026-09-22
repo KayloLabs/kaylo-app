@@ -1,10 +1,4 @@
-enum WorkerSort {
-  rating,
-  priceLowToHigh,
-  priceHighToLow,
-  experience,
-  distance,
-}
+enum WorkerSort { rating, priceLowToHigh, priceHighToLow, experience, distance }
 
 class WorkerFilter {
   final double? minRating;

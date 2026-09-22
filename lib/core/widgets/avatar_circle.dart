@@ -18,7 +18,9 @@ class AvatarCircle extends StatelessWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     return CircleAvatar(
       radius: radius,
-      backgroundColor: isDark ? AppColors.surfaceTintDark : AppColors.surfaceTint,
+      backgroundColor: isDark
+          ? AppColors.surfaceTintDark
+          : AppColors.surfaceTint,
       backgroundImage: _getImageProvider(),
       child: _getImageProvider() == null
           ? Text(

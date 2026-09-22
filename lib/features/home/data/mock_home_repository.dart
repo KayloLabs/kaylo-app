@@ -1,5 +1,4 @@
 import '../../../core/models/service_item.dart';
-import '../../../core/models/worker.dart';
 import '../domain/home_repository.dart';
 
 class MockHomeRepository implements HomeRepository {
@@ -19,14 +18,6 @@ class MockHomeRepository implements HomeRepository {
     ServiceItem(id: '13', name: 'Painting', category: 'home', description: 'Interior and exterior home painting', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 800),
     ServiceItem(id: '14', name: 'AC Service', category: 'home', description: 'AC maintenance, repair, and gas refilling', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 650),
     ServiceItem(id: '15', name: 'Appliance Repair', category: 'home', description: 'Washing machine, fridge, and TV repair', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 500),
-  ];
-
-  final List<Worker> _mockWorkers = [
-    Worker(id: 'w1', name: 'Raju K.', profileImageUrl: '', rating: 4.8, reviewsCount: 120, skillIds: ['1', '4'], location: 'Kochi', trustScore: 95, isVerified: true, hourlyRate: 350, totalJobs: 132),
-    Worker(id: 'w2', name: 'Manoj P.', profileImageUrl: '', rating: 4.5, reviewsCount: 85, skillIds: ['1', '4', '12'], location: 'Ernakulam', trustScore: 88, isVerified: true, hourlyRate: 300, totalJobs: 96),
-    Worker(id: 'w3', name: 'Suresh B.', profileImageUrl: '', rating: 4.9, reviewsCount: 200, skillIds: ['5', '14'], location: 'Thrissur', trustScore: 98, isVerified: true, hourlyRate: 400, totalJobs: 214),
-    Worker(id: 'w4', name: 'Anil Kumar', profileImageUrl: '', rating: 4.7, reviewsCount: 75, skillIds: ['7', '13'], location: 'Kochi', trustScore: 92, isVerified: true, hourlyRate: 280, totalJobs: 82),
-    Worker(id: 'w5', name: 'Prasad V.', profileImageUrl: '', rating: 4.6, reviewsCount: 110, skillIds: ['4', '15'], location: 'Kochi', trustScore: 90, isVerified: false, hourlyRate: 320, totalJobs: 105),
   ];
 
   @override
@@ -55,15 +46,5 @@ class MockHomeRepository implements HomeRepository {
     return _mockServices.where((s) =>
         s.name.toLowerCase().contains(lower) ||
         s.description.toLowerCase().contains(lower)).toList();
-  }
-
-  @override
-  Future<List<Worker>> searchWorkers(String query) async {
-    await Future.delayed(const Duration(milliseconds: 200));
-    if (query.trim().isEmpty) return [];
-    final lower = query.toLowerCase().trim();
-    return _mockWorkers.where((w) =>
-        w.name.toLowerCase().contains(lower) ||
-        w.location.toLowerCase().contains(lower)).toList();
   }
 }

@@ -1,0 +1,26 @@
+name: kaylo_ui
+description: Theme and reusable widgets shared by the Kaylo customer and partner apps.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  kaylo_core:
+    path: ../kaylo_core
+  shimmer: ^3.0.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  assets:
+    - assets/logo.png
+    - assets/kaylo_transparent.png

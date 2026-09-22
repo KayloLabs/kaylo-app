@@ -3,14 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/avatar_circle.dart';
-import '../../../../core/widgets/kaylo_card.dart';
-import '../../../../core/widgets/kaylo_liquid_glass.dart';
-import '../../../../core/widgets/kaylo_list_tile.dart';
-import '../../../../core/widgets/kaylo_snackbar.dart';
-import '../../../../core/widgets/section_header.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/avatar_circle.dart';
+import 'package:kaylo_ui/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
+import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
+import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
+import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../auth/application/session_controller.dart';

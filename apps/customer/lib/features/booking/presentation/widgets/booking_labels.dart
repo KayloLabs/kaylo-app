@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:kaylo_core/models/booking.dart';
-import '../../../../core/widgets/kaylo_chip.dart';
+import 'package:kaylo_ui/widgets/kaylo_chip.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/payment_method.dart';
 

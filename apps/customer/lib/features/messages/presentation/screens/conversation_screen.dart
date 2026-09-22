@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/avatar_circle.dart';
-import '../../../../core/widgets/error_state.dart';
-import '../../../../core/widgets/kaylo_loader.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/avatar_circle.dart';
+import 'package:kaylo_ui/widgets/error_state.dart';
+import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../../application/messages_providers.dart';

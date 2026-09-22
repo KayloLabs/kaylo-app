@@ -16,14 +16,17 @@ class KayloLogo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // The artwork ships with this package so both apps show the same mark.
     Widget image = Image.asset(
-      'assets_kaylo/logo.png', // The user will place the new logo here
+      'assets/logo.png',
+      package: 'kaylo_ui',
       width: width,
       fit: BoxFit.contain,
       errorBuilder: (context, error, stackTrace) {
         // Fallback to the old transparent png if logo.png is missing
         return Image.asset(
-          'assets_kaylo/kaylo_transparent.png',
+          'assets/kaylo_transparent.png',
+          package: 'kaylo_ui',
           width: width,
           fit: BoxFit.contain,
         );

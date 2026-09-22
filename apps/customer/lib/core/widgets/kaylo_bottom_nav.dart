@@ -2,9 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_spacing.dart';
-import 'kaylo_liquid_glass.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 
 class KayloBottomNav extends StatefulWidget {
   final StatefulNavigationShell navigationShell;

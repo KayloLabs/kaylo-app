@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_radius.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/empty_state.dart';
-import '../../../../core/widgets/error_state.dart';
-import '../../../../core/widgets/shimmer_box.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_radius.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/empty_state.dart';
+import 'package:kaylo_ui/widgets/error_state.dart';
+import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/farm_providers.dart';
 import '../widgets/farm_service_card.dart';

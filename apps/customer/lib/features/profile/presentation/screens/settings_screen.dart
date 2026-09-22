@@ -5,13 +5,13 @@ import '../../../../core/providers/care_mode_provider.dart';
 import '../../../../core/providers/locale_provider.dart';
 import '../../../../core/providers/theme_mode_provider.dart';
 import 'package:kaylo_core/services/storage_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../../../../core/widgets/kaylo_list_tile.dart';
+import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
-import '../../../../core/widgets/section_header.dart';
+import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 const _notificationsKey = 'notifications_enabled';

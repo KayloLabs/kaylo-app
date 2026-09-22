@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kaylo/core/theme/app_theme.dart';
+import 'package:kaylo_ui/theme/app_theme.dart';
 
 // Guards the accessibility contract of the senior-friendly careTheme.
 // If these fail, Care Mode no longer meets the spec it was built to.

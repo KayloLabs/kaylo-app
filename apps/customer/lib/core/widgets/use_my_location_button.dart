@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/services/location_service.dart';
-import '../theme/app_colors.dart';
-import 'kaylo_snackbar.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 
 /// Human-readable reason a GPS lookup failed, keyed on LocationFailure.code.
 String locationErrorMessage(AppLocalizations l10n, String? code) =>

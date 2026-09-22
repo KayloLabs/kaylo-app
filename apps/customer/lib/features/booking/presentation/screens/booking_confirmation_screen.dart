@@ -4,12 +4,12 @@ import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/sound_service.dart';
-import '../../../../core/widgets/google_pay_tick.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/google_pay_tick.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_core/utils/money.dart';
-import '../../../../core/widgets/kaylo_button.dart';
-import '../../../../core/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/kaylo_button.dart';
+import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/booking_receipt.dart';
 import '../widgets/booking_labels.dart';

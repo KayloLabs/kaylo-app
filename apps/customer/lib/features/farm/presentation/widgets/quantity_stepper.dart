@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
 
 /// Large-target stepper (56x56 buttons) so it works for gloved hands
 /// in the field and for Care Mode users alike.

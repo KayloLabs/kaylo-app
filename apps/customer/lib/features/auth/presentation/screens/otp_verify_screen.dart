@@ -4,13 +4,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/kaylo_button.dart';
-import '../../../../core/widgets/kaylo_card.dart';
-import '../../../../core/widgets/kaylo_text_field.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/kaylo_button.dart';
+import 'package:kaylo_ui/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 import '../../domain/auth_repository.dart';
-import '../../../../core/widgets/kaylo_snackbar.dart';
+import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 
 class OtpVerifyScreen extends ConsumerStatefulWidget {
   final String phone;

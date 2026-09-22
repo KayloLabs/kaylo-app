@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_theme.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/theme/app_theme.dart';
 
 /// Every Care screen runs under [AppTheme.careTheme] regardless of the
 /// app-wide theme, and leaves room for the floating bottom nav.

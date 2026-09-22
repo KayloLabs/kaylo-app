@@ -4,11 +4,11 @@ import 'package:kaylo_core/models/service_item.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../core/router/service_routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/theme/app_radius.dart';
-import '../../../../core/widgets/section_header.dart';
-import '../../../../core/widgets/kaylo_liquid_glass.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/theme/app_radius.dart';
+import 'package:kaylo_ui/widgets/section_header.dart';
+import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 class PopularServicesHorizontal extends StatelessWidget {

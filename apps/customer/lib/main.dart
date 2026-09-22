@@ -12,7 +12,7 @@ import 'core/providers/care_mode_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'package:kaylo_core/services/storage_service.dart';
-import 'core/theme/app_theme.dart';
+import 'package:kaylo_ui/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

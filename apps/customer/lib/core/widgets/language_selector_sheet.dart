@@ -3,8 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../l10n/generated/app_localizations.dart';
 import '../providers/locale_provider.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import '../theme/app_colors.dart';
-import '../theme/app_spacing.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
 
 class LanguageSelectorSheet extends ConsumerWidget {
   const LanguageSelectorSheet({super.key});

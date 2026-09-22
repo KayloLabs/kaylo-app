@@ -2,11 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kaylo_core/models/service_item.dart';
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/kaylo_card.dart';
-import '../../../../core/widgets/price_tag.dart';
-import '../../../../core/widgets/rating_stars.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/price_tag.dart';
+import 'package:kaylo_ui/widgets/rating_stars.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/farm_providers.dart';
 import '../../domain/farm_service_info.dart';

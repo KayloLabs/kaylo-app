@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../../core/theme/app_colors.dart';
-import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/widgets/empty_state.dart';
-import '../../../../core/widgets/error_state.dart';
-import '../../../../core/widgets/kaylo_chip.dart';
-import '../../../../core/widgets/kaylo_loader.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/widgets/empty_state.dart';
+import 'package:kaylo_ui/widgets/error_state.dart';
+import 'package:kaylo_ui/widgets/kaylo_chip.dart';
+import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/care_providers.dart';
 import '../../domain/care_models.dart';

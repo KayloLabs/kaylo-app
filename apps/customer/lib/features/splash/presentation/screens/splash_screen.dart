@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
-import '../../../../core/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_colors.dart';
 import '../../application/splash_controller.dart';
 
 class RevealClipper extends CustomClipper<Rect> {

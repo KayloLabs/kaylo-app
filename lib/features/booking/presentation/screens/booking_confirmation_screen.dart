@@ -1,9 +1,10 @@
-import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
-import '../../../../core/widgets/google_pay_tick.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../core/services/sound_service.dart';
+import '../../../../core/widgets/google_pay_tick.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
 import '../../../../core/utils/money.dart';
@@ -15,42 +16,28 @@ import '../widgets/booking_labels.dart';
 
 /// Final step of every booking flow. Back navigation is deliberately
 /// disabled: the payment is done, so "back" means the dashboard.
-class BookingConfirmationScreen extends StatefulWidget {
+class BookingConfirmationScreen extends ConsumerStatefulWidget {
   final BookingReceipt? receipt;
 
   const BookingConfirmationScreen({super.key, required this.receipt});
 
   @override
-  State<BookingConfirmationScreen> createState() =>
+  ConsumerState<BookingConfirmationScreen> createState() =>
       _BookingConfirmationScreenState();
 }
 
-class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
-  AudioPlayer? _audioPlayer;
-
-  bool get _isTest => WidgetsBinding.instance.runtimeType.toString().contains('TestWidgetsFlutterBinding');
-
+class _BookingConfirmationScreenState
+    extends ConsumerState<BookingConfirmationScreen> {
   @override
   void initState() {
     super.initState();
-    
-    if (!_isTest) {
-      _audioPlayer = AudioPlayer();
-    }
-
     if (widget.receipt == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) context.go(Routes.dashboard);
       });
     } else {
-      _audioPlayer?.play(AssetSource('success.wav'));
+      ref.read(soundServiceProvider).playSuccess();
     }
-  }
-
-  @override
-  void dispose() {
-    _audioPlayer?.dispose();
-    super.dispose();
   }
 
   @override

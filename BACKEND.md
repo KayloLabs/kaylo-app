@@ -15,7 +15,7 @@ supabase/
 ```
 
 The Flutter side selects its data source at compile time
-(`lib/core/config/app_env.dart`):
+(`packages/kaylo_core/lib/config/app_env.dart`, shared by both apps):
 
 | Run command                                        | Data source        |
 |----------------------------------------------------|--------------------|
@@ -47,8 +47,10 @@ feature's `data/` folder implement them, so no UI code knows the difference.
 4. Run the app:
 
 ```bash
-flutter run -d chrome --dart-define=SUPABASE_URL=https://<project>.supabase.co --dart-define=SUPABASE_ANON_KEY=<anon-key>
+cd apps/customer && flutter run -d chrome --dart-define=SUPABASE_URL=https://<project>.supabase.co --dart-define=SUPABASE_ANON_KEY=<anon-key>
 ```
+
+(The same defines work for `apps/partner`.)
 
 (Alternatively install the Supabase CLI and use `supabase db push` — the
 `supabase/` folder is already CLI-shaped.)

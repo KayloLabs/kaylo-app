@@ -7,6 +7,7 @@ on:
     branches: [main]
 
 jobs:
+  # One job named "check" is what branch protection on main waits for.
   check:
     runs-on: ubuntu-latest
     steps:
@@ -17,16 +18,36 @@ jobs:
           channel: stable
           cache: true
 
+      # Pub workspace: one resolution for both apps and both packages.
       - name: Install dependencies
         run: flutter pub get
 
-      - name: Verify localizations are up to date
+      - name: Verify customer localizations are up to date
+        working-directory: apps/customer
         run: |
           flutter gen-l10n
           git diff --exit-code lib/l10n/generated
 
-      - name: Analyze
+      - name: Analyze kaylo_core
+        working-directory: packages/kaylo_core
         run: flutter analyze
 
-      - name: Test
+      - name: Analyze kaylo_ui
+        working-directory: packages/kaylo_ui
+        run: flutter analyze
+
+      - name: Analyze customer app
+        working-directory: apps/customer
+        run: flutter analyze
+
+      - name: Analyze partner app
+        working-directory: apps/partner
+        run: flutter analyze
+
+      - name: Test customer app
+        working-directory: apps/customer
+        run: flutter test
+
+      - name: Test partner app
+        working-directory: apps/partner
         run: flutter test

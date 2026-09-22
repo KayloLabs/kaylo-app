@@ -24,10 +24,14 @@ database, see BACKEND.md.
 
 ## 3. Where to add your code
 
-Each feature lives in its own folder:
+The repository is a pub workspace with two apps and two shared packages
+(see the README for the layout). Run `flutter pub get` once at the root;
+analyze and test from inside the member you changed.
+
+Each feature lives in its own folder inside the app that owns it:
 
 ```
-lib/features/<feature>/
+apps/customer/lib/features/<feature>/   (apps/partner/lib/features/ for the worker app)
   presentation/screens/   screens
   presentation/widgets/   widgets used only by this feature
   application/            Riverpod providers and controllers
@@ -35,26 +39,35 @@ lib/features/<feature>/
   data/                   mock and Supabase repository implementations
 ```
 
-Example: booking screens belong in `lib/features/booking/presentation/screens/`.
+Example: booking screens belong in
+`apps/customer/lib/features/booking/presentation/screens/`.
 The `features/home/` folder is the reference implementation of this pattern.
 
 ## 4. Shared code
 
-- `lib/core/` is maintained by M1. To change a shared model in
-  `core/models/`, request it from M1 instead of editing directly.
+- `packages/kaylo_core/` (models, Supabase access, device services) and
+  `packages/kaylo_ui/` (theme, widgets) are shared by both apps and
+  maintained by M1. To change a shared model in `kaylo_core/lib/models/`,
+  request it from M1 instead of editing directly; both apps depend on it.
+- Import them as `package:kaylo_core/kaylo_core.dart` and
+  `package:kaylo_ui/kaylo_ui.dart`.
 - Use the shared widgets: `KayloButton`, `KayloCard`, `KayloListTile`,
   `KayloSnackbar`, `KayloLiquidGlass`.
 - Call `KayloFeedback.tap()` or `KayloFeedback.press()` on interactions
-  (`core/services/feedback_service.dart`) for haptics and sound.
-- Take colors, spacing, and radii from `core/theme/`. Do not hardcode values.
+  (`kaylo_core`) for haptics and sound.
+- Take colors, spacing, and radii from `kaylo_ui`'s theme. Do not hardcode
+  values.
+- Shared widgets take user-facing text as parameters; localized strings
+  stay in the app that shows them.
 
 ## 5. On-screen text (localization)
 
 All user-visible text must be localized:
 
-1. Add the key to all four files: `lib/l10n/app_en.arb`, `app_ml.arb`,
-   `app_hi.arb`, `app_ta.arb`
-2. Run `flutter gen-l10n` and commit the generated files
+1. Add the key to all four files: `apps/customer/lib/l10n/app_en.arb`,
+   `app_ml.arb`, `app_hi.arb`, `app_ta.arb`
+2. Run `flutter gen-l10n` inside `apps/customer` and commit the generated
+   files
 3. Use it in code: `AppLocalizations.of(context)!.myKey`
 
 CI rejects the PR if the generated files are out of date. Note that Tamil

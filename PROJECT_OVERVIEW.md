@@ -60,39 +60,31 @@ The following tasks are pending for Review 2, broken down by team member ownersh
 ---
 
 ## 4. File Structure & Contents
-The project uses a **Feature-First Architecture** combined with a robust `core` layer.
+The repository is a pub workspace: two apps and the packages they share, with a **Feature-First Architecture** inside each app.
 
 ```text
-lib/
-├── main.dart                 # App entry point, Firebase init, ProviderScope
-├── app.dart                  # MaterialApp definition, localization, theme injection
-│
-├── core/                     # Shared infrastructure (No feature-specific code)
-│   ├── models/               # Canonical shared data models (AppUser, ServiceItem, Booking)
-│   ├── network/              # API clients, FirestoreRefs, AppFailure error handling
-│   ├── providers/            # Global state (SessionController, LocaleNotifier)
-│   ├── router/               # go_router configuration, ShellRoute, routes.dart
-│   ├── services/             # Interfaces for Storage, Location, Payments, Notifications
-│   ├── theme/                # AppColors, AppTypography, AppTheme (Light, Dark, Care variants)
-│   └── widgets/              # The shared Design System component kit (KayloButton, etc.)
-│
-├── features/                 # Isolated feature modules
-│   ├── splash/               # Splash screen initialization logic
-│   ├── onboarding/           # Welcome slides and initial user state
-│   ├── home/                 # The Home Dashboard UI and dashboard controller
-│   ├── auth/                 # Login, Signup, OTP screens and controllers
-│   ├── profile/              # Profile view and Settings
-│   ├── booking/              # Booking flows, forms, and validation
-│   ├── payment/              # Razorpay integration and confirmation screens
-│   ├── tracking/             # GPS and maps implementation
-│   ├── farm/                 # Farm specific service flows
-│   └── care/                 # (R2) Care Home, Medicine Reminders, SOS, Family Dashboard
-│
-└── l10n/                     # Localization files (.arb) for English, Malayalam, Hindi
+apps/
+├── customer/                 # The Kaylo app (customers)
+│   ├── lib/main.dart         # Entry point: Supabase init, ProviderScope, device preview on web
+│   ├── lib/core/             # App-only glue: router, global providers, bottom nav, localized widgets
+│   ├── lib/features/         # Feature modules (see anatomy below)
+│   │   ├── splash/ onboarding/ auth/ home/ workers/ booking/ farm/
+│   │   ├── care/ messages/ notifications/ profile/
+│   └── lib/l10n/             # .arb files for English, Malayalam, Hindi, Tamil + generated code
+└── partner/                  # Kaylo Partner (workers): jobs inbox, job detail, availability, earnings
+
+packages/
+├── kaylo_core/               # Shared below the UI: models, Supabase client, AppFailure,
+│                             # app_env, device services (location, speech, sound, storage, haptics)
+└── kaylo_ui/                 # Shared look: AppColors, AppTypography, AppTheme (light, dark, care),
+                              # the widget kit (KayloButton, KayloCard, KayloLiquidGlass, ...)
+
+supabase/                     # One schema for both apps: migrations and seed
+tools/                        # Asset-processing scripts
 ```
 
 ### Feature Folder Anatomy
-Inside every feature folder (e.g., `lib/features/home/`), we follow Domain-Driven Design (DDD) principles:
+Inside every feature folder (e.g., `apps/customer/lib/features/home/`), we follow Domain-Driven Design (DDD) principles:
 - **`presentation/`**: Contains `screens/` (the UI pages) and `widgets/` (UI components specific to this feature).
 - **`application/`**: Contains Riverpod controllers and StateNotifiers that manage the business logic and coordinate between the UI and repositories.
 - **`domain/`**: Contains feature-specific models and the Repository interfaces (abstract classes).

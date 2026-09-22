@@ -1,4 +1,4 @@
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 
 /// A window of the day a worker can be booked for, in minutes from
 /// midnight so the domain stays free of Flutter types.

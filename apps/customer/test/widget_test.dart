@@ -10,7 +10,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo/main.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:kaylo/core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 void main() {
   testWidgets('App smoke test', (WidgetTester tester) async {

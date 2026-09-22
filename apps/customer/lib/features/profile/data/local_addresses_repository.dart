@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import '../domain/addresses_repository.dart';
 import '../domain/saved_address.dart';
 

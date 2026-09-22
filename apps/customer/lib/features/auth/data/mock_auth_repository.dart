@@ -1,6 +1,6 @@
 import 'dart:async';
-import '../../../core/models/app_user.dart';
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/models/app_user.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import '../domain/auth_repository.dart';
 
 class MockAuthRepository implements AuthRepository {

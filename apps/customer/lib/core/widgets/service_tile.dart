@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_radius.dart';
 import '../theme/app_spacing.dart';

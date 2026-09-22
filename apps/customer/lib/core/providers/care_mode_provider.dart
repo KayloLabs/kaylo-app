@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 /// Persistent Care Mode flag. When on, KayloApp swaps the entire app
 /// into `AppTheme.careTheme` (18sp minimum text, 56x56 targets, always

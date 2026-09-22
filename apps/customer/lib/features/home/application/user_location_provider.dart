@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/services/location_service.dart';
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/services/location_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 /// The customer's active location: what the dashboard header shows and
 /// what SOS alerts share. Captured by Location Setup or the header pill,

@@ -1,4 +1,4 @@
-import '../../../core/models/booking.dart';
+import 'package:kaylo_core/models/booking.dart';
 import '../domain/bookings_repository.dart';
 
 class MockBookingsRepository implements BookingsRepository {

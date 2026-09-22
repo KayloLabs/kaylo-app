@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/models/service_item.dart';
-import '../../../core/network/supabase_providers.dart';
+import 'package:kaylo_core/models/service_item.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../domain/home_repository.dart';
 
 /// Reads the service catalog from the `service_catalog` view

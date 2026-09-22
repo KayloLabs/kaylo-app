@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../../core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 enum SplashRouteDestination { onboarding, login, dashboard }
 

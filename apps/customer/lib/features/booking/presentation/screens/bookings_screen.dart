@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import '../../../../core/models/booking.dart';
-import '../../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import '../../../../core/router/routes.dart';
-import '../../../../core/services/feedback_service.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
-import '../../../../core/utils/money.dart';
+import 'package:kaylo_core/utils/money.dart';
 import '../../../../core/widgets/empty_state.dart';
 import '../../../../core/widgets/error_state.dart';
 import '../../../../core/widgets/kaylo_card.dart';

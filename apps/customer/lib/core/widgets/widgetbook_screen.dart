@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import '../models/service_item.dart';
-import '../models/worker.dart';
+import 'package:kaylo_core/models/service_item.dart';
+import 'package:kaylo_core/models/worker.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'avatar_circle.dart';

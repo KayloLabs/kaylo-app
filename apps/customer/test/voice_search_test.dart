@@ -1,5 +1,5 @@
 import 'package:flutter_test/flutter_test.dart';
-import 'package:kaylo/core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import 'package:kaylo/features/home/application/voice_search.dart';
 
 ServiceItem _service(String id, String name, String category) => ServiceItem(

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kaylo/core/models/app_user.dart';
+import 'package:kaylo_core/models/app_user.dart';
 import 'package:kaylo/core/router/routes.dart';
 import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/features/care/presentation/screens/care_home_screen.dart';

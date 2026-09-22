@@ -6,12 +6,12 @@ import 'package:device_preview/device_preview.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'l10n/generated/app_localizations.dart';
 
-import 'core/config/app_env.dart';
+import 'package:kaylo_core/config/app_env.dart';
 import 'core/router/app_router.dart';
 import 'core/providers/care_mode_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
-import 'core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import 'core/theme/app_theme.dart';
 
 void main() async {

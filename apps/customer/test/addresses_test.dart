@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo/core/router/routes.dart';
-import 'package:kaylo/core/services/location_service.dart';
+import 'package:kaylo_core/services/location_service.dart';
 import 'package:kaylo/features/profile/presentation/screens/saved_addresses_screen.dart';
 
 import 'support/test_app.dart';

@@ -1,5 +1,5 @@
-import '../../../core/models/booking.dart';
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import 'payment_method.dart';
 
 /// One label/value row on the confirmation screen. The flow that created

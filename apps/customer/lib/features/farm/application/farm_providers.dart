@@ -1,9 +1,9 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/models/booking.dart';
-import '../../../core/models/service_item.dart';
-import '../../../core/models/worker.dart';
-import '../../../core/network/app_failure.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/models/service_item.dart';
+import 'package:kaylo_core/models/worker.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import '../../booking/domain/payment_method.dart';

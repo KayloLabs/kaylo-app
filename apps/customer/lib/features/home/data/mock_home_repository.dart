@@ -1,4 +1,4 @@
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import '../domain/home_repository.dart';
 
 class MockHomeRepository implements HomeRepository {

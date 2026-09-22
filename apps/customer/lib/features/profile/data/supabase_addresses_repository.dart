@@ -1,6 +1,6 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/network/supabase_providers.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../domain/addresses_repository.dart';
 import '../domain/saved_address.dart';
 

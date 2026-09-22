@@ -1,8 +1,8 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/models/worker.dart';
-import '../../../core/network/app_failure.dart';
-import '../../../core/network/supabase_providers.dart';
+import 'package:kaylo_core/models/worker.dart';
+import 'package:kaylo_core/network/app_failure.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../domain/models/worker_review.dart';
 import '../domain/workers_repository.dart';
 

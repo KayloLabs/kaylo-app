@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../../../core/config/app_env.dart';
-import '../../../core/models/app_user.dart';
+import 'package:kaylo_core/config/app_env.dart';
+import 'package:kaylo_core/models/app_user.dart';
 import '../data/mock_auth_repository.dart';
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import '../data/supabase_auth_repository.dart';
 
 abstract class AuthRepository {

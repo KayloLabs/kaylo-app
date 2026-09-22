@@ -1,4 +1,4 @@
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 
 /// How one unit of a farm service is counted and priced.
 enum FarmUnit { tree, hour, visit }

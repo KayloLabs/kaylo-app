@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 /// The in-app star rating the customer gave (1 to 5), null until they do.
 /// Kept locally; there is no store listing to hand off to yet.

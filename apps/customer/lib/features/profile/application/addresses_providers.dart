@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/app_env.dart';
-import '../../../core/network/supabase_providers.dart';
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/config/app_env.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../data/local_addresses_repository.dart';
 import '../data/supabase_addresses_repository.dart';

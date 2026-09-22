@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
-import '../services/feedback_service.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_spacing.dart';
 import 'kaylo_liquid_glass.dart';

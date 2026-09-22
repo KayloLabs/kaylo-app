@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo/core/router/routes.dart';
-import 'package:kaylo/core/services/location_service.dart';
+import 'package:kaylo_core/services/location_service.dart';
 import 'package:kaylo/features/auth/presentation/screens/location_setup_screen.dart';
 import 'package:kaylo/features/home/application/user_location_provider.dart';
 

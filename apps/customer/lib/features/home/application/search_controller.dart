@@ -1,9 +1,9 @@
 import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/models/service_item.dart';
-import '../../../core/models/worker.dart';
-import '../../../core/services/storage_service.dart';
+import 'package:kaylo_core/models/service_item.dart';
+import 'package:kaylo_core/models/worker.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 import '../../workers/application/workers_providers.dart';
 import 'home_providers.dart';
 import 'voice_search.dart';

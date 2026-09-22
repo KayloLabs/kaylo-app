@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/config/app_env.dart';
-import '../../../core/models/worker.dart';
-import '../../../core/network/supabase_providers.dart';
+import 'package:kaylo_core/config/app_env.dart';
+import 'package:kaylo_core/models/worker.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../data/mock_workers_repository.dart';
 import '../data/supabase_workers_repository.dart';
 import '../domain/models/worker_filter.dart';

@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../l10n/generated/app_localizations.dart';
-import '../services/feedback_service.dart';
-import '../services/location_service.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/location_service.dart';
 import '../theme/app_colors.dart';
 import 'kaylo_snackbar.dart';
 

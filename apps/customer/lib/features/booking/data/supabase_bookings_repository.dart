@@ -1,7 +1,7 @@
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import '../../../core/models/booking.dart';
-import '../../../core/network/supabase_providers.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../domain/bookings_repository.dart';
 
 /// Bookings against the `bookings` table. The app model's single

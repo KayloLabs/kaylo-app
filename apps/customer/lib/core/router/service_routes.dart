@@ -1,6 +1,6 @@
 import 'package:go_router/go_router.dart';
 
-import '../models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import 'routes.dart';
 
 /// Opens the right screen for a catalog entry: farm services have their

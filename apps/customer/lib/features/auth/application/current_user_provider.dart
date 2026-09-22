@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/models/app_user.dart';
+import 'package:kaylo_core/models/app_user.dart';
 import 'session_controller.dart';
 
 /// The signed-in user, or null while the session is loading or absent.

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import '../services/storage_service.dart';
+import 'package:kaylo_core/services/storage_service.dart';
 
 class ThemeModeNotifier extends Notifier<ThemeMode> {
   @override

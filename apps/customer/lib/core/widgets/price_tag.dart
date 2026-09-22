@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme/app_colors.dart';
-import '../utils/money.dart';
+import 'package:kaylo_core/utils/money.dart';
 
 class PriceTag extends StatelessWidget {
   final double amount;

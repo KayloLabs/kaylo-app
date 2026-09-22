@@ -1,7 +1,7 @@
-import '../../../core/models/worker.dart';
+import 'package:kaylo_core/models/worker.dart';
 import '../domain/models/worker_review.dart';
 import '../domain/workers_repository.dart';
-import '../../../core/network/app_failure.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 
 class MockWorkersRepository implements WorkersRepository {
   final List<Worker> _mockWorkers = [

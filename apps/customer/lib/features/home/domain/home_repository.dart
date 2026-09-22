@@ -1,4 +1,4 @@
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 
 abstract class HomeRepository {
   Future<List<ServiceItem>> getPopularServices();

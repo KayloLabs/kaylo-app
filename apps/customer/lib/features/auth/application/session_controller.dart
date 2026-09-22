@@ -1,7 +1,7 @@
 import 'dart:async';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import '../../../core/models/app_user.dart';
+import 'package:kaylo_core/models/app_user.dart';
 import '../domain/auth_repository.dart';
 
 part 'session_controller.g.dart';

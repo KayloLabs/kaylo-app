@@ -1,6 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import '../../../core/models/service_item.dart';
+import 'package:kaylo_core/models/service_item.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import 'home_providers.dart';

@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
-import '../../../core/models/app_user.dart';
+import 'package:kaylo_core/models/app_user.dart';
 import '../domain/auth_repository.dart';
 
 class SupabaseAuthRepository implements AuthRepository {

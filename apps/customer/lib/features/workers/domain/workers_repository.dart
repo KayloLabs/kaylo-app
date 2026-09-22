@@ -1,4 +1,4 @@
-import '../../../core/models/worker.dart';
+import 'package:kaylo_core/models/worker.dart';
 import 'models/worker_review.dart';
 
 abstract class WorkersRepository {

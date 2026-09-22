@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../models/worker.dart';
+import 'package:kaylo_core/models/worker.dart';
 import '../theme/app_spacing.dart';
 import 'avatar_circle.dart';
 import 'kaylo_card.dart';

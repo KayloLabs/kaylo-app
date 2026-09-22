@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../services/feedback_service.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
 import '../theme/app_colors.dart';
 import '../theme/app_shadows.dart';
 

@@ -157,7 +157,7 @@ class _NotificationTile extends ConsumerWidget {
           case NotificationType.care:
             context.go(Routes.careHome);
           case NotificationType.promo:
-            context.push(Routes.services('farm'));
+            context.push(Routes.farm);
           case NotificationType.system:
             break;
         }

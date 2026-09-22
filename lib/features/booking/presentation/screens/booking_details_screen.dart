@@ -21,10 +21,10 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../home/application/home_providers.dart';
 import '../../../messages/application/messages_providers.dart';
-import '../../../services/domain/service_info.dart';
-import '../../../services/presentation/widgets/service_labels.dart';
+import '../../../farm/domain/farm_booking_draft.dart';
+import '../../../farm/domain/farm_service_info.dart';
+import '../../../farm/presentation/widgets/farm_labels.dart';
 import '../../application/bookings_providers.dart';
-import '../../domain/booking_draft.dart';
 import '../widgets/booking_labels.dart';
 
 class BookingDetailsScreen extends ConsumerWidget {
@@ -105,7 +105,7 @@ class _Details extends ConsumerWidget {
     final secondary =
         isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
     final accent = categoryAccent(service?.category ?? 'home');
-    final info = service == null ? null : serviceInfoFor(service!);
+    final info = service == null ? null : farmInfoFor(service!);
     // Quantity is not stored on the booking; it falls out of the amount
     // whenever the total is a whole number of units.
     final quantity = service == null || service!.basePrice <= 0
@@ -238,7 +238,7 @@ class _Details extends ConsumerWidget {
                 ),
                 if (wholeQuantity != null && info != null)
                   row(l10n.quantity,
-                      text(serviceUnitCount(l10n, info.unit, wholeQuantity))),
+                      text(farmUnitCount(l10n, info.unit, wholeQuantity))),
                 if (booking.notes != null && booking.notes!.isNotEmpty)
                   row(
                     service?.category == 'farm'
@@ -298,6 +298,7 @@ class _Details extends ConsumerWidget {
                     variant: KayloButtonVariant.secondary,
                     onPressed: () => showModalBottomSheet<void>(
                       context: context,
+                      useRootNavigator: true,
                       isScrollControlled: true,
                       useSafeArea: true,
                       builder: (_) => _RescheduleSheet(booking: booking),
@@ -500,7 +501,7 @@ class _RescheduleSheet extends ConsumerStatefulWidget {
 
 class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
   late DateTime _date;
-  late BookingTimeSlot _slot;
+  late FarmTimeSlot _slot;
   bool _saving = false;
 
   @override
@@ -508,7 +509,7 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
     super.initState();
     final at = widget.booking.scheduledAt;
     _date = DateTime(at.year, at.month, at.day);
-    _slot = BookingTimeSlot.closestTo(at);
+    _slot = FarmTimeSlot.closestTo(at);
   }
 
   Future<void> _save() async {
@@ -600,7 +601,7 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
             spacing: AppSpacing.s,
             runSpacing: AppSpacing.s,
             children: [
-              for (final slot in BookingTimeSlot.all)
+              for (final slot in FarmTimeSlot.all)
                 ChoiceChip(
                   label: Text(formatTimeSlot(context, slot)),
                   selected: identical(slot, _slot),

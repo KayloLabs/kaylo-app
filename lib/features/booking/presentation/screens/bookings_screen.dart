@@ -79,7 +79,7 @@ class BookingsScreen extends ConsumerWidget {
                       icon: Icons.event_available_rounded,
                       actionText: l10n.bookAService,
                       onActionPressed: () =>
-                          context.push(Routes.services('all')),
+                          context.push(Routes.homeServices),
                     ),
                   ];
                 }

@@ -1248,6 +1248,24 @@ abstract class AppLocalizations {
   /// **'Please enter the farm address'**
   String get addressRequired;
 
+  /// No description provided for @serviceAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Service address'**
+  String get serviceAddress;
+
+  /// No description provided for @serviceAddressRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please enter the service address'**
+  String get serviceAddressRequired;
+
+  /// No description provided for @worker.
+  ///
+  /// In en, this message translates to:
+  /// **'Worker'**
+  String get worker;
+
   /// No description provided for @continueToPayment.
   ///
   /// In en, this message translates to:

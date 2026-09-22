@@ -640,6 +640,15 @@ class AppLocalizationsTa extends AppLocalizations {
   String get addressRequired => 'பண்ணை முகவரியை உள்ளிடவும்';
 
   @override
+  String get serviceAddress => 'சேவை முகவரி';
+
+  @override
+  String get serviceAddressRequired => 'சேவை முகவரியை உள்ளிடவும்';
+
+  @override
+  String get worker => 'தொழிலாளி';
+
+  @override
   String get continueToPayment => 'பணம் செலுத்த';
 
   @override

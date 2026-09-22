@@ -630,6 +630,15 @@ class AppLocalizationsEn extends AppLocalizations {
   String get addressRequired => 'Please enter the farm address';
 
   @override
+  String get serviceAddress => 'Service address';
+
+  @override
+  String get serviceAddressRequired => 'Please enter the service address';
+
+  @override
+  String get worker => 'Worker';
+
+  @override
   String get continueToPayment => 'Continue to payment';
 
   @override

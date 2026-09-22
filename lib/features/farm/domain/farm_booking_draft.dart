@@ -26,12 +26,17 @@ class FarmBookingDraft {
   final int quantity;
   final String address;
 
+  /// Set when the customer picked a specific worker on the way in
+  /// (worker list or profile); null lets Kaylo assign one.
+  final String? workerId;
+
   const FarmBookingDraft({
     required this.service,
     required this.date,
     required this.slot,
     required this.quantity,
     required this.address,
+    this.workerId,
   });
 
   double get total => service.basePrice * quantity;
@@ -56,6 +61,7 @@ class FarmBookingDraft {
       slot: slot ?? this.slot,
       quantity: quantity ?? this.quantity,
       address: address ?? this.address,
+      workerId: workerId,
     );
   }
 }

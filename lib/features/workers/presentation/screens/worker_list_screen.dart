@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/models/worker.dart';
-import '../../../../core/providers/active_location_provider.dart';
+import '../../../home/application/user_location_provider.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -33,7 +33,7 @@ class WorkerListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeLocation = ref.watch(activeLocationProvider);
+    final activeLocation = ref.watch(userLocationProvider);
     final filterSortState = ref.watch(workerFilterSortProvider);
     final workersAsync = ref.watch(filteredWorkersProvider(serviceId));
 

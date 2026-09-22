@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/models/service_item.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../core/router/service_routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -57,10 +58,7 @@ class PopularServicesHorizontal extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppRadius.card),
                       onTap: () {
                         KayloFeedback.tap();
-                        context.push(
-                          '${Routes.serviceDetails}?id=${service.id}',
-                          extra: service,
-                        );
+                        openService(GoRouter.of(context), service);
                       },
                       child: Padding(
                         padding: const EdgeInsets.all(AppSpacing.s),

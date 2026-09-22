@@ -47,6 +47,15 @@ class Routes {
   static const String search = '/search';
   static const String bookService = '/book-service';
 
+  static const String notifications = '/notifications';
+
+  // One booking, nested under the Bookings tab.
+  static String bookingDetails(String bookingId) => '/bookings/$bookingId';
+
+  // Profile flows, nested under the Profile tab.
+  static const String addresses = '/profile/addresses';
+  static const String help = '/profile/help';
+
   // Feature screens
   static const String payment = '/dashboard/payment';
   static const String confirmation = '/dashboard/confirmation';

@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo/core/router/routes.dart';
-import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/features/booking/domain/booking_receipt.dart';
 import 'package:kaylo/features/booking/presentation/screens/booking_confirmation_screen.dart';
 import 'package:kaylo/features/farm/domain/farm_booking_draft.dart';
@@ -11,84 +9,51 @@ import 'package:kaylo/features/farm/presentation/screens/farm_payment_screen.dar
 import 'package:kaylo/features/farm/presentation/screens/farm_schedule_screen.dart';
 import 'package:kaylo/features/farm/presentation/screens/farm_service_details_screen.dart';
 import 'package:kaylo/features/farm/presentation/screens/farm_services_screen.dart';
-import 'package:kaylo/l10n/generated/app_localizations.dart';
 
-/// Mock repositories answer after short delays and loaders animate
-/// forever, so plain pumps replace pumpAndSettle throughout.
-Future<void> settle(WidgetTester tester) async {
-  for (var i = 0; i < 8; i++) {
-    await tester.pump(const Duration(milliseconds: 300));
-  }
-}
+import 'support/test_app.dart';
 
-/// Phone width, tall enough that lazy lists build every row, so taps on
-/// widgets near the bottom of a screen land without scrolling.
-void useTallPhone(WidgetTester tester) {
-  tester.view.physicalSize = const Size(1080, 4000);
-  tester.view.devicePixelRatio = 2.5;
-  addTearDown(tester.view.reset);
-}
-
-Widget app({required String initialLocation}) {
-  final router = GoRouter(
-    initialLocation: initialLocation,
+final _routes = <RouteBase>[
+  GoRoute(
+    path: Routes.farm,
+    builder: (_, _) => const FarmServicesScreen(),
     routes: [
       GoRoute(
-        path: Routes.farm,
-        builder: (_, _) => const FarmServicesScreen(),
+        path: ':serviceId',
+        builder: (_, state) => FarmServiceDetailsScreen(
+          serviceId: state.pathParameters['serviceId']!,
+        ),
         routes: [
           GoRoute(
-            path: ':serviceId',
-            builder: (_, state) => FarmServiceDetailsScreen(
+            path: 'schedule',
+            builder: (_, state) => FarmScheduleScreen(
               serviceId: state.pathParameters['serviceId']!,
             ),
-            routes: [
-              GoRoute(
-                path: 'schedule',
-                builder: (_, state) => FarmScheduleScreen(
-                  serviceId: state.pathParameters['serviceId']!,
-                ),
-              ),
-              GoRoute(
-                path: 'payment',
-                builder: (_, state) => FarmPaymentScreen(
-                  draft: state.extra as FarmBookingDraft?,
-                ),
-              ),
-            ],
+          ),
+          GoRoute(
+            path: 'payment',
+            builder: (_, state) => FarmPaymentScreen(
+              draft: state.extra as FarmBookingDraft?,
+            ),
           ),
         ],
       ),
-      GoRoute(
-        path: Routes.bookingConfirmation,
-        builder: (_, state) => BookingConfirmationScreen(
-          receipt: state.extra as BookingReceipt?,
-        ),
-      ),
-      GoRoute(
-        path: Routes.bookings,
-        builder: (_, _) => const Scaffold(body: Text('bookings-stub')),
-      ),
-      GoRoute(
-        path: Routes.dashboard,
-        builder: (_, _) => const Scaffold(body: Text('dashboard-stub')),
-      ),
     ],
-  );
-  return ProviderScope(
-    overrides: [currentUserIdProvider.overrideWithValue('mock_uid_1')],
-    child: MaterialApp.router(
-      localizationsDelegates: AppLocalizations.localizationsDelegates,
-      supportedLocales: AppLocalizations.supportedLocales,
-      routerConfig: router,
+  ),
+  GoRoute(
+    path: Routes.bookingConfirmation,
+    builder: (_, state) => BookingConfirmationScreen(
+      receipt: state.extra as BookingReceipt?,
     ),
-  );
-}
+  ),
+  stubRoute(Routes.bookings, 'bookings-stub'),
+  stubRoute(Routes.dashboard, 'dashboard-stub'),
+];
 
 void main() {
   testWidgets('catalog lists farm services and opens details', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(app(initialLocation: Routes.farm));
+    await tester.pumpWidget(
+        await testApp(initialLocation: Routes.farm, routes: _routes));
     await settle(tester);
 
     expect(find.text('Coconut Plucking'), findsOneWidget);
@@ -105,7 +70,8 @@ void main() {
 
   testWidgets('schedule recomputes the total from the quantity', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(app(initialLocation: Routes.farmSchedule('1')));
+    await tester.pumpWidget(await testApp(
+        initialLocation: Routes.farmSchedule('1'), routes: _routes));
     await settle(tester);
 
     // 10 trees x 1000 to start with.
@@ -121,7 +87,8 @@ void main() {
 
   testWidgets('address is required before payment', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(app(initialLocation: Routes.farmSchedule('1')));
+    await tester.pumpWidget(await testApp(
+        initialLocation: Routes.farmSchedule('1'), routes: _routes));
     await settle(tester);
 
     await tester.tap(find.text('Continue to payment'));
@@ -131,9 +98,24 @@ void main() {
     expect(find.text('Order summary'), findsNothing);
   });
 
+  testWidgets('a saved address fills the field in one tap', (tester) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(await testApp(
+        initialLocation: Routes.farmSchedule('1'), routes: _routes));
+    await settle(tester);
+
+    expect(find.text('Use my location'), findsOneWidget);
+    await tester.tap(find.text('Home'));
+    await tester.pump();
+
+    final field = tester.widget<TextFormField>(find.byType(TextFormField));
+    expect(field.controller!.text, isNotEmpty);
+  });
+
   testWidgets('payment records the booking and confirms it', (tester) async {
     useTallPhone(tester);
-    await tester.pumpWidget(app(initialLocation: Routes.farmSchedule('1')));
+    await tester.pumpWidget(await testApp(
+        initialLocation: Routes.farmSchedule('1'), routes: _routes));
     await settle(tester);
 
     await tester.enterText(find.byType(TextFormField), 'Thekkedath House');

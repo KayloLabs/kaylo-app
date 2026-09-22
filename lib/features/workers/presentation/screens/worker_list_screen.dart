@@ -33,7 +33,7 @@ class WorkerListScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final activeLocation = ref.watch(userLocationProvider);
+    final activeLocation = ref.watch(userLocationProvider).label;
     final filterSortState = ref.watch(workerFilterSortProvider);
     final workersAsync = ref.watch(filteredWorkersProvider(serviceId));
 

@@ -28,7 +28,10 @@ class MessagesScreen extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
+        child: RefreshIndicator(
+          onRefresh: () => ref.refresh(chatThreadsProvider.future),
+          child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.l,
             AppSpacing.m,
@@ -91,6 +94,7 @@ class MessagesScreen extends ConsumerWidget {
               ],
             ),
           ],
+          ),
         ),
       ),
     );

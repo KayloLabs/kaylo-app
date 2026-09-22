@@ -1,8 +1,16 @@
 import 'package:flutter/material.dart';
 
+import '../../../../core/theme/app_colors.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
+
+/// Section accent for a catalog category.
+Color categoryAccent(String category) => switch (category) {
+      'farm' => AppColors.farmAccent,
+      'care' => AppColors.careAccent,
+      _ => AppColors.homeAccent,
+    };
 
 String farmUnitLabel(AppLocalizations l10n, FarmUnit unit) => switch (unit) {
       FarmUnit.tree => l10n.unitTree,

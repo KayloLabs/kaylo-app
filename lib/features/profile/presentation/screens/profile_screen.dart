@@ -14,6 +14,8 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import '../../../auth/application/session_controller.dart';
+import '../../application/app_rating_provider.dart';
+import '../widgets/rate_kaylo_sheet.dart';
 
 class ProfileScreen extends ConsumerWidget {
   const ProfileScreen({super.key});
@@ -23,6 +25,7 @@ class ProfileScreen extends ConsumerWidget {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final sessionState = ref.watch(sessionControllerProvider);
     final user = sessionState.whenOrNull(data: (u) => u);
+    final rating = ref.watch(appRatingProvider);
     final l10n = AppLocalizations.of(context)!;
     
     if (user == null) {
@@ -143,8 +146,7 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.location_on_rounded,
                     color: AppColors.farmAccent,
                     title: l10n.savedAddresses,
-                    onTap: () =>
-                        KayloSnackbar.showInfo(context, l10n.comingSoon),
+                    onTap: () => context.push(Routes.addresses),
                   ),
                   _tileDivider(isDark),
                   _MenuTile(
@@ -184,16 +186,15 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.help_rounded,
                     color: AppColors.secondaryAccent,
                     title: l10n.helpSupport,
-                    onTap: () =>
-                        KayloSnackbar.showInfo(context, l10n.comingSoon),
+                    onTap: () => context.push(Routes.help),
                   ),
                   _tileDivider(isDark),
                   _MenuTile(
                     icon: Icons.favorite_rounded,
                     color: AppColors.error,
                     title: l10n.rateKaylo,
-                    onTap: () =>
-                        KayloSnackbar.showInfo(context, l10n.rateThanks),
+                    subtitle: rating == null ? null : l10n.youRated(rating),
+                    onTap: () => showRateKayloSheet(context),
                   ),
                 ],
               ),

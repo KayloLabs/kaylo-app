@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import '../../../../core/models/booking.dart';
 import '../../../../core/models/service_item.dart';
 import '../../../../core/router/routes.dart';
+import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_radius.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -36,7 +37,10 @@ class BookingsScreen extends ConsumerWidget {
     return Scaffold(
       body: SafeArea(
         bottom: false,
-        child: ListView(
+        child: RefreshIndicator(
+          onRefresh: () => ref.refresh(userBookingsProvider.future),
+          child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
           padding: const EdgeInsets.fromLTRB(
             AppSpacing.l,
             AppSpacing.m,
@@ -74,7 +78,8 @@ class BookingsScreen extends ConsumerWidget {
                       description: l10n.noBookingsDescription,
                       icon: Icons.event_available_rounded,
                       actionText: l10n.bookAService,
-                      onActionPressed: () => context.push(Routes.farm),
+                      onActionPressed: () =>
+                          context.push(Routes.homeServices),
                     ),
                   ];
                 }
@@ -126,6 +131,7 @@ class BookingsScreen extends ConsumerWidget {
               ],
             ),
           ],
+          ),
         ),
       ),
     );
@@ -173,6 +179,10 @@ class _BookingCard extends StatelessWidget {
         );
 
     return KayloCard(
+      onTap: () {
+        KayloFeedback.tap();
+        context.push(Routes.bookingDetails(booking.id));
+      },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

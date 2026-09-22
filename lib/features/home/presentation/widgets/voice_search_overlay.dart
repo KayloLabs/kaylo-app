@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/models/service_item.dart';
-import '../../../../core/router/routes.dart';
+import '../../../../core/router/service_routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/services/speech_service.dart';
 import '../../../../core/theme/app_colors.dart';
@@ -460,14 +460,11 @@ class _ResultsCard extends StatelessWidget {
               child: ListTile(
                 onTap: () {
                   KayloFeedback.tap();
-                  if (service.category == 'care') {
-                    // Care has a real destination already.
-                    context.go(Routes.careHome);
-                    Navigator.of(context).pop();
-                  } else {
-                    // TODO(M3): open the service detail screen.
-                    KayloSnackbar.showInfo(context, l10n.comingSoon);
-                  }
+                  // The overlay is its own route; grab the router before
+                  // popping so the push lands on a live context.
+                  final router = GoRouter.of(context);
+                  Navigator.of(context).pop();
+                  openService(router, service);
                 },
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(AppRadius.card),

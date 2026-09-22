@@ -32,11 +32,17 @@ class RatingStars extends StatelessWidget {
         ),
         if (reviewCount != null) ...[
           const SizedBox(width: 4),
-          Text(
-            '($reviewCount reviews)',
-            style: TextStyle(
-              fontSize: size - 2,
-              color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+          // Flexible so a narrow card (search results, list tiles) trims
+          // the review count instead of overflowing the row.
+          Flexible(
+            child: Text(
+              '($reviewCount reviews)',
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontSize: size - 2,
+                color: isDark ? AppColors.textSecondaryDark : AppColors.textSecondary,
+              ),
             ),
           ),
         ]

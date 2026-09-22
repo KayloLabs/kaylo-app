@@ -15,6 +15,20 @@ class FarmTimeSlot {
     FarmTimeSlot(14 * 60, 16 * 60),
     FarmTimeSlot(16 * 60 + 30, 18 * 60 + 30),
   ];
+
+  /// The slot whose start is nearest to [dateTime]'s time of day, so a
+  /// reschedule sheet opens on the booking's current slot.
+  static FarmTimeSlot closestTo(DateTime dateTime) {
+    final minutes = dateTime.hour * 60 + dateTime.minute;
+    var best = all.first;
+    for (final slot in all) {
+      if ((slot.startMinutes - minutes).abs() <
+          (best.startMinutes - minutes).abs()) {
+        best = slot;
+      }
+    }
+    return best;
+  }
 }
 
 /// Everything the customer has chosen on the way to payment. Immutable;

@@ -638,6 +638,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get worker => 'कामगार';
 
   @override
+  String get popularSearches => 'लोकप्रिय खोजें';
+
+  @override
   String get continueToPayment => 'भुगतान पर जाएँ';
 
   @override
@@ -972,5 +975,388 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String primaryContact(String name) {
     return 'मुख्य संपर्क: $name';
+  }
+
+  @override
+  String get unitOrder => 'ऑर्डर';
+
+  @override
+  String unitOrderCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ऑर्डर',
+      one: '1 ऑर्डर',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get standardPartsQuoted => 'पुर्ज़े लगाने से पहले दाम बताया जाता है';
+
+  @override
+  String get standardCleanupAfter => 'जाने से पहले काम की जगह साफ़';
+
+  @override
+  String get standardBackgroundChecked => 'पृष्ठभूमि-जाँचा हुआ केयरगिवर';
+
+  @override
+  String get standardPrescriptionChecked =>
+      'पर्ची फ़ार्मासिस्ट द्वारा जाँची जाती है';
+
+  @override
+  String get careServices => 'केयर सेवाएँ';
+
+  @override
+  String get allServices => 'सभी सेवाएँ';
+
+  @override
+  String get homeServicesTagline =>
+      'प्लंबर, इलेक्ट्रीशियन और सफ़ाईकर्मी जो समय पर आते हैं और काम के बाद सफ़ाई करते हैं।';
+
+  @override
+  String get careServicesTagline =>
+      'आपके अपनों के लिए प्रशिक्षित केयरगिवर और घर तक दवाएँ।';
+
+  @override
+  String get allServicesTagline => 'घर, खेत और केयर में कायलो की हर सेवा।';
+
+  @override
+  String get useMyLocation => 'मेरी लोकेशन इस्तेमाल करें';
+
+  @override
+  String get locating => 'ढूँढ रहे हैं…';
+
+  @override
+  String get locationServicesOff => 'लोकेशन सेवाएँ चालू करके फिर कोशिश करें।';
+
+  @override
+  String get locationDenied => 'लोकेशन की अनुमति नहीं मिली।';
+
+  @override
+  String get locationDeniedForever =>
+      'कायलो के लिए लोकेशन ब्लॉक है। डिवाइस सेटिंग में अनुमति दें।';
+
+  @override
+  String get locationTimeout =>
+      'GPS नहीं मिला। खुली जगह पर जाकर फिर कोशिश करें।';
+
+  @override
+  String get locationUnavailable => 'लोकेशन अभी उपलब्ध नहीं है।';
+
+  @override
+  String get markAllRead => 'सभी पढ़ी हुई करें';
+
+  @override
+  String get noNotificationsTitle => 'सब देख लिया';
+
+  @override
+  String get noNotificationsDescription =>
+      'बुकिंग अपडेट, संदेश और रिमाइंडर यहाँ दिखेंगे।';
+
+  @override
+  String get today => 'आज';
+
+  @override
+  String get earlier => 'पहले';
+
+  @override
+  String get justNow => 'अभी';
+
+  @override
+  String minutesAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count मिनट पहले',
+      one: '1 मिनट पहले',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String hoursAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count घंटे पहले',
+      one: '1 घंटा पहले',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String daysAgo(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count दिन पहले',
+      one: 'कल',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get bookingDetails => 'बुकिंग विवरण';
+
+  @override
+  String get cancelBookingTitle => 'यह बुकिंग रद्द करें?';
+
+  @override
+  String get cancelBookingMessage =>
+      'कामगार को छोड़ दिया जाएगा। आप कभी भी दोबारा बुक कर सकते हैं।';
+
+  @override
+  String get keepBooking => 'बुकिंग रखें';
+
+  @override
+  String get cancelBooking => 'बुकिंग रद्द करें';
+
+  @override
+  String get bookingCancelled => 'बुकिंग रद्द हुई';
+
+  @override
+  String get bookingCancelledBanner => 'यह बुकिंग रद्द कर दी गई थी।';
+
+  @override
+  String get stepRequested => 'अनुरोध';
+
+  @override
+  String get stepConfirmed => 'पक्की';
+
+  @override
+  String get stepInProgress => 'चल रही';
+
+  @override
+  String get stepCompleted => 'पूरी';
+
+  @override
+  String get assignedWorker => 'आपका कामगार';
+
+  @override
+  String get noWorkerYet => 'विज़िट से पहले कामगार तय किया जाएगा।';
+
+  @override
+  String get messageWorker => 'संदेश';
+
+  @override
+  String get reschedule => 'समय बदलें';
+
+  @override
+  String get bookingRescheduled => 'बुकिंग का समय बदला';
+
+  @override
+  String get filters => 'फ़िल्टर';
+
+  @override
+  String get category => 'श्रेणी';
+
+  @override
+  String get applyFilters => 'लागू करें';
+
+  @override
+  String get sortRelevance => 'प्रासंगिकता';
+
+  @override
+  String get sortPriceLowHigh => 'दाम: कम से ज़्यादा';
+
+  @override
+  String get sortPriceHighLow => 'दाम: ज़्यादा से कम';
+
+  @override
+  String get allCategories => 'सभी';
+
+  @override
+  String get noResultsTitle => 'कोई सेवा नहीं मिली';
+
+  @override
+  String get noResultsDescription =>
+      'दूसरा शब्द आज़माएँ, या समस्या बताएँ: \"नल टपक रहा है\" भी चलेगा।';
+
+  @override
+  String resultsFor(int count, String query) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '\"$query\" के लिए $count नतीजे',
+      one: '\"$query\" के लिए 1 नतीजा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourLocation => 'आपकी लोकेशन';
+
+  @override
+  String get or => 'या';
+
+  @override
+  String get townOrCity => 'कस्बा या शहर';
+
+  @override
+  String get townHint => 'जैसे कन्नूर';
+
+  @override
+  String get saveLocation => 'लोकेशन सहेजें';
+
+  @override
+  String get townRequired => 'कृपया कस्बा या शहर भरें';
+
+  @override
+  String locationUpdated(String label) {
+    return 'लोकेशन $label सेट हुई';
+  }
+
+  @override
+  String get enableLocation => 'लोकेशन चालू करें';
+
+  @override
+  String get enableLocationSubtitle =>
+      'कायलो आपकी लोकेशन से पास के कामगार दिखाता है और SOS अलर्ट में उसे साझा करता है।';
+
+  @override
+  String get locationWillAppear => 'आपकी लोकेशन यहाँ दिखेगी';
+
+  @override
+  String get locateAgain => 'फिर से ढूँढें';
+
+  @override
+  String get continueLabel => 'आगे बढ़ें';
+
+  @override
+  String get enterManually => 'खुद भरें';
+
+  @override
+  String get notNow => 'अभी नहीं';
+
+  @override
+  String get noAddressesTitle => 'कोई सहेजा पता नहीं';
+
+  @override
+  String get noAddressesDescription =>
+      'घर या खेत का पता एक बार सहेजें, बुकिंग में एक टैप में चुनें।';
+
+  @override
+  String get addAddress => 'पता जोड़ें';
+
+  @override
+  String get defaultLabel => 'डिफ़ॉल्ट';
+
+  @override
+  String get setAsDefault => 'डिफ़ॉल्ट बनाएँ';
+
+  @override
+  String get removeAddress => 'हटाएँ';
+
+  @override
+  String get addressLabel => 'लेबल';
+
+  @override
+  String get labelHome => 'घर';
+
+  @override
+  String get labelFarm => 'खेत';
+
+  @override
+  String get labelWork => 'काम';
+
+  @override
+  String get labelOther => 'अन्य';
+
+  @override
+  String get labelOtherHint => 'जैसे माँ का घर';
+
+  @override
+  String get addressLine => 'पता';
+
+  @override
+  String get addressSaved => 'पता सहेजा गया';
+
+  @override
+  String get contactUs => 'संपर्क करें';
+
+  @override
+  String get emailUs => 'ईमेल करें';
+
+  @override
+  String get reportProblem => 'समस्या बताएँ';
+
+  @override
+  String get reportProblemSubtitle => 'बताएँ क्या गड़बड़ हुई';
+
+  @override
+  String get reportProblemTemplate => 'क्या हुआ:\nऐप में कहाँ:\nफ़ोन मॉडल:';
+
+  @override
+  String get faq => 'अक्सर पूछे जाने वाले सवाल';
+
+  @override
+  String get faqBookQ => 'सेवा कैसे बुक करें?';
+
+  @override
+  String get faqBookA =>
+      'होम स्क्रीन या खोज से सेवा चुनें, तारीख़, समय और मात्रा तय करें, पता जोड़ें और पक्का करें। बुकिंग आईडी तुरंत मिलती है और बुकिंग में ट्रैक कर सकते हैं।';
+
+  @override
+  String get faqPayQ => 'भुगतान कैसे करें?';
+
+  @override
+  String get faqPayA =>
+      'UPI और कार्ड पक्का करते ही कट जाते हैं। काम पूरा होने पर कामगार को सीधे देने के लिए \"सेवा के बाद भुगतान\" चुनें।';
+
+  @override
+  String get faqCancelQ => 'क्या रद्द या समय बदल सकते हैं?';
+
+  @override
+  String get faqCancelA =>
+      'हाँ। बुकिंग में जाकर समय बदलें या रद्द करें। कामगार के निकलने तक दोनों मुफ़्त हैं।';
+
+  @override
+  String get faqWorkersQ => 'कामगारों की जाँच कैसे होती है?';
+
+  @override
+  String get faqWorkersA =>
+      'सूची में आने से पहले हर कामगार की आईडी जाँची जाती है, और रेटिंग सिर्फ़ उन ग्राहकों से आती है जिन्होंने बुकिंग पूरी की।';
+
+  @override
+  String get faqCareQ => 'केयर मोड क्या है?';
+
+  @override
+  String get faqCareA =>
+      'केयर मोड पूरे ऐप को बुज़ुर्गों के लिए बड़े अक्षर और ऊँचे कॉन्ट्रास्ट वाला बना देता है, दवा रिमाइंडर और एक दबाव में SOS के साथ।';
+
+  @override
+  String get faqSosQ => 'SOS कैसे काम करता है?';
+
+  @override
+  String get faqSosA =>
+      'SOS बटन तीन सेकंड दबाकर रखें। हर आपातकालीन संपर्क को आपकी लोकेशन मिलती है और मुख्य संपर्क को कॉल जाता है।';
+
+  @override
+  String get helpFooter =>
+      'कायलो केरल की एक छोटी टीम बनाती है। हर संदेश पढ़ा जाता है।';
+
+  @override
+  String get couldNotOpenEmail => 'ईमेल ऐप नहीं खुल सका।';
+
+  @override
+  String get rateTitle => 'कायलो कैसा लग रहा है?';
+
+  @override
+  String get rateSubtitle =>
+      'आपकी रेटिंग टीम को बताती है कि आगे किस पर ध्यान दें।';
+
+  @override
+  String get rateComment => 'कुछ सुधारें? (वैकल्पिक)';
+
+  @override
+  String get submitRating => 'भेजें';
+
+  @override
+  String get pickAStar => 'पहले स्टार रेटिंग चुनें';
+
+  @override
+  String youRated(int stars) {
+    return 'आपने कायलो को 5 में से $stars दिए';
   }
 }

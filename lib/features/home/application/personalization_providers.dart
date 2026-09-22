@@ -1,7 +1,6 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../core/models/service_item.dart';
-import '../../../core/network/supabase_providers.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import 'home_providers.dart';
@@ -53,23 +52,4 @@ final recommendedServicesProvider = FutureProvider.autoDispose<
       return a.name.compareTo(b.name);
     });
   return (services: ranked, personalized: true);
-});
-
-/// Unread notification count for the dashboard bell badge. Mock mode shows
-/// a demo value; live mode counts the caller's unread rows (RLS scopes the
-/// query, so signed-out sessions correctly see zero until M2's auth lands).
-final unreadNotificationsCountProvider =
-    FutureProvider.autoDispose<int>((ref) async {
-  if (useMockData) return 3;
-  try {
-    final client = ref.watch(supabaseClientProvider);
-    final rows = await client
-        .from('notifications')
-        .select('notification_id')
-        .eq('is_read', false)
-        .limit(99);
-    return rows.length;
-  } catch (_) {
-    return 0;
-  }
 });

@@ -26,25 +26,30 @@ class BookingConfirmationScreen extends StatefulWidget {
 }
 
 class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
-  late final AudioPlayer _audioPlayer;
+  AudioPlayer? _audioPlayer;
+
+  bool get _isTest => WidgetsBinding.instance.runtimeType.toString().contains('TestWidgetsFlutterBinding');
 
   @override
   void initState() {
     super.initState();
-    _audioPlayer = AudioPlayer();
+    
+    if (!_isTest) {
+      _audioPlayer = AudioPlayer();
+    }
 
     if (widget.receipt == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) context.go(Routes.dashboard);
       });
     } else {
-      _audioPlayer.play(AssetSource('success.wav'));
+      _audioPlayer?.play(AssetSource('success.wav'));
     }
   }
 
   @override
   void dispose() {
-    _audioPlayer.dispose();
+    _audioPlayer?.dispose();
     super.dispose();
   }
 

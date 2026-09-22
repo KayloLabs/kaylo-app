@@ -649,6 +649,9 @@ class AppLocalizationsTa extends AppLocalizations {
   String get worker => 'தொழிலாளி';
 
   @override
+  String get popularSearches => 'பிரபலமான தேடல்கள்';
+
+  @override
   String get continueToPayment => 'பணம் செலுத்த';
 
   @override
@@ -1016,9 +1019,6 @@ class AppLocalizationsTa extends AppLocalizations {
       'மருந்துச்சீட்டு மருந்தாளுநரால் சரிபார்க்கப்படும்';
 
   @override
-  String get homeServices => 'வீட்டு சேவைகள்';
-
-  @override
   String get careServices => 'கேர் சேவைகள்';
 
   @override
@@ -1035,9 +1035,6 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get allServicesTagline =>
       'வீடு, விவசாயம், கேர் என கெய்லோ வழங்கும் எல்லாமும்.';
-
-  @override
-  String get serviceAddress => 'சேவை முகவரி';
 
   @override
   String get useMyLocation => 'என் இருப்பிடத்தைப் பயன்படுத்து';
@@ -1168,13 +1165,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get filters => 'வடிகட்டிகள்';
 
   @override
-  String get reset => 'மீட்டமை';
-
-  @override
   String get category => 'வகை';
-
-  @override
-  String get sortBy => 'வரிசைப்படுத்து';
 
   @override
   String get applyFilters => 'பயன்படுத்து';

@@ -638,6 +638,9 @@ class AppLocalizationsHi extends AppLocalizations {
   String get worker => 'कामगार';
 
   @override
+  String get popularSearches => 'लोकप्रिय खोजें';
+
+  @override
   String get continueToPayment => 'भुगतान पर जाएँ';
 
   @override
@@ -1002,9 +1005,6 @@ class AppLocalizationsHi extends AppLocalizations {
       'पर्ची फ़ार्मासिस्ट द्वारा जाँची जाती है';
 
   @override
-  String get homeServices => 'घर की सेवाएँ';
-
-  @override
   String get careServices => 'केयर सेवाएँ';
 
   @override
@@ -1020,9 +1020,6 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get allServicesTagline => 'घर, खेत और केयर में कायलो की हर सेवा।';
-
-  @override
-  String get serviceAddress => 'सेवा का पता';
 
   @override
   String get useMyLocation => 'मेरी लोकेशन इस्तेमाल करें';
@@ -1152,13 +1149,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get filters => 'फ़िल्टर';
 
   @override
-  String get reset => 'रीसेट';
-
-  @override
   String get category => 'श्रेणी';
-
-  @override
-  String get sortBy => 'क्रम';
 
   @override
   String get applyFilters => 'लागू करें';

@@ -639,6 +639,9 @@ class AppLocalizationsEn extends AppLocalizations {
   String get worker => 'Worker';
 
   @override
+  String get popularSearches => 'Popular searches';
+
+  @override
   String get continueToPayment => 'Continue to payment';
 
   @override
@@ -1004,9 +1007,6 @@ class AppLocalizationsEn extends AppLocalizations {
       'Prescription checked by a pharmacist';
 
   @override
-  String get homeServices => 'Home Services';
-
-  @override
   String get careServices => 'Care Services';
 
   @override
@@ -1023,9 +1023,6 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get allServicesTagline =>
       'Everything Kaylo offers, across home, farm and care.';
-
-  @override
-  String get serviceAddress => 'Service address';
 
   @override
   String get useMyLocation => 'Use my location';
@@ -1155,13 +1152,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get filters => 'Filters';
 
   @override
-  String get reset => 'Reset';
-
-  @override
   String get category => 'Category';
-
-  @override
-  String get sortBy => 'Sort by';
 
   @override
   String get applyFilters => 'Apply';

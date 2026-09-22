@@ -1266,6 +1266,12 @@ abstract class AppLocalizations {
   /// **'Worker'**
   String get worker;
 
+  /// No description provided for @popularSearches.
+  ///
+  /// In en, this message translates to:
+  /// **'Popular searches'**
+  String get popularSearches;
+
   /// No description provided for @continueToPayment.
   ///
   /// In en, this message translates to:
@@ -1854,12 +1860,6 @@ abstract class AppLocalizations {
   /// **'Prescription checked by a pharmacist'**
   String get standardPrescriptionChecked;
 
-  /// No description provided for @homeServices.
-  ///
-  /// In en, this message translates to:
-  /// **'Home Services'**
-  String get homeServices;
-
   /// No description provided for @careServices.
   ///
   /// In en, this message translates to:
@@ -1889,12 +1889,6 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Everything Kaylo offers, across home, farm and care.'**
   String get allServicesTagline;
-
-  /// No description provided for @serviceAddress.
-  ///
-  /// In en, this message translates to:
-  /// **'Service address'**
-  String get serviceAddress;
 
   /// No description provided for @useMyLocation.
   ///
@@ -2094,23 +2088,11 @@ abstract class AppLocalizations {
   /// **'Filters'**
   String get filters;
 
-  /// No description provided for @reset.
-  ///
-  /// In en, this message translates to:
-  /// **'Reset'**
-  String get reset;
-
   /// No description provided for @category.
   ///
   /// In en, this message translates to:
   /// **'Category'**
   String get category;
-
-  /// No description provided for @sortBy.
-  ///
-  /// In en, this message translates to:
-  /// **'Sort by'**
-  String get sortBy;
 
   /// No description provided for @applyFilters.
   ///

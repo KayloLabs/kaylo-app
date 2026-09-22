@@ -645,6 +645,9 @@ class AppLocalizationsMl extends AppLocalizations {
   String get worker => 'തൊഴിലാളി';
 
   @override
+  String get popularSearches => 'ജനപ്രിയ തിരയലുകൾ';
+
+  @override
   String get continueToPayment => 'പേയ്‌മെന്റിലേക്ക്';
 
   @override
@@ -1010,9 +1013,6 @@ class AppLocalizationsMl extends AppLocalizations {
       'കുറിപ്പടി ഫാർമസിസ്റ്റ് പരിശോധിക്കും';
 
   @override
-  String get homeServices => 'വീട്ടുസേവനങ്ങൾ';
-
-  @override
   String get careServices => 'കെയർ സേവനങ്ങൾ';
 
   @override
@@ -1029,9 +1029,6 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get allServicesTagline =>
       'വീട്, കൃഷി, കെയർ എന്നിവയിലായി കെയ്‌ലോ നൽകുന്ന എല്ലാ സേവനങ്ങളും.';
-
-  @override
-  String get serviceAddress => 'സേവന വിലാസം';
 
   @override
   String get useMyLocation => 'എന്റെ ലൊക്കേഷൻ ഉപയോഗിക്കുക';
@@ -1162,13 +1159,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get filters => 'ഫിൽട്ടറുകൾ';
 
   @override
-  String get reset => 'പുനഃസജ്ജമാക്കുക';
-
-  @override
   String get category => 'വിഭാഗം';
-
-  @override
-  String get sortBy => 'ക്രമപ്പെടുത്തുക';
 
   @override
   String get applyFilters => 'പ്രയോഗിക്കുക';

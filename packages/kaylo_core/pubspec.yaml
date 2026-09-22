@@ -1,0 +1,25 @@
+name: kaylo_core
+description: Models, backend access and device services shared by the Kaylo customer and partner apps.
+version: 0.1.0
+publish_to: none
+resolution: workspace
+
+environment:
+  sdk: ^3.11.5
+  flutter: ">=3.27.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flutter_riverpod: ^3.3.1
+  supabase_flutter: ^2.17.2
+  shared_preferences: ^2.5.5
+  geolocator: ^14.0.3
+  http: ^1.6.0
+  audioplayers: ^6.7.1
+  speech_to_text: ^7.4.0
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0

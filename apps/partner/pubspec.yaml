@@ -1,0 +1,32 @@
+name: kaylo_partner
+description: "Kaylo Partner: the app workers use to receive, accept and complete Kaylo bookings."
+publish_to: 'none'
+# Member of the pub workspace at the repository root; run `flutter pub get`
+# there (or here, which resolves the whole workspace).
+resolution: workspace
+
+version: 0.1.0+1
+
+environment:
+  sdk: ^3.11.5
+
+dependencies:
+  flutter:
+    sdk: flutter
+
+  # Shared with the customer app: models, Supabase, device services, theme
+  # and widgets.
+  kaylo_core:
+    path: ../../packages/kaylo_core
+  kaylo_ui:
+    path: ../../packages/kaylo_ui
+
+  flutter_riverpod: ^3.3.1
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+  flutter_lints: ^6.0.0
+
+flutter:
+  uses-material-design: true

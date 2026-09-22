@@ -140,6 +140,52 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           receipt: state.extra as BookingReceipt?,
         ),
       ),
+
+      // Home discovery: catalog -> details -> workers -> profile, and
+      // search. Full-screen like the farm flow; the dashboard pushes in.
+      GoRoute(
+        path: Routes.homeServices,
+        builder: (context, state) => const HomeServicesScreen(),
+      ),
+      GoRoute(
+        path: Routes.serviceDetails,
+        builder: (context, state) => ServiceDetailsScreen(
+          serviceId: state.uri.queryParameters['id'] ?? '',
+          initialService: state.extra as ServiceItem?,
+        ),
+      ),
+      GoRoute(
+        path: Routes.workerList,
+        builder: (context, state) => WorkerListScreen(
+          serviceId: state.uri.queryParameters['serviceId'] ?? '',
+          serviceName: state.uri.queryParameters['serviceName'],
+        ),
+      ),
+      GoRoute(
+        path: Routes.workerProfile,
+        builder: (context, state) => WorkerProfileScreen(
+          workerId: state.uri.queryParameters['workerId'] ?? '',
+          serviceId: state.uri.queryParameters['serviceId'],
+          initialWorker: state.extra as Worker?,
+        ),
+      ),
+      GoRoute(
+        path: Routes.search,
+        builder: (context, state) => const SearchScreen(),
+      ),
+      // Booking handoff from a worker list or profile: the same schedule
+      // and payment steps the farm flow uses, with the chosen worker
+      // pinned on the draft.
+      GoRoute(
+        path: Routes.bookService,
+        builder: (context, state) {
+          final workerId = state.uri.queryParameters['workerId'];
+          return FarmScheduleScreen(
+            serviceId: state.uri.queryParameters['serviceId'] ?? '',
+            workerId: workerId == null || workerId.isEmpty ? null : workerId,
+          );
+        },
+      ),
       GoRoute(
         path: '/chat/:threadId', // Routes.chat(id)
         builder: (context, state) => ConversationScreen(
@@ -158,73 +204,6 @@ final goRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.dashboard,
                 builder: (context, state) => const DashboardScreen(),
-                routes: [
-                  GoRoute(
-                    path: 'home-services',
-                    builder: (context, state) => const HomeServicesScreen(),
-                  ),
-                  GoRoute(
-                    path: 'service-details',
-                    builder: (context, state) {
-                      final id = state.uri.queryParameters['id'] ?? '';
-                      final service = state.extra as ServiceItem?;
-                      return ServiceDetailsScreen(
-                        serviceId: id,
-                        initialService: service,
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: 'workers',
-                    builder: (context, state) {
-                      final serviceId =
-                          state.uri.queryParameters['serviceId'] ?? '';
-                      final serviceName =
-                          state.uri.queryParameters['serviceName'];
-                      return WorkerListScreen(
-                        serviceId: serviceId,
-                        serviceName: serviceName,
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: 'worker-profile',
-                    builder: (context, state) {
-                      final workerId =
-                          state.uri.queryParameters['workerId'] ?? '';
-                      final serviceId =
-                          state.uri.queryParameters['serviceId'];
-                      final worker = state.extra as Worker?;
-                      return WorkerProfileScreen(
-                        workerId: workerId,
-                        serviceId: serviceId,
-                        initialWorker: worker,
-                      );
-                    },
-                  ),
-                  GoRoute(
-                    path: 'search',
-                    builder: (context, state) => const SearchScreen(),
-                  ),
-                  GoRoute(
-                    path: 'book-service',
-                    builder: (context, state) {
-                      final serviceId =
-                          state.uri.queryParameters['serviceId'] ?? '';
-                      final workerId =
-                          state.uri.queryParameters['workerId'] ?? '';
-                      return Scaffold(
-                        appBar: AppBar(title: const Text('Book Service')),
-                        body: Center(
-                          child: Text(
-                            'Booking Service: $serviceId\nWorker: $workerId\n(Handoff to M4)',
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                ],
               ),
             ],
           ),

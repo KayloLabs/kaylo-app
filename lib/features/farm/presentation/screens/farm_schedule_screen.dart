@@ -15,7 +15,9 @@ import '../../../../core/widgets/kaylo_loader.dart';
 import '../../../../core/widgets/kaylo_snackbar.dart';
 import '../../../../core/widgets/kaylo_text_field.dart';
 import '../../../../core/widgets/price_tag.dart';
+import '../../../../core/widgets/use_my_location_button.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../profile/application/addresses_providers.dart';
 import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
@@ -57,17 +59,17 @@ class FarmScheduleScreen extends ConsumerWidget {
   }
 }
 
-class _ScheduleForm extends StatefulWidget {
+class _ScheduleForm extends ConsumerStatefulWidget {
   final ServiceItem service;
   final String? workerId;
 
   const _ScheduleForm({required this.service, this.workerId});
 
   @override
-  State<_ScheduleForm> createState() => _ScheduleFormState();
+  ConsumerState<_ScheduleForm> createState() => _ScheduleFormState();
 }
 
-class _ScheduleFormState extends State<_ScheduleForm> {
+class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
   late FarmBookingDraft _draft;
   final _addressController = TextEditingController();
 
@@ -319,6 +321,33 @@ class _ScheduleFormState extends State<_ScheduleForm> {
             controller: _addressController,
             prefixIcon: const Icon(Icons.pin_drop_rounded),
           ),
+          const SizedBox(height: AppSpacing.s),
+          // GPS and the customer's saved addresses fill the field in one
+          // tap; typing stays available for a one-off place.
+          Wrap(
+            spacing: AppSpacing.s,
+            runSpacing: AppSpacing.s,
+            children: [
+              UseMyLocationButton(
+                onResolved: (resolved) => setState(() {
+                  _addressController.text =
+                      resolved.addressLine ?? resolved.label;
+                }),
+              ),
+              for (final address in ref
+                      .watch(savedAddressesProvider)
+                      .whenOrNull(data: (list) => list) ??
+                  const [])
+                ActionChip(
+                  avatar: Icon(_addressIcon(address.label), size: 18),
+                  label: Text(address.label),
+                  onPressed: () {
+                    KayloFeedback.tap();
+                    setState(() => _addressController.text = address.line);
+                  },
+                ),
+            ],
+          ),
         ],
       ),
       bottomNavigationBar: SafeArea(
@@ -357,4 +386,12 @@ class _ScheduleFormState extends State<_ScheduleForm> {
       ),
     );
   }
+}
+
+IconData _addressIcon(String label) {
+  final l = label.toLowerCase();
+  if (l.contains('home') || l.contains('house')) return Icons.home_rounded;
+  if (l.contains('farm')) return Icons.agriculture_rounded;
+  if (l.contains('work') || l.contains('office')) return Icons.work_rounded;
+  return Icons.place_rounded;
 }

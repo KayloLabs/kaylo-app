@@ -103,6 +103,7 @@ class SettingsScreen extends ConsumerWidget {
               trailing: const Icon(Icons.chevron_right_rounded),
               onTap: () => showModalBottomSheet(
                 context: context,
+                useRootNavigator: true,
                 backgroundColor: Colors.transparent,
                 isScrollControlled: true,
                 builder: (context) => const LanguageSelectorSheet(),

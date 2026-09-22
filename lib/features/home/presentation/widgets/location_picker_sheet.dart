@@ -16,6 +16,8 @@ import '../../application/user_location_provider.dart';
 Future<bool> showLocationPickerSheet(BuildContext context) async {
   final saved = await showModalBottomSheet<bool>(
     context: context,
+    // Over the whole app so the floating bottom nav stays underneath.
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (context) => const LocationPickerSheet(),

@@ -13,6 +13,8 @@ import '../../application/app_rating_provider.dart';
 Future<void> showRateKayloSheet(BuildContext context) {
   return showModalBottomSheet<void>(
     context: context,
+    // Over the whole app so the floating bottom nav stays underneath.
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     builder: (_) => const RateKayloSheet(),

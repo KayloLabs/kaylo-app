@@ -69,6 +69,7 @@ class SavedAddressesScreen extends ConsumerWidget {
             KayloFeedback.tap();
             showModalBottomSheet<void>(
               context: context,
+              useRootNavigator: true,
               isScrollControlled: true,
               useSafeArea: true,
               builder: (_) => const _AddAddressSheet(),

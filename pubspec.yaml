@@ -1,0 +1,15 @@
+name: kaylo_workspace
+description: Kaylo customer and partner apps with the packages they share. Not a package itself.
+publish_to: none
+
+environment:
+  sdk: ^3.11.5
+
+# Pub workspace: one dependency resolution and one pubspec.lock for
+# every app and package below. Run `flutter pub get` here once; each
+# member is then built, analyzed and tested from its own directory.
+workspace:
+  - apps/customer
+  - apps/partner
+  - packages/kaylo_core
+  - packages/kaylo_ui

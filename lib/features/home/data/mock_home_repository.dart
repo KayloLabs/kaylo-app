@@ -14,10 +14,10 @@ class MockHomeRepository implements HomeRepository {
     ServiceItem(id: '9', name: 'Medicine Delivery', category: 'care', description: 'Medicines at your doorstep', iconPath: 'assets_kaylo/3d_transparent/mode_care.png', basePrice: 100),
     ServiceItem(id: '10', name: 'Tree Pruning', category: 'farm', description: 'Overhanging branches trimmed safely near roofs and power lines', iconPath: 'assets_kaylo/3d_transparent/icon_garden.png', basePrice: 600, estimatedDurationMinutes: 90),
     ServiceItem(id: '11', name: 'Plot Clearing', category: 'farm', description: 'Grass and bush cleared with brush cutters', iconPath: 'assets_kaylo/3d_transparent/mode_farm.png', basePrice: 350, estimatedDurationMinutes: 60),
-    ServiceItem(id: '12', name: 'Carpentry', category: 'home', description: 'Furniture repair, assembly, and woodwork', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 450),
-    ServiceItem(id: '13', name: 'Painting', category: 'home', description: 'Interior and exterior home painting', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 800),
-    ServiceItem(id: '14', name: 'AC Service', category: 'home', description: 'AC maintenance, repair, and gas refilling', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 650),
-    ServiceItem(id: '15', name: 'Appliance Repair', category: 'home', description: 'Washing machine, fridge, and TV repair', iconPath: 'assets_kaylo/3d_transparent/icon_more.png', basePrice: 500),
+    ServiceItem(id: '12', name: 'Carpentry', category: 'home', description: 'Furniture repair, assembly, and woodwork', iconPath: 'assets_kaylo/3d_transparent/icon_carpentry.png', basePrice: 450),
+    ServiceItem(id: '13', name: 'Painting', category: 'home', description: 'Interior and exterior home painting', iconPath: 'assets_kaylo/3d_transparent/icon_painting.png', basePrice: 800),
+    ServiceItem(id: '14', name: 'AC Service', category: 'home', description: 'AC maintenance, repair, and gas refilling', iconPath: 'assets_kaylo/3d_transparent/icon_ac.png', basePrice: 650),
+    ServiceItem(id: '15', name: 'Appliance Repair', category: 'home', description: 'Washing machine, fridge, and TV repair', iconPath: 'assets_kaylo/3d_transparent/icon_appliance.png', basePrice: 500),
   ];
 
   @override

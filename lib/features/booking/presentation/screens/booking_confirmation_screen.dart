@@ -1,4 +1,6 @@
+import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter/material.dart';
+import '../../../../core/widgets/google_pay_tick.dart';
 import 'package:go_router/go_router.dart';
 
 import '../../../../core/router/routes.dart';
@@ -24,14 +26,26 @@ class BookingConfirmationScreen extends StatefulWidget {
 }
 
 class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
+  late final AudioPlayer _audioPlayer;
+
   @override
   void initState() {
     super.initState();
+    _audioPlayer = AudioPlayer();
+    
     if (widget.receipt == null) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         if (mounted) context.go(Routes.dashboard);
       });
+    } else {
+      _audioPlayer.play(AssetSource('success.wav'));
     }
+  }
+
+  @override
+  void dispose() {
+    _audioPlayer.dispose();
+    super.dispose();
   }
 
   @override
@@ -93,26 +107,10 @@ class _BookingConfirmationScreenState extends State<BookingConfirmationScreen> {
               AppSpacing.xxl,
             ),
             children: [
-              Center(
-                child: TweenAnimationBuilder<double>(
-                  tween: Tween(begin: 0.4, end: 1),
-                  duration: const Duration(milliseconds: 600),
-                  curve: Curves.easeOutBack,
-                  builder: (context, scale, child) =>
-                      Transform.scale(scale: scale, child: child),
-                  child: Container(
-                    width: 104,
-                    height: 104,
-                    decoration: BoxDecoration(
-                      color: AppColors.brandPrimary.withValues(alpha: 0.12),
-                      shape: BoxShape.circle,
-                    ),
-                    child: const Icon(
-                      Icons.check_rounded,
-                      size: 60,
-                      color: AppColors.brandPrimary,
-                    ),
-                  ),
+              const Center(
+                child: GooglePayTick(
+                  size: 104,
+                  color: AppColors.brandPrimary,
                 ),
               ),
               const SizedBox(height: AppSpacing.xl),

@@ -46,6 +46,23 @@ class SupabaseWorkersRepository implements WorkersRepository {
   }
 
   @override
+  Future<List<Worker>> searchWorkers(String query) async {
+    final term = query.trim();
+    if (term.isEmpty) return [];
+    try {
+      final rows = await _client
+          .from('worker_profiles')
+          .select()
+          .or('full_name.ilike.%$term%,district.ilike.%$term%')
+          .eq('is_available', true)
+          .order('average_rating', ascending: false);
+      return rows.map(_workerFromRow).toList();
+    } catch (e) {
+      throw mapSupabaseError(e);
+    }
+  }
+
+  @override
   Future<List<WorkerReview>> getReviewsForWorker(String workerId) async {
     try {
       final rows = await _client

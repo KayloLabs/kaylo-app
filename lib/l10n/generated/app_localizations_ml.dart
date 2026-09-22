@@ -636,6 +636,15 @@ class AppLocalizationsMl extends AppLocalizations {
   String get addressRequired => 'കൃഷിയിടത്തിന്റെ വിലാസം നൽകുക';
 
   @override
+  String get serviceAddress => 'സേവന വിലാസം';
+
+  @override
+  String get serviceAddressRequired => 'സേവന വിലാസം നൽകുക';
+
+  @override
+  String get worker => 'തൊഴിലാളി';
+
+  @override
   String get continueToPayment => 'പേയ്‌മെന്റിലേക്ക്';
 
   @override

@@ -16,6 +16,7 @@ import '../../../../core/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../booking/domain/booking_receipt.dart';
 import '../../../booking/domain/payment_method.dart';
+import '../../../workers/application/workers_providers.dart';
 import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
@@ -35,9 +36,19 @@ class FarmPaymentScreen extends ConsumerStatefulWidget {
 class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
   PaymentMethod _method = PaymentMethod.upi;
 
+  /// Name of the worker the customer picked, once loaded; null when none
+  /// was picked or the lookup has not finished.
+  String? _workerName(FarmBookingDraft draft) {
+    final id = draft.workerId;
+    if (id == null) return null;
+    return ref.watch(workerDetailProvider(id)).whenOrNull(data: (w) => w.name);
+  }
+
   Future<void> _confirm(FarmBookingDraft draft) async {
     final l10n = AppLocalizations.of(context)!;
     final unit = farmInfoFor(draft.service).unit;
+    final isFarm = draft.service.category == 'farm';
+    final workerName = _workerName(draft);
 
     final booking = await ref
         .read(farmCheckoutControllerProvider.notifier)
@@ -58,8 +69,12 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         service: draft.service,
         paymentMethod: _method,
         extras: [
+          if (workerName != null) ReceiptLine(l10n.worker, workerName),
           ReceiptLine(l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
-          ReceiptLine(l10n.farmAddress, draft.address),
+          ReceiptLine(
+            isFarm ? l10n.farmAddress : l10n.serviceAddress,
+            draft.address,
+          ),
         ],
       ),
     );
@@ -86,6 +101,8 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
     final secondary =
         isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
     final unit = farmInfoFor(draft.service).unit;
+    final isFarm = draft.service.category == 'farm';
+    final workerName = _workerName(draft);
     final isProcessing = ref.watch(farmCheckoutControllerProvider).isLoading;
 
     Widget summaryRow(String label, String value) => Padding(
@@ -134,6 +151,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
             child: Column(
               children: [
                 summaryRow(l10n.service, draft.service.name),
+                if (workerName != null) summaryRow(l10n.worker, workerName),
                 summaryRow(l10n.date, loc.formatMediumDate(draft.date)),
                 summaryRow(l10n.time, formatTimeSlot(context, draft.slot)),
                 summaryRow(
@@ -143,7 +161,10 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                   '${formatRupees(draft.service.basePrice)} '
                   '${l10n.perUnit(farmUnitLabel(l10n, unit))}',
                 ),
-                summaryRow(l10n.farmAddress, draft.address),
+                summaryRow(
+                  isFarm ? l10n.farmAddress : l10n.serviceAddress,
+                  draft.address,
+                ),
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
                   child: Divider(height: 1),

@@ -17,11 +17,13 @@ final farmServicesProvider =
   return ref.watch(homeRepositoryProvider).getServicesByCategory('farm');
 });
 
-/// One farm service by id; throws when the id is not a farm service so
-/// a bad deep link surfaces as an error state instead of a blank screen.
+/// One service by id for the checkout screens. Reads the whole catalog,
+/// not just farm, because the home flow books through the same schedule
+/// and payment steps. Throws on an unknown id so a bad deep link
+/// surfaces as an error state instead of a blank screen.
 final farmServiceProvider =
     FutureProvider.autoDispose.family<ServiceItem, String>((ref, id) async {
-  final services = await ref.watch(farmServicesProvider.future);
+  final services = await ref.watch(fullCatalogProvider.future);
   return services.firstWhere(
     (s) => s.id == id,
     orElse: () => throw ServerFailure('Service not found', code: 'not-found'),
@@ -76,7 +78,8 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         final payments = ref.read(paymentServiceProvider);
         final initialized = await payments.initializePayment(
           amount: draft.total.toStringAsFixed(2),
-          orderId: 'farm-${draft.service.id}-${draft.scheduledAt.millisecondsSinceEpoch}',
+          orderId:
+              '${draft.service.category}-${draft.service.id}-${draft.scheduledAt.millisecondsSinceEpoch}',
           currency: 'INR',
         );
         final paid = initialized && await payments.processPayment();
@@ -90,6 +93,7 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
               id: '',
               userId: userId,
               serviceId: draft.service.id,
+              workerId: draft.workerId,
               scheduledAt: draft.scheduledAt,
               status: method == PaymentMethod.payAfterService
                   ? BookingStatus.pending

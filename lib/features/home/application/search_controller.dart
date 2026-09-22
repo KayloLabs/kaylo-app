@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../../../core/models/service_item.dart';
 import '../../../core/models/worker.dart';
 import '../../../core/services/storage_service.dart';
+import '../../workers/application/workers_providers.dart';
 import 'home_providers.dart';
 
 class SearchResults {
@@ -93,9 +94,10 @@ class SearchNotifier extends Notifier<SearchState> {
 
   Future<void> _performSearch(String query) async {
     final homeRepo = ref.read(homeRepositoryProvider);
+    final workersRepo = ref.read(workersRepositoryProvider);
     try {
       final servicesFuture = homeRepo.searchServices(query);
-      final workersFuture = homeRepo.searchWorkers(query);
+      final workersFuture = workersRepo.searchWorkers(query);
 
       final results = await Future.wait([servicesFuture, workersFuture]);
       final services = results[0] as List<ServiceItem>;

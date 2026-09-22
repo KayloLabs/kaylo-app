@@ -50,6 +50,18 @@ class MockWorkersRepository implements WorkersRepository {
   }
 
   @override
+  Future<List<Worker>> searchWorkers(String query) async {
+    await Future.delayed(const Duration(milliseconds: 200));
+    final lower = query.trim().toLowerCase();
+    if (lower.isEmpty) return [];
+    return _mockWorkers
+        .where((w) =>
+            w.name.toLowerCase().contains(lower) ||
+            w.location.toLowerCase().contains(lower))
+        .toList();
+  }
+
+  @override
   Future<List<WorkerReview>> getReviewsForWorker(String workerId) async {
     await Future.delayed(const Duration(milliseconds: 200));
     return _mockReviews[workerId] ?? [

@@ -22,16 +22,25 @@ import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
 import '../widgets/quantity_stepper.dart';
 
+/// Schedule step of checkout. Serves every category: the farm flow
+/// reaches it from the service details page, the home flow from a
+/// worker list or profile (which also pins [workerId]).
 class FarmScheduleScreen extends ConsumerWidget {
   final String serviceId;
+  final String? workerId;
 
-  const FarmScheduleScreen({super.key, required this.serviceId});
+  const FarmScheduleScreen({
+    super.key,
+    required this.serviceId,
+    this.workerId,
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     return ref.watch(farmServiceProvider(serviceId)).when(
-          data: (service) => _ScheduleForm(service: service),
+          data: (service) =>
+              _ScheduleForm(service: service, workerId: workerId),
           loading: () => Scaffold(
             appBar: AppBar(),
             body: const Center(child: KayloLoader()),
@@ -50,8 +59,9 @@ class FarmScheduleScreen extends ConsumerWidget {
 
 class _ScheduleForm extends StatefulWidget {
   final ServiceItem service;
+  final String? workerId;
 
-  const _ScheduleForm({required this.service});
+  const _ScheduleForm({required this.service, this.workerId});
 
   @override
   State<_ScheduleForm> createState() => _ScheduleFormState();
@@ -62,6 +72,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
   final _addressController = TextEditingController();
 
   FarmServiceInfo get _info => farmInfoFor(widget.service);
+  bool get _isFarm => widget.service.category == 'farm';
 
   @override
   void initState() {
@@ -71,9 +82,15 @@ class _ScheduleFormState extends State<_ScheduleForm> {
       service: widget.service,
       date: DateTime(now.year, now.month, now.day + 1),
       slot: FarmTimeSlot.all[1],
-      // Trees are booked by the dozen or so; hourly work by the morning.
-      quantity: _info.unit == FarmUnit.tree ? 10 : 2,
+      // Trees are booked by the dozen or so, hourly work by the morning,
+      // and a tradesperson's callout is one visit.
+      quantity: switch (_info.unit) {
+        FarmUnit.tree => 10,
+        FarmUnit.hour => 2,
+        FarmUnit.visit => 1,
+      },
       address: '',
+      workerId: widget.workerId,
     );
   }
 
@@ -97,8 +114,11 @@ class _ScheduleFormState extends State<_ScheduleForm> {
   void _continue() {
     final address = _addressController.text.trim();
     if (address.isEmpty) {
+      final l10n = AppLocalizations.of(context)!;
       KayloSnackbar.showError(
-          context, AppLocalizations.of(context)!.addressRequired);
+        context,
+        _isFarm ? l10n.addressRequired : l10n.serviceAddressRequired,
+      );
       return;
     }
     context.push(
@@ -119,6 +139,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
         .titleMedium
         ?.copyWith(fontWeight: FontWeight.w700);
     final unit = _info.unit;
+    final accent = _isFarm ? AppColors.farmAccent : AppColors.brandPrimary;
 
     return Scaffold(
       appBar: AppBar(title: Text(l10n.scheduleTitle)),
@@ -133,7 +154,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
           Container(
             padding: const EdgeInsets.all(AppSpacing.m),
             decoration: BoxDecoration(
-              color: AppColors.farmAccent.withValues(alpha: isDark ? 0.18 : 0.12),
+              color: accent.withValues(alpha: isDark ? 0.18 : 0.12),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -168,8 +189,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
             ),
             child: Row(
               children: [
-                const Icon(Icons.calendar_today_rounded,
-                    color: AppColors.farmAccent, size: 20),
+                Icon(Icons.calendar_today_rounded, color: accent, size: 20),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: Text(
@@ -294,7 +314,7 @@ class _ScheduleFormState extends State<_ScheduleForm> {
           const SizedBox(height: AppSpacing.xl),
 
           KayloTextField(
-            label: l10n.farmAddress,
+            label: _isFarm ? l10n.farmAddress : l10n.serviceAddress,
             hintText: l10n.farmAddressHint,
             controller: _addressController,
             prefixIcon: const Icon(Icons.pin_drop_rounded),

@@ -43,12 +43,6 @@ void main() {
       expect(results, isNotEmpty);
       expect(results.first.name, equals('Plumbing'));
     });
-
-    test('searchWorkers matches worker name and service', () async {
-      final results = await homeRepo.searchWorkers('Suresh');
-      expect(results, isNotEmpty);
-      expect(results.any((w) => w.name.contains('Suresh')), isTrue);
-    });
   });
 
   group('M3 - Workers, Reviews, Filter & Sort Tests', () {
@@ -56,6 +50,23 @@ void main() {
 
     setUp(() {
       workersRepo = MockWorkersRepository();
+    });
+
+    test('searchWorkers matches worker name and district', () async {
+      final byName = await workersRepo.searchWorkers('Suresh');
+      expect(byName.map((w) => w.id), equals(['w3']));
+
+      final byDistrict = await workersRepo.searchWorkers('kannur');
+      expect(byDistrict.map((w) => w.id), equals(['w10']));
+
+      expect(await workersRepo.searchWorkers('   '), isEmpty);
+    });
+
+    test('searchWorkers returns the same workers the service lists do', () async {
+      final searched = await workersRepo.searchWorkers('Raju');
+      final listed = await workersRepo.getWorkersByServiceId('4');
+      expect(searched.single.id, equals('w1'));
+      expect(listed.any((w) => w.id == 'w1'), isTrue);
     });
 
     test('getWorkersByService returns workers with rich metadata', () async {

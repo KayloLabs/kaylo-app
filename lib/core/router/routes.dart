@@ -36,13 +36,18 @@ class Routes {
   static const String careSos = '/care/sos';
   static const String careSosHistory = '/care/sos/history';
 
+  // Discovery and booking handoff, pushed over the shell so the bottom
+  // nav does not sit under details, worker lists and checkout.
+  // serviceDetails takes ?id=, workerList ?serviceId=&serviceName=,
+  // workerProfile ?workerId=&serviceId=, bookService ?serviceId=&workerId=.
+  static const String homeServices = '/home-services';
+  static const String serviceDetails = '/service-details';
+  static const String workerList = '/workers';
+  static const String workerProfile = '/worker-profile';
+  static const String search = '/search';
+  static const String bookService = '/book-service';
+
   // Feature screens
-  static const String homeServices = '/dashboard/home-services';
-  static const String serviceDetails = '/dashboard/service-details';
-  static const String workerList = '/dashboard/workers';
-  static const String workerProfile = '/dashboard/worker-profile';
-  static const String search = '/dashboard/search';
-  static const String bookService = '/dashboard/book-service';
   static const String payment = '/dashboard/payment';
   static const String confirmation = '/dashboard/confirmation';
   static const String tracking = '/dashboard/tracking';

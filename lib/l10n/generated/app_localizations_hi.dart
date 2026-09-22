@@ -629,6 +629,15 @@ class AppLocalizationsHi extends AppLocalizations {
   String get addressRequired => 'कृपया खेत का पता भरें';
 
   @override
+  String get serviceAddress => 'सेवा का पता';
+
+  @override
+  String get serviceAddressRequired => 'कृपया सेवा का पता भरें';
+
+  @override
+  String get worker => 'कामगार';
+
+  @override
   String get continueToPayment => 'भुगतान पर जाएँ';
 
   @override

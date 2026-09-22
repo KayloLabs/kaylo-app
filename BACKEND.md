@@ -36,9 +36,13 @@ feature's `data/` folder implement them, so no UI code knows the difference.
    2. `supabase/migrations/0002_rls_policies.sql`
    3. `supabase/seed.sql`
    4. `supabase/migrations/0003_care_contacts_and_logs.sql`
+   5. `supabase/migrations/0004_care_doctors_caregivers.sql`
 
-   A project that already ran the first three only needs step 4 (it is
-   also appended to `setup_all.sql` for fresh projects).
+   A project that already ran the earlier steps only needs the new
+   migrations (each is also appended to `setup_all.sql` for fresh
+   projects). 0004 adds the `doctors`, `caregivers` and
+   `doctor_appointments` tables the Care doctor and caregiver screens
+   read, seeded with the same directory the mock mode shows.
 3. Grab the project URL and anon key from **Settings → API**.
 4. Run the app:
 

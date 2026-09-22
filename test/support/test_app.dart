@@ -5,6 +5,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo/core/models/app_user.dart';
 import 'package:kaylo/core/services/location_service.dart';
+import 'package:kaylo/core/services/sound_service.dart';
 import 'package:kaylo/core/services/storage_service.dart';
 import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/l10n/generated/app_localizations.dart';
@@ -34,7 +35,8 @@ final testUser = AppUser(
 );
 
 /// A signed-in, mock-backed app around [routes], with in-memory
-/// SharedPreferences so storage-backed providers work.
+/// SharedPreferences so storage-backed providers work and no audio
+/// plugin, since the test runner has none.
 Future<Widget> testApp({
   required String initialLocation,
   required List<RouteBase> routes,
@@ -48,6 +50,7 @@ Future<Widget> testApp({
       sharedPreferencesProvider.overrideWithValue(prefs),
       currentUserProvider.overrideWithValue(testUser),
       currentUserIdProvider.overrideWithValue(testUser.id),
+      soundServiceProvider.overrideWithValue(SilentSoundService()),
       ...overrides,
     ],
     child: MaterialApp.router(

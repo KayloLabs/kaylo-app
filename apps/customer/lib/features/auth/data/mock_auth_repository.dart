@@ -36,7 +36,7 @@ class MockAuthRepository implements AuthRepository {
   AppUser? get currentUser => _currentUser;
 
   @override
-  Future<void> signInWithPhone(String phone) async {
+  Future<void> signInWithPhone(String phone, {String? displayName}) async {
     await Future.delayed(const Duration(seconds: 1));
     // Simulate OTP sent successfully
   }

@@ -85,7 +85,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).signInWithPhone(formattedPhone);
+      await ref.read(authRepositoryProvider).signInWithPhone(
+            formattedPhone,
+            displayName: _isSignUp ? _firstNameController.text.trim() : null,
+          );
       if (mounted) {
         context.push(Routes.loginOtp, extra: formattedPhone);
       }

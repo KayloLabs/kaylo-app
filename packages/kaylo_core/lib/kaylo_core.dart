@@ -4,6 +4,7 @@
 library;
 
 export 'config/app_env.dart';
+export 'firebase/firebase_bootstrap.dart';
 export 'models/app_user.dart';
 export 'models/booking.dart';
 export 'models/service_item.dart';
@@ -11,6 +12,7 @@ export 'models/worker.dart';
 export 'network/app_failure.dart';
 export 'network/error_mapper.dart';
 export 'network/supabase_providers.dart';
+export 'services/device_tokens.dart';
 export 'services/feedback_service.dart';
 export 'services/location_service.dart';
 export 'services/notification_service.dart';

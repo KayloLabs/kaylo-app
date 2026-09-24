@@ -1,4 +1,4 @@
-package com.example.kaylo
+package com.kaylo.partner
 
 import io.flutter.embedding.android.FlutterActivity
 

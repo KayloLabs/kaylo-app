@@ -1,9 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kaylo_core/kaylo_core.dart';
 import 'package:kaylo_ui/kaylo_ui.dart';
 
-void main() {
+import 'firebase_options.dart';
+
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  try {
+    await FirebaseBootstrap.initialize(DefaultFirebaseOptions.currentPlatform);
+  } on UnsupportedError {
+    // No Firebase options for this platform (desktop, or not configured
+    // yet); the app still runs, without push, crash reports or analytics.
+  }
   runApp(const ProviderScope(child: KayloPartnerApp()));
 }
 

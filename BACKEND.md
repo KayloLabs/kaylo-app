@@ -37,6 +37,7 @@ feature's `data/` folder implement them, so no UI code knows the difference.
    3. `supabase/seed.sql`
    4. `supabase/migrations/0003_care_contacts_and_logs.sql`
    5. `supabase/migrations/0004_care_doctors_caregivers.sql`
+   6. `supabase/migrations/0005_firebase_auth_and_device_tokens.sql`
 
    A project that already ran the earlier steps only needs the new
    migrations (each is also appended to `setup_all.sql` for fresh
@@ -92,3 +93,38 @@ cd apps/customer && flutter run -d chrome --dart-define=SUPABASE_URL=https://<pr
   `Supabase.instance.client.auth.currentSession`.
 - Live GPS tracking and chat can use Supabase Realtime channels on
   `messages` — the schema is already subscribed-ready.
+
+## Firebase (auth, push, crashes, analytics)
+
+Firebase provides the platform services; the data stays in Supabase.
+
+- **Authentication**: phone OTP through Firebase. Supabase accepts the
+  Firebase ID token as a third-party JWT, so the schema and every RLS
+  policy keep working. Migration `0005` makes `persons.auth_user_id`
+  hold the Firebase uid and switches the helpers to the token subject.
+- **Cloud Messaging**: each signed-in device registers its token in
+  `device_tokens` (`person_id`, `platform`, `app`), ready for a booking
+  webhook to push to.
+- **Crashlytics** and **Analytics**: wired in `FirebaseBootstrap`
+  (`packages/kaylo_core`); screen views come from a router observer.
+
+One-time setup:
+
+1. Firebase console: create the project, enable Phone sign-in (add test
+   numbers with fixed codes for demos), register the six apps (customer
+   and partner, each Android `com.kaylo.app` / `com.kaylo.partner`, iOS
+   and web).
+2. `firebase login`, then in each app directory
+   `flutterfire configure --project=<firebase-project-id> --platforms=android,ios,web`.
+   This writes `lib/firebase_options.dart`, `android/app/google-services.json`
+   and `ios/Runner/GoogleService-Info.plist`; commit them.
+3. Android phone auth needs the debug SHA-1 in the console: run
+   `./gradlew signingReport` inside `apps/<app>/android` once and add the
+   SHA1 to both Android apps.
+4. Supabase dashboard: Authentication -> Sign In / Providers ->
+   Third-Party Auth -> add Firebase with the project id. Then run
+   migration `0005`.
+
+Without Firebase options for a platform (desktop, or before step 2) the
+apps still start: sign-in falls back to Supabase OTP and push, crash
+reporting and analytics are off.

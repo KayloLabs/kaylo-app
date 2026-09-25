@@ -115,9 +115,14 @@ One-time setup:
    and partner, each Android `com.kaylo.app` / `com.kaylo.partner`, iOS
    and web).
 2. `firebase login`, then in each app directory
-   `flutterfire configure --project=<firebase-project-id> --platforms=android,ios,web`.
+   `flutterfire configure --project=studio-1794461068-2d7dd --platforms=android,ios,web`.
    This writes `lib/firebase_options.dart`, `android/app/google-services.json`
-   and `ios/Runner/GoogleService-Info.plist`; commit them.
+   and `ios/Runner/GoogleService-Info.plist`; commit them. (Done for both
+   apps; the project is `studio-1794461068-2d7dd`.) The CLI's iOS step
+   needs the `xcodeproj` Ruby gem; without it the plist is written but not
+   added to the Xcode project, so the first person building for iPhone
+   drags `ios/Runner/GoogleService-Info.plist` into the Runner target in
+   Xcode once.
 3. Android phone auth needs the debug SHA-1 in the console: run
    `./gradlew signingReport` inside `apps/<app>/android` once and add the
    SHA1 to both Android apps.

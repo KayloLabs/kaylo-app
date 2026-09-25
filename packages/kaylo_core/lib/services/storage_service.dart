@@ -6,6 +6,12 @@ abstract class StorageService {
   Future<String?> getToken();
   Future<void> removeToken();
 
+  /// The signed-in user as JSON, so a demo session survives a reload
+  /// with the same name and photo.
+  Future<void> saveUserProfile(String json);
+  Future<String?> getUserProfile();
+  Future<void> removeUserProfile();
+
   Future<void> setCareMode(bool enabled);
   Future<bool> getCareMode();
 
@@ -44,6 +50,18 @@ class SharedPreferencesStorageService implements StorageService {
   static const _activeLocationKey = 'active_location';
   static const _addressesKey = 'saved_addresses';
   static const _appRatingKey = 'app_rating';
+  static const _userProfileKey = 'user_profile';
+
+  @override
+  Future<String?> getUserProfile() async => _prefs.getString(_userProfileKey);
+
+  @override
+  Future<void> saveUserProfile(String json) async =>
+      await _prefs.setString(_userProfileKey, json);
+
+  @override
+  Future<void> removeUserProfile() async =>
+      await _prefs.remove(_userProfileKey);
 
   @override
   Future<String?> getToken() async => _prefs.getString(_tokenKey);

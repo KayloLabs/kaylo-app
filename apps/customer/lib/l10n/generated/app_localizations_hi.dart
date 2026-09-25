@@ -200,6 +200,21 @@ class AppLocalizationsHi extends AppLocalizations {
   String get profileEditSoon => 'साइन-इन के साथ प्रोफ़ाइल संपादन आएगा';
 
   @override
+  String get editProfile => 'प्रोफ़ाइल संपादित करें';
+
+  @override
+  String get firstName => 'पहला नाम';
+
+  @override
+  String get lastName => 'अंतिम नाम';
+
+  @override
+  String get profileUpdated => 'प्रोफ़ाइल अपडेट हो गई';
+
+  @override
+  String get statCompleted => 'पूर्ण';
+
+  @override
   String get kayloCare => 'कायलो केयर';
 
   @override

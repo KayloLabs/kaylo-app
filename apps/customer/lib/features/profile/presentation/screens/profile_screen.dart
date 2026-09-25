@@ -13,8 +13,13 @@ import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
+import 'package:kaylo_core/models/booking.dart';
+
 import '../../../auth/application/session_controller.dart';
+import '../../../booking/application/bookings_providers.dart';
+import '../../application/addresses_providers.dart';
 import '../../application/app_rating_provider.dart';
+import '../widgets/edit_profile_sheet.dart';
 import '../widgets/rate_kaylo_sheet.dart';
 
 class ProfileScreen extends ConsumerWidget {
@@ -31,6 +36,16 @@ class ProfileScreen extends ConsumerWidget {
     if (user == null) {
       return const Scaffold(body: Center(child: CircularProgressIndicator()));
     }
+
+    // Real counts; a dash while a list is still loading.
+    final bookings =
+        ref.watch(userBookingsProvider).whenOrNull(data: (list) => list);
+    final addresses =
+        ref.watch(savedAddressesProvider).whenOrNull(data: (list) => list);
+    final completed = bookings
+        ?.where((b) => b.status == BookingStatus.completed)
+        .length;
+    String count(int? n) => n == null ? '-' : '$n';
 
     return Scaffold(
       body: SafeArea(
@@ -69,7 +84,8 @@ class ProfileScreen extends ConsumerWidget {
                 child: Row(
                   children: [
                     AvatarCircle(
-                      fallbackText: '${user.firstName} ${user.lastName}'.trim(),
+                      imageUrl: user.profileImageUrl,
+                      fallbackText: user.fullName,
                       radius: 34,
                     ),
                     const SizedBox(width: AppSpacing.l),
@@ -78,20 +94,20 @@ class ProfileScreen extends ConsumerWidget {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Text(
-                            '${user.firstName} ${user.lastName}'.trim(),
+                            user.fullName,
                             style: Theme.of(context).textTheme.titleLarge,
                           ),
                           const SizedBox(height: AppSpacing.xs),
                           Text(
-                            user.phone,
+                            user.contactLine,
                             style: Theme.of(context).textTheme.bodySmall,
                           ),
                         ],
                       ),
                     ),
                     IconButton(
-                      onPressed: () =>
-                          KayloSnackbar.showInfo(context, l10n.profileEditSoon),
+                      tooltip: l10n.editProfile,
+                      onPressed: () => showEditProfileSheet(context, user),
                       icon: const Icon(Icons.edit_rounded, size: 20),
                       style: IconButton.styleFrom(
                         backgroundColor: (isDark ? Colors.white : Colors.black)
@@ -109,7 +125,7 @@ class ProfileScreen extends ConsumerWidget {
               children: [
                 Expanded(
                   child: _StatTile(
-                    value: '12',
+                    value: count(bookings?.length),
                     label: l10n.statBookings,
                     icon: Icons.event_available_rounded,
                   ),
@@ -117,15 +133,15 @@ class ProfileScreen extends ConsumerWidget {
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: _StatTile(
-                    value: '4.9',
-                    label: l10n.statRating,
-                    icon: Icons.star_rounded,
+                    value: count(completed),
+                    label: l10n.statCompleted,
+                    icon: Icons.task_alt_rounded,
                   ),
                 ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
                   child: _StatTile(
-                    value: '5',
+                    value: count(addresses?.length),
                     label: l10n.statSaved,
                     icon: Icons.bookmark_rounded,
                   ),

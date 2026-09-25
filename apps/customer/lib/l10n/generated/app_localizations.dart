@@ -480,6 +480,36 @@ abstract class AppLocalizations {
   /// **'Profile editing arrives with sign-in'**
   String get profileEditSoon;
 
+  /// No description provided for @editProfile.
+  ///
+  /// In en, this message translates to:
+  /// **'Edit profile'**
+  String get editProfile;
+
+  /// No description provided for @firstName.
+  ///
+  /// In en, this message translates to:
+  /// **'First name'**
+  String get firstName;
+
+  /// No description provided for @lastName.
+  ///
+  /// In en, this message translates to:
+  /// **'Last name'**
+  String get lastName;
+
+  /// No description provided for @profileUpdated.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile updated'**
+  String get profileUpdated;
+
+  /// No description provided for @statCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Completed'**
+  String get statCompleted;
+
   /// No description provided for @kayloCare.
   ///
   /// In en, this message translates to:

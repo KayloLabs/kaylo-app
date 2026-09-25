@@ -204,6 +204,21 @@ class AppLocalizationsTa extends AppLocalizations {
   String get profileEditSoon => 'உள்நுழைவுடன் சுயவிவரத் திருத்தம் வரும்';
 
   @override
+  String get editProfile => 'சுயவிவரத்தைத் திருத்து';
+
+  @override
+  String get firstName => 'முதல் பெயர்';
+
+  @override
+  String get lastName => 'கடைசி பெயர்';
+
+  @override
+  String get profileUpdated => 'சுயவிவரம் புதுப்பிக்கப்பட்டது';
+
+  @override
+  String get statCompleted => 'முடிந்தது';
+
+  @override
   String get kayloCare => 'கெய்லோ கேர்';
 
   @override

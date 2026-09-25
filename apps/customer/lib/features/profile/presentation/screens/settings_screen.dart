@@ -11,8 +11,11 @@ import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
+import 'package:kaylo_ui/widgets/avatar_circle.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../auth/application/current_user_provider.dart';
+import '../widgets/edit_profile_sheet.dart';
 
 const _notificationsKey = 'notifications_enabled';
 
@@ -56,6 +59,32 @@ class SettingsScreen extends ConsumerWidget {
       body: ListView(
         padding: const EdgeInsets.all(AppSpacing.l),
         children: [
+          // Who is signed in, editable in place: the name here is the
+          // same one the greeting and the profile show.
+          if (ref.watch(currentUserProvider) case final user?) ...[
+            SectionHeader(title: l10n.account),
+            const SizedBox(height: AppSpacing.m),
+            KayloCard(
+              padding: EdgeInsets.zero,
+              child: KayloListTile(
+                leading: AvatarCircle(
+                  imageUrl: user.profileImageUrl,
+                  fallbackText: user.fullName,
+                  radius: 20,
+                ),
+                title: Text(user.fullName),
+                subtitle: user.contactLine.isEmpty
+                    ? null
+                    : Text(user.contactLine),
+                trailing: const Icon(Icons.edit_rounded, size: 20),
+                onTap: () {
+                  KayloFeedback.tap();
+                  showEditProfileSheet(context, user);
+                },
+              ),
+            ),
+            const SizedBox(height: AppSpacing.xl),
+          ],
           SectionHeader(title: l10n.appearance),
           const SizedBox(height: AppSpacing.m),
           KayloCard(

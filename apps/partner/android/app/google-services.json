@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "39987383091",
+    "project_id": "studio-1794461068-2d7dd",
+    "storage_bucket": "studio-1794461068-2d7dd.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39987383091:android:fd4a738eb7bfedd3fbcc46",
+        "android_client_info": {
+          "package_name": "com.kaylo.app"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1yEjYDpqCUwwEgezU3V1qw0D3gMmRDlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:39987383091:android:4f2d0ffd8679135ffbcc46",
+        "android_client_info": {
+          "package_name": "com.kaylo.partner"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD1yEjYDpqCUwwEgezU3V1qw0D3gMmRDlQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

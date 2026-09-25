@@ -65,7 +65,7 @@ class SupabaseAuthRepository implements AuthRepository {
   AppUser? get currentUser => _currentUser;
 
   @override
-  Future<void> signInWithPhone(String phone) async {
+  Future<void> signInWithPhone(String phone, {String? displayName}) async {
     await _client.auth.signInWithOtp(phone: phone);
   }
 

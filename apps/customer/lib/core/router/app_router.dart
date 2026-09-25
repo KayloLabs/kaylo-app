@@ -1,6 +1,8 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaylo_core/firebase/firebase_bootstrap.dart';
 
 import 'kaylo_page.dart';
 import 'routes.dart';
@@ -57,6 +59,12 @@ final goRouterProvider = Provider<GoRouter>((ref) {
   return GoRouter(
     initialLocation: Routes.splash,
     refreshListenable: listenable,
+    // Screen views for Firebase Analytics on the root navigator (pushed
+    // full-screen routes); tab switches inside the shell are not logged.
+    observers: [
+      if (FirebaseBootstrap.isReady)
+        FirebaseAnalyticsObserver(analytics: FirebaseBootstrap.analytics),
+    ],
     redirect: (context, state) {
       final sessionState = ref.read(sessionControllerProvider);
       final isLoggedIn = sessionState.whenOrNull(data: (user) => user) != null;

@@ -2,12 +2,19 @@ import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:kaylo_core/models/app_user.dart';
 import '../domain/auth_repository.dart';
+import '../domain/profile_store.dart';
 
+/// Supabase's own phone OTP and OAuth. The fallback where Firebase is
+/// not configured (desktop builds); the profile handling is shared with
+/// the Firebase repository through ProfileSync.
 class SupabaseAuthRepository implements AuthRepository {
   final supabase.SupabaseClient _client = supabase.Supabase.instance.client;
+  late final ProfileSync _profiles =
+      ProfileSync(SupabaseProfileStore(_client));
   final _authStateController = StreamController<AppUser?>.broadcast();
   StreamSubscription<supabase.AuthState>? _authStateSubscription;
   AppUser? _currentUser;
+  String? _pendingDisplayName;
 
   SupabaseAuthRepository() {
     _authStateSubscription = _client.auth.onAuthStateChange.listen((
@@ -15,40 +22,25 @@ class SupabaseAuthRepository implements AuthRepository {
     ) async {
       final session = data.session;
       if (session != null) {
-        // Fetch user profile from the persons table. Column names match
-        // supabase/migrations/0001_initial_schema.sql: person_id,
-        // full_name, phone_number, profile_photo.
+        final user = session.user;
+        final identity = SignInIdentity(
+          authUserId: user.id,
+          displayName: user.userMetadata?['full_name'] as String?,
+          email: user.email,
+          phone: user.phone,
+          photoUrl: user.userMetadata?['avatar_url'] as String?,
+        );
         try {
-          final response = await _client
-              .from('persons')
-              .select('person_id, full_name, phone_number, profile_photo')
-              .eq('auth_user_id', session.user.id)
-              .maybeSingle();
-
-          if (response != null) {
-            _currentUser = AppUser(
-              id: response['person_id'] as String,
-              firstName: response['full_name'] as String,
-              lastName: '',
-              phone: (response['phone_number'] as String?) ?? '',
-              profileImageUrl: response['profile_photo'] as String?,
-            );
-          } else {
-            // User just signed up and row not created yet, or they don't have a profile
-            _currentUser = AppUser(
-              id: session.user.id,
-              firstName: 'New',
-              lastName: 'User',
-              phone: session.user.phone ?? '',
-            );
-          }
-        } catch (e) {
-          // Fallback if db fails
-          _currentUser = AppUser(
-            id: session.user.id,
-            firstName: 'Kaylo',
-            lastName: 'User',
-            phone: session.user.phone ?? '',
+          _currentUser = await _profiles.resolve(
+            identity,
+            preferredName: _pendingDisplayName,
+          );
+        } catch (_) {
+          _currentUser = AppUser.fromFullName(
+            id: user.id,
+            fullName: _pendingDisplayName ?? identity.displayName ?? placeholderName,
+            phone: user.phone ?? '',
+            email: user.email,
           );
         }
       } else {
@@ -66,6 +58,9 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      _pendingDisplayName = displayName.trim();
+    }
     await _client.auth.signInWithOtp(phone: phone);
   }
 
@@ -90,7 +85,22 @@ class SupabaseAuthRepository implements AuthRepository {
   }
 
   @override
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+  }) async {
+    final user = _currentUser;
+    if (user == null) throw Exception('Sign in first.');
+    final updated = await _profiles.store.update(
+      user.copyWith(firstName: firstName.trim(), lastName: lastName.trim()),
+    );
+    _currentUser = updated;
+    _authStateController.add(updated);
+  }
+
+  @override
   Future<void> signOut() async {
+    _pendingDisplayName = null;
     await _client.auth.signOut();
   }
 

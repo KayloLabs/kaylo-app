@@ -783,6 +783,9 @@ insert into caregivers (id, name, rating, reviews_count, hourly_rate, experience
 
 -- ---------- persons.auth_user_id: Supabase uuid -> Firebase uid ----------
 
+-- Postgres will not retype a column a policy refers to; the policy is
+-- recreated further down against the new helper.
+drop policy if exists "self insert" on persons;
 alter table persons drop constraint if exists persons_auth_user_id_fkey;
 alter table persons alter column auth_user_id type text using auth_user_id::text;
 
@@ -816,7 +819,6 @@ language sql stable security definer set search_path = public as $$
   where p.auth_user_id = current_auth_subject();
 $$;
 
-drop policy if exists "self insert" on persons;
 create policy "self insert" on persons for insert
   with check (auth_user_id = current_auth_subject());
 

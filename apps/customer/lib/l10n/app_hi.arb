@@ -401,5 +401,11 @@
   "rateComment": "कुछ सुधारें? (वैकल्पिक)",
   "submitRating": "भेजें",
   "pickAStar": "पहले स्टार रेटिंग चुनें",
-  "youRated": "आपने कायलो को 5 में से {stars} दिए"
+  "youRated": "आपने कायलो को 5 में से {stars} दिए",
+  "confirmLocation": "लोकेशन कन्फ़र्म करें",
+  "moveMapToPlacePin": "पिन रखने के लिए मैप खिसकाएँ",
+  "findingAddress": "पता ढूँढ रहे हैं…",
+  "selectedLocation": "चुनी हुई लोकेशन",
+  "mapUnavailable": "मैप प्रीव्यू उपलब्ध नहीं",
+  "searchTownHint": "कस्बा या शहर खोजें"
 }

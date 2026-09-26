@@ -66,7 +66,9 @@ GoRoute stubRoute(String path, String text) => GoRoute(
   builder: (_, _) => Scaffold(body: Text(text)),
 );
 
-/// GPS stand-in: resolves instantly to a fixed Kannur address.
+/// GPS stand-in: resolves instantly to a fixed Kannur address. A pin
+/// keeps its coordinates but gets the same address; a search finds the
+/// query as a town in Kerala unless the query is "Nowhere".
 class FakeLocationService implements LocationService {
   final ResolvedLocation result;
 
@@ -81,9 +83,27 @@ class FakeLocationService implements LocationService {
 
   @override
   Future<ResolvedLocation> locate() async => result;
+
+  @override
+  Future<ResolvedLocation> resolve(double latitude, double longitude) async =>
+      ResolvedLocation(
+        latitude: latitude,
+        longitude: longitude,
+        label: result.label,
+        addressLine: result.addressLine,
+      );
+
+  @override
+  Future<ResolvedLocation?> search(String query) async => query == 'Nowhere'
+      ? null
+      : ResolvedLocation(
+          latitude: 10.7867,
+          longitude: 76.6548,
+          label: '$query, Kerala',
+        );
 }
 
-/// GPS stand-in that fails with a given code.
+/// GPS stand-in that fails with a given code; lookups find nothing.
 class FailingLocationService implements LocationService {
   final String code;
 
@@ -92,4 +112,15 @@ class FailingLocationService implements LocationService {
   @override
   Future<ResolvedLocation> locate() async =>
       throw LocationFailure('nope', code: code);
+
+  @override
+  Future<ResolvedLocation> resolve(double latitude, double longitude) async =>
+      ResolvedLocation(
+        latitude: latitude,
+        longitude: longitude,
+        label: '$latitude, $longitude',
+      );
+
+  @override
+  Future<ResolvedLocation?> search(String query) async => null;
 }

@@ -1377,4 +1377,22 @@ class AppLocalizationsEn extends AppLocalizations {
   String youRated(int stars) {
     return 'You rated Kaylo $stars of 5';
   }
+
+  @override
+  String get confirmLocation => 'Confirm location';
+
+  @override
+  String get moveMapToPlacePin => 'Move the map to place the pin';
+
+  @override
+  String get findingAddress => 'Finding address…';
+
+  @override
+  String get selectedLocation => 'Selected location';
+
+  @override
+  String get mapUnavailable => 'Map preview unavailable';
+
+  @override
+  String get searchTownHint => 'Search a town or city';
 }

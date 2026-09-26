@@ -2495,6 +2495,42 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'You rated Kaylo {stars} of 5'**
   String youRated(int stars);
+
+  /// No description provided for @confirmLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm location'**
+  String get confirmLocation;
+
+  /// No description provided for @moveMapToPlacePin.
+  ///
+  /// In en, this message translates to:
+  /// **'Move the map to place the pin'**
+  String get moveMapToPlacePin;
+
+  /// No description provided for @findingAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Finding address…'**
+  String get findingAddress;
+
+  /// No description provided for @selectedLocation.
+  ///
+  /// In en, this message translates to:
+  /// **'Selected location'**
+  String get selectedLocation;
+
+  /// No description provided for @mapUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Map preview unavailable'**
+  String get mapUnavailable;
+
+  /// No description provided for @searchTownHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Search a town or city'**
+  String get searchTownHint;
 }
 
 class _AppLocalizationsDelegate

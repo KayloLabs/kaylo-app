@@ -1385,4 +1385,22 @@ class AppLocalizationsMl extends AppLocalizations {
   String youRated(int stars) {
     return 'നിങ്ങൾ കെയ്‌ലോയ്ക്ക് 5-ൽ $stars നൽകി';
   }
+
+  @override
+  String get confirmLocation => 'ലൊക്കേഷൻ സ്ഥിരീകരിക്കുക';
+
+  @override
+  String get moveMapToPlacePin => 'പിൻ വയ്ക്കാൻ മാപ്പ് നീക്കുക';
+
+  @override
+  String get findingAddress => 'വിലാസം കണ്ടെത്തുന്നു…';
+
+  @override
+  String get selectedLocation => 'തിരഞ്ഞെടുത്ത ലൊക്കേഷൻ';
+
+  @override
+  String get mapUnavailable => 'മാപ്പ് പ്രിവ്യൂ ലഭ്യമല്ല';
+
+  @override
+  String get searchTownHint => 'പട്ടണമോ നഗരമോ തിരയുക';
 }

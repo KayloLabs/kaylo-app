@@ -164,25 +164,36 @@ come from OpenStreetMap's Nominatim, which needs no key; the map tiles do
 need a Google Maps key.
 
 1. Google Cloud console, project `studio-1794461068-2d7dd` (the Firebase
-   project): APIs & Services, enable **Maps SDK for Android**, **Maps SDK for
-   iOS** and **Maps JavaScript API**. Maps Platform needs a billing account
-   on the project; the monthly free usage covers a demo many times over.
-2. Credentials, create an API key. Restrict it to Android app `com.kaylo.app`
+   project). Enable **Maps SDK for Android**
+   (`https://console.cloud.google.com/apis/library/maps-android-backend.googleapis.com?project=studio-1794461068-2d7dd`);
+   for web and iOS builds also **Maps JavaScript API** and **Maps SDK for
+   iOS** from the same library. Maps Platform needs a billing account on the
+   project (`https://console.cloud.google.com/billing?project=studio-1794461068-2d7dd`);
+   the monthly free usage covers a demo many times over.
+2. Credentials (`https://console.cloud.google.com/apis/credentials?project=studio-1794461068-2d7dd`),
+   **Create credentials, API key**. Restrict it to Android app `com.kaylo.app`
    with the debug SHA-1 (`cd apps/customer/android && ./gradlew signingReport`),
    iOS bundle `com.kaylo.app`, and your HTTP referrers for web.
-3. Pass it at build time. One flag covers every platform:
+3. Put the key in `apps/customer/android/local.properties` (gitignored, never
+   committed), one line:
 
-   ```bash
-   cd apps/customer
-   flutter build apk --dart-define=USE_MOCK=true --dart-define=GOOGLE_MAPS_API_KEY=AIza...
+   ```
+   GOOGLE_MAPS_API_KEY=AIza...
    ```
 
-   Android decodes the same define in `android/app/build.gradle.kts` and fills
-   the manifest placeholder; the web app injects the Maps script with it at
-   runtime. Two no-flag alternatives: `GOOGLE_MAPS_API_KEY=AIza...` in
-   `apps/customer/android/local.properties` (gitignored) for builds from
-   Android Studio, and the same line in `apps/customer/ios/Flutter/Maps.xcconfig`
-   (gitignored, included by Debug/Release.xcconfig) for iOS.
+4. Build with the script, which reads that line and passes it to Flutter:
+
+   ```bash
+   apps/customer/tool/build_apk.sh
+   ```
+
+   The dart-define `GOOGLE_MAPS_API_KEY` is what switches the map on in the
+   app; `android/app/build.gradle.kts` decodes the same define (or the
+   `local.properties` line) into the manifest, and the web app injects the
+   Maps script with it at runtime. Building by hand is the same flag:
+   `flutter build apk --dart-define=USE_MOCK=true --dart-define=GOOGLE_MAPS_API_KEY=AIza...`.
+   iOS additionally needs the line in `apps/customer/ios/Flutter/Maps.xcconfig`
+   (gitignored, included by Debug/Release.xcconfig), which fills `GMSApiKey`.
 
 Without a key the app still runs: map areas show a placeholder, and GPS and
 town search keep working.

@@ -155,3 +155,49 @@ email, photo) by `ProfileSync` in `features/auth/domain/profile_store.dart`.
 
 Apple sign-in is wired for web only (Firebase pop-up) and needs the Apple
 developer configuration before it can be enabled.
+
+## Google Maps (location picker)
+
+The location picker (the header pill and first-run Location Setup) shows a
+map under a fixed pin. Out of the box it draws OpenStreetMap tiles, which are
+free and need no key. With a Google Maps key the same screens switch to
+Google's map (richer tiles, lite-mode previews on Android); the steps below
+are for that upgrade. The address under the pin and the town search come
+from OpenStreetMap's Nominatim either way.
+
+1. Google Cloud console, project `studio-1794461068-2d7dd` (the Firebase
+   project). Enable **Maps SDK for Android**
+   (`https://console.cloud.google.com/apis/library/maps-android-backend.googleapis.com?project=studio-1794461068-2d7dd`);
+   for web and iOS builds also **Maps JavaScript API** and **Maps SDK for
+   iOS** from the same library. Maps Platform needs a billing account on the
+   project (`https://console.cloud.google.com/billing?project=studio-1794461068-2d7dd`);
+   the monthly free usage covers a demo many times over.
+2. Credentials (`https://console.cloud.google.com/apis/credentials?project=studio-1794461068-2d7dd`),
+   **Create credentials, API key**. Restrict it to Android app `com.kaylo.app`
+   with the debug SHA-1 (`cd apps/customer/android && ./gradlew signingReport`),
+   iOS bundle `com.kaylo.app`, and your HTTP referrers for web.
+3. Put the key in `apps/customer/android/local.properties` (gitignored, never
+   committed), one line:
+
+   ```
+   GOOGLE_MAPS_API_KEY=AIza...
+   ```
+
+4. Build with the script, which reads that line and passes it to Flutter:
+
+   ```bash
+   apps/customer/tool/build_apk.sh
+   ```
+
+   The dart-define `GOOGLE_MAPS_API_KEY` is what switches the map on in the
+   app; `android/app/build.gradle.kts` decodes the same define (or the
+   `local.properties` line) into the manifest, and the web app injects the
+   Maps script with it at runtime. Building by hand is the same flag:
+   `flutter build apk --dart-define=USE_MOCK=true --dart-define=GOOGLE_MAPS_API_KEY=AIza...`.
+   iOS additionally needs the line in `apps/customer/ios/Flutter/Maps.xcconfig`
+   (gitignored, included by Debug/Release.xcconfig), which fills `GMSApiKey`.
+
+Without a key nothing is missing: the map is OpenStreetMap, and GPS and town
+search work the same. Widget tests run with no map engine at all
+(`mapBackendProvider` overridden to `MapBackend.none` in `test_app.dart`), so
+they never fetch tiles or create a platform view.

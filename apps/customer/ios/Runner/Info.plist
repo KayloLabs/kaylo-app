@@ -15,7 +15,7 @@
 	<key>CFBundleInfoDictionaryVersion</key>
 	<string>6.0</string>
 	<key>CFBundleName</key>
-	<string>kaylo</string>
+	<string>Kaylo</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
@@ -72,5 +72,7 @@
 	<string>Kaylo uses your location to find workers near you and to share it in an SOS alert.</string>
 	<key>NSSpeechRecognitionUsageDescription</key>
 	<string>Kaylo turns your speech into a service search.</string>
+	<key>GMSApiKey</key>
+	<string>$(GOOGLE_MAPS_API_KEY)</string>
 </dict>
 </plist>

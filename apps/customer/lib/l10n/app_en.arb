@@ -609,5 +609,11 @@
         "type": "int"
       }
     }
-  }
+  },
+  "confirmLocation": "Confirm location",
+  "moveMapToPlacePin": "Move the map to place the pin",
+  "findingAddress": "Finding address…",
+  "selectedLocation": "Selected location",
+  "mapUnavailable": "Map preview unavailable",
+  "searchTownHint": "Search a town or city"
 }

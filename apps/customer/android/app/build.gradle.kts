@@ -1,3 +1,6 @@
+import java.util.Base64
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     // START: FlutterFire Configuration
@@ -8,6 +11,41 @@ plugins {
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id("dev.flutter.flutter-gradle-plugin")
 }
+
+// The Flutter tool hands Gradle every --dart-define as a comma-separated
+// list of base64 "KEY=VALUE" entries. Decoding it here lets one flag
+// (GOOGLE_MAPS_API_KEY) configure the Dart side and the Android manifest.
+val dartDefines: Map<String, String> =
+    (project.findProperty("dart-defines") as String?)
+        ?.split(",")
+        ?.filter { it.isNotBlank() }
+        ?.mapNotNull { encoded ->
+            val decoded = runCatching {
+                String(Base64.getDecoder().decode(encoded), Charsets.UTF_8)
+            }.getOrNull() ?: return@mapNotNull null
+            val separator = decoded.indexOf('=')
+            if (separator > 0) {
+                decoded.substring(0, separator) to decoded.substring(separator + 1)
+            } else {
+                null
+            }
+        }
+        ?.toMap()
+        ?: emptyMap()
+
+val localProperties = Properties().apply {
+    val file = rootProject.file("local.properties")
+    if (file.exists()) file.inputStream().use { load(it) }
+}
+
+// Google Maps key for the location picker. The dart-define wins; a line
+// in local.properties (gitignored) suits builds from Android Studio.
+val googleMapsApiKey: String =
+    dartDefines["GOOGLE_MAPS_API_KEY"]
+        ?: localProperties.getProperty("GOOGLE_MAPS_API_KEY")
+        ?: (project.findProperty("GOOGLE_MAPS_API_KEY") as String?)
+        ?: System.getenv("GOOGLE_MAPS_API_KEY")
+        ?: ""
 
 android {
     namespace = "com.kaylo.app"
@@ -32,6 +70,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        manifestPlaceholders["GOOGLE_MAPS_API_KEY"] = googleMapsApiKey
     }
 
     buildTypes {

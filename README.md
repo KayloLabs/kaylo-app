@@ -45,4 +45,8 @@ cd apps/customer && flutter run --dart-define=USE_MOCK=true
 cd apps/partner  && flutter run --dart-define=USE_MOCK=true
 ```
 
+The location picker draws OpenStreetMap tiles by default. Add
+`--dart-define=GOOGLE_MAPS_API_KEY=...` to switch it to Google Maps (setup in
+[BACKEND.md](BACKEND.md), Google Maps).
+
 Analyze and test from inside the member you changed (`flutter analyze`, `flutter test`); CI does the same for every member. Backend setup is in [BACKEND.md](BACKEND.md), team conventions in [CONTRIBUTING.md](CONTRIBUTING.md).

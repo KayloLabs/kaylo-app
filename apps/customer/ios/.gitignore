@@ -32,3 +32,6 @@ Runner/GeneratedPluginRegistrant.*
 !default.mode2v3
 !default.pbxuser
 !default.perspectivev3
+
+# Google Maps key for iOS builds (see BACKEND.md, Google Maps)
+Flutter/Maps.xcconfig

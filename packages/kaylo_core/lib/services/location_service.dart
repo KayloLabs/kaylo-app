@@ -38,14 +38,24 @@ class LocationFailure extends AppFailure {
 }
 
 abstract class LocationService {
+  /// Where the device is now, as a readable place.
   Future<ResolvedLocation> locate();
+
+  /// A readable place for coordinates, for a pin dropped on the map.
+  /// Never throws: when the lookup fails the coordinates become the label.
+  Future<ResolvedLocation> resolve(double latitude, double longitude);
+
+  /// The best match for a typed place name, or null when nothing matched.
+  Future<ResolvedLocation?> search(String query);
 }
 
-/// GPS through geolocator (web, Android, iOS), then reverse geocoding
-/// through OpenStreetMap's Nominatim, which works on every platform
-/// without an API key. Geocoding is best effort: when it fails the
-/// coordinates still come back as the label.
+/// GPS through geolocator (web, Android, iOS), then geocoding through
+/// OpenStreetMap's Nominatim, which works on every platform without an
+/// API key. Geocoding is best effort: when it fails the coordinates
+/// still come back as the label.
 class GeolocatorLocationService implements LocationService {
+  static const _host = 'nominatim.openstreetmap.org';
+
   final http.Client _http;
 
   GeolocatorLocationService({http.Client? client})
@@ -96,75 +106,125 @@ class GeolocatorLocationService implements LocationService {
       );
     }
 
-    return reverseGeocode(position.latitude, position.longitude);
+    return resolve(position.latitude, position.longitude);
   }
 
-  Future<ResolvedLocation> reverseGeocode(double lat, double lng) async {
+  @override
+  Future<ResolvedLocation> resolve(double latitude, double longitude) async {
     final fallback = ResolvedLocation(
-      latitude: lat,
-      longitude: lng,
-      label: '${lat.toStringAsFixed(4)}, ${lng.toStringAsFixed(4)}',
+      latitude: latitude,
+      longitude: longitude,
+      label: '${latitude.toStringAsFixed(4)}, ${longitude.toStringAsFixed(4)}',
     );
     try {
-      final uri = Uri.https('nominatim.openstreetmap.org', '/reverse', {
+      final uri = Uri.https(_host, '/reverse', {
         'format': 'jsonv2',
-        'lat': '$lat',
-        'lon': '$lng',
+        'lat': '$latitude',
+        'lon': '$longitude',
         'zoom': '16',
         'addressdetails': '1',
       });
-      final response = await _http
-          .get(
-            uri,
-            headers: {
-              'Accept': 'application/json',
-              // Nominatim's usage policy asks for an identifying agent; the
-              // browser sets its own on web and rejects a custom one.
-              if (!kIsWeb) 'User-Agent': 'Kaylo/1.0 (KayloLabs/kaylo-app)',
-            },
-          )
-          .timeout(const Duration(seconds: 10));
+      final response = await _get(uri);
       if (response.statusCode != 200) return fallback;
-
       final json = jsonDecode(response.body) as Map<String, dynamic>;
-      final address =
-          (json['address'] as Map?)?.cast<String, dynamic>() ?? const {};
-      String? pick(List<String> keys) {
-        for (final key in keys) {
-          final value = address[key];
-          if (value is String && value.trim().isNotEmpty) return value.trim();
-        }
-        return null;
-      }
-
-      final locality = pick([
-        'village',
-        'town',
-        'city',
-        'municipality',
-        'suburb',
-        'county',
-      ]);
-      final label = [
-        locality,
-        pick(['state']),
-      ].whereType<String>().join(', ');
-      final line = [
-        pick(['road', 'neighbourhood', 'hamlet']),
-        pick(['suburb', 'village', 'town', 'city']),
-        pick(['state_district', 'county']),
-        pick(['postcode']),
-      ].whereType<String>().toSet().join(', ');
-
-      return ResolvedLocation(
-        latitude: lat,
-        longitude: lng,
-        label: label.isEmpty ? fallback.label : label,
-        addressLine: line.isEmpty ? null : line,
-      );
+      return _fromNominatim(json, latitude, longitude) ?? fallback;
     } catch (_) {
       return fallback;
     }
+  }
+
+  @override
+  Future<ResolvedLocation?> search(String query) async {
+    final text = query.trim();
+    if (text.isEmpty) return null;
+    try {
+      final uri = Uri.https(_host, '/search', {
+        'q': text,
+        'format': 'jsonv2',
+        'limit': '1',
+        'addressdetails': '1',
+        // Kaylo serves Kerala: keep matches in India so a town name does
+        // not land on a street with the same name elsewhere.
+        'countrycodes': 'in',
+      });
+      final response = await _get(uri);
+      if (response.statusCode != 200) return null;
+      final results = jsonDecode(response.body) as List<dynamic>;
+      if (results.isEmpty) return null;
+      final json = results.first as Map<String, dynamic>;
+      final lat = double.tryParse('${json['lat']}');
+      final lng = double.tryParse('${json['lon']}');
+      if (lat == null || lng == null) return null;
+      return _fromNominatim(json, lat, lng, preferName: true) ??
+          ResolvedLocation(latitude: lat, longitude: lng, label: text);
+    } catch (_) {
+      return null;
+    }
+  }
+
+  Future<http.Response> _get(Uri uri) => _http
+      .get(
+        uri,
+        headers: {
+          'Accept': 'application/json',
+          // Nominatim's usage policy asks for an identifying agent; the
+          // browser sets its own on web and rejects a custom one.
+          if (!kIsWeb) 'User-Agent': 'Kaylo/1.0 (KayloLabs/kaylo-app)',
+        },
+      )
+      .timeout(const Duration(seconds: 10));
+
+  /// Builds the label and address line from a Nominatim result (shared
+  /// by reverse and forward lookups). Null when the response had no
+  /// usable place name.
+  ///
+  /// [preferName] is for search results: a town query often matches the
+  /// district or municipality boundary, whose `address` has no town
+  /// key, so the matched feature's own name is the locality. Reverse
+  /// lookups never use it, since there `name` is whatever building or
+  /// road is nearest.
+  ResolvedLocation? _fromNominatim(
+    Map<String, dynamic> json,
+    double lat,
+    double lng, {
+    bool preferName = false,
+  }) {
+    final address =
+        (json['address'] as Map?)?.cast<String, dynamic>() ?? const {};
+    String? pick(List<String> keys) {
+      for (final key in keys) {
+        final value = address[key];
+        if (value is String && value.trim().isNotEmpty) return value.trim();
+      }
+      return null;
+    }
+
+    final name = (json['name'] as String?)?.trim();
+    final locality =
+        pick(['village', 'town', 'city', 'municipality', 'suburb']) ??
+        (preferName && name != null && name.isNotEmpty ? name : null) ??
+        pick(['county', 'state_district']);
+    final label = [
+      locality,
+      pick(['state']),
+    ].whereType<String>().join(', ');
+    if (label.isEmpty) return null;
+
+    final line = [
+      pick(['road', 'neighbourhood', 'hamlet']),
+      pick(['suburb', 'village', 'town', 'city']),
+      pick(['state_district', 'county']),
+      pick(['postcode']),
+    ].whereType<String>().toSet().join(', ');
+
+    return ResolvedLocation(
+      latitude: lat,
+      longitude: lng,
+      label: label,
+      // A line that only repeats the label ("Palakkad" under "Palakkad,
+      // Kerala") says nothing new.
+      addressLine: line.isEmpty || label.contains(line) ? null : line,
+    );
   }
 }
 

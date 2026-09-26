@@ -1374,4 +1374,22 @@ class AppLocalizationsHi extends AppLocalizations {
   String youRated(int stars) {
     return 'आपने कायलो को 5 में से $stars दिए';
   }
+
+  @override
+  String get confirmLocation => 'लोकेशन कन्फ़र्म करें';
+
+  @override
+  String get moveMapToPlacePin => 'पिन रखने के लिए मैप खिसकाएँ';
+
+  @override
+  String get findingAddress => 'पता ढूँढ रहे हैं…';
+
+  @override
+  String get selectedLocation => 'चुनी हुई लोकेशन';
+
+  @override
+  String get mapUnavailable => 'मैप प्रीव्यू उपलब्ध नहीं';
+
+  @override
+  String get searchTownHint => 'कस्बा या शहर खोजें';
 }

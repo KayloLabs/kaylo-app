@@ -1392,4 +1392,22 @@ class AppLocalizationsTa extends AppLocalizations {
   String youRated(int stars) {
     return 'நீங்கள் கெய்லோவுக்கு 5ல் $stars கொடுத்தீர்கள்';
   }
+
+  @override
+  String get confirmLocation => 'இருப்பிடத்தை உறுதிப்படுத்து';
+
+  @override
+  String get moveMapToPlacePin => 'பின்னை வைக்க வரைபடத்தை நகர்த்தவும்';
+
+  @override
+  String get findingAddress => 'முகவரியைத் தேடுகிறது…';
+
+  @override
+  String get selectedLocation => 'தேர்ந்தெடுத்த இருப்பிடம்';
+
+  @override
+  String get mapUnavailable => 'வரைபட முன்னோட்டம் இல்லை';
+
+  @override
+  String get searchTownHint => 'ஊர் அல்லது நகரத்தைத் தேடுங்கள்';
 }

@@ -133,3 +133,24 @@ One-time setup:
 Without Firebase options for a platform (desktop, or before step 2) the
 apps still start: sign-in falls back to Supabase OTP and push, crash
 reporting and analytics are off.
+
+### Google sign-in
+
+The customer app signs in with Google through Firebase: a browser
+pop-up on web, the `google_sign_in` plugin on Android and iOS. The
+profile row is created or completed from the Google identity (name,
+email, photo) by `ProfileSync` in `features/auth/domain/profile_store.dart`.
+
+1. Firebase console → Authentication → Sign-in method → **Google** →
+   Enable, pick the support email, save. Web works from here.
+2. Android: the debug SHA-1 must be on the Android app (see above), then
+   re-run `flutterfire configure` in `apps/customer` so
+   `google-services.json` picks up the OAuth client; the plugin reads the
+   web client id from it. Alternatively pass
+   `--dart-define=GOOGLE_SERVER_CLIENT_ID=<web client id>`.
+3. iOS: after step 1, re-run `flutterfire configure` and add the
+   `REVERSED_CLIENT_ID` from `GoogleService-Info.plist` as a URL scheme in
+   `ios/Runner/Info.plist` (standard google_sign_in setup).
+
+Apple sign-in is wired for web only (Firebase pop-up) and needs the Apple
+developer configuration before it can be enabled.

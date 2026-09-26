@@ -87,7 +87,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     try {
       await ref.read(authRepositoryProvider).signInWithPhone(
             formattedPhone,
-            displayName: _isSignUp ? _firstNameController.text.trim() : null,
+            displayName: _isSignUp
+                ? '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'
+                    .trim()
+                : null,
           );
       if (mounted) {
         context.push(Routes.loginOtp, extra: formattedPhone);

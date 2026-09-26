@@ -202,6 +202,21 @@ class AppLocalizationsMl extends AppLocalizations {
   String get profileEditSoon => 'സൈൻ-ഇനോടൊപ്പം പ്രൊഫൈൽ എഡിറ്റിംഗ് വരും';
 
   @override
+  String get editProfile => 'പ്രൊഫൈൽ എഡിറ്റ് ചെയ്യുക';
+
+  @override
+  String get firstName => 'പേര്';
+
+  @override
+  String get lastName => 'കുടുംബപ്പേര്';
+
+  @override
+  String get profileUpdated => 'പ്രൊഫൈൽ പുതുക്കി';
+
+  @override
+  String get statCompleted => 'പൂർത്തിയായി';
+
+  @override
   String get kayloCare => 'കെയ്‌ലോ കെയർ';
 
   @override

@@ -34,4 +34,13 @@ class SessionController extends _$SessionController {
       state = AsyncError(e, st);
     }
   }
+
+  /// Renames the signed-in user; the repository's stream then refreshes
+  /// the state, so the header, profile and settings all follow.
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+  }) {
+    return _authRepo.updateProfile(firstName: firstName, lastName: lastName);
+  }
 }

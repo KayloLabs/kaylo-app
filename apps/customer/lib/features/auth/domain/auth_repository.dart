@@ -20,12 +20,19 @@ abstract class AuthRepository {
   Future<void> signInWithGoogle();
   Future<void> signInWithApple();
 
+  /// Renames the signed-in user; [authStateChanges] emits the result so
+  /// every screen showing the name updates.
+  Future<void> updateProfile({
+    required String firstName,
+    required String lastName,
+  });
+
   Future<void> signOut();
 }
 
-/// Mock for demos and tests; otherwise Firebase phone auth when the app
-/// has Firebase options, falling back to Supabase's own OTP where it
-/// does not (desktop builds, a checkout without config files).
+/// Mock for demos and tests; otherwise Firebase when the app has
+/// Firebase options, falling back to Supabase's own OTP where it does
+/// not (desktop builds, a checkout without config files).
 final authRepositoryProvider = Provider<AuthRepository>((ref) {
   if (useMockData) {
     return MockAuthRepository(ref.watch(storageServiceProvider));

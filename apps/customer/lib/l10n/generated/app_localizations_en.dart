@@ -200,6 +200,21 @@ class AppLocalizationsEn extends AppLocalizations {
   String get profileEditSoon => 'Profile editing arrives with sign-in';
 
   @override
+  String get editProfile => 'Edit profile';
+
+  @override
+  String get firstName => 'First name';
+
+  @override
+  String get lastName => 'Last name';
+
+  @override
+  String get profileUpdated => 'Profile updated';
+
+  @override
+  String get statCompleted => 'Completed';
+
+  @override
   String get kayloCare => 'Kaylo Care';
 
   @override

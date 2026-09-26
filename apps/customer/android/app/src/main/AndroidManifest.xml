@@ -34,6 +34,12 @@
         <meta-data
             android:name="flutterEmbedding"
             android:value="2" />
+        <!-- Google Maps (location picker). build.gradle.kts fills the
+             placeholder from dart-define GOOGLE_MAPS_API_KEY, or from
+             GOOGLE_MAPS_API_KEY in android/local.properties. -->
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="${GOOGLE_MAPS_API_KEY}" />
     </application>
     <!-- Required to query activities that can process text, see:
          https://developer.android.com/training/package-visibility and

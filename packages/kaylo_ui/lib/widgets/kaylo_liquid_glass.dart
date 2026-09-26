@@ -1,21 +1,29 @@
 import 'dart:math' as math;
 import 'dart:ui' as ui;
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 /// Apple-style "liquid glass" surface.
 ///
 /// Layers (bottom to top):
-///   1. Backdrop blur + saturation boost with a whisper of tint (vibrancy)
-///   2. Edge refraction — the backdrop is re-sampled through a magnifying
-///      matrix inside a band along the border, so background content is
-///      genuinely bent and displaced where the "thick" glass edge would
-///      lens it. This is real optical warping of what's behind the surface
-///      (the same backdrop-matrix technique Flutter's text magnifier uses),
-///      most visible while content scrolls behind the glass.
+///   1. Backdrop blur with a whisper of tint. On web the blur is composed
+///      with a saturation boost (vibrancy), so the backdrop reads richer
+///      through the glass.
+///   2. Edge refraction, web only: the backdrop is re-sampled through a
+///      magnifying matrix inside a band along the border, so background
+///      content is genuinely bent and displaced where the "thick" glass
+///      edge would lens it (the backdrop-matrix technique Flutter's text
+///      magnifier uses), most visible while content scrolls behind.
 ///   3. Refraction shading gradient (light concentration at the lensed edge)
 ///   4. Specular rim (sweep gradient + chromatic fringe strokes)
 ///   5. Pointer-tracking specular highlight (hover / press)
+///
+/// Android and iOS render through Impeller, which paints the nested
+/// backdrop matrix layer as a displaced, hard-edged rectangle instead of
+/// a lensed edge (visible on the Home / Farm / Care cards). Those two
+/// backdrop tricks are therefore web-only; phones get the plain frosted
+/// blur, which Impeller renders correctly, plus every other layer.
 ///
 /// Passing [onTap] makes the surface interactive: it springs down slightly
 /// while pressed and the highlight brightens, like iOS glass buttons.
@@ -41,6 +49,11 @@ class KayloLiquidGlass extends StatefulWidget {
     this.onTap,
   });
 
+  /// Whether the renderer draws the backdrop refraction and vibrancy
+  /// filters faithfully. Skia on the web does; Impeller on phones does
+  /// not (see the class comment).
+  static const bool richBackdrop = kIsWeb;
+
   @override
   State<KayloLiquidGlass> createState() => _KayloLiquidGlassState();
 }
@@ -64,39 +77,44 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
             ? const Color(0xFF16211B).withValues(alpha: 0.15)
             : const Color(0xFFFAF8F3).withValues(alpha: 0.15));
 
+    final blur = ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16);
+
     final glass = ClipRRect(
       borderRadius: BorderRadius.circular(widget.borderRadius),
       child: Stack(
         children: [
-          // 1. Backdrop blur + saturation boost (vibrancy) + tint. Real glass
-          // concentrates color, so the backdrop reads richer through it.
+          // 1. Backdrop blur + tint. Real glass concentrates color, so on
+          // web the blur is composed with a saturation boost as well.
           Positioned.fill(
             child: BackdropFilter(
-              filter: ui.ImageFilter.compose(
-                outer: ui.ImageFilter.blur(sigmaX: 16, sigmaY: 16),
-                inner: _saturationFilter(isDark ? 1.25 : 1.55),
-              ),
-              child: Container(color: tintColor),
+              filter: KayloLiquidGlass.richBackdrop
+                  ? ui.ImageFilter.compose(
+                      outer: blur,
+                      inner: _saturationFilter(isDark ? 1.25 : 1.55),
+                    )
+                  : blur,
+              child: ColoredBox(color: tintColor),
             ),
           ),
 
           // 2. Edge refraction: inside a band along the border, re-sample
           // the backdrop through a magnifying matrix anchored at the widget
-          // center — background content bends inward at the edge exactly as
-          // it would through a convex gel edge.
-          Positioned.fill(
-            child: IgnorePointer(
-              child: ClipPath(
-                clipper: _EdgeRingClipper(borderRadius: widget.borderRadius),
-                child: const _BackdropRefraction(
-                  scale: 1.18,
-                  child: SizedBox.expand(),
+          // center, so background content bends inward at the edge exactly
+          // as it would through a convex gel edge.
+          if (KayloLiquidGlass.richBackdrop)
+            Positioned.fill(
+              child: IgnorePointer(
+                child: ClipPath(
+                  clipper: _EdgeRingClipper(borderRadius: widget.borderRadius),
+                  child: const _BackdropRefraction(
+                    scale: 1.18,
+                    child: SizedBox.expand(),
+                  ),
                 ),
               ),
             ),
-          ),
 
-          // 3. Refraction shading — light concentrates where the edge lenses.
+          // 3. Refraction shading: light concentrates where the edge lenses.
           Positioned.fill(
             child: IgnorePointer(
               child: DecoratedBox(
@@ -155,7 +173,7 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
             ),
           ),
 
-          // 4. Specular rim — sweep gradient so light catches the corners
+          // 4. Specular rim: sweep gradient so light catches the corners
           Positioned.fill(
             child: IgnorePointer(
               child: CustomPaint(
@@ -230,7 +248,7 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
 }
 
 /// Saturation color matrix used to give the blurred backdrop the vibrancy
-/// Apple glass has — colors behind the surface come through richer.
+/// Apple glass has: colors behind the surface come through richer.
 ui.ImageFilter _saturationFilter(double s) {
   final sr = (1 - s) * 0.2126;
   final sg = (1 - s) * 0.7152;
@@ -260,10 +278,10 @@ ui.ImageFilter _saturationFilter(double s) {
 }
 
 /// Re-samples the backdrop through a magnifying matrix anchored at this
-/// widget's center — genuine optical warping of the content behind the
+/// widget's center: genuine optical warping of the content behind the
 /// glass. Same backdrop-matrix technique as Flutter's RawMagnifier; the
 /// anchor is computed from the paint offset so it stays correct wherever
-/// the widget sits on screen.
+/// the widget sits on screen. Web only (see KayloLiquidGlass).
 class _BackdropRefraction extends SingleChildRenderObjectWidget {
   final double scale;
 
@@ -316,7 +334,7 @@ class _RenderBackdropRefraction extends RenderProxyBox {
 }
 
 /// Clips to the band between the outer rounded rect and a deflated inner
-/// one — the "thickness" of the glass where refraction is strongest.
+/// one: the "thickness" of the glass where refraction is strongest.
 class _EdgeRingClipper extends CustomClipper<Path> {
   final double borderRadius;
 
@@ -349,7 +367,7 @@ class _EdgeRingClipper extends CustomClipper<Path> {
 
 /// Draws the glass rim as a stroked rounded rect with a sweep gradient:
 /// bright at the top edge, a soft kick on the lower-left corner, dark
-/// falloff at the bottom — the way real glass edges catch ambient light.
+/// falloff at the bottom, the way real glass edges catch ambient light.
 class _GlassRimPainter extends CustomPainter {
   final double borderRadius;
   final bool isDark;
@@ -399,8 +417,8 @@ class _GlassRimPainter extends CustomPainter {
 
     canvas.drawRRect(rrect, paint);
 
-    // Chromatic fringe: real glass edges split light — a cool cast on the
-    // top-left rim, a warm one on the bottom-right, both barely-there.
+    // Chromatic fringe: real glass edges split light, a cool cast on the
+    // top-left rim, a warm one on the bottom-right, both barely there.
     final fringeAlpha = isDark ? 0.05 : 0.10;
     final cool = Paint()
       ..style = PaintingStyle.stroke

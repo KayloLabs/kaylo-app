@@ -23,6 +23,17 @@ const bool supabaseConfigured = supabaseUrl != '' && supabaseAnonKey != '';
 const String googleServerClientId =
     String.fromEnvironment('GOOGLE_SERVER_CLIENT_ID');
 
+/// Google Maps key for the location picker and map previews. One flag
+/// configures every platform: this constant, the Android manifest
+/// (android/app/build.gradle.kts decodes the same dart-define into the
+/// placeholder) and the Maps JavaScript API, which the web app loads with
+/// it at runtime.
+///   --dart-define=GOOGLE_MAPS_API_KEY=AIza...
+/// Without it map areas show a placeholder and everything else still works.
+const String googleMapsApiKey = String.fromEnvironment('GOOGLE_MAPS_API_KEY');
+
+const bool googleMapsConfigured = googleMapsApiKey != '';
+
 /// True when the app should fall back to mock repositories: either mocks
 /// were requested explicitly, or no Supabase project is configured yet.
 const bool useMockData = useMock || !supabaseConfigured;

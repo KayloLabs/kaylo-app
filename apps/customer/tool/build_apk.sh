@@ -2,11 +2,12 @@
 # Builds the customer APK for a phone (mock data, arm64, which covers
 # every recent Android phone).
 #
-# The Google Maps key lives in android/local.properties (gitignored):
+# The map is OpenStreetMap unless a Google Maps key is present in
+# android/local.properties (gitignored):
 #   GOOGLE_MAPS_API_KEY=AIza...
 # This script passes it to Flutter as the dart-define that switches the
-# map on, and build.gradle.kts decodes the same define into the Android
-# manifest, so the key is typed once and never committed.
+# map engine to Google, and build.gradle.kts decodes the same define into
+# the Android manifest, so the key is typed once and never committed.
 #
 #   apps/customer/tool/build_apk.sh
 #   apps/customer/tool/build_apk.sh --split-debug-info=build/symbols   # extra flutter args pass through
@@ -25,7 +26,7 @@ defines=(--dart-define=USE_MOCK=true)
 if [ -n "$key" ]; then
   defines+=("--dart-define=GOOGLE_MAPS_API_KEY=$key")
 else
-  echo "note: no GOOGLE_MAPS_API_KEY in android/local.properties, the map will show a placeholder"
+  echo "note: no GOOGLE_MAPS_API_KEY in android/local.properties, the map will use OpenStreetMap"
 fi
 
 flutter build apk --release --target-platform android-arm64 "${defines[@]}" "$@"

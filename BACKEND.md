@@ -159,9 +159,11 @@ developer configuration before it can be enabled.
 ## Google Maps (location picker)
 
 The location picker (the header pill and first-run Location Setup) shows a
-Google Map under a fixed pin. The address under the pin and the town search
-come from OpenStreetMap's Nominatim, which needs no key; the map tiles do
-need a Google Maps key.
+map under a fixed pin. Out of the box it draws OpenStreetMap tiles, which are
+free and need no key. With a Google Maps key the same screens switch to
+Google's map (richer tiles, lite-mode previews on Android); the steps below
+are for that upgrade. The address under the pin and the town search come
+from OpenStreetMap's Nominatim either way.
 
 1. Google Cloud console, project `studio-1794461068-2d7dd` (the Firebase
    project). Enable **Maps SDK for Android**
@@ -195,5 +197,7 @@ need a Google Maps key.
    iOS additionally needs the line in `apps/customer/ios/Flutter/Maps.xcconfig`
    (gitignored, included by Debug/Release.xcconfig), which fills `GMSApiKey`.
 
-Without a key the app still runs: map areas show a placeholder, and GPS and
-town search keep working.
+Without a key nothing is missing: the map is OpenStreetMap, and GPS and town
+search work the same. Widget tests run with no map engine at all
+(`mapBackendProvider` overridden to `MapBackend.none` in `test_app.dart`), so
+they never fetch tiles or create a platform view.

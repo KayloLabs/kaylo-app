@@ -155,3 +155,34 @@ email, photo) by `ProfileSync` in `features/auth/domain/profile_store.dart`.
 
 Apple sign-in is wired for web only (Firebase pop-up) and needs the Apple
 developer configuration before it can be enabled.
+
+## Google Maps (location picker)
+
+The location picker (the header pill and first-run Location Setup) shows a
+Google Map under a fixed pin. The address under the pin and the town search
+come from OpenStreetMap's Nominatim, which needs no key; the map tiles do
+need a Google Maps key.
+
+1. Google Cloud console, project `studio-1794461068-2d7dd` (the Firebase
+   project): APIs & Services, enable **Maps SDK for Android**, **Maps SDK for
+   iOS** and **Maps JavaScript API**. Maps Platform needs a billing account
+   on the project; the monthly free usage covers a demo many times over.
+2. Credentials, create an API key. Restrict it to Android app `com.kaylo.app`
+   with the debug SHA-1 (`cd apps/customer/android && ./gradlew signingReport`),
+   iOS bundle `com.kaylo.app`, and your HTTP referrers for web.
+3. Pass it at build time. One flag covers every platform:
+
+   ```bash
+   cd apps/customer
+   flutter build apk --dart-define=USE_MOCK=true --dart-define=GOOGLE_MAPS_API_KEY=AIza...
+   ```
+
+   Android decodes the same define in `android/app/build.gradle.kts` and fills
+   the manifest placeholder; the web app injects the Maps script with it at
+   runtime. Two no-flag alternatives: `GOOGLE_MAPS_API_KEY=AIza...` in
+   `apps/customer/android/local.properties` (gitignored) for builds from
+   Android Studio, and the same line in `apps/customer/ios/Flutter/Maps.xcconfig`
+   (gitignored, included by Debug/Release.xcconfig) for iOS.
+
+Without a key the app still runs: map areas show a placeholder, and GPS and
+town search keep working.

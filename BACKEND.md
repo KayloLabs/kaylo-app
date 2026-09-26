@@ -38,6 +38,7 @@ feature's `data/` folder implement them, so no UI code knows the difference.
    4. `supabase/migrations/0003_care_contacts_and_logs.sql`
    5. `supabase/migrations/0004_care_doctors_caregivers.sql`
    6. `supabase/migrations/0005_firebase_auth_and_device_tokens.sql`
+   7. `supabase/migrations/0006_booking_customer_default.sql`
 
    A project that already ran the earlier steps only needs the new
    migrations (each is also appended to `setup_all.sql` for fresh

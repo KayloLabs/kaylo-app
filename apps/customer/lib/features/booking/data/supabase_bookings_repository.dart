@@ -16,10 +16,12 @@ class SupabaseBookingsRepository implements BookingsRepository {
   @override
   Future<List<Booking>> getUserBookings(String userId) async {
     try {
+      // Row-level security returns only this customer's bookings, so the
+      // client does not filter by id (customer_id is the customers-table
+      // id, not the person_id the app carries as userId).
       final rows = await _client
           .from('bookings')
           .select()
-          .eq('customer_id', userId)
           .order('created_at', ascending: false);
       return rows.map(_bookingFromRow).toList();
     } catch (e) {
@@ -30,10 +32,11 @@ class SupabaseBookingsRepository implements BookingsRepository {
   @override
   Future<Booking> createBooking(Booking booking) async {
     try {
+      // customer_id defaults to current_customer_id() (migration 0006);
+      // omitting it keeps the client from sending the wrong id.
       final row = await _client
           .from('bookings')
           .insert({
-            'customer_id': booking.userId,
             'worker_id': booking.workerId,
             'service_id': booking.serviceId,
             'booking_date': _dateString(booking.scheduledAt),

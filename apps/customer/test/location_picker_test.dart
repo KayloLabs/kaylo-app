@@ -8,9 +8,8 @@ import 'package:kaylo/features/home/presentation/widgets/location_picker_sheet.d
 
 import 'support/test_app.dart';
 
-// The test build has no Maps key, so the picker shows its placeholder
-// instead of a platform view; the GPS and search paths are what these
-// cover.
+// testApp runs the map with no engine (placeholder, no tiles, no
+// platform view); the GPS and search paths are what these cover.
 late ProviderContainer container;
 
 List<RouteBase> get _routes => [

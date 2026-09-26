@@ -7,6 +7,7 @@ import 'package:kaylo_core/models/app_user.dart';
 import 'package:kaylo_core/services/location_service.dart';
 import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_core/services/storage_service.dart';
+import 'package:kaylo/core/widgets/kaylo_map.dart';
 import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/l10n/generated/app_localizations.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -35,8 +36,9 @@ final testUser = AppUser(
 );
 
 /// A signed-in, mock-backed app around [routes], with in-memory
-/// SharedPreferences so storage-backed providers work and no audio
-/// plugin, since the test runner has none.
+/// SharedPreferences so storage-backed providers work, no audio plugin
+/// (the test runner has none) and no map engine (tiles would be fetched
+/// over the network).
 Future<Widget> testApp({
   required String initialLocation,
   required List<RouteBase> routes,
@@ -51,6 +53,7 @@ Future<Widget> testApp({
       currentUserProvider.overrideWithValue(testUser),
       currentUserIdProvider.overrideWithValue(testUser.id),
       soundServiceProvider.overrideWithValue(SilentSoundService()),
+      mapBackendProvider.overrideWithValue(MapBackend.none),
       ...overrides,
     ],
     child: MaterialApp.router(

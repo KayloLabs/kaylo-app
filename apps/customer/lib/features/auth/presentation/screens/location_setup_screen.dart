@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
@@ -100,16 +99,9 @@ class _LocationSetupScreenState extends ConsumerState<LocationSetupScreen> {
                         center: position ?? keralaCenter,
                         zoom: position == null ? 6.4 : 15,
                         interactive: false,
-                        markers: {
-                          if (position != null)
-                            Marker(
-                              markerId: const MarkerId('me'),
-                              position: position,
-                              icon: BitmapDescriptor.defaultMarkerWithHue(
-                                BitmapDescriptor.hueGreen,
-                              ),
-                            ),
-                        },
+                        markers: [
+                          if (position != null) KayloMapMarker(position),
+                        ],
                       ),
                       AnimatedSwitcher(
                         duration: const Duration(milliseconds: 300),

@@ -2,9 +2,7 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import 'package:kaylo_core/config/app_env.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/services/location_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
@@ -39,8 +37,8 @@ Future<bool> showLocationPickerSheet(BuildContext context) async {
 /// Map-first picker in the style of delivery apps: the map moves under a
 /// fixed pin, the address beneath it refreshes once the map settles, a
 /// button jumps to GPS, and a search field covers places the customer
-/// cannot pan to. Without a Maps key the map area is a placeholder and
-/// the other two paths still work.
+/// cannot pan to. The map is OpenStreetMap or Google depending on the
+/// build (see mapBackendProvider); the other two paths work regardless.
 class LocationPickerSheet extends ConsumerStatefulWidget {
   const LocationPickerSheet({super.key});
 
@@ -52,7 +50,7 @@ class LocationPickerSheet extends ConsumerStatefulWidget {
 class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
   final _town = TextEditingController();
   final _townFocus = FocusNode();
-  GoogleMapController? _map;
+  final _map = KayloMapController();
   Timer? _debounce;
 
   /// Sequence number so a slow lookup cannot overwrite a newer one.
@@ -104,7 +102,7 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
     }
   }
 
-  void _onCameraMove(CameraPosition position) => _target = position.target;
+  void _onCameraMove(LatLng target) => _target = target;
 
   void _onCameraIdle() {
     if (_moving) setState(() => _moving = false);
@@ -137,7 +135,7 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
       _selected = UserLocation.fromResolved(location);
       _moved = true;
     });
-    await _map?.animateCamera(CameraUpdate.newLatLngZoom(target, zoom));
+    await _map.animateTo(target, zoom: zoom);
   }
 
   Future<void> _locateMe() async {
@@ -211,6 +209,7 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
     // map keeps some height above the keyboard on small phones.
     final typing = keyboard > 0;
     final selected = _selected;
+    final hasMap = ref.watch(mapBackendProvider) != MapBackend.none;
 
     return SizedBox(
       height: MediaQuery.sizeOf(context).height * 0.88,
@@ -266,13 +265,13 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
                       zoom: _target == null ? 12 : 15,
                       followCenter: false,
                       padding: const EdgeInsets.only(bottom: AppSpacing.s),
-                      onMapCreated: (controller) => _map = controller,
+                      controller: _map,
                       onCameraMoveStarted: _onCameraMoveStarted,
                       onCameraMove: _onCameraMove,
                       onCameraIdle: _onCameraIdle,
                     ),
                   ),
-                  if (googleMapsConfigured) ...[
+                  if (hasMap) ...[
                     IgnorePointer(
                       child: Center(child: _MapPin(lifted: _moving)),
                     ),

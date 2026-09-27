@@ -139,7 +139,7 @@ flutter_launcher_icons:
   ios: true
   remove_alpha_ios: true
   min_sdk_android: 21
-  adaptive_icon_background: "#F7F9F6"
+  adaptive_icon_background: "assets_kaylo/launcher/icon_background.png"
   adaptive_icon_foreground: "assets_kaylo/launcher/icon_foreground.png"
   adaptive_icon_monochrome: "assets_kaylo/launcher/icon_monochrome.png"
   web:

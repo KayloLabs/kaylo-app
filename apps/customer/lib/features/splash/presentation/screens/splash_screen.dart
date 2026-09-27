@@ -49,10 +49,12 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
   void initState() {
     super.initState();
 
-    // Choreography: 1.5s loop + 0.25s dot + 0.3s text + 0.6s shimmer/hold = 2.65s
+    // Choreography over 1.5 s: loop draws for 0.85 s, the dot lands,
+    // the wordmark rises, then a light sweep during the closing hold.
+    // The intervals below are fractions of that.
     _controller = AnimationController(
       vsync: this,
-      duration: const Duration(milliseconds: 2650),
+      duration: const Duration(milliseconds: 1500),
     );
 
     // Slow ambient drift for the background light blobs.
@@ -63,21 +65,17 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
 
     _loopReveal = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.566, curve: Curves.easeInOut), // 0-1500ms
+      curve: const Interval(0.0, 0.566, curve: Curves.easeInOut),
     );
 
     _dotScale = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(
-        0.566,
-        0.660,
-        curve: Curves.easeOutBack,
-      ), // 1500-1750ms
+      curve: const Interval(0.566, 0.660, curve: Curves.easeOutBack),
     );
 
     _textFade = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.660, 0.774, curve: Curves.easeIn), // 1750-2050ms
+      curve: const Interval(0.660, 0.774, curve: Curves.easeIn),
     );
 
     _textSlide = Tween<Offset>(begin: const Offset(0, 0.1), end: Offset.zero)
@@ -91,11 +89,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
     // Light sweep across the assembled logo during the closing hold.
     _shimmer = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(
-        0.790,
-        0.980,
-        curve: Curves.easeInOut,
-      ), // 2090-2600ms
+      curve: const Interval(0.790, 0.980, curve: Curves.easeInOut),
     );
 
     _taglineFade = CurvedAnimation(
@@ -115,26 +109,24 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       _ambient.repeat();
     }
 
-    // Start initialization logic concurrently with animation
+    // Initialization runs while the logo animates; the scene leaves as
+    // soon as both are done.
     final initFuture = ref
         .read(splashControllerProvider.notifier)
         .initializeApp();
 
-    // Wait for the app state to initialize
-    await initFuture;
-    _destination = ref.read(splashControllerProvider).value;
-
     if (disableAnimations) {
-      // Fast path for reduced motion
+      // Reduced motion: show the finished logo briefly, then move on.
       _controller.value = 1.0;
-      await Future.delayed(const Duration(milliseconds: 500));
+      await initFuture;
+      await Future.delayed(const Duration(milliseconds: 250));
     } else {
-      // Play the full choreography, then fade the whole scene out.
-      await _controller.forward();
+      await Future.wait([initFuture, _controller.forward()]);
       if (mounted) setState(() => _exiting = true);
-      await Future.delayed(const Duration(milliseconds: 260));
+      await Future.delayed(const Duration(milliseconds: 200));
     }
 
+    _destination = ref.read(splashControllerProvider).value;
     _routeToDestination();
   }
 
@@ -176,7 +168,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen>
       backgroundColor: backgroundColor,
       body: AnimatedOpacity(
         opacity: _exiting ? 0.0 : 1.0,
-        duration: const Duration(milliseconds: 260),
+        duration: const Duration(milliseconds: 200),
         curve: Curves.easeOut,
         child: Stack(
           children: [

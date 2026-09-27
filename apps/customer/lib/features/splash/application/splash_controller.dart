@@ -17,10 +17,8 @@ class SplashController extends AsyncNotifier<SplashRouteDestination?> {
     state = const AsyncValue.loading();
 
     try {
-      // Simulate Firebase/App initialization
-      // TODO: await Firebase.initializeApp();
-      await Future.delayed(const Duration(milliseconds: 1200));
-
+      // Firebase and Supabase are already up (main.dart); only the two
+      // preference reads remain, so the logo animation sets the pace.
       final hasSeenOnboarding = await _storageService.getOnboardingSeen();
       final token = await _storageService.getToken();
 

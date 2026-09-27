@@ -84,7 +84,14 @@ class DashboardScreen extends ConsumerWidget {
                         },
                         const SizedBox(height: AppSpacing.xl),
                         const BottomPromoBanner(),
-                        const SizedBox(height: 120), // bottom nav space
+                        // Clears the floating nav pill, which the shell
+                        // reports as this body's bottom padding, plus
+                        // the gesture bar it now floats above.
+                        SizedBox(
+                          height:
+                              MediaQuery.paddingOf(context).bottom +
+                              AppSpacing.xl,
+                        ),
                       ],
                     ),
                   ),

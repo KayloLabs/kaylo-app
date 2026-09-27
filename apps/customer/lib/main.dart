@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:device_preview/device_preview.dart';
@@ -19,6 +20,13 @@ import 'package:kaylo_ui/theme/app_theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+
+  // Phones: draw behind the status and navigation bars. Screens keep
+  // their content clear of them with SafeArea, and the bar icons follow
+  // the theme through the AnnotatedRegion in KayloApp.
+  if (!kIsWeb) {
+    await SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
 
   try {
     await FirebaseBootstrap.initialize(DefaultFirebaseOptions.currentPlatform);
@@ -75,7 +83,22 @@ class KayloApp extends ConsumerWidget {
       locale: ref.watch(localeProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,
       supportedLocales: AppLocalizations.supportedLocales,
-      builder: DevicePreview.appBuilder,
+      builder: (context, child) {
+        // Transparent bars whose icons flip with the theme; screens with
+        // an AppBar still set their own status bar icons on top of this.
+        final dark = Theme.of(context).brightness == Brightness.dark;
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: (dark ? SystemUiOverlayStyle.light : SystemUiOverlayStyle.dark)
+              .copyWith(
+                statusBarColor: Colors.transparent,
+                systemStatusBarContrastEnforced: false,
+                systemNavigationBarColor: Colors.transparent,
+                systemNavigationBarDividerColor: Colors.transparent,
+                systemNavigationBarContrastEnforced: false,
+              ),
+          child: DevicePreview.appBuilder(context, child),
+        );
+      },
       routerConfig: router,
     );
   }

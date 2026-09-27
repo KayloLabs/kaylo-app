@@ -21,52 +21,59 @@ class ModeSwitcherSection extends StatelessWidget {
           title: AppLocalizations.of(context)!.whatDoYouNeedHelpWith,
         ),
         const SizedBox(height: AppSpacing.m),
-        Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Expanded(
-              child: _ModeCard(
-                title: AppLocalizations.of(context)!.home,
-                subtitle: AppLocalizations.of(context)!.homeSubtitle,
-                imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
-                colorOverlay: Colors.amber.withValues(alpha: 0.15), // Gold tint
-                onTap: () {
-                  KayloFeedback.tap();
-                  context.push(Routes.homeServices);
-                },
+        // The three cards share the height of the tallest, so a subtitle
+        // that wraps to an extra line (Farm in English, most of them in
+        // Malayalam) does not leave one card taller than its neighbours.
+        IntrinsicHeight(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Expanded(
+                child: _ModeCard(
+                  title: AppLocalizations.of(context)!.home,
+                  subtitle: AppLocalizations.of(context)!.homeSubtitle,
+                  imagePath: 'assets_kaylo/3d_transparent/mode_home.png',
+                  colorOverlay: Colors.amber.withValues(
+                    alpha: 0.15,
+                  ), // Gold tint
+                  onTap: () {
+                    KayloFeedback.tap();
+                    context.push(Routes.homeServices);
+                  },
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.s),
-            Expanded(
-              child: _ModeCard(
-                title: AppLocalizations.of(context)!.farm,
-                subtitle: AppLocalizations.of(context)!.farmSubtitle,
-                imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
-                colorOverlay: Colors.green.withValues(
-                  alpha: 0.15,
-                ), // Green tint
-                onTap: () {
-                  KayloFeedback.tap();
-                  context.push(Routes.farm);
-                },
+              const SizedBox(width: AppSpacing.s),
+              Expanded(
+                child: _ModeCard(
+                  title: AppLocalizations.of(context)!.farm,
+                  subtitle: AppLocalizations.of(context)!.farmSubtitle,
+                  imagePath: 'assets_kaylo/3d_transparent/mode_farm.png',
+                  colorOverlay: Colors.green.withValues(
+                    alpha: 0.15,
+                  ), // Green tint
+                  onTap: () {
+                    KayloFeedback.tap();
+                    context.push(Routes.farm);
+                  },
+                ),
               ),
-            ),
-            const SizedBox(width: AppSpacing.s),
-            Expanded(
-              child: _ModeCard(
-                title: AppLocalizations.of(context)!.care,
-                subtitle: AppLocalizations.of(context)!.careSubtitle,
-                imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
-                colorOverlay: Colors.deepPurpleAccent.withValues(
-                  alpha: 0.15,
-                ), // Violet tint
-                onTap: () {
-                  KayloFeedback.tap();
-                  context.go(Routes.careHome);
-                },
+              const SizedBox(width: AppSpacing.s),
+              Expanded(
+                child: _ModeCard(
+                  title: AppLocalizations.of(context)!.care,
+                  subtitle: AppLocalizations.of(context)!.careSubtitle,
+                  imagePath: 'assets_kaylo/3d_transparent/mode_care.png',
+                  colorOverlay: Colors.deepPurpleAccent.withValues(
+                    alpha: 0.15,
+                  ), // Violet tint
+                  onTap: () {
+                    KayloFeedback.tap();
+                    context.go(Routes.careHome);
+                  },
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ],
     );
@@ -133,6 +140,7 @@ class _ModeCard extends StatelessWidget {
                     height: 1.2,
                   ),
                 ),
+                const Spacer(),
                 const SizedBox(height: AppSpacing.s),
                 Align(
                   alignment: Alignment.centerRight,

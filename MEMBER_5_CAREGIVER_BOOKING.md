@@ -1,138 +1,143 @@
-# M5 (Sandeep): Caregiver booking, finished (mock-first)
+# M5 (Sandeep): finishing the caregiver booking
 
-Owner: Sandeep (`sandeep2006-c`). Branch off `main`, one PR, Nimal merges.
-Everything here runs behind `USE_MOCK=true` and touches **no Supabase**.
-`SupabaseCareRepository` already hands caregiver bookings to the mock
-(`data/supabase_care_repository.dart`, the two methods near the bottom); M1
-adds the table later and implements the interface you leave behind. Your job
-is the Flutter side: make the flow complete and worth showing in the demo.
+Hi Sandeep. The farm flow, messages and the whole Care section you built are
+the heart of the demo, so this next piece is a natural continuation: taking
+the caregiver booking from "works" to "feels finished", the way the farm flow
+does. It is Flutter-only work with the mock data, nothing on the Supabase
+side; M1 adds the table later and implements the interface you leave behind.
 
-Reference apps: **Urban Company** (book a service: slot, notes, receipt, then
-the booking in "Upcoming"), **Practo** (care bookings listed with a cancel).
+If you want a picture of the target: **Urban Company** (pick a slot, add a
+note, get a receipt, see it under Upcoming) and **Practo** (care bookings
+listed with a cancel).
 
 ---
 
-## What is wrong today
+## Where the flow stands today
 
-Open the app with mocks, Care tab, **Book a Caregiver**, and confirm one.
-Then read `apps/customer/lib/features/care/presentation/screens/caregiver_booking_screen.dart`
-around the confirm button (lines 360 to 410):
+Run the app with mocks, open the Care tab, tap **Book a Caregiver** and
+confirm one. Then have a look at the confirm button in
+`apps/customer/lib/features/care/presentation/screens/caregiver_booking_screen.dart`
+(around lines 360 to 410). A few things were stubbed to get the flow moving,
+and now they can become real:
 
-| Problem | Where |
+| Today | What we want |
 |---|---|
-| Start time is a literal `'09:00 AM'`; the customer never picks one | `startTime: '09:00 AM'` |
-| Notes are a literal `'Caregiver visit for senior'` | `notes: ...` |
-| The Bookings-tab copy is created for user `'u1'` instead of the signed-in user | `userId: 'u1'` |
-| Failure of that copy is swallowed by an empty `catch (_) {}` | same block |
-| The flow ends in a snackbar and `context.pop()`; the farm flow lands on a proper receipt | `KayloSnackbar.showSuccess(...)` |
-| Care Home never shows the visit afterwards, and nothing can be cancelled | `care_home_screen.dart` |
+| The start time is fixed at `'09:00 AM'` | The customer picks a slot |
+| The notes are fixed text | An optional notes field |
+| The Bookings-tab copy is saved for user `'u1'` | The signed-in user |
+| A failed save is caught silently | A small error message, and the screen stays put |
+| The flow ends with a snackbar and `pop()` | The shared receipt screen, like the farm flow |
+| Care Home does not show the visit afterwards | An "Upcoming care visits" list with cancel |
 
-The farm flow is the reference for how a Kaylo booking should end:
-`features/farm/presentation/screens/farm_payment_screen.dart` (the `context.go(Routes.bookingConfirmation, extra: BookingReceipt(...))` call).
+The farm flow is a good model for the ending:
+`features/farm/presentation/screens/farm_payment_screen.dart`, the
+`context.go(Routes.bookingConfirmation, extra: BookingReceipt(...))` call.
 
 ---
 
-## Before you start
+## Getting set up
 
 ```bash
 git checkout main
-git pull                                  # always start from the latest main
+git pull                                  # start from the latest main
 flutter pub get                           # once, at the repo root (pub workspace)
 cd apps/customer
 flutter run -d chrome --dart-define=USE_MOCK=true
-git checkout -b feat/m5-caregiver-booking # never work on main
+git checkout -b feat/m5-caregiver-booking
 ```
 
-Then read, in this order:
+Worth a read before coding, in this order:
 
-1. `CONTRIBUTING.md`, all of it: daily workflow (§2), where code goes (§3),
-   shared code (§4), localization (§5), the screen → provider → interface →
-   implementation rule (§6).
+1. `CONTRIBUTING.md`: the daily workflow (§2), where code goes (§3), shared
+   code (§4), localization (§5), and the screen → provider → interface →
+   implementation flow (§6).
 2. `features/care/domain/care_repository.dart` (the interface),
    `features/care/data/mock_care_repository.dart` (your implementation),
    `features/care/application/care_providers.dart` (`caregiverBookingsProvider`).
 3. `features/farm/presentation/screens/farm_payment_screen.dart` and
-   `features/booking/domain/booking_receipt.dart` (the receipt you will reuse).
-4. `test/care_flows_test.dart` (how care screens are tested).
+   `features/booking/domain/booking_receipt.dart` (the receipt you can reuse).
+4. `test/care_flows_test.dart`, to see how care screens are tested.
 
 ---
 
-## Rules for this task
+## Things to keep in mind
 
-**Kaylo theme, always.**
-- Colours, spacing and radii come from `kaylo_ui`: `AppColors`, `AppSpacing`,
-  `AppRadius`. No hex values, no `Colors.blue`, no magic numbers for padding.
-- Text styles come from `Theme.of(context).textTheme`. Never set a font size
-  smaller than what the theme gives you: Care screens run under `careTheme`
-  (`packages/kaylo_ui/lib/theme/app_theme.dart`), which is built for seniors,
-  18 sp minimum body text, 56 by 56 tap targets, high contrast. Keep every new
-  button and chip at least that big.
-- Use the shared widgets: `KayloButton`, `KayloCard`, `KayloChip`,
-  `KayloListTile`, `KayloSnackbar`, `SectionHeader`, `EmptyState`. The care
-  type chips already on the screen (`ChoiceChip` near line 94) show the
-  selected and unselected look; match it for the new time slot chips.
-- `KayloFeedback.tap()` on selections, `KayloFeedback.press()` on confirm,
-  `KayloFeedback.alert()` on an error, before the action.
-- Money through `formatRupees` (`kaylo_core`), never string-built rupees.
-- Check the screen once with **Care Mode** on (Profile → Settings → Care
-  Mode) and once in Tamil; both change sizes a lot.
+**The Kaylo look.** Colours, spacing and radii come from `kaylo_ui`
+(`AppColors`, `AppSpacing`, `AppRadius`) and text styles from
+`Theme.of(context).textTheme`, so the new pieces match the rest without
+effort. Care screens run under `careTheme`
+(`packages/kaylo_ui/lib/theme/app_theme.dart`), which is tuned for seniors:
+18 sp body text and 56 by 56 tap targets. Keeping the theme's sizes as they
+are is enough; just avoid shrinking anything for fit. The shared widgets
+(`KayloButton`, `KayloCard`, `KayloChip`, `KayloListTile`, `KayloSnackbar`,
+`SectionHeader`, `EmptyState`) cover everything this task needs, and the care
+type chips already on the screen (`ChoiceChip`, near line 94) show the
+selected and unselected look to match for the time slots. A
+`KayloFeedback.tap()` on selections and `KayloFeedback.press()` on confirm
+gives the haptics and sound the other flows have, and `formatRupees`
+(`kaylo_core`) formats money the Indian way.
 
-**Localization.** Every visible string goes into all four files
+Two quick checks at the end make a big difference: once with **Care Mode**
+on (Profile → Settings → Care Mode) and once in Tamil, since both change the
+sizes a lot.
+
+**Localization.** Each visible string goes into the four files
 (`lib/l10n/app_en.arb`, `app_ml.arb`, `app_hi.arb`, `app_ta.arb`), then
-`flutter gen-l10n` inside `apps/customer`, and the generated files are
-committed. CI fails the PR if they are stale. Times are formatted with
-`MaterialLocalizations.of(context).formatTimeOfDay`, dates with
-`DateFormat` from `intl` using the current locale, so nothing says "AM" by hand.
+`flutter gen-l10n` inside `apps/customer`, with the generated files committed
+(CI checks they are current). For times and dates,
+`MaterialLocalizations.of(context).formatTimeOfDay` and `DateFormat` from
+`intl` handle the locale, so nothing needs a hand-written "AM".
 
-**Architecture.** Screens talk to providers, providers to `CareRepository`,
-`MockCareRepository` does the work. No Supabase calls anywhere in this PR. If
-you add a method to the interface, `SupabaseCareRepository` must compile, so
-give it the same one-line delegation the two caregiver methods already use
-(`return _fallback.yourMethod(...)`).
+**Architecture.** Screen → provider → `CareRepository` → `MockCareRepository`,
+as everywhere else. No Supabase calls in this PR. If you add a method to the
+interface, `SupabaseCareRepository` needs it too so it compiles; the two
+caregiver methods at the bottom of that file show the one-line
+`return _fallback.yourMethod(...)` to copy.
 
 **Shared code.** `CaregiverBookingRecord` lives in the customer app
-(`features/care/domain/models/caregiver.dart`), so you may extend it. Models in
-`packages/kaylo_core/lib/models/` are M1's; ask before touching them.
+(`features/care/domain/models/caregiver.dart`), so it is yours to extend.
+Models in `packages/kaylo_core/lib/models/` are shared by both apps; a quick
+word with M1 before changing one saves a merge headache.
 
 **Git.** Small commits with conventional messages (`feat(care): time slot
-chips`), your own git identity, no AI attribution lines of any kind.
-`flutter analyze` and `flutter test` green before every push.
+chips`), your own git identity, no AI attribution lines. `flutter analyze` and
+`flutter test` green before each push keeps CI happy.
 
 ---
 
-## The work, in this order
+## The work, in a sensible order
 
 ### 1. Pick a start time (screen)
 
-Add a **Start time** section under the date picker. Show slots as chips in
-two rows, Morning (07:00, 09:00, 11:00) and Afternoon (14:00, 16:00), with one
-selected by default (09:00). Store the choice as a `TimeOfDay` in the screen
-state and keep the slot list in care code, for example a
-`caregiverSlots` constant next to `CaregiverBookingRecord`.
+A **Start time** section under the date picker: chips in two rows, Morning
+(07:00, 09:00, 11:00) and Afternoon (14:00, 16:00), with 09:00 selected by
+default. Keep the choice as a `TimeOfDay` in the screen state, and the slot
+list in care code, for example a `caregiverSlots` constant next to
+`CaregiverBookingRecord`.
 
 On confirm:
-- `startTime` on the record is the formatted label (use
-  `MaterialLocalizations.of(context).formatTimeOfDay`).
-- The `Booking` copy's `scheduledAt` is the date **plus the slot**, not just
-  the date, so the Bookings tab sorts and shows it correctly.
+- `startTime` on the record is the formatted label
+  (`MaterialLocalizations.of(context).formatTimeOfDay`).
+- The `Booking` copy's `scheduledAt` is the date **plus the slot**, so the
+  Bookings tab sorts and shows it at the right time.
 
 ### 2. Notes (screen)
 
 An optional multiline `TextField` (`maxLines: 3`, `maxLength: 200`) titled
-"Anything the caregiver should know?" with a localized hint such as
-"Medicines, mobility, food, language". The app theme already styles inputs;
-do not restyle it. Empty text saves as `notes: null`.
+"Anything the caregiver should know?" with a hint like "Medicines, mobility,
+food, language". The app theme already styles inputs. Empty text saves as
+`notes: null`.
 
 ### 3. The signed-in user, and a real receipt
 
-- Replace `'u1'` with `ref.read(currentUserIdProvider)`
-  (`features/auth/application/current_user_provider.dart`). If it is null the
-  person is signed out: still save the care record, skip the Bookings-tab
+- `'u1'` becomes `ref.read(currentUserIdProvider)`
+  (`features/auth/application/current_user_provider.dart`). When it is null
+  (signed-out preview), still save the care record and skip the Bookings-tab
   copy.
-- Delete the empty `catch (_) {}`. If either write throws, call
-  `KayloFeedback.alert()` and `KayloSnackbar.showError` with a localized
-  string, and stay on the screen.
-- On success, do exactly what the farm flow does:
+- The empty `catch (_) {}` can go. If either write throws,
+  `KayloFeedback.alert()` plus `KayloSnackbar.showError` with a localized
+  string, and the screen stays put.
+- On success, the same ending the farm flow has:
 
 ```dart
 KayloFeedback.press();
@@ -152,66 +157,67 @@ context.go(
 );
 ```
 
-Remove the snackbar and the `context.pop()`. `BookingConfirmationScreen`
-already plays the tick animation and the chime; you get those for free.
+The snackbar and `context.pop()` are no longer needed;
+`BookingConfirmationScreen` brings the tick animation and the chime with it.
 
 ### 4. Upcoming care visits on Care Home
 
-In `care_home_screen.dart`, below the three action cards and above the SOS
-card, add:
+In `care_home_screen.dart`, between the three action cards and the SOS card:
 
 - `SectionHeader(title: l10n.upcomingCareVisits)`.
 - The list from `caregiverBookingsProvider`, filtered to
-  `status == 'confirmed'` and a date from today onward, newest first, at most
-  three. Each row is a `KayloCard` with: caregiver name (title), care type and
-  the date and start time (subtitle, one line, ellipsis), the total
+  `status == 'confirmed'` with a date from today onward, newest first, at most
+  three. Each row a `KayloCard`: caregiver name (title), care type with the
+  date and start time (subtitle, one line, ellipsis), the total
   (`formatRupees(totalAmount)`), and a **Cancel** text button.
-- When there are none: `EmptyState` with "No caregiver visits booked yet" and
-  a button that opens the booking screen.
-- Cancel asks first (an `AlertDialog` with localized "Cancel this visit?",
-  "Keep it" and "Cancel visit"), then:
-  1. `CareRepository.cancelCaregiverBooking(String id)`: new interface method,
-     implemented in `MockCareRepository` by setting the record's status to
-     `'cancelled'`, and delegated with one line in `SupabaseCareRepository`.
-  2. A `cancel(id)` method on the notifier behind `caregiverBookingsProvider`
-     that calls it and refreshes the state.
-  3. The Bookings-tab copy is cancelled through the same repository method
-     Booking Details already uses (`features/booking/presentation/screens/booking_details_screen.dart`
+- With nothing booked: `EmptyState` with "No caregiver visits booked yet" and
+  a button to the booking screen.
+- Cancel asks first (an `AlertDialog`: "Cancel this visit?", "Keep it",
+  "Cancel visit"), then:
+  1. `CareRepository.cancelCaregiverBooking(String id)`, a new interface
+     method: `MockCareRepository` sets the record's status to `'cancelled'`,
+     `SupabaseCareRepository` gets the one-line delegation.
+  2. A `cancel(id)` on the notifier behind `caregiverBookingsProvider` that
+     calls it and refreshes the state.
+  3. The Bookings-tab copy is cancelled through the repository method Booking
+     Details already uses
+     (`features/booking/presentation/screens/booking_details_screen.dart`
      shows the call).
   4. `KayloSnackbar.showSuccess(context, l10n.visitCancelled)`.
 
-Status values are exactly `'confirmed'`, `'completed'`, `'cancelled'`; that is
-the check constraint `doctor_appointments` already has in
-`supabase/migrations/0004_care_doctors_caregivers.sql`, and the caregiver
-table will match it.
+Status values are `'confirmed'`, `'completed'` and `'cancelled'`, matching the
+check constraint `doctor_appointments` has in
+`supabase/migrations/0004_care_doctors_caregivers.sql`; the caregiver table
+will use the same.
 
-### 5. Small model tidy
+### 5. A small model tidy
 
-On `CaregiverBookingRecord`: add `copyWith`, `bool get isUpcoming`, and a
-`DateTime get scheduledAt` that combines `date` and the slot so the two
-screens do not each parse the label. Keep the constructor compatible: the mock
-repository, the booking screen and the tests all construct it.
+On `CaregiverBookingRecord`: a `copyWith`, a `bool get isUpcoming`, and a
+`DateTime get scheduledAt` combining `date` and the slot so the two screens
+share one definition. The constructor is used by the mock repository, the
+booking screen and the tests, so keeping it compatible avoids churn.
 
-### 6. Tests (`test/care_flows_test.dart` style)
+### 6. Tests (in the style of `test/care_flows_test.dart`)
 
-Add `test/caregiver_booking_test.dart` with, at least:
+A new `test/caregiver_booking_test.dart` covering:
 
 1. choosing a slot and typing notes, then confirming, lands on the receipt
-   screen showing the caregiver's name and the chosen time;
+   with the caregiver's name and the chosen time;
 2. Care Home then lists that visit under Upcoming;
-3. cancelling it (confirm in the dialog) removes it from Upcoming;
+3. cancelling it (confirming in the dialog) removes it from Upcoming;
 4. the new section renders in Malayalam without overflow
    (`care_home_smoke_test.dart` shows how to pump a locale).
 
-Use `testApp`, `settle` and `useTallPhone` from `test/support/test_app.dart`.
-Never `pumpAndSettle`: the mock repositories answer after a delay and loaders
-animate forever, so `settle` (a handful of pumps) is what works here.
+`testApp`, `settle` and `useTallPhone` in `test/support/test_app.dart` do the
+setup. One tip that saves an afternoon: `pumpAndSettle` hangs here because the
+mock repositories answer after a delay and the loaders animate forever;
+`settle` (a handful of pumps) is the helper that works.
 
 ---
 
 ## Strings to add
 
-English below; you write Malayalam, Hindi and Tamil. Keep them short, Tamil
+English below; the Malayalam, Hindi and Tamil are yours. Short is good, Tamil
 runs about 40 percent longer than English.
 
 | Key | English |
@@ -233,22 +239,22 @@ runs about 40 percent longer than English.
 | `visitCancelled` | Visit cancelled |
 | `bookingFailed` | Could not save the booking. Please try again. |
 
-Reuse what already exists: `caregiverBooking`, `caregiverBooked`,
+Already there and reusable: `caregiverBooking`, `caregiverBooked`,
 `selectCaregiver`, `bookNow`, `cancel`.
 
 ---
 
-## Definition of done
+## When it is done, we should be able to
 
-- [ ] Slot and notes are chosen on screen; nothing about the visit is a literal in code.
-- [ ] Confirm lands on the shared receipt with caregiver, care type, start time, duration.
-- [ ] The visit appears in Care Home under Upcoming, and in the Bookings tab at the right date and time.
-- [ ] Cancel works from Care Home, with a confirmation, and updates both lists.
-- [ ] Signed-out preview still works (no crash on a null user id).
-- [ ] All new strings in four languages, `flutter gen-l10n` output committed, Tamil checked.
-- [ ] Looks right with Care Mode on: nothing smaller than the theme, tap targets 56 dp.
-- [ ] `flutter analyze` clean, `flutter test` green (the four new tests included).
-- [ ] No Supabase code touched beyond the one-line delegations.
+- [ ] Pick a slot and add notes on screen, with nothing about the visit fixed in code.
+- [ ] Confirm and land on the shared receipt showing caregiver, care type, start time, duration.
+- [ ] See the visit on Care Home under Upcoming, and in the Bookings tab at the right date and time.
+- [ ] Cancel from Care Home, after a confirmation, and see both lists update.
+- [ ] Use the signed-out preview without a crash on the null user id.
+- [ ] Read every new string in the four languages, with the generated files committed and Tamil checked.
+- [ ] Turn Care Mode on and find everything still comfortable: theme sizes intact, 56 dp targets.
+- [ ] Run `flutter analyze` clean and `flutter test` green, the four new tests included.
+- [ ] Confirm nothing in the Supabase repository changed beyond the one-line delegations.
 
 ---
 
@@ -263,16 +269,17 @@ flutter test
 flutter test test/caregiver_booking_test.dart    # just yours, while iterating
 ```
 
-## PR checklist
+## Opening the PR
 
-- Branch `feat/m5-caregiver-booking` off a fresh `main`, one PR to `main`, Nimal merges.
+- Branch `feat/m5-caregiver-booking` off a fresh `main`, one PR to `main`; Nimal merges.
 - Conventional commit messages, your own identity, no AI attribution.
-- Screens use `kaylo_ui` widgets and theme tokens; no hardcoded colours, sizes or strings.
-- Strings in en, ml, hi, ta; generated files committed.
-- Two screenshots in the PR body: the booking screen with a slot chosen, and Care Home showing an upcoming visit, one of them in Care Mode.
+- Two screenshots in the PR body help the review a lot: the booking screen with a slot chosen, and Care Home showing an upcoming visit, one of them in Care Mode.
 
-## Out of scope (do not start these)
+## Not needed for this task (we take care of these)
 
 - The `caregiver_bookings` table, RLS and the Supabase repository (M1).
 - Payments for care visits (M4).
-- The caregiver's side of the booking (partner app, M4).
+- The caregiver's side of the booking in the partner app (M4).
+
+Any doubt along the way, ping Nimal on the PR or in the group; a draft PR
+early is welcome.

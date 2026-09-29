@@ -1,4 +1,15 @@
-enum BookingStatus { pending, confirmed, inProgress, completed, cancelled }
+/// A booking progresses from confirmation through travel and work completion.
+///
+/// [onWay] is deliberately distinct from [inProgress]: it lets the tracking
+/// screen accurately show that a professional is travelling before work starts.
+enum BookingStatus {
+  pending,
+  confirmed,
+  onWay,
+  inProgress,
+  completed,
+  cancelled,
+}
 
 class Booking {
   final String id;

@@ -24,6 +24,12 @@ class Routes {
   static String farmSchedule(String serviceId) => '/farm/$serviceId/schedule';
   static String farmPayment(String serviceId) => '/farm/$serviceId/payment';
 
+  // Booking & Payment flows (M4)
+  static String book(String serviceId, [String? workerId]) =>
+      workerId != null ? '/book/$serviceId?workerId=$workerId' : '/book/$serviceId';
+  static String bookPayment(String serviceId) => '/book/$serviceId/payment';
+  static String track(String bookingId) => '/tracking/$bookingId';
+
   // Shared by every booking flow (farm today, home services when M3/M4
   // land theirs). Takes a BookingReceipt as `extra`.
   static const String bookingConfirmation = '/booking/confirmation';

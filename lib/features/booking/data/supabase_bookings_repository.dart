@@ -52,7 +52,10 @@ class SupabaseBookingsRepository implements BookingsRepository {
   }
 
   @override
-  Future<void> updateBookingStatus(String bookingId, BookingStatus status) async {
+  Future<void> updateBookingStatus(
+    String bookingId,
+    BookingStatus status,
+  ) async {
     try {
       await _client
           .from('bookings')
@@ -70,7 +73,8 @@ class SupabaseBookingsRepository implements BookingsRepository {
       serviceId: row['service_id'] as String,
       workerId: row['worker_id'] as String?,
       scheduledAt: DateTime.parse(
-          '${row['booking_date']}T${row['booking_time']}'),
+        '${row['booking_date']}T${row['booking_time']}',
+      ),
       status: _statusFromDb(row['status'] as String),
       totalAmount: ((row['estimated_cost'] as num?) ?? 0).toDouble(),
       locationId: row['location_id'] as String?,
@@ -89,18 +93,20 @@ class SupabaseBookingsRepository implements BookingsRepository {
       '${dt.minute.toString().padLeft(2, '0')}:00';
 
   String _statusToDb(BookingStatus status) => switch (status) {
-        BookingStatus.pending => 'pending',
-        BookingStatus.confirmed => 'confirmed',
-        BookingStatus.inProgress => 'in_progress',
-        BookingStatus.completed => 'completed',
-        BookingStatus.cancelled => 'cancelled',
-      };
+    BookingStatus.pending => 'pending',
+    BookingStatus.confirmed => 'confirmed',
+    BookingStatus.onWay => 'on_way',
+    BookingStatus.inProgress => 'in_progress',
+    BookingStatus.completed => 'completed',
+    BookingStatus.cancelled => 'cancelled',
+  };
 
   BookingStatus _statusFromDb(String value) => switch (value) {
-        'confirmed' => BookingStatus.confirmed,
-        'in_progress' => BookingStatus.inProgress,
-        'completed' => BookingStatus.completed,
-        'cancelled' => BookingStatus.cancelled,
-        _ => BookingStatus.pending,
-      };
+    'confirmed' => BookingStatus.confirmed,
+    'on_way' => BookingStatus.onWay,
+    'in_progress' => BookingStatus.inProgress,
+    'completed' => BookingStatus.completed,
+    'cancelled' => BookingStatus.cancelled,
+    _ => BookingStatus.pending,
+  };
 }

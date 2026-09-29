@@ -9,6 +9,7 @@ String bookingStatusLabel(AppLocalizations l10n, BookingStatus status) =>
     switch (status) {
       BookingStatus.pending => l10n.statusPending,
       BookingStatus.confirmed => l10n.statusConfirmed,
+      BookingStatus.onWay => 'On the way',
       BookingStatus.inProgress => l10n.statusInProgress,
       BookingStatus.completed => l10n.statusCompleted,
       BookingStatus.cancelled => l10n.statusCancelled,
@@ -30,12 +31,23 @@ class BookingStatusChip extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final (variant, icon) = switch (status) {
-      BookingStatus.pending => (KayloChipVariant.warning, Icons.schedule_rounded),
+      BookingStatus.pending => (
+        KayloChipVariant.warning,
+        Icons.schedule_rounded,
+      ),
       BookingStatus.confirmed => (KayloChipVariant.brand, Icons.check_rounded),
-      BookingStatus.inProgress =>
-        (KayloChipVariant.brand, Icons.autorenew_rounded),
-      BookingStatus.completed =>
-        (KayloChipVariant.success, Icons.task_alt_rounded),
+      BookingStatus.onWay => (
+        KayloChipVariant.brand,
+        Icons.two_wheeler_rounded,
+      ),
+      BookingStatus.inProgress => (
+        KayloChipVariant.brand,
+        Icons.autorenew_rounded,
+      ),
+      BookingStatus.completed => (
+        KayloChipVariant.success,
+        Icons.task_alt_rounded,
+      ),
       BookingStatus.cancelled => (KayloChipVariant.error, Icons.close_rounded),
     };
     return KayloChip(

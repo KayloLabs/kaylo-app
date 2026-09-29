@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
 import '../../../../core/models/service_item.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../core/services/feedback_service.dart';
 import '../../../../core/theme/app_colors.dart';
 import '../../../../core/theme/app_spacing.dart';
@@ -50,7 +52,14 @@ class PopularServicesHorizontal extends StatelessWidget {
                     color: Colors.transparent,
                     child: InkWell(
                       borderRadius: BorderRadius.circular(AppRadius.card),
-                      onTap: () => KayloFeedback.tap(),
+                      onTap: () {
+                        KayloFeedback.tap();
+                        if (service.category == 'farm') {
+                          context.push(Routes.farmService(service.id));
+                        } else {
+                          context.push(Routes.book(service.id));
+                        }
+                      },
                       child: Padding(
                         padding: const EdgeInsets.all(AppSpacing.s),
                         child: Center(

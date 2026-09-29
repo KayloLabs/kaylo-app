@@ -15,9 +15,13 @@ import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/location_setup_screen.dart';
 import '../../features/auth/application/session_controller.dart';
+import '../../features/booking/domain/booking_draft.dart';
 import '../../features/booking/domain/booking_receipt.dart';
+import '../../features/booking/presentation/screens/book_service_screen.dart';
 import '../../features/booking/presentation/screens/booking_confirmation_screen.dart';
+import '../../features/booking/presentation/screens/booking_payment_screen.dart';
 import '../../features/booking/presentation/screens/bookings_screen.dart';
+import '../../features/booking/presentation/screens/tracking_screen.dart';
 import '../../features/care/presentation/screens/emergency_sos_screen.dart';
 import '../../features/care/presentation/screens/medicine_reminders_screen.dart';
 import '../../features/care/presentation/screens/sos_history_screen.dart';
@@ -129,6 +133,27 @@ final goRouterProvider = Provider<GoRouter>((ref) {
         path: Routes.bookingConfirmation,
         builder: (context, state) => BookingConfirmationScreen(
           receipt: state.extra as BookingReceipt?,
+        ),
+      ),
+      GoRoute(
+        path: '/book/:serviceId',
+        builder: (context, state) => BookServiceScreen(
+          serviceId: state.pathParameters['serviceId']!,
+          workerId: state.uri.queryParameters['workerId'],
+        ),
+        routes: [
+          GoRoute(
+            path: 'payment',
+            builder: (context, state) => BookingPaymentScreen(
+              draft: state.extra as BookingDraft?,
+            ),
+          ),
+        ],
+      ),
+      GoRoute(
+        path: '/tracking/:bookingId',
+        builder: (context, state) => TrackingScreen(
+          bookingId: state.pathParameters['bookingId']!,
         ),
       ),
       GoRoute(

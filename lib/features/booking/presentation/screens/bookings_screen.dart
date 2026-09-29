@@ -57,10 +57,10 @@ class BookingsScreen extends ConsumerWidget {
                   Text(
                     l10n.myBookingsSubtitle,
                     style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondary,
-                        ),
+                      color: isDark
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary,
+                    ),
                   ),
                 ],
               ),
@@ -143,8 +143,9 @@ class _BookingCard extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final loc = MaterialLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final secondary =
-        isDark ? AppColors.textSecondaryDark : AppColors.textSecondary;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
     final accent = switch (service?.category) {
       'farm' => AppColors.farmAccent,
       'care' => AppColors.careAccent,
@@ -152,27 +153,27 @@ class _BookingCard extends StatelessWidget {
     };
 
     Widget detail(IconData icon, String value) => Padding(
-          padding: const EdgeInsets.only(top: AppSpacing.xs),
-          child: Row(
-            children: [
-              Icon(icon, size: 16, color: secondary),
-              const SizedBox(width: AppSpacing.s),
-              Expanded(
-                child: Text(
-                  value,
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context)
-                      .textTheme
-                      .bodySmall
-                      ?.copyWith(color: secondary),
-                ),
-              ),
-            ],
+      padding: const EdgeInsets.only(top: AppSpacing.xs),
+      child: Row(
+        children: [
+          Icon(icon, size: 16, color: secondary),
+          const SizedBox(width: AppSpacing.s),
+          Expanded(
+            child: Text(
+              value,
+              maxLines: 1,
+              overflow: TextOverflow.ellipsis,
+              style: Theme.of(
+                context,
+              ).textTheme.bodySmall?.copyWith(color: secondary),
+            ),
           ),
-        );
+        ],
+      ),
+    );
 
     return KayloCard(
+      onTap: () => context.push(Routes.track(booking.id)),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -197,17 +198,15 @@ class _BookingCard extends StatelessWidget {
                   children: [
                     Text(
                       service?.name ?? l10n.service,
-                      style: Theme.of(context)
-                          .textTheme
-                          .titleMedium
-                          ?.copyWith(fontWeight: FontWeight.w700),
+                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
+                        fontWeight: FontWeight.w700,
+                      ),
                     ),
                     Text(
                       booking.id,
-                      style: Theme.of(context)
-                          .textTheme
-                          .bodySmall
-                          ?.copyWith(color: secondary),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: secondary),
                     ),
                   ],
                 ),

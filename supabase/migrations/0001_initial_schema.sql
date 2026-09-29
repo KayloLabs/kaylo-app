@@ -17,7 +17,7 @@ create extension if not exists pgcrypto;
 
 -- ---------- Enums ----------
 create type account_status as enum ('active', 'suspended', 'deleted');
-create type booking_status as enum ('pending', 'confirmed', 'in_progress', 'completed', 'cancelled');
+create type booking_status as enum ('pending', 'confirmed', 'on_way', 'in_progress', 'completed', 'cancelled');
 create type payment_status as enum ('pending', 'success', 'failed', 'refunded');
 create type sos_status as enum ('open', 'acknowledged', 'resolved');
 

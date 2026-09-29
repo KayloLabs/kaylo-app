@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "857732417932",
+    "project_id": "kaylo-app",
+    "storage_bucket": "kaylo-app.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:857732417932:android:06b3fce351d9f01340aea9",
+        "android_client_info": {
+          "package_name": "com.example.kaylo"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAvAI4c5cpwVVhpE7QfWP4qeOA_UkJm83I"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

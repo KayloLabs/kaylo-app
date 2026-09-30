@@ -15,6 +15,7 @@ import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/home_providers.dart';
+import '../../../workers/application/workers_providers.dart';
 
 class ServiceDetailsScreen extends ConsumerStatefulWidget {
   final String serviceId;
@@ -34,64 +35,72 @@ class ServiceDetailsScreen extends ConsumerStatefulWidget {
 class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
   final Set<String> _selectedSubServices = {};
 
-  List<String> _getSubServicesFor(String serviceName) {
+  List<String> _getSubServicesFor(String serviceName, AppLocalizations l10n) {
     final lower = serviceName.toLowerCase();
     if (lower.contains('plumb')) {
-      return ['Tap Repair', 'Pipe Leakage', 'Drain Cleaning', 'Installation'];
+      return [
+        l10n.incPlumbTap,
+        l10n.incPlumbPipe,
+        l10n.incPlumbDrain,
+        l10n.incPlumbInstall,
+      ];
     }
     if (lower.contains('electric')) {
       return [
-        'Switchboard Repair',
-        'Wiring Fix',
-        'Fan Installation',
-        'MCB Tripping',
+        l10n.incElecSwitch,
+        l10n.incElecWiring,
+        l10n.incElecFan,
+        l10n.incElecMcb,
       ];
     }
     if (lower.contains('clean')) {
       return [
-        'Full Home Deep Clean',
-        'Kitchen Cleaning',
-        'Bathroom Scrub',
-        'Sofa Shampoo',
+        l10n.incCleanDeep,
+        l10n.incCleanKitchen,
+        l10n.incCleanBath,
+        l10n.incCleanSofa,
       ];
     }
     if (lower.contains('carpent')) {
       return [
-        'Furniture Repair',
-        'Door & Window',
-        'Lock Installation',
-        'Custom Woodwork',
+        l10n.incCarpFurniture,
+        l10n.incCarpDoor,
+        l10n.incCarpLock,
+        l10n.incCarpCustom,
       ];
     }
     if (lower.contains('paint')) {
       return [
-        'Interior Painting',
-        'Exterior Painting',
-        'Wall Putty & Primer',
-        'Waterproofing',
+        l10n.incPaintInterior,
+        l10n.incPaintExterior,
+        l10n.incPaintPutty,
+        l10n.incPaintWaterproof,
       ];
     }
-    if (lower.contains('ac')) {
+    if (lower.contains('ac service') ||
+        lower.contains('air condition') ||
+        lower.contains('ac repair') ||
+        lower == 'ac') {
       return [
-        'Filter Cleaning',
-        'Gas Refill',
-        'Cooling Issue Repair',
-        'Installation/Uninstallation',
+        l10n.incAcFilter,
+        l10n.incAcGas,
+        l10n.incAcCooling,
+        l10n.incAcInstall,
       ];
     }
     if (lower.contains('appliance')) {
       return [
-        'Washing Machine',
-        'Refrigerator',
-        'Microwave',
-        'TV Mounting/Repair',
+        l10n.incApplWasher,
+        l10n.incApplFridge,
+        l10n.incApplMicrowave,
+        l10n.incApplTv,
       ];
     }
     return [
-      'General Inspection',
-      'Repair & Fix',
-      'New Installation',
-      'Maintenance',
+      l10n.incGenInspect,
+      l10n.incGenRepair,
+      l10n.incGenInstall,
+      l10n.incGenMaintain,
     ];
   }
 
@@ -115,7 +124,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
             );
           }
 
-          final subServices = _getSubServicesFor(item.name);
+          final subServices = _getSubServicesFor(item.name, l10n);
 
           return Stack(
             children: [
@@ -214,7 +223,44 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                     ),
                               ),
                             ),
-                            const RatingStars(rating: 4.8, reviewCount: 150),
+                            ref.watch(workerListProvider(widget.serviceId)).when(
+                              data: (workers) {
+                                int totalReviews = 0;
+                                double weightedRatingSum = 0;
+                                for (final w in workers) {
+                                  if (w.reviewsCount > 0) {
+                                    totalReviews += w.reviewsCount.toInt();
+                                    weightedRatingSum +=
+                                        w.rating * w.reviewsCount;
+                                  }
+                                }
+                                if (totalReviews == 0) {
+                                  return Text(
+                                    l10n.newService,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: isDark
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textSecondary,
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                  );
+                                }
+                                final avgRating =
+                                    weightedRatingSum / totalReviews;
+                                return RatingStars(
+                                  rating: avgRating,
+                                  reviewCount: totalReviews,
+                                );
+                              },
+                              loading: () => const ShimmerBox(
+                                width: 110,
+                                height: 20,
+                              ),
+                              error: (_, _) => const SizedBox.shrink(),
+                            ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.s),

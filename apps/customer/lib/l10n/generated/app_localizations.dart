@@ -2531,6 +2531,348 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Search a town or city'**
   String get searchTownHint;
+
+  /// No description provided for @workerAbout.
+  ///
+  /// In en, this message translates to:
+  /// **'{name} is a Kaylo professional in {place} with {jobs} completed jobs.'**
+  String workerAbout(String name, String place, int jobs);
+
+  /// No description provided for @verificationPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification in progress'**
+  String get verificationPending;
+
+  /// No description provided for @certGovtId.
+  ///
+  /// In en, this message translates to:
+  /// **'Government ID verified'**
+  String get certGovtId;
+
+  /// No description provided for @certGovtIdSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar or Voter ID checked'**
+  String get certGovtIdSub;
+
+  /// No description provided for @certPolice.
+  ///
+  /// In en, this message translates to:
+  /// **'Police clearance verified'**
+  String get certPolice;
+
+  /// No description provided for @certPoliceSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Background check clear'**
+  String get certPoliceSub;
+
+  /// No description provided for @certSkill.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo skill certified'**
+  String get certSkill;
+
+  /// No description provided for @certSkillSub.
+  ///
+  /// In en, this message translates to:
+  /// **'Practical skills tested'**
+  String get certSkillSub;
+
+  /// No description provided for @hourlyRate.
+  ///
+  /// In en, this message translates to:
+  /// **'Hourly rate'**
+  String get hourlyRate;
+
+  /// No description provided for @perHour.
+  ///
+  /// In en, this message translates to:
+  /// **'per hour'**
+  String get perHour;
+
+  /// No description provided for @priceOnVisit.
+  ///
+  /// In en, this message translates to:
+  /// **'Price shared on visit'**
+  String get priceOnVisit;
+
+  /// No description provided for @noReviewsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews yet'**
+  String get noReviewsYet;
+
+  /// No description provided for @newService.
+  ///
+  /// In en, this message translates to:
+  /// **'New'**
+  String get newService;
+
+  /// No description provided for @nearbyFirst.
+  ///
+  /// In en, this message translates to:
+  /// **'Nearby first'**
+  String get nearbyFirst;
+
+  /// No description provided for @tomorrow.
+  ///
+  /// In en, this message translates to:
+  /// **'Tomorrow'**
+  String get tomorrow;
+
+  /// No description provided for @inDays.
+  ///
+  /// In en, this message translates to:
+  /// **'In {count} days'**
+  String inDays(int count);
+
+  /// No description provided for @whoIsItFor.
+  ///
+  /// In en, this message translates to:
+  /// **'Who is it for?'**
+  String get whoIsItFor;
+
+  /// No description provided for @appointmentNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Notes for the doctor (optional)'**
+  String get appointmentNotes;
+
+  /// No description provided for @appointmentConfirmedWith.
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment booked with {doctor}'**
+  String appointmentConfirmedWith(String doctor);
+
+  /// No description provided for @noUpcomingAppointments.
+  ///
+  /// In en, this message translates to:
+  /// **'No upcoming appointments yet'**
+  String get noUpcomingAppointments;
+
+  /// No description provided for @specGeneral.
+  ///
+  /// In en, this message translates to:
+  /// **'General physician'**
+  String get specGeneral;
+
+  /// No description provided for @specCardio.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardiologist'**
+  String get specCardio;
+
+  /// No description provided for @specOrtho.
+  ///
+  /// In en, this message translates to:
+  /// **'Orthopaedic'**
+  String get specOrtho;
+
+  /// No description provided for @specGeriatric.
+  ///
+  /// In en, this message translates to:
+  /// **'Geriatrician'**
+  String get specGeriatric;
+
+  /// No description provided for @specAyurveda.
+  ///
+  /// In en, this message translates to:
+  /// **'Ayurveda'**
+  String get specAyurveda;
+
+  /// No description provided for @incPlumbTap.
+  ///
+  /// In en, this message translates to:
+  /// **'Tap repair'**
+  String get incPlumbTap;
+
+  /// No description provided for @incPlumbPipe.
+  ///
+  /// In en, this message translates to:
+  /// **'Pipe leakage'**
+  String get incPlumbPipe;
+
+  /// No description provided for @incPlumbDrain.
+  ///
+  /// In en, this message translates to:
+  /// **'Drain cleaning'**
+  String get incPlumbDrain;
+
+  /// No description provided for @incPlumbInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation'**
+  String get incPlumbInstall;
+
+  /// No description provided for @incElecSwitch.
+  ///
+  /// In en, this message translates to:
+  /// **'Switchboard repair'**
+  String get incElecSwitch;
+
+  /// No description provided for @incElecWiring.
+  ///
+  /// In en, this message translates to:
+  /// **'Wiring fix'**
+  String get incElecWiring;
+
+  /// No description provided for @incElecFan.
+  ///
+  /// In en, this message translates to:
+  /// **'Fan installation'**
+  String get incElecFan;
+
+  /// No description provided for @incElecMcb.
+  ///
+  /// In en, this message translates to:
+  /// **'MCB tripping'**
+  String get incElecMcb;
+
+  /// No description provided for @incCleanDeep.
+  ///
+  /// In en, this message translates to:
+  /// **'Full home deep clean'**
+  String get incCleanDeep;
+
+  /// No description provided for @incCleanKitchen.
+  ///
+  /// In en, this message translates to:
+  /// **'Kitchen cleaning'**
+  String get incCleanKitchen;
+
+  /// No description provided for @incCleanBath.
+  ///
+  /// In en, this message translates to:
+  /// **'Bathroom scrub'**
+  String get incCleanBath;
+
+  /// No description provided for @incCleanSofa.
+  ///
+  /// In en, this message translates to:
+  /// **'Sofa shampoo'**
+  String get incCleanSofa;
+
+  /// No description provided for @incCarpFurniture.
+  ///
+  /// In en, this message translates to:
+  /// **'Furniture repair'**
+  String get incCarpFurniture;
+
+  /// No description provided for @incCarpDoor.
+  ///
+  /// In en, this message translates to:
+  /// **'Doors and windows'**
+  String get incCarpDoor;
+
+  /// No description provided for @incCarpLock.
+  ///
+  /// In en, this message translates to:
+  /// **'Lock installation'**
+  String get incCarpLock;
+
+  /// No description provided for @incCarpCustom.
+  ///
+  /// In en, this message translates to:
+  /// **'Custom woodwork'**
+  String get incCarpCustom;
+
+  /// No description provided for @incPaintInterior.
+  ///
+  /// In en, this message translates to:
+  /// **'Interior painting'**
+  String get incPaintInterior;
+
+  /// No description provided for @incPaintExterior.
+  ///
+  /// In en, this message translates to:
+  /// **'Exterior painting'**
+  String get incPaintExterior;
+
+  /// No description provided for @incPaintPutty.
+  ///
+  /// In en, this message translates to:
+  /// **'Wall putty and primer'**
+  String get incPaintPutty;
+
+  /// No description provided for @incPaintWaterproof.
+  ///
+  /// In en, this message translates to:
+  /// **'Waterproofing'**
+  String get incPaintWaterproof;
+
+  /// No description provided for @incAcFilter.
+  ///
+  /// In en, this message translates to:
+  /// **'Filter cleaning'**
+  String get incAcFilter;
+
+  /// No description provided for @incAcGas.
+  ///
+  /// In en, this message translates to:
+  /// **'Gas refill'**
+  String get incAcGas;
+
+  /// No description provided for @incAcCooling.
+  ///
+  /// In en, this message translates to:
+  /// **'Cooling issue repair'**
+  String get incAcCooling;
+
+  /// No description provided for @incAcInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'Installation and removal'**
+  String get incAcInstall;
+
+  /// No description provided for @incApplWasher.
+  ///
+  /// In en, this message translates to:
+  /// **'Washing machine'**
+  String get incApplWasher;
+
+  /// No description provided for @incApplFridge.
+  ///
+  /// In en, this message translates to:
+  /// **'Refrigerator'**
+  String get incApplFridge;
+
+  /// No description provided for @incApplMicrowave.
+  ///
+  /// In en, this message translates to:
+  /// **'Microwave'**
+  String get incApplMicrowave;
+
+  /// No description provided for @incApplTv.
+  ///
+  /// In en, this message translates to:
+  /// **'TV mounting and repair'**
+  String get incApplTv;
+
+  /// No description provided for @incGenInspect.
+  ///
+  /// In en, this message translates to:
+  /// **'General inspection'**
+  String get incGenInspect;
+
+  /// No description provided for @incGenRepair.
+  ///
+  /// In en, this message translates to:
+  /// **'Repair and fix'**
+  String get incGenRepair;
+
+  /// No description provided for @incGenInstall.
+  ///
+  /// In en, this message translates to:
+  /// **'New installation'**
+  String get incGenInstall;
+
+  /// No description provided for @incGenMaintain.
+  ///
+  /// In en, this message translates to:
+  /// **'Maintenance'**
+  String get incGenMaintain;
 }
 
 class _AppLocalizationsDelegate

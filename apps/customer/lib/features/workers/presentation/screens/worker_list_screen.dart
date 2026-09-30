@@ -110,8 +110,8 @@ class WorkerListScreen extends ConsumerWidget {
                         ),
                         side: BorderSide(
                           color: isDark
-                              ? Colors.grey.shade700
-                              : Colors.grey.shade300,
+                              ? AppColors.borderDark
+                              : AppColors.border,
                         ),
                       ),
                       onPressed: () {
@@ -144,8 +144,8 @@ class WorkerListScreen extends ConsumerWidget {
                         color: filterSortState.filter.hasActiveFilters
                             ? AppColors.brandPrimary
                             : (isDark
-                                  ? Colors.grey.shade700
-                                  : Colors.grey.shade300),
+                                  ? AppColors.borderDark
+                                  : AppColors.border),
                       ),
                     ),
                     onPressed: () {
@@ -329,7 +329,7 @@ class WorkerListScreen extends ConsumerWidget {
       case WorkerSort.experience:
         return '${l10n.sortBy}: ${l10n.experience}';
       case WorkerSort.distance:
-        return '${l10n.sortBy}: ${l10n.distance}';
+        return '${l10n.sortBy}: ${l10n.nearbyFirst}';
     }
   }
 
@@ -370,6 +370,10 @@ class WorkerListScreen extends ConsumerWidget {
                 },
                 child: Column(
                   children: [
+                    RadioListTile<WorkerSort>(
+                      title: Text(l10n.nearbyFirst),
+                      value: WorkerSort.distance,
+                    ),
                     RadioListTile<WorkerSort>(
                       title: Text(l10n.rating),
                       value: WorkerSort.rating,

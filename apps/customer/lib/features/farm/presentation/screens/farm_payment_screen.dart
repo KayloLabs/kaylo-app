@@ -11,10 +11,13 @@ import 'package:kaylo_ui/widgets/error_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
+import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import 'package:kaylo_ui/widgets/price_tag.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../booking/domain/booking_receipt.dart';
+import '../../../auth/application/current_user_provider.dart';
 import '../../../booking/domain/payment_method.dart';
 import '../../../workers/application/workers_providers.dart';
 import '../../application/farm_providers.dart';
@@ -34,7 +37,24 @@ class FarmPaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
-  PaymentMethod _method = PaymentMethod.upi;
+  PaymentMethod _method = PaymentMethod.online;
+
+  /// Where the invoice goes. Prefilled from the profile; people who
+  /// signed up by phone have none, so they type one here.
+  final _email = TextEditingController();
+  static final _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+
+  @override
+  void initState() {
+    super.initState();
+    _email.text = ref.read(currentUserProvider)?.email ?? '';
+  }
+
+  @override
+  void dispose() {
+    _email.dispose();
+    super.dispose();
+  }
 
   /// Name of the worker the customer picked, once loaded; null when none
   /// was picked or the lookup has not finished.
@@ -50,14 +70,26 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
     final isFarm = draft.service.category == 'farm';
     final workerName = _workerName(draft);
 
+    final online = _method != PaymentMethod.payAfterService;
+    final email = _email.text.trim().toLowerCase();
+    final emailOk = _emailPattern.hasMatch(email);
+    if (online && !emailOk) {
+      KayloSnackbar.showError(context, l10n.invoiceEmailRequired);
+      return;
+    }
+
     final booking = await ref
         .read(farmCheckoutControllerProvider.notifier)
-        .confirm(draft: draft, method: _method);
+        .confirm(draft: draft, method: _method, email: emailOk ? email : null);
     if (!mounted) return;
 
     if (booking == null) {
       KayloFeedback.alert();
-      KayloSnackbar.showError(context, l10n.paymentFailed);
+      final error = ref.read(farmCheckoutControllerProvider).error;
+      KayloSnackbar.showError(
+        context,
+        error is AppFailure ? error.message : l10n.paymentFailed,
+      );
       return;
     }
 
@@ -190,20 +222,11 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           SectionHeader(title: l10n.paymentMethod),
           const SizedBox(height: AppSpacing.m),
           _PaymentOption(
-            method: PaymentMethod.upi,
+            method: PaymentMethod.online,
             selected: _method,
-            icon: Icons.account_balance_wallet_rounded,
-            title: l10n.payUpi,
-            subtitle: l10n.payUpiSubtitle,
-            onSelect: (m) => setState(() => _method = m),
-          ),
-          const SizedBox(height: AppSpacing.s),
-          _PaymentOption(
-            method: PaymentMethod.card,
-            selected: _method,
-            icon: Icons.credit_card_rounded,
-            title: l10n.payCard,
-            subtitle: l10n.payCardSubtitle,
+            icon: Icons.lock_rounded,
+            title: l10n.payNow,
+            subtitle: l10n.payNowSubtitle,
             onSelect: (m) => setState(() => _method = m),
           ),
           const SizedBox(height: AppSpacing.s),
@@ -215,6 +238,18 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
             subtitle: l10n.payAfterSubtitle,
             onSelect: (m) => setState(() => _method = m),
           ),
+          const SizedBox(height: AppSpacing.xl),
+          KayloTextField(
+            label: _method == PaymentMethod.payAfterService
+                ? l10n.confirmationEmail
+                : l10n.invoiceEmail,
+            hintText: 'you@example.com',
+            controller: _email,
+            keyboardType: TextInputType.emailAddress,
+            autofillHints: const [AutofillHints.email],
+            prefixIcon: const Icon(Icons.receipt_long_rounded),
+          ),
+          const SizedBox(height: AppSpacing.xxl),
         ],
       ),
       bottomNavigationBar: SafeArea(

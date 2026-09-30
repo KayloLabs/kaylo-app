@@ -33,6 +33,9 @@ final testUser = AppUser(
   firstName: 'Nimal',
   lastName: 'User',
   phone: '+91 9847012345',
+  // Online checkout needs an address for the invoice; a Google sign-in
+  // brings one along, so the test user has one too.
+  email: 'nimal@example.com',
 );
 
 /// A signed-in, mock-backed app around [routes], with in-memory

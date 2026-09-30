@@ -464,5 +464,10 @@
   "incGenInspect": "सामान्य निरीक्षण",
   "incGenRepair": "मरम्मत और ठीक करना",
   "incGenInstall": "नया इंस्टॉलेशन",
-  "incGenMaintain": "रखरखाव"
+  "incGenMaintain": "रखरखाव",
+  "invoiceEmail": "इनवॉइस के लिए ईमेल",
+  "invoiceEmailRequired": "इनवॉइस के लिए एक ईमेल पता भरें",
+  "confirmationEmail": "पुष्टि के लिए ईमेल (वैकल्पिक)",
+  "payNow": "अभी भुगतान करें",
+  "payNowSubtitle": "कार्ड, नेटबैंकिंग या UPI, Razorpay द्वारा सुरक्षित"
 }

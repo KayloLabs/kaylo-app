@@ -5,12 +5,15 @@ import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_core/models/worker.dart';
 import 'package:kaylo_core/network/app_failure.dart';
 import 'package:kaylo_core/network/supabase_providers.dart';
-import 'package:kaylo_core/services/payment_service.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../../workers/application/workers_providers.dart';
+import '../data/checkout/razorpay_checkout.dart';
 import '../data/mock_bookings_repository.dart';
+import '../data/mock_payment_gateway.dart';
+import '../data/razorpay_gateway.dart';
 import '../data/supabase_bookings_repository.dart';
 import '../domain/bookings_repository.dart';
+import '../domain/payment_gateway.dart';
 
 final bookingsRepositoryProvider = Provider<BookingsRepository>((ref) {
   if (useMockData) {
@@ -19,10 +22,14 @@ final bookingsRepositoryProvider = Provider<BookingsRepository>((ref) {
   return SupabaseBookingsRepository(ref.watch(supabaseClientProvider));
 });
 
-/// Payment gateway. The stub approves everything; M4 swaps in Razorpay
-/// here without touching any checkout screen.
-final paymentServiceProvider = Provider<PaymentService>((ref) {
-  return PaymentServiceStub();
+/// Payment gateway: Razorpay through our server functions, or a
+/// stand-in that approves after a pause in the demo build.
+final paymentGatewayProvider = Provider<PaymentGateway>((ref) {
+  if (useMockData) return MockPaymentGateway();
+  return RazorpayGateway(
+    ref.watch(supabaseClientProvider),
+    createRazorpayCheckout(),
+  );
 });
 
 /// The signed-in user's bookings, newest scheduled first. Invalidate it

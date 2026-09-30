@@ -699,5 +699,10 @@
   "incGenInspect": "General inspection",
   "incGenRepair": "Repair and fix",
   "incGenInstall": "New installation",
-  "incGenMaintain": "Maintenance"
+  "incGenMaintain": "Maintenance",
+  "invoiceEmail": "Email for the invoice",
+  "invoiceEmailRequired": "Enter an email address for the invoice",
+  "confirmationEmail": "Email for the confirmation (optional)",
+  "payNow": "Pay now",
+  "payNowSubtitle": "Cards, netbanking or UPI, secured by Razorpay"
 }

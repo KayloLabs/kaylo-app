@@ -1589,4 +1589,22 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get incGenMaintain => 'பராமரிப்பு';
+
+  @override
+  String get invoiceEmail => 'இன்வாய்ஸிற்கான மின்னஞ்சல்';
+
+  @override
+  String get invoiceEmailRequired =>
+      'இன்வாய்ஸிற்கு ஒரு மின்னஞ்சல் முகவரியை உள்ளிடவும்';
+
+  @override
+  String get confirmationEmail =>
+      'உறுதிப்படுத்தலுக்கான மின்னஞ்சல் (விருப்பத்தேர்வு)';
+
+  @override
+  String get payNow => 'இப்போது செலுத்து';
+
+  @override
+  String get payNowSubtitle =>
+      'கார்டு, நெட்பேங்கிங் அல்லது UPI, Razorpay மூலம் பாதுகாப்பானது';
 }

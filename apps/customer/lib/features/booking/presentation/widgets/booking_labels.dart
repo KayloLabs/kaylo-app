@@ -16,8 +16,7 @@ String bookingStatusLabel(AppLocalizations l10n, BookingStatus status) =>
 
 String paymentMethodLabel(AppLocalizations l10n, PaymentMethod method) =>
     switch (method) {
-      PaymentMethod.upi => l10n.payUpi,
-      PaymentMethod.card => l10n.payCard,
+      PaymentMethod.online => l10n.payNow,
       PaymentMethod.payAfterService => l10n.payAfter,
     };
 

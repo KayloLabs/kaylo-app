@@ -464,5 +464,10 @@
   "incGenInspect": "പൊതുവായ പരിശോധന",
   "incGenRepair": "അറ്റകുറ്റപ്പണിയും പരിഹാരവും",
   "incGenInstall": "പുതിയ ഇൻസ്റ്റാളേഷൻ",
-  "incGenMaintain": "പരിപാലനം"
+  "incGenMaintain": "പരിപാലനം",
+  "invoiceEmail": "ഇൻവോയ്‌സിനുള്ള ഇമെയിൽ",
+  "invoiceEmailRequired": "ഇൻവോയ്‌സിനായി ഒരു ഇമെയിൽ വിലാസം നൽകുക",
+  "confirmationEmail": "സ്ഥിരീകരണത്തിനുള്ള ഇമെയിൽ (ഐച്ഛികം)",
+  "payNow": "ഇപ്പോൾ പണമടയ്ക്കുക",
+  "payNowSubtitle": "കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം"
 }

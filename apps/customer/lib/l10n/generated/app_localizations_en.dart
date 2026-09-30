@@ -1572,4 +1572,19 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get incGenMaintain => 'Maintenance';
+
+  @override
+  String get invoiceEmail => 'Email for the invoice';
+
+  @override
+  String get invoiceEmailRequired => 'Enter an email address for the invoice';
+
+  @override
+  String get confirmationEmail => 'Email for the confirmation (optional)';
+
+  @override
+  String get payNow => 'Pay now';
+
+  @override
+  String get payNowSubtitle => 'Cards, netbanking or UPI, secured by Razorpay';
 }

@@ -1581,4 +1581,20 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get incGenMaintain => 'പരിപാലനം';
+
+  @override
+  String get invoiceEmail => 'ഇൻവോയ്‌സിനുള്ള ഇമെയിൽ';
+
+  @override
+  String get invoiceEmailRequired => 'ഇൻവോയ്‌സിനായി ഒരു ഇമെയിൽ വിലാസം നൽകുക';
+
+  @override
+  String get confirmationEmail => 'സ്ഥിരീകരണത്തിനുള്ള ഇമെയിൽ (ഐച്ഛികം)';
+
+  @override
+  String get payNow => 'ഇപ്പോൾ പണമടയ്ക്കുക';
+
+  @override
+  String get payNowSubtitle =>
+      'കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം';
 }

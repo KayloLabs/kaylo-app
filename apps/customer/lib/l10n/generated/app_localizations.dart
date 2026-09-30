@@ -2873,6 +2873,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Maintenance'**
   String get incGenMaintain;
+
+  /// No description provided for @invoiceEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email for the invoice'**
+  String get invoiceEmail;
+
+  /// No description provided for @invoiceEmailRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter an email address for the invoice'**
+  String get invoiceEmailRequired;
+
+  /// No description provided for @confirmationEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Email for the confirmation (optional)'**
+  String get confirmationEmail;
+
+  /// No description provided for @payNow.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay now'**
+  String get payNow;
+
+  /// No description provided for @payNowSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards, netbanking or UPI, secured by Razorpay'**
+  String get payNowSubtitle;
 }
 
 class _AppLocalizationsDelegate

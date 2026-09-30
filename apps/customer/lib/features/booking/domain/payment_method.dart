@@ -1,4 +1,5 @@
-/// How the customer settles a booking. Card and UPI go through
-/// [PaymentService]; paying after the service skips it and leaves the
-/// booking pending until the worker confirms.
-enum PaymentMethod { upi, card, payAfterService }
+/// How the customer settles a booking. Paying now opens Razorpay with
+/// whatever the account offers (cards, netbanking, UPI where enabled);
+/// paying after the service skips it and leaves the booking pending
+/// until the worker confirms.
+enum PaymentMethod { online, payAfterService }

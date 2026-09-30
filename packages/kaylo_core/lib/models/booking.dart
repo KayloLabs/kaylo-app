@@ -33,4 +33,28 @@ class Booking {
     this.notes,
     this.finalCost,
   });
+
+  Booking copyWith({
+    String? id,
+    String? userId,
+    String? serviceId,
+    String? workerId,
+    DateTime? scheduledAt,
+    BookingStatus? status,
+    double? totalAmount,
+    String? locationId,
+    String? notes,
+    double? finalCost,
+  }) => Booking(
+    id: id ?? this.id,
+    userId: userId ?? this.userId,
+    serviceId: serviceId ?? this.serviceId,
+    workerId: workerId ?? this.workerId,
+    scheduledAt: scheduledAt ?? this.scheduledAt,
+    status: status ?? this.status,
+    totalAmount: totalAmount ?? this.totalAmount,
+    locationId: locationId ?? this.locationId,
+    notes: notes ?? this.notes,
+    finalCost: finalCost ?? this.finalCost,
+  );
 }

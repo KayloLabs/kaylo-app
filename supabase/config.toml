@@ -1,0 +1,20 @@
+# Supabase CLI settings for this project. Only what differs from the
+# defaults is listed; the CLI fills in the rest.
+project_id = "jeiwfvnkxubykrzjzktm"
+
+# The app signs in through Firebase, so requests carry a Firebase token,
+# not a Supabase one. The gateway's own JWT check would reject it, so
+# each function checks the caller itself: it reads the booking through
+# PostgREST with the caller's token, and row-level security only returns
+# the customer's own booking.
+[functions.create-order]
+verify_jwt = false
+
+[functions.verify-payment]
+verify_jwt = false
+
+[functions.email-otp]
+verify_jwt = false
+
+[functions.booking-email]
+verify_jwt = false

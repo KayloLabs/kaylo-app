@@ -39,6 +39,11 @@ feature's `data/` folder implement them, so no UI code knows the difference.
    5. `supabase/migrations/0004_care_doctors_caregivers.sql`
    6. `supabase/migrations/0005_firebase_auth_and_device_tokens.sql`
    7. `supabase/migrations/0006_booking_customer_default.sql`
+   8. `supabase/migrations/0007_catalog_home_services.sql`
+   9. `supabase/migrations/0008_catalog_farm_services.sql`
+   10. `supabase/migrations/0009_live_demo_readiness.sql`
+   11. `supabase/migrations/0010_payments_razorpay.sql`
+   12. `supabase/migrations/0011_email_otps.sql`
 
    A project that already ran the earlier steps only needs the new
    migrations (each is also appended to `setup_all.sql` for fresh
@@ -201,3 +206,90 @@ Without a key nothing is missing: the map is OpenStreetMap, and GPS and town
 search work the same. Widget tests run with no map engine at all
 (`mapBackendProvider` overridden to `MapBackend.none` in `test_app.dart`), so
 they never fetch tiles or create a platform view.
+
+## Payments (Razorpay) and the invoice email
+
+Online payment runs through Razorpay, verified on the server, with an
+invoice emailed afterwards. The server is two Supabase Edge Functions in
+`supabase/functions`; the app never holds the Razorpay secret.
+
+- `create-order`: the app sends a booking id. The function reads the
+  booking with the caller's own token (so row-level security proves it is
+  theirs), takes the amount from the row, creates a Razorpay order, stores
+  a pending row in `payments` and returns what Checkout needs.
+- `verify-payment`: the app sends Checkout's order id, payment id and
+  signature. The function checks the signature against the key secret,
+  confirms the payment with Razorpay (capturing it if needed), marks the
+  payment paid with an invoice number, sets the booking to confirmed (the
+  notification trigger from 0009 tells the customer) and emails the invoice.
+
+Both are deployed with JWT verification off (`supabase/config.toml`)
+because sign-in is Firebase; the ownership check above replaces it.
+
+One-time setup:
+
+1. Run migration `0010_payments_razorpay.sql` (payments columns, invoice
+   numbers).
+2. [Razorpay dashboard](https://dashboard.razorpay.com/): in **Test Mode**,
+   Account & Settings → API Keys → Generate key. Live mode needs business
+   KYC; test mode is enough for a demo and uses Razorpay's test cards and UPI.
+3. A Gmail account for sending invoices, with 2-Step Verification on and an
+   [app password](https://myaccount.google.com/apppasswords). Gmail needs no
+   domain of our own; Supabase functions reach it on port 465.
+4. From the repo root, once (`supabase login` opens the browser):
+
+   ```bash
+   supabase login
+   supabase link --project-ref jeiwfvnkxubykrzjzktm
+   supabase secrets set RAZORPAY_KEY_ID=rzp_test_... RAZORPAY_KEY_SECRET=... \
+     GMAIL_USER=you@gmail.com GMAIL_APP_PASSWORD=... INVOICE_FROM_NAME=Kaylo
+   supabase functions deploy --use-api
+   ```
+
+   Re-run the last line after changing a function. Secrets never go in git.
+
+Without the Razorpay secrets the functions answer `not-configured` and the
+app falls back to pay-after-service; without the Gmail secrets payments
+still complete and the invoice is simply not sent (`invoice_note` says so).
+
+Every email (sign-in code, booking received, invoice) shares one Kaylo
+frame: green header with the logo, white card, faded mark as a watermark on
+the receipts. The images live in the public Storage bucket `assets` under
+`email/` (`logo_white.png`, `logo_dark.png`, `watermark.png`), uploaded
+once through the Storage API; mail clients such as Gmail need hosted images
+and drop embedded ones. `booking-email` sends the "Booking received" note
+for pay-after-service bookings (the app calls it after creating the
+booking); paid bookings get the invoice from `verify-payment`.
+
+Razorpay test mode: the sheet is the real one, so use test instruments.
+Domestic test card 5267 3181 8797 5449 (any future expiry, any CVV; card
+4111… counts as international and is refused unless international payments
+are enabled). UPI: `success@razorpay`; if the UPI tab is missing, enable
+UPI under Account & Settings → Payment methods in the Razorpay dashboard.
+
+## Sign-in codes by email
+
+Real SMS needs Firebase's paid plan, so the code goes by email instead,
+while the session itself still comes from Firebase Authentication:
+
+1. The app calls the `email-otp` Edge Function (`action: send`). It stores
+   a hashed six-digit code in `email_otps` (migration 0011, server-only)
+   and emails it through the Gmail account (same secrets as the invoice).
+2. The app sends the code back (`action: verify`). The function checks it
+   (ten-minute expiry, five attempts), finds the Firebase user with that
+   email or creates one with the email marked verified, and returns a
+   Firebase custom token minted with the project's service account.
+3. The app signs in with `signInWithCustomToken`. From there it is an
+   ordinary Firebase session: Supabase trusts the token as before, the
+   profile row is created or found by uid, Google sign-in with the same
+   email lands on the same account.
+
+Secrets, in addition to the Gmail ones: `FIREBASE_SERVICE_ACCOUNT_B64`,
+the service account JSON from Firebase (Project settings → Service
+accounts → Generate new private key) encoded with `base64`:
+
+```bash
+supabase secrets set FIREBASE_SERVICE_ACCOUNT_B64="$(base64 -i ~/Downloads/<key>.json)"
+```
+
+The demo build (`USE_MOCK=true`) still accepts 1234 and sends nothing.

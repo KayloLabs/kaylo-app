@@ -1395,4 +1395,181 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get searchTownHint => 'Search a town or city';
+
+  @override
+  String workerAbout(String name, String place, int jobs) {
+    return '$name is a Kaylo professional in $place with $jobs completed jobs.';
+  }
+
+  @override
+  String get verificationPending => 'Verification in progress';
+
+  @override
+  String get certGovtId => 'Government ID verified';
+
+  @override
+  String get certGovtIdSub => 'Aadhaar or Voter ID checked';
+
+  @override
+  String get certPolice => 'Police clearance verified';
+
+  @override
+  String get certPoliceSub => 'Background check clear';
+
+  @override
+  String get certSkill => 'Kaylo skill certified';
+
+  @override
+  String get certSkillSub => 'Practical skills tested';
+
+  @override
+  String get hourlyRate => 'Hourly rate';
+
+  @override
+  String get perHour => 'per hour';
+
+  @override
+  String get priceOnVisit => 'Price shared on visit';
+
+  @override
+  String get noReviewsYet => 'No reviews yet';
+
+  @override
+  String get newService => 'New';
+
+  @override
+  String get nearbyFirst => 'Nearby first';
+
+  @override
+  String get tomorrow => 'Tomorrow';
+
+  @override
+  String inDays(int count) {
+    return 'In $count days';
+  }
+
+  @override
+  String get whoIsItFor => 'Who is it for?';
+
+  @override
+  String get appointmentNotes => 'Notes for the doctor (optional)';
+
+  @override
+  String appointmentConfirmedWith(String doctor) {
+    return 'Appointment booked with $doctor';
+  }
+
+  @override
+  String get noUpcomingAppointments => 'No upcoming appointments yet';
+
+  @override
+  String get specGeneral => 'General physician';
+
+  @override
+  String get specCardio => 'Cardiologist';
+
+  @override
+  String get specOrtho => 'Orthopaedic';
+
+  @override
+  String get specGeriatric => 'Geriatrician';
+
+  @override
+  String get specAyurveda => 'Ayurveda';
+
+  @override
+  String get incPlumbTap => 'Tap repair';
+
+  @override
+  String get incPlumbPipe => 'Pipe leakage';
+
+  @override
+  String get incPlumbDrain => 'Drain cleaning';
+
+  @override
+  String get incPlumbInstall => 'Installation';
+
+  @override
+  String get incElecSwitch => 'Switchboard repair';
+
+  @override
+  String get incElecWiring => 'Wiring fix';
+
+  @override
+  String get incElecFan => 'Fan installation';
+
+  @override
+  String get incElecMcb => 'MCB tripping';
+
+  @override
+  String get incCleanDeep => 'Full home deep clean';
+
+  @override
+  String get incCleanKitchen => 'Kitchen cleaning';
+
+  @override
+  String get incCleanBath => 'Bathroom scrub';
+
+  @override
+  String get incCleanSofa => 'Sofa shampoo';
+
+  @override
+  String get incCarpFurniture => 'Furniture repair';
+
+  @override
+  String get incCarpDoor => 'Doors and windows';
+
+  @override
+  String get incCarpLock => 'Lock installation';
+
+  @override
+  String get incCarpCustom => 'Custom woodwork';
+
+  @override
+  String get incPaintInterior => 'Interior painting';
+
+  @override
+  String get incPaintExterior => 'Exterior painting';
+
+  @override
+  String get incPaintPutty => 'Wall putty and primer';
+
+  @override
+  String get incPaintWaterproof => 'Waterproofing';
+
+  @override
+  String get incAcFilter => 'Filter cleaning';
+
+  @override
+  String get incAcGas => 'Gas refill';
+
+  @override
+  String get incAcCooling => 'Cooling issue repair';
+
+  @override
+  String get incAcInstall => 'Installation and removal';
+
+  @override
+  String get incApplWasher => 'Washing machine';
+
+  @override
+  String get incApplFridge => 'Refrigerator';
+
+  @override
+  String get incApplMicrowave => 'Microwave';
+
+  @override
+  String get incApplTv => 'TV mounting and repair';
+
+  @override
+  String get incGenInspect => 'General inspection';
+
+  @override
+  String get incGenRepair => 'Repair and fix';
+
+  @override
+  String get incGenInstall => 'New installation';
+
+  @override
+  String get incGenMaintain => 'Maintenance';
 }

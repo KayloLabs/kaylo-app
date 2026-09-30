@@ -1410,4 +1410,183 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get searchTownHint => 'ஊர் அல்லது நகரத்தைத் தேடுங்கள்';
+
+  @override
+  String workerAbout(String name, String place, int jobs) {
+    return '$name $place-ல் $jobs வேலைகளை முடித்த கெய்லோ நிபுணர் ஆவார்.';
+  }
+
+  @override
+  String get verificationPending => 'சரிபார்ப்பு செயல்பாட்டில் உள்ளது';
+
+  @override
+  String get certGovtId => 'அரசு அடையாளச் சான்று சரிபார்க்கப்பட்டது';
+
+  @override
+  String get certGovtIdSub => 'ஆதார் அல்லது வாக்காளர் அட்டை சரிபார்க்கப்பட்டது';
+
+  @override
+  String get certPolice => 'காவல்துறை சான்றிதழ் சரிபார்க்கப்பட்டது';
+
+  @override
+  String get certPoliceSub => 'பின்னணி சரிபார்ப்பு முடிந்தது';
+
+  @override
+  String get certSkill => 'கெய்லோ திறன் சான்றிதழ் பெற்றது';
+
+  @override
+  String get certSkillSub => 'நடைமுறைத் திறன்கள் சோதிக்கப்பட்டன';
+
+  @override
+  String get hourlyRate => 'மணிநேரக் கட்டணம்';
+
+  @override
+  String get perHour => 'மணிக்கு';
+
+  @override
+  String get priceOnVisit => 'நேரில் பார்த்து கட்டணம் கூறப்படும்';
+
+  @override
+  String get noReviewsYet => 'இன்னும் மதிப்புரைகள் இல்லை';
+
+  @override
+  String get newService => 'புதியது';
+
+  @override
+  String get nearbyFirst => 'அருகிலுள்ளவர்கள் முதலில்';
+
+  @override
+  String get tomorrow => 'நாளை';
+
+  @override
+  String inDays(int count) {
+    return '$count நாட்களில்';
+  }
+
+  @override
+  String get whoIsItFor => 'இது யாருக்காக?';
+
+  @override
+  String get appointmentNotes =>
+      'மருத்துவருக்கான குறிப்புகள் (விருப்பத்தேர்வு)';
+
+  @override
+  String appointmentConfirmedWith(String doctor) {
+    return '$doctor உடன் சந்திப்பு புக் செய்யப்பட்டது';
+  }
+
+  @override
+  String get noUpcomingAppointments =>
+      'வரவிருக்கும் சந்திப்புகள் எதுவும் இல்லை';
+
+  @override
+  String get specGeneral => 'பொது மருத்துவர்';
+
+  @override
+  String get specCardio => 'இதய நோய் நிபுணர்';
+
+  @override
+  String get specOrtho => 'எலும்பியல் நிபுணர்';
+
+  @override
+  String get specGeriatric => 'முதியோர் நல மருத்துவர்';
+
+  @override
+  String get specAyurveda => 'ஆயுர்வேதம்';
+
+  @override
+  String get incPlumbTap => 'குழாய் பழுதுநீக்கம்';
+
+  @override
+  String get incPlumbPipe => 'பைப் கசிவு';
+
+  @override
+  String get incPlumbDrain => 'வடிகால் சுத்தம்';
+
+  @override
+  String get incPlumbInstall => 'பொருத்துதல்';
+
+  @override
+  String get incElecSwitch => 'சுவிட்ச்போர்டு பழுதுநீக்கம்';
+
+  @override
+  String get incElecWiring => 'வயரிங் சரிசெய்தல்';
+
+  @override
+  String get incElecFan => 'மின்விசிறி பொருத்துதல்';
+
+  @override
+  String get incElecMcb => 'MCB ட்ரிப்பிங்';
+
+  @override
+  String get incCleanDeep => 'முழு வீடு ஆழ்ந்த தூய்மை';
+
+  @override
+  String get incCleanKitchen => 'சமையலறை சுத்தம்';
+
+  @override
+  String get incCleanBath => 'குளியலறை தேய்த்தல்';
+
+  @override
+  String get incCleanSofa => 'சோஃபா ஷாம்பூ';
+
+  @override
+  String get incCarpFurniture => 'மரச்சாமான்கள் பழுது';
+
+  @override
+  String get incCarpDoor => 'கதவுகள் மற்றும் ஜன்னல்கள்';
+
+  @override
+  String get incCarpLock => 'பூட்டு பொருத்துதல்';
+
+  @override
+  String get incCarpCustom => 'தனிப்பயன் மரவேலை';
+
+  @override
+  String get incPaintInterior => 'உட்புற பெயிண்டிங்';
+
+  @override
+  String get incPaintExterior => 'வெளிப்புற பெயிண்டிங்';
+
+  @override
+  String get incPaintPutty => 'சுவர் புட்டி மற்றும் ப்ரைமர்';
+
+  @override
+  String get incPaintWaterproof => 'நீர்ப்புகாப்பு';
+
+  @override
+  String get incAcFilter => 'ஃபில்டர் சுத்தம்';
+
+  @override
+  String get incAcGas => 'கேஸ் நிரப்புதல்';
+
+  @override
+  String get incAcCooling => 'குளிர்ச்சி பிரச்சனை சரிசெய்தல்';
+
+  @override
+  String get incAcInstall => 'பொருத்துதல் மற்றும் அகற்றுதல்';
+
+  @override
+  String get incApplWasher => 'சலவை இயந்திரம்';
+
+  @override
+  String get incApplFridge => 'குளிர்சாதன பெட்டி';
+
+  @override
+  String get incApplMicrowave => 'மைக்ரோவேவ்';
+
+  @override
+  String get incApplTv => 'டிவி பொருத்துதல் மற்றும் பழுது';
+
+  @override
+  String get incGenInspect => 'பொது ஆய்வு';
+
+  @override
+  String get incGenRepair => 'பழுது மற்றும் சரிசெய்தல்';
+
+  @override
+  String get incGenInstall => 'புதிய பொருத்துதல்';
+
+  @override
+  String get incGenMaintain => 'பராமரிப்பு';
 }

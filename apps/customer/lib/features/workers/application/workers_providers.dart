@@ -8,6 +8,7 @@ import '../data/supabase_workers_repository.dart';
 import '../domain/models/worker_filter.dart';
 import '../domain/models/worker_review.dart';
 import '../domain/workers_repository.dart';
+import '../../home/application/user_location_provider.dart';
 
 export '../domain/models/worker_filter.dart';
 export '../domain/models/worker_review.dart';
@@ -126,7 +127,18 @@ final filteredWorkersProvider = FutureProvider.family<List<Worker>, String>((
       result.sort((a, b) => b.totalJobs.compareTo(a.totalJobs));
       break;
     case WorkerSort.distance:
-      // In mock/district mode, stable order
+      final userLoc = ref.watch(userLocationProvider).label.toLowerCase();
+      final nearby = <Worker>[];
+      final others = <Worker>[];
+      for (final w in result) {
+        final wLoc = w.location.toLowerCase();
+        if (wLoc.isNotEmpty && (userLoc.contains(wLoc) || wLoc.contains(userLoc))) {
+          nearby.add(w);
+        } else {
+          others.add(w);
+        }
+      }
+      result = [...nearby, ...others];
       break;
   }
 

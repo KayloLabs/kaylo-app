@@ -1392,4 +1392,181 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get searchTownHint => 'कस्बा या शहर खोजें';
+
+  @override
+  String workerAbout(String name, String place, int jobs) {
+    return '$name $place में $jobs पूरे किए गए कार्यों के साथ कायलो पेशेवर हैं।';
+  }
+
+  @override
+  String get verificationPending => 'सत्यापन प्रगति पर है';
+
+  @override
+  String get certGovtId => 'सरकारी पहचान सत्यापित';
+
+  @override
+  String get certGovtIdSub => 'आधार या वोटर आईडी जांची गई';
+
+  @override
+  String get certPolice => 'पुलिस क्लीयरेंस सत्यापित';
+
+  @override
+  String get certPoliceSub => 'पृष्ठभूमि जांच स्पष्ट';
+
+  @override
+  String get certSkill => 'कायलो कौशल प्रमाणित';
+
+  @override
+  String get certSkillSub => 'व्यावहारिक कौशल परीक्षित';
+
+  @override
+  String get hourlyRate => 'प्रति घंटा दर';
+
+  @override
+  String get perHour => 'प्रति घंटा';
+
+  @override
+  String get priceOnVisit => 'विज़िट पर तय मूल्य';
+
+  @override
+  String get noReviewsYet => 'अभी कोई समीक्षा नहीं';
+
+  @override
+  String get newService => 'नया';
+
+  @override
+  String get nearbyFirst => 'नज़दीकी पहले';
+
+  @override
+  String get tomorrow => 'कल';
+
+  @override
+  String inDays(int count) {
+    return '$count दिनों में';
+  }
+
+  @override
+  String get whoIsItFor => 'यह किसके लिए है?';
+
+  @override
+  String get appointmentNotes => 'डॉक्टर के लिए नोट्स (वैकल्पिक)';
+
+  @override
+  String appointmentConfirmedWith(String doctor) {
+    return '$doctor के साथ अपॉइंटमेंट बुक हुआ';
+  }
+
+  @override
+  String get noUpcomingAppointments => 'अभी कोई आगामी अपॉइंटमेंट नहीं है';
+
+  @override
+  String get specGeneral => 'सामान्य चिकित्सक';
+
+  @override
+  String get specCardio => 'हृदय रोग विशेषज्ञ';
+
+  @override
+  String get specOrtho => 'हड्डी रोग विशेषज्ञ';
+
+  @override
+  String get specGeriatric => 'वृद्धावस्था विशेषज्ञ';
+
+  @override
+  String get specAyurveda => 'आयुर्वेद';
+
+  @override
+  String get incPlumbTap => 'नल मरम्मत';
+
+  @override
+  String get incPlumbPipe => 'पाइप रिसाव';
+
+  @override
+  String get incPlumbDrain => 'नाली की सफाई';
+
+  @override
+  String get incPlumbInstall => 'स्थापना';
+
+  @override
+  String get incElecSwitch => 'स्विचबोर्ड मरम्मत';
+
+  @override
+  String get incElecWiring => 'वायरिंग ठीक करना';
+
+  @override
+  String get incElecFan => 'पंखा लगाना';
+
+  @override
+  String get incElecMcb => 'MCB ट्रिपिंग';
+
+  @override
+  String get incCleanDeep => 'पूरे घर की डीप क्लीनिंग';
+
+  @override
+  String get incCleanKitchen => 'रसोई की सफाई';
+
+  @override
+  String get incCleanBath => 'बाथरूम स्क्रब';
+
+  @override
+  String get incCleanSofa => 'सोफा शैम्पू';
+
+  @override
+  String get incCarpFurniture => 'फर्नीचर मरम्मत';
+
+  @override
+  String get incCarpDoor => 'दरवाजे और खिड़कियां';
+
+  @override
+  String get incCarpLock => 'ताला लगाना';
+
+  @override
+  String get incCarpCustom => 'कस्टम लकड़ी का काम';
+
+  @override
+  String get incPaintInterior => 'आंतरिक पेंटिंग';
+
+  @override
+  String get incPaintExterior => 'बाहरी पेंटिंग';
+
+  @override
+  String get incPaintPutty => 'वॉल पुट्टी और प्राइमर';
+
+  @override
+  String get incPaintWaterproof => 'वॉटरप्रूफिंग';
+
+  @override
+  String get incAcFilter => 'फ़िल्टर सफाई';
+
+  @override
+  String get incAcGas => 'गैस रिफिल';
+
+  @override
+  String get incAcCooling => 'कूलिंग समस्या ठीक करना';
+
+  @override
+  String get incAcInstall => 'लगाना और हटाना';
+
+  @override
+  String get incApplWasher => 'वॉशिंग मशीन';
+
+  @override
+  String get incApplFridge => 'रेफ्रिजरेटर';
+
+  @override
+  String get incApplMicrowave => 'माइक्रोवेव';
+
+  @override
+  String get incApplTv => 'टीवी लगाना और मरम्मत';
+
+  @override
+  String get incGenInspect => 'सामान्य निरीक्षण';
+
+  @override
+  String get incGenRepair => 'मरम्मत और ठीक करना';
+
+  @override
+  String get incGenInstall => 'नया इंस्टॉलेशन';
+
+  @override
+  String get incGenMaintain => 'रखरखाव';
 }

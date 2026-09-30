@@ -615,5 +615,89 @@
   "findingAddress": "Finding address…",
   "selectedLocation": "Selected location",
   "mapUnavailable": "Map preview unavailable",
-  "searchTownHint": "Search a town or city"
+  "searchTownHint": "Search a town or city",
+  "workerAbout": "{name} is a Kaylo professional in {place} with {jobs} completed jobs.",
+  "@workerAbout": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      },
+      "place": {
+        "type": "String"
+      },
+      "jobs": {
+        "type": "int"
+      }
+    }
+  },
+  "verificationPending": "Verification in progress",
+  "certGovtId": "Government ID verified",
+  "certGovtIdSub": "Aadhaar or Voter ID checked",
+  "certPolice": "Police clearance verified",
+  "certPoliceSub": "Background check clear",
+  "certSkill": "Kaylo skill certified",
+  "certSkillSub": "Practical skills tested",
+  "hourlyRate": "Hourly rate",
+  "perHour": "per hour",
+  "priceOnVisit": "Price shared on visit",
+  "noReviewsYet": "No reviews yet",
+  "newService": "New",
+  "nearbyFirst": "Nearby first",
+  "tomorrow": "Tomorrow",
+  "inDays": "In {count} days",
+  "@inDays": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "whoIsItFor": "Who is it for?",
+  "appointmentNotes": "Notes for the doctor (optional)",
+  "appointmentConfirmedWith": "Appointment booked with {doctor}",
+  "@appointmentConfirmedWith": {
+    "placeholders": {
+      "doctor": {
+        "type": "String"
+      }
+    }
+  },
+  "noUpcomingAppointments": "No upcoming appointments yet",
+  "specGeneral": "General physician",
+  "specCardio": "Cardiologist",
+  "specOrtho": "Orthopaedic",
+  "specGeriatric": "Geriatrician",
+  "specAyurveda": "Ayurveda",
+  "incPlumbTap": "Tap repair",
+  "incPlumbPipe": "Pipe leakage",
+  "incPlumbDrain": "Drain cleaning",
+  "incPlumbInstall": "Installation",
+  "incElecSwitch": "Switchboard repair",
+  "incElecWiring": "Wiring fix",
+  "incElecFan": "Fan installation",
+  "incElecMcb": "MCB tripping",
+  "incCleanDeep": "Full home deep clean",
+  "incCleanKitchen": "Kitchen cleaning",
+  "incCleanBath": "Bathroom scrub",
+  "incCleanSofa": "Sofa shampoo",
+  "incCarpFurniture": "Furniture repair",
+  "incCarpDoor": "Doors and windows",
+  "incCarpLock": "Lock installation",
+  "incCarpCustom": "Custom woodwork",
+  "incPaintInterior": "Interior painting",
+  "incPaintExterior": "Exterior painting",
+  "incPaintPutty": "Wall putty and primer",
+  "incPaintWaterproof": "Waterproofing",
+  "incAcFilter": "Filter cleaning",
+  "incAcGas": "Gas refill",
+  "incAcCooling": "Cooling issue repair",
+  "incAcInstall": "Installation and removal",
+  "incApplWasher": "Washing machine",
+  "incApplFridge": "Refrigerator",
+  "incApplMicrowave": "Microwave",
+  "incApplTv": "TV mounting and repair",
+  "incGenInspect": "General inspection",
+  "incGenRepair": "Repair and fix",
+  "incGenInstall": "New installation",
+  "incGenMaintain": "Maintenance"
 }

@@ -5,6 +5,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kaylo_core/models/worker.dart';
 import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/avatar_circle.dart';
@@ -159,18 +160,17 @@ class WorkerProfileScreen extends ConsumerWidget {
                       const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: _StatCard(
-                          title:
-                              '${(w.trustScore / 15).clamp(3, 15).toInt()}+ yrs',
-                          subtitle: l10n.yearsExperience,
-                          icon: Icons.work_outline_rounded,
+                          title: w.rating.toStringAsFixed(1),
+                          subtitle: l10n.rating,
+                          icon: Icons.star_rounded,
                         ),
                       ),
                       const SizedBox(width: AppSpacing.m),
                       Expanded(
                         child: _StatCard(
-                          title: '< 30m',
-                          subtitle: l10n.responseTime,
-                          icon: Icons.timer_outlined,
+                          title: '${w.reviewsCount}',
+                          subtitle: l10n.reviews,
+                          icon: Icons.rate_review_outlined,
                         ),
                       ),
                     ],
@@ -188,7 +188,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                   KayloCard(
                     padding: const EdgeInsets.all(AppSpacing.m),
                     child: Text(
-                      'Dedicated and experienced service professional with a track record of delivering clean, punctual, and high-quality work. Fluent in Malayalam and English with full verification and safety clearance.',
+                      l10n.workerAbout(w.name, w.location, w.totalJobs),
                       style: Theme.of(
                         context,
                       ).textTheme.bodyMedium?.copyWith(height: 1.5),
@@ -206,27 +206,58 @@ class WorkerProfileScreen extends ConsumerWidget {
                   const SizedBox(height: AppSpacing.s),
                   KayloCard(
                     padding: const EdgeInsets.all(AppSpacing.m),
-                    child: Column(
-                      children: [
-                        _buildCertRow(
-                          icon: Icons.badge_outlined,
-                          title: 'Government Identity Verified',
-                          subtitle: 'Aadhaar / Voter ID check passed',
-                        ),
-                        const Divider(height: AppSpacing.l),
-                        _buildCertRow(
-                          icon: Icons.verified_user_outlined,
-                          title: 'Police Clearance Verified',
-                          subtitle: 'Criminal background check clear',
-                        ),
-                        const Divider(height: AppSpacing.l),
-                        _buildCertRow(
-                          icon: Icons.star_outline_rounded,
-                          title: 'Kaylo Skill Certified',
-                          subtitle: 'Practical skills tested and certified',
-                        ),
-                      ],
-                    ),
+                    child: w.isVerified
+                        ? Column(
+                            children: [
+                              _buildCertRow(
+                                icon: Icons.badge_outlined,
+                                title: l10n.certGovtId,
+                                subtitle: l10n.certGovtIdSub,
+                              ),
+                              const Divider(height: AppSpacing.l),
+                              _buildCertRow(
+                                icon: Icons.verified_user_outlined,
+                                title: l10n.certPolice,
+                                subtitle: l10n.certPoliceSub,
+                              ),
+                              const Divider(height: AppSpacing.l),
+                              _buildCertRow(
+                                icon: Icons.star_outline_rounded,
+                                title: l10n.certSkill,
+                                subtitle: l10n.certSkillSub,
+                              ),
+                            ],
+                          )
+                        : Padding(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.s,
+                              horizontal: AppSpacing.xs,
+                            ),
+                            child: Row(
+                              children: [
+                                const Icon(
+                                  Icons.pending_outlined,
+                                  color: AppColors.textSecondary,
+                                  size: 20,
+                                ),
+                                const SizedBox(width: AppSpacing.m),
+                                Expanded(
+                                  child: Text(
+                                    l10n.verificationPending,
+                                    style: Theme.of(context)
+                                        .textTheme
+                                        .bodyMedium
+                                        ?.copyWith(
+                                          color: isDark
+                                              ? AppColors.textSecondaryDark
+                                              : AppColors.textSecondary,
+                                          fontWeight: FontWeight.w500,
+                                        ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                   ),
                   const SizedBox(height: AppSpacing.l),
 
@@ -256,7 +287,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                         return Padding(
                           padding: const EdgeInsets.all(AppSpacing.m),
                           child: Text(
-                            'No reviews yet for this professional.',
+                            l10n.noReviewsYet,
                             style: TextStyle(
                               color: isDark
                                   ? AppColors.textSecondaryDark
@@ -308,17 +339,21 @@ class WorkerProfileScreen extends ConsumerWidget {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            const Text(
-                              'Hourly Rate',
+                            Text(
+                              l10n.hourlyRate,
                               style: TextStyle(
                                 fontSize: 12,
-                                color: AppColors.textSecondary,
+                                color: isDark
+                                    ? AppColors.textSecondaryDark
+                                    : AppColors.textSecondary,
                               ),
                             ),
                             Text(
-                              '₹${(w.hourlyRate ?? 300).toInt()}/hr',
-                              style: const TextStyle(
-                                fontSize: 20,
+                              w.hourlyRate != null
+                                  ? '${formatRupees(w.hourlyRate!.toDouble())} ${l10n.perHour}'
+                                  : l10n.priceOnVisit,
+                              style: TextStyle(
+                                fontSize: w.hourlyRate != null ? 18 : 14,
                                 fontWeight: FontWeight.bold,
                                 color: AppColors.brandPrimary,
                               ),
@@ -401,7 +436,7 @@ class WorkerProfileScreen extends ConsumerWidget {
             ],
           ),
         ),
-        const Icon(Icons.check_circle_rounded, color: Colors.green, size: 18),
+        const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 18),
       ],
     );
   }

@@ -373,8 +373,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 onTap: () {
                   KayloFeedback.tap();
                   notifier.addRecentSearch(worker.name);
+                  // With a service the profile's Book button knows what
+                  // to book; the first skill is the natural choice.
+                  final serviceId = worker.skillIds.isEmpty
+                      ? ''
+                      : '&serviceId=${worker.skillIds.first}';
                   context.push(
-                    '${Routes.workerProfile}?workerId=${worker.id}',
+                    '${Routes.workerProfile}?workerId=${worker.id}$serviceId',
                     extra: worker,
                   );
                 },

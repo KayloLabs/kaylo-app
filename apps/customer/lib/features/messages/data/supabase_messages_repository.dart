@@ -21,8 +21,10 @@ class SupabaseMessagesRepository implements MessagesRepository {
             'chat_rooms(room_id), '
             'workers(worker_id, persons(full_name)), '
             'services(service_name)',
-          )
-          .eq('customer_id', userId);
+          );
+      // No customer filter: userId is a person id, bookings are keyed by
+      // customer id, and row-level security already limits the rows to
+      // this customer's bookings.
 
       final threads = <ChatThread>[];
       for (final row in rows) {

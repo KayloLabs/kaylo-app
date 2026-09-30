@@ -59,10 +59,13 @@ class GreetingHeader extends StatelessWidget {
                         color: AppColors.textSecondary,
                       ),
                       const SizedBox(width: 4),
+                      // Only the town: "Ettimadai, Coimbatore" would
+                      // push the greeting down to "Hello, N…" on a
+                      // narrow phone. The picker shows the full label.
                       ConstrainedBox(
-                        constraints: const BoxConstraints(maxWidth: 120),
+                        constraints: const BoxConstraints(maxWidth: 88),
                         child: Text(
-                          location,
+                          location.split(',').first.trim(),
                           maxLines: 1,
                           overflow: TextOverflow.ellipsis,
                           style: const TextStyle(

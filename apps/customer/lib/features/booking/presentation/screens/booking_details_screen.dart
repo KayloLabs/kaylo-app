@@ -93,7 +93,14 @@ class _Details extends ConsumerWidget {
     );
     if (confirmed != true || !context.mounted) return;
     KayloFeedback.alert();
-    await ref.read(bookingsControllerProvider).cancel(booking.id);
+    try {
+      await ref.read(bookingsControllerProvider).cancel(booking.id);
+    } catch (_) {
+      if (context.mounted) {
+        KayloSnackbar.showError(context, l10n.somethingWentWrong);
+      }
+      return;
+    }
     if (context.mounted) KayloSnackbar.showInfo(context, l10n.bookingCancelled);
   }
 

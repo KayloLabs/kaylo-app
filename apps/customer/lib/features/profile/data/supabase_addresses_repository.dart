@@ -15,13 +15,22 @@ class SupabaseAddressesRepository implements AddressesRepository {
   @override
   Future<List<SavedAddress>> getAddresses(String userId) async {
     try {
+      // The person filter stays: workers' locations are readable too.
+      // `*` keeps this working before migration 0009 adds is_default and
+      // created_at; without them the first address counts as default.
       final rows = await _client
           .from('locations')
-          .select(
-            'location_id, nickname, street, district, pincode, latitude, longitude',
-          )
+          .select()
           .eq('person_id', userId)
           .order('location_id');
+      rows.sort((a, b) {
+        final byDefault = (b['is_default'] == true ? 1 : 0) -
+            (a['is_default'] == true ? 1 : 0);
+        if (byDefault != 0) return byDefault;
+        final at = a['created_at'] as String?, bt = b['created_at'] as String?;
+        return at == null || bt == null ? 0 : at.compareTo(bt);
+      });
+      final anyDefault = rows.any((r) => r['is_default'] == true);
       return [
         for (final (index, row) in rows.indexed)
           SavedAddress(
@@ -34,7 +43,7 @@ class SupabaseAddressesRepository implements AddressesRepository {
             ].whereType<String>().where((s) => s.isNotEmpty).join(', '),
             latitude: (row['latitude'] as num?)?.toDouble(),
             longitude: (row['longitude'] as num?)?.toDouble(),
-            isDefault: index == 0,
+            isDefault: anyDefault ? row['is_default'] == true : index == 0,
           ),
       ];
     } catch (e) {
@@ -83,7 +92,22 @@ class SupabaseAddressesRepository implements AddressesRepository {
     }
   }
 
-  /// The schema has no default flag yet, so this is a no-op live.
+  /// Uses locations.is_default (migration 0009): clears the flag on the
+  /// customer's other addresses, then sets it on this one.
   @override
-  Future<void> setDefaultAddress(String userId, String addressId) async {}
+  Future<void> setDefaultAddress(String userId, String addressId) async {
+    try {
+      await _client
+          .from('locations')
+          .update({'is_default': false})
+          .eq('person_id', userId)
+          .neq('location_id', addressId);
+      await _client
+          .from('locations')
+          .update({'is_default': true})
+          .eq('location_id', addressId);
+    } catch (e) {
+      throw mapSupabaseError(e);
+    }
+  }
 }

@@ -460,9 +460,19 @@ class _DoctorAppointmentScreenState
                       notes: notes,
                     );
 
-                    await ref
-                        .read(doctorAppointmentsProvider.notifier)
-                        .bookAppointment(appointment);
+                    try {
+                      await ref
+                          .read(doctorAppointmentsProvider.notifier)
+                          .bookAppointment(appointment);
+                    } catch (_) {
+                      if (!context.mounted) return;
+                      KayloFeedback.alert();
+                      KayloSnackbar.showError(
+                        context,
+                        l10n.somethingWentWrong,
+                      );
+                      return;
+                    }
 
                     if (!context.mounted) return;
 

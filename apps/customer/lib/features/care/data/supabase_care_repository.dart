@@ -360,59 +360,52 @@ class SupabaseCareRepository implements CareRepository {
     }
   }
 
+  // Appointments are the customer's own data: a new customer has none,
+  // and a failed save must not look like a success, so no sample
+  // fallback here (unlike the public doctor and caregiver lists).
   @override
   Future<List<DoctorAppointment>> getDoctorAppointments() async {
-    try {
-      final rows = await _client
-          .from('doctor_appointments')
-          .select()
-          .order('created_at', ascending: false);
-      if (rows.isEmpty) return await _fallback.getDoctorAppointments();
-      return rows
-          .map(
-            (r) => DoctorAppointment(
-              id: r['id'] as String,
-              doctorId: r['doctor_id'] as String,
-              doctorName: r['doctor_name'] as String,
-              specialty: r['specialty'] as String,
-              hospital: r['hospital'] as String? ?? '',
-              date: DateTime.parse(r['appointment_date'] as String),
-              timeSlot: r['time_slot'] as String,
-              consultationType:
-                  r['consultation_type'] as String? ?? 'homeVisit',
-              status: r['status'] as String? ?? 'confirmed',
-              patientName: r['patient_name'] as String? ?? 'Senior',
-              notes: r['notes'] as String?,
-            ),
-          )
-          .toList();
-    } catch (_) {
-      return await _fallback.getDoctorAppointments();
-    }
+    final rows = await _client
+        .from('doctor_appointments')
+        .select()
+        .order('created_at', ascending: false);
+    return rows
+        .map(
+          (r) => DoctorAppointment(
+            id: r['id'] as String,
+            doctorId: r['doctor_id'] as String,
+            doctorName: r['doctor_name'] as String,
+            specialty: r['specialty'] as String,
+            hospital: r['hospital'] as String? ?? '',
+            date: DateTime.parse(r['appointment_date'] as String),
+            timeSlot: r['time_slot'] as String,
+            consultationType: r['consultation_type'] as String? ?? 'homeVisit',
+            status: r['status'] as String? ?? 'confirmed',
+            patientName: r['patient_name'] as String? ?? 'Senior',
+            notes: r['notes'] as String?,
+          ),
+        )
+        .toList();
   }
 
   @override
   Future<DoctorAppointment> bookDoctorAppointment(
     DoctorAppointment appointment,
   ) async {
-    try {
-      await _client.from('doctor_appointments').insert({
-        'id': appointment.id,
-        'doctor_id': appointment.doctorId,
-        'doctor_name': appointment.doctorName,
-        'specialty': appointment.specialty,
-        'hospital': appointment.hospital,
-        'appointment_date': appointment.date.toIso8601String(),
-        'time_slot': appointment.timeSlot,
-        'consultation_type': appointment.consultationType,
-        'status': appointment.status,
-        'patient_name': appointment.patientName,
-        'notes': appointment.notes,
-      });
-      return appointment;
-    } catch (_) {
-      return await _fallback.bookDoctorAppointment(appointment);
-    }
+    await _client.from('doctor_appointments').insert({
+      'id': appointment.id,
+      'doctor_id': appointment.doctorId,
+      'doctor_name': appointment.doctorName,
+      'specialty': appointment.specialty,
+      'hospital': appointment.hospital,
+      'appointment_date': appointment.date.toIso8601String(),
+      'time_slot': appointment.timeSlot,
+      'consultation_type': appointment.consultationType,
+      'status': appointment.status,
+      'patient_name': appointment.patientName,
+      'notes': appointment.notes,
+    });
+    return appointment;
   }
 
   @override
@@ -420,24 +413,7 @@ class SupabaseCareRepository implements CareRepository {
     try {
       final rows = await _client.from('caregivers').select();
       if (rows.isEmpty) return await _fallback.getCaregivers();
-      return rows
-          .map(
-            (r) => Caregiver(
-              id: r['id'] as String,
-              name: r['name'] as String,
-              rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
-              reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 40,
-              hourlyRate: ((r['hourly_rate'] as num?) ?? 250).toDouble(),
-              experienceYears: (r['experience_years'] as num?)?.toInt() ?? 5,
-              isVerified: (r['is_verified'] as bool?) ?? true,
-              imageUrl: r['image_url'] as String? ?? '',
-              specialties: List<String>.from(
-                r['specialties'] ?? ['Elderly Care'],
-              ),
-              bio: r['bio'] as String? ?? '',
-            ),
-          )
-          .toList();
+      return rows.map(_caregiverFromRow).toList();
     } catch (_) {
       return await _fallback.getCaregivers();
     }
@@ -445,18 +421,80 @@ class SupabaseCareRepository implements CareRepository {
 
   @override
   Future<Caregiver?> getCaregiverById(String caregiverId) async {
-    return _fallback.getCaregiverById(caregiverId);
+    try {
+      final row = await _client
+          .from('caregivers')
+          .select()
+          .eq('id', caregiverId)
+          .maybeSingle();
+      return row == null
+          ? await _fallback.getCaregiverById(caregiverId)
+          : _caregiverFromRow(row);
+    } catch (_) {
+      return await _fallback.getCaregiverById(caregiverId);
+    }
   }
 
+  Caregiver _caregiverFromRow(Map<String, dynamic> r) => Caregiver(
+    id: r['id'] as String,
+    name: r['name'] as String,
+    rating: ((r['rating'] as num?) ?? 4.8).toDouble(),
+    reviewsCount: (r['reviews_count'] as num?)?.toInt() ?? 40,
+    hourlyRate: ((r['hourly_rate'] as num?) ?? 250).toDouble(),
+    experienceYears: (r['experience_years'] as num?)?.toInt() ?? 5,
+    isVerified: (r['is_verified'] as bool?) ?? true,
+    imageUrl: r['image_url'] as String? ?? '',
+    specialties: List<String>.from(r['specialties'] ?? ['Elderly Care']),
+    bio: r['bio'] as String? ?? '',
+  );
+
+  // Caregiver visits live in caregiver_bookings (migration 0009). Like
+  // appointments they are the customer's own data: no sample fallback.
   @override
   Future<List<CaregiverBookingRecord>> getCaregiverBookings() async {
-    return _fallback.getCaregiverBookings();
+    final rows = await _client
+        .from('caregiver_bookings')
+        .select()
+        .order('created_at', ascending: false);
+    return rows
+        .map(
+          (r) => CaregiverBookingRecord(
+            id: r['id'] as String,
+            caregiverId: r['caregiver_id'] as String,
+            caregiverName: r['caregiver_name'] as String,
+            date: DateTime.parse(r['visit_date'] as String),
+            startTime: r['start_time'] as String,
+            hours: (r['hours'] as num).toInt(),
+            hourlyRate: (r['hourly_rate'] as num).toDouble(),
+            totalAmount: (r['total_amount'] as num).toDouble(),
+            careType: r['care_type'] as String,
+            notes: r['notes'] as String?,
+            status: r['status'] as String? ?? 'confirmed',
+          ),
+        )
+        .toList();
   }
 
   @override
   Future<CaregiverBookingRecord> bookCaregiver(
     CaregiverBookingRecord booking,
   ) async {
-    return _fallback.bookCaregiver(booking);
+    final d = booking.date;
+    String two(int n) => n.toString().padLeft(2, '0');
+    // customer_id is left out: it defaults to the signed-in customer.
+    await _client.from('caregiver_bookings').insert({
+      'id': booking.id,
+      'caregiver_id': booking.caregiverId,
+      'caregiver_name': booking.caregiverName,
+      'visit_date': '${d.year}-${two(d.month)}-${two(d.day)}',
+      'start_time': booking.startTime,
+      'hours': booking.hours,
+      'hourly_rate': booking.hourlyRate,
+      'total_amount': booking.totalAmount,
+      'care_type': booking.careType,
+      'notes': booking.notes,
+      'status': booking.status,
+    });
+    return booking;
   }
 }

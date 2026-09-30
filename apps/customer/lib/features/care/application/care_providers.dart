@@ -43,13 +43,12 @@ class DoctorAppointmentsNotifier
     return repo.getDoctorAppointments();
   }
 
+  /// Throws when the save fails, so the screen can say so; the list
+  /// keeps what it had.
   Future<void> bookAppointment(DoctorAppointment appointment) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final repo = ref.read(careRepositoryProvider);
-      await repo.bookDoctorAppointment(appointment);
-      return repo.getDoctorAppointments();
-    });
+    final repo = ref.read(careRepositoryProvider);
+    await repo.bookDoctorAppointment(appointment);
+    state = await AsyncValue.guard(repo.getDoctorAppointments);
   }
 }
 
@@ -71,13 +70,12 @@ class CaregiverBookingsNotifier
     return repo.getCaregiverBookings();
   }
 
+  /// Throws when the save fails, so the screen can say so; the list
+  /// keeps what it had.
   Future<void> bookCaregiver(CaregiverBookingRecord booking) async {
-    state = const AsyncValue.loading();
-    state = await AsyncValue.guard(() async {
-      final repo = ref.read(careRepositoryProvider);
-      await repo.bookCaregiver(booking);
-      return repo.getCaregiverBookings();
-    });
+    final repo = ref.read(careRepositoryProvider);
+    await repo.bookCaregiver(booking);
+    state = await AsyncValue.guard(repo.getCaregiverBookings);
   }
 }
 

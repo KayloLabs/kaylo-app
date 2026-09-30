@@ -16,7 +16,9 @@ import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../auth/application/current_user_provider.dart';
 import '../../../booking/application/bookings_providers.dart';
+import '../../../home/application/home_providers.dart';
 import '../../application/care_providers.dart';
 import '../../domain/models/caregiver.dart';
 
@@ -378,28 +380,49 @@ class _CaregiverBookingScreenState
                         status: 'confirmed',
                       );
 
-                      await ref
-                          .read(caregiverBookingsProvider.notifier)
-                          .bookCaregiver(record);
-
-                      // 2. Also register in M4's Bookings repository with category caregiver
                       try {
-                        final bookingsRepo = ref.read(
-                          bookingsRepositoryProvider,
+                        await ref
+                            .read(caregiverBookingsProvider.notifier)
+                            .bookCaregiver(record);
+
+                        // 2. A copy in My Bookings under the catalog's
+                        // Caregiver Visit service (a uuid live, '8' in the
+                        // mock). Caregivers are not workers, so no worker.
+                        final userId = ref.read(currentUserIdProvider);
+                        final careServices = await ref
+                            .read(homeRepositoryProvider)
+                            .getServicesByCategory('care');
+                        final visit = careServices
+                            .where(
+                              (s) => s.name.toLowerCase().contains('caregiver'),
+                            )
+                            .firstOrNull;
+                        if (userId != null && visit != null) {
+                          await ref
+                              .read(bookingsRepositoryProvider)
+                              .createBooking(
+                                Booking(
+                                  id: record.id,
+                                  userId: userId,
+                                  serviceId: visit.id,
+                                  scheduledAt: _selectedDate,
+                                  status: BookingStatus.confirmed,
+                                  totalAmount: total,
+                                  notes:
+                                      '${caregiver.name} · ${record.careType} · ${record.hours} h',
+                                ),
+                              );
+                          ref.invalidate(userBookingsProvider);
+                        }
+                      } catch (_) {
+                        if (!context.mounted) return;
+                        KayloFeedback.alert();
+                        KayloSnackbar.showError(
+                          context,
+                          l10n.somethingWentWrong,
                         );
-                        await bookingsRepo.createBooking(
-                          Booking(
-                            id: record.id,
-                            userId: 'u1',
-                            serviceId: '8', // Caregiver Visit service id
-                            workerId: caregiver.id,
-                            scheduledAt: _selectedDate,
-                            status: BookingStatus.confirmed,
-                            totalAmount: total,
-                            notes: '${record.careType} - ${record.hours} hours',
-                          ),
-                        );
-                      } catch (_) {}
+                        return;
+                      }
 
                       if (!context.mounted) return;
 

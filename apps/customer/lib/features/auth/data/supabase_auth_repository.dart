@@ -4,7 +4,7 @@ import 'package:kaylo_core/models/app_user.dart';
 import '../domain/auth_repository.dart';
 import '../domain/profile_store.dart';
 
-/// Supabase's own phone OTP and OAuth. The fallback where Firebase is
+/// Supabase's own email OTP and OAuth. The fallback where Firebase is
 /// not configured (desktop builds); the profile handling is shared with
 /// the Firebase repository through ProfileSync.
 class SupabaseAuthRepository implements AuthRepository {
@@ -57,6 +57,23 @@ class SupabaseAuthRepository implements AuthRepository {
   AppUser? get currentUser => _currentUser;
 
   @override
+  Future<void> requestEmailCode(
+    String email, {
+    bool signUp = false,
+    String? displayName,
+    String? phone,
+  }) async {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      _pendingDisplayName = displayName.trim();
+    }
+    await _client.auth.signInWithOtp(
+      email: email,
+      shouldCreateUser: signUp,
+      data: {'full_name': ?displayName, 'phone': ?phone},
+    );
+  }
+
+  @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
@@ -70,6 +87,15 @@ class SupabaseAuthRepository implements AuthRepository {
       phone: phone,
       token: otp,
       type: supabase.OtpType.sms,
+    );
+  }
+
+  @override
+  Future<void> verifyEmailCode(String email, String code) async {
+    await _client.auth.verifyOTP(
+      email: email,
+      token: code,
+      type: supabase.OtpType.email,
     );
   }
 

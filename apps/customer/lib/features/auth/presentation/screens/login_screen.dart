@@ -9,7 +9,9 @@ import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 import 'package:kaylo_ui/widgets/kaylo_logo.dart';
 import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
+import '../../application/current_user_provider.dart';
 import '../../domain/auth_repository.dart';
+import 'otp_verify_screen.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -22,11 +24,16 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen>
     with SingleTickerProviderStateMixin {
   final _phoneController = TextEditingController();
+  final _emailController = TextEditingController();
   final _firstNameController = TextEditingController();
   final _lastNameController = TextEditingController();
 
   bool _isLoading = false;
-  bool _isSignUp = false; // Toggle between Sign In and Sign Up
+  bool _isSignUp = false;
+
+  /// Email codes are the usual way in; the button beside Google switches
+  /// the form to SMS codes (Firebase phone sign-in, Blaze plan).
+  bool _usePhone = false; // Toggle between Sign In and Sign Up
 
   late final AnimationController _animController;
   late final Animation<double> _formHeightAnim;
@@ -49,6 +56,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
   @override
   void dispose() {
     _phoneController.dispose();
+    _emailController.dispose();
     _firstNameController.dispose();
     _lastNameController.dispose();
     _animController.dispose();
@@ -66,34 +74,51 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     }
   }
 
-  Future<void> _handlePhoneSubmit() async {
-    final phone = _phoneController.text.trim();
-    if (phone.isEmpty) {
-      KayloSnackbar.showError(context, 'Please enter a valid phone number');
+  static final _emailPattern = RegExp(r'^[^\s@]+@[^\s@]+\.[^\s@]+$');
+
+  Future<void> _handleCodeSubmit() async {
+    final email = _emailController.text.trim().toLowerCase();
+    if (!_usePhone && !_emailPattern.hasMatch(email)) {
+      KayloSnackbar.showError(context, 'Please enter a valid email address');
       return;
     }
 
-    if (_isSignUp) {
-      final firstName = _firstNameController.text.trim();
-      if (firstName.isEmpty) {
-        KayloSnackbar.showError(context, 'Please enter your first name');
-        return;
-      }
+    String? phone;
+    final rawPhone = _phoneController.text.trim();
+    if (rawPhone.isNotEmpty) {
+      phone = rawPhone.startsWith('+') ? rawPhone : '+91$rawPhone';
     }
-
-    final formattedPhone = phone.startsWith('+') ? phone : '+91$phone';
+    if (_usePhone && (phone == null || phone.length < 10)) {
+      KayloSnackbar.showError(context, 'Please enter a valid phone number');
+      return;
+    }
+    if (_isSignUp && _firstNameController.text.trim().isEmpty) {
+      KayloSnackbar.showError(context, 'Please enter your first name');
+      return;
+    }
+    final displayName = _isSignUp
+        ? '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'
+              .trim()
+        : null;
 
     setState(() => _isLoading = true);
     try {
-      await ref.read(authRepositoryProvider).signInWithPhone(
-            formattedPhone,
-            displayName: _isSignUp
-                ? '${_firstNameController.text.trim()} ${_lastNameController.text.trim()}'
-                    .trim()
-                : null,
-          );
+      final auth = ref.read(authRepositoryProvider);
+      final OtpTarget target;
+      if (_usePhone) {
+        await auth.signInWithPhone(phone!, displayName: displayName);
+        target = OtpTarget.phone(phone);
+      } else {
+        await auth.requestEmailCode(
+          email,
+          signUp: _isSignUp,
+          displayName: displayName,
+          phone: phone,
+        );
+        target = OtpTarget.email(email);
+      }
       if (mounted) {
-        context.push(Routes.loginOtp, extra: formattedPhone);
+        context.push(Routes.loginOtp, extra: target);
       }
     } catch (e) {
       if (mounted) KayloSnackbar.showError(context, e.toString());
@@ -106,9 +131,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
     setState(() => _isLoading = true);
     try {
       await authMethod();
-      await Future.delayed(
-        const Duration(milliseconds: 100),
-      ); // Wait for stream propagation
+      // Wait for the profile to load; see awaitSignedInUser.
+      await awaitSignedInUser(ref);
       if (mounted) context.go(Routes.location);
     } catch (e) {
       if (mounted) KayloSnackbar.showError(context, e.toString());
@@ -333,22 +357,47 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                     ],
                                   ),
                                   const SizedBox(height: AppSpacing.l),
+                                  if (!_usePhone) ...[
+                                    KayloTextField(
+                                      label: 'Phone Number',
+                                      hintText: 'e.g. 98470 12345',
+                                      controller: _phoneController,
+                                      keyboardType: TextInputType.phone,
+                                      prefixIcon: const Icon(Icons.phone_outlined),
+                                    ),
+                                    const SizedBox(height: AppSpacing.l),
+                                  ],
                                 ],
                               ),
                             ),
                           ),
 
-                          KayloTextField(
-                            label: 'Phone Number',
-                            hintText: 'e.g. 98470 12345',
-                            controller: _phoneController,
-                            keyboardType: TextInputType.phone,
-                            prefixIcon: const Icon(Icons.phone_outlined),
-                          ),
+                          if (_usePhone)
+                            KayloTextField(
+                              label: 'Phone Number',
+                              hintText: 'e.g. 98470 12345',
+                              controller: _phoneController,
+                              keyboardType: TextInputType.phone,
+                              autofillHints: const [AutofillHints.telephoneNumber],
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _handleCodeSubmit(),
+                              prefixIcon: const Icon(Icons.phone_outlined),
+                            )
+                          else
+                            KayloTextField(
+                              label: 'Email',
+                              hintText: 'you@example.com',
+                              controller: _emailController,
+                              keyboardType: TextInputType.emailAddress,
+                              autofillHints: const [AutofillHints.email],
+                              textInputAction: TextInputAction.done,
+                              onSubmitted: (_) => _handleCodeSubmit(),
+                              prefixIcon: const Icon(Icons.mail_outline_rounded),
+                            ),
                           const SizedBox(height: AppSpacing.xl),
                           KayloButton(
-                            text: 'Continue',
-                            onPressed: _handlePhoneSubmit,
+                            text: _usePhone ? 'Send code by SMS' : 'Send code',
+                            onPressed: _handleCodeSubmit,
                             isLoading: _isLoading,
                           ),
                           const SizedBox(height: AppSpacing.xl),
@@ -403,13 +452,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               const SizedBox(width: AppSpacing.m),
                               Expanded(
                                 child: KayloButton(
-                                  text: 'Apple',
+                                  text: _usePhone ? 'Email' : 'Phone',
+                                  icon: _usePhone
+                                      ? Icons.mail_outline_rounded
+                                      : Icons.phone_outlined,
                                   variant: KayloButtonVariant.secondary,
-                                  onPressed: () => _handleSocial(
-                                    () => ref
-                                        .read(authRepositoryProvider)
-                                        .signInWithApple(),
-                                  ),
+                                  onPressed: () =>
+                                      setState(() => _usePhone = !_usePhone),
                                 ),
                               ),
                             ],

@@ -12,6 +12,11 @@ abstract class ProfileStore {
 
   /// Saves name and photo changes; [user.id] is the person id.
   Future<AppUser> update(AppUser user);
+
+  /// Makes sure the customer row that bookings hang off exists for
+  /// [personId]. Repairs accounts whose first sign-in stopped between
+  /// the person and the customer insert.
+  Future<void> ensureCustomer(String personId);
 }
 
 /// What a sign-in provider tells us about the account.
@@ -47,6 +52,10 @@ class ProfileSync {
   Future<AppUser> resolve(SignInIdentity identity, {String? preferredName}) async {
     final providedName = _firstNonEmpty([preferredName, identity.displayName]);
     final existing = await store.findByAuthId(identity.authUserId);
+
+    if (existing != null) {
+      await store.ensureCustomer(existing.id);
+    }
 
     if (existing == null) {
       return store.create(
@@ -111,20 +120,32 @@ class SupabaseProfileStore implements ProfileStore {
 
   @override
   Future<AppUser> create(AppUser draft, {required String authUserId}) async {
-    final row = await _db
-        .from('persons')
-        .insert({
-          'auth_user_id': authUserId,
-          'full_name': draft.fullName.isEmpty ? placeholderName : draft.fullName,
-          'phone_number': draft.phone.isEmpty ? null : draft.phone,
-          'email': draft.email,
-          'profile_photo': draft.profileImageUrl,
-        })
-        .select(_columns)
-        .single();
-    final user = _fromRow(row);
-    await _db.from('customers').insert({'person_id': user.id});
+    // No RETURNING here: the persons read rule finds "me" through
+    // current_person_id(), which cannot see a row the same statement is
+    // inserting, so asking for the row back fails row-level security.
+    // A second request reads it once it exists.
+    await _db.from('persons').insert({
+      'auth_user_id': authUserId,
+      'full_name': draft.fullName.isEmpty ? placeholderName : draft.fullName,
+      'phone_number': draft.phone.isEmpty ? null : draft.phone,
+      'email': draft.email,
+      'profile_photo': draft.profileImageUrl,
+    });
+    final user = await findByAuthId(authUserId);
+    if (user == null) {
+      throw StateError('The profile was saved but could not be read back');
+    }
+    await ensureCustomer(user.id);
     return user;
+  }
+
+  @override
+  Future<void> ensureCustomer(String personId) async {
+    await _db.from('customers').upsert(
+      {'person_id': personId},
+      onConflict: 'person_id',
+      ignoreDuplicates: true,
+    );
   }
 
   @override
@@ -157,6 +178,9 @@ class InMemoryProfileStore implements ProfileStore {
   final Map<String, AppUser> _byAuthId = {};
   int _nextId = 1;
 
+  /// Person ids that have a customer row.
+  final Set<String> customerIds = {};
+
   @override
   Future<AppUser?> findByAuthId(String authUserId) async => _byAuthId[authUserId];
 
@@ -164,7 +188,13 @@ class InMemoryProfileStore implements ProfileStore {
   Future<AppUser> create(AppUser draft, {required String authUserId}) async {
     final user = draft.copyWith(id: 'person-${_nextId++}');
     _byAuthId[authUserId] = user;
+    customerIds.add(user.id);
     return user;
+  }
+
+  @override
+  Future<void> ensureCustomer(String personId) async {
+    customerIds.add(personId);
   }
 
   @override

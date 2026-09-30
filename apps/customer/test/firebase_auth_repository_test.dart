@@ -6,15 +6,54 @@ import 'package:kaylo/features/auth/domain/profile_store.dart';
 import 'package:kaylo_core/models/app_user.dart';
 
 void main() {
-  test('phone OTP through Firebase creates the profile with the sign-up name',
+  test('an email code through Firebase creates the profile with the sign-up name',
+      () async {
+    final auth = MockFirebaseAuth(
+      mockUser: MockUser(uid: 'fb-email', email: 'anjali@example.com'),
+    );
+    final store = InMemoryProfileStore();
+    final calls = <Map<String, dynamic>>[];
+    final repo = FirebaseAuthRepository(
+      auth: auth,
+      profiles: store,
+      emailCodes: (body) async {
+        calls.add(body);
+        return body['action'] == 'send'
+            ? {'ok': true}
+            : {'ok': true, 'token': 'custom-token'};
+      },
+    );
+    final emitted = <AppUser?>[];
+    repo.authStateChanges.listen(emitted.add);
+
+    await repo.requestEmailCode(
+      'Anjali@Example.com',
+      signUp: true,
+      displayName: 'Anjali Menon',
+      phone: '+916282374586',
+    );
+    await repo.verifyEmailCode('anjali@example.com', '123456');
+    await Future<void>.delayed(const Duration(milliseconds: 50));
+
+    expect(calls.first['email'], 'anjali@example.com');
+    expect(calls.first['purpose'], 'signup');
+    expect(calls.last['code'], '123456');
+    expect(calls.last['purpose'], 'signup');
+    final user = repo.currentUser!;
+    expect(user.firstName, 'Anjali');
+    expect(user.email, 'anjali@example.com');
+    expect(user.phone, '+916282374586');
+    expect(await store.findByAuthId('fb-email'), user);
+    expect(emitted.last, user);
+  });
+
+  test('phone OTP through Firebase still works as the second option',
       () async {
     final auth = MockFirebaseAuth(
       mockUser: MockUser(uid: 'fb-phone', phoneNumber: '+916282374586'),
     );
     final store = InMemoryProfileStore();
     final repo = FirebaseAuthRepository(auth: auth, profiles: store);
-    final emitted = <AppUser?>[];
-    repo.authStateChanges.listen(emitted.add);
 
     await repo.signInWithPhone('+916282374586', displayName: 'Anjali Menon');
     await repo.verifyOtp('+916282374586', '123456');
@@ -24,7 +63,18 @@ void main() {
     expect(user.firstName, 'Anjali');
     expect(user.phone, '+916282374586');
     expect(await store.findByAuthId('fb-phone'), user);
-    expect(emitted.last, user);
+  });
+
+  test('verifying a phone code without requesting one is refused clearly',
+      () async {
+    final repo = FirebaseAuthRepository(
+      auth: MockFirebaseAuth(mockUser: MockUser(uid: 'x')),
+      profiles: InMemoryProfileStore(),
+    );
+    expect(
+      () => repo.verifyOtp('+919847012345', '000000'),
+      throwsA(predicate((e) => e.toString().contains('Request a new code'))),
+    );
   });
 
   test('Google sign-in maps the Google identity onto the profile', () async {
@@ -86,15 +136,16 @@ void main() {
     expect(describe('something-new'), contains('try again'));
   });
 
-  test('verifying without requesting a code first is refused clearly',
+  test('a refusal from the sign-in service is shown as its message',
       () async {
     final repo = FirebaseAuthRepository(
       auth: MockFirebaseAuth(mockUser: MockUser(uid: 'x')),
       profiles: InMemoryProfileStore(),
+      emailCodes: (_) async => throw AuthMessage('That code is not right'),
     );
     expect(
-      () => repo.verifyOtp('+919847012345', '000000'),
-      throwsA(predicate((e) => e.toString().contains('Request a new code'))),
+      () => repo.verifyEmailCode('someone@example.com', '000000'),
+      throwsA(predicate((e) => e.toString().contains('not right'))),
     );
   });
 }

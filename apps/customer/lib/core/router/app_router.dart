@@ -105,8 +105,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           GoRoute(
             path: 'otp', // absolute form is Routes.loginOtp
             builder: (context, state) {
-              final phone = state.extra as String? ?? '';
-              return OtpVerifyScreen(phone: phone);
+              final extra = state.extra;
+              final target = extra is OtpTarget
+                  ? extra
+                  : OtpTarget.email(extra as String? ?? '');
+              return OtpVerifyScreen(target: target);
             },
           ),
         ],

@@ -25,6 +25,27 @@ void main() {
     expect(await store.findByAuthId('fb-1'), user);
   });
 
+  test('a first sign-in gives the person a customer row', () async {
+    final user = await sync.resolve(
+      const SignInIdentity(authUserId: 'fb-9', phone: '+919847012345'),
+    );
+
+    expect(store.customerIds, contains(user.id));
+  });
+
+  test('a returning sign-in repairs a missing customer row', () async {
+    // An account whose first sign-in stopped after the person insert.
+    final person = await store.create(
+      AppUser.fromFullName(id: '', fullName: 'Ravi K', phone: '+911111111111'),
+      authUserId: 'fb-10',
+    );
+    store.customerIds.remove(person.id);
+
+    await sync.resolve(const SignInIdentity(authUserId: 'fb-10'));
+
+    expect(store.customerIds, contains(person.id));
+  });
+
   test('a bare phone sign-in gets the placeholder name', () async {
     final user = await sync.resolve(
       const SignInIdentity(authUserId: 'fb-2', phone: '+919847012345'),

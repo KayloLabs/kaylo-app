@@ -63,13 +63,30 @@ class MockAuthRepository implements AuthRepository {
   @override
   AppUser? get currentUser => _currentUser;
 
+  String? _pendingPhone;
+
+  @override
+  Future<void> requestEmailCode(
+    String email, {
+    bool signUp = false,
+    String? displayName,
+    String? phone,
+  }) async {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      _pendingDisplayName = displayName.trim();
+    }
+    _pendingPhone = phone;
+    await Future.delayed(const Duration(seconds: 1));
+    // The demo "sends" nothing; the code is always 1234.
+  }
+
   @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
     }
+    _pendingPhone = phone;
     await Future.delayed(const Duration(seconds: 1));
-    // Simulate OTP sent successfully
   }
 
   @override
@@ -80,10 +97,33 @@ class MockAuthRepository implements AuthRepository {
     }
     final name = _pendingDisplayName;
     _pendingDisplayName = null;
+    _pendingPhone = null;
     await _signIn(
       name == null
           ? demoUser.copyWith(phone: phone)
           : AppUser.fromFullName(id: demoUser.id, fullName: name, phone: phone),
+    );
+  }
+
+  @override
+  Future<void> verifyEmailCode(String email, String code) async {
+    await Future.delayed(const Duration(seconds: 1));
+    if (code != '1234') {
+      throw Exception('Invalid code. Use 1234 for testing.');
+    }
+    final name = _pendingDisplayName;
+    final phone = _pendingPhone ?? demoUser.phone;
+    _pendingDisplayName = null;
+    _pendingPhone = null;
+    await _signIn(
+      name == null
+          ? demoUser.copyWith(email: email, phone: phone)
+          : AppUser.fromFullName(
+              id: demoUser.id,
+              fullName: name,
+              phone: phone,
+              email: email,
+            ),
     );
   }
 

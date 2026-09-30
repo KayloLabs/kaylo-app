@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:kaylo_core/config/app_env.dart';
 import 'package:kaylo_core/models/app_user.dart';
@@ -26,24 +26,34 @@ class FirebaseAuthRepository implements AuthRepository {
   StreamSubscription<User?>? _subscription;
   AppUser? _currentUser;
 
-  /// Mobile: the id Firebase hands back once the SMS is sent.
-  String? _verificationId;
+  /// Calls the email-otp Edge Function with a JSON body and returns its
+  /// JSON reply. Injected so tests can bypass the network.
+  final Future<Map<String, dynamic>> Function(Map<String, dynamic> body)
+      _emailCodes;
 
-  /// Web: the pending confirmation (web verifies through reCAPTCHA).
-  ConfirmationResult? _webConfirmation;
-
-  /// Name typed on the sign-up form, used when the person row is created.
+  /// Name and phone typed on the sign-up form, used when the person row
+  /// is created (an email sign-in carries no phone of its own).
   String? _pendingDisplayName;
+  String? _pendingPhone;
+  bool _pendingSignUp = false;
+
+  /// Phone sign-in. Mobile: the id Firebase hands back once the SMS is
+  /// sent. Web: the pending confirmation (web verifies through reCAPTCHA).
+  String? _verificationId;
+  ConfirmationResult? _webConfirmation;
 
   FirebaseAuthRepository({
     FirebaseAuth? auth,
     ProfileStore? profiles,
     Future<String?> Function()? googleIdToken,
+    Future<Map<String, dynamic>> Function(Map<String, dynamic> body)?
+        emailCodes,
   })  : _auth = auth ?? FirebaseAuth.instance,
         _profiles = ProfileSync(
           profiles ?? SupabaseProfileStore(supabase.Supabase.instance.client),
         ),
-        _googleIdToken = googleIdToken ?? _googleIdTokenFromPlugin {
+        _googleIdToken = googleIdToken ?? _googleIdTokenFromPlugin,
+        _emailCodes = emailCodes ?? _invokeEmailOtp {
     _subscription = _auth.authStateChanges().listen((user) async {
       _currentUser = user == null ? null : await _profileFor(user);
       _controller.add(_currentUser);
@@ -54,25 +64,31 @@ class FirebaseAuthRepository implements AuthRepository {
         authUserId: user.uid,
         displayName: user.displayName,
         email: user.email,
-        phone: user.phoneNumber,
+        phone: user.phoneNumber ?? _pendingPhone,
         photoUrl: user.photoURL,
       );
 
   Future<AppUser> _profileFor(User user) async {
     final identity = _identityOf(user);
-    try {
-      return await _profiles.resolve(identity, preferredName: _pendingDisplayName);
-    } catch (_) {
-      // Offline, or the row is not reachable yet: the session still
-      // works and the screens show what the provider knows.
-      return AppUser.fromFullName(
-        id: user.uid,
-        fullName: _pendingDisplayName ?? identity.displayName ?? placeholderName,
-        phone: identity.phone ?? '',
-        email: identity.email,
-        profileImageUrl: identity.photoUrl,
-      );
+    for (var attempt = 1; attempt <= 2; attempt++) {
+      try {
+        return await _profiles.resolve(identity, preferredName: _pendingDisplayName);
+      } catch (e) {
+        debugPrint('Kaylo: profile sync attempt $attempt failed: $e');
+        if (attempt == 1) {
+          await Future<void>.delayed(const Duration(milliseconds: 800));
+        }
+      }
     }
+    // Offline: the session still works and the screens show what the
+    // provider knows. Per-user data waits for the next sign-in.
+    return AppUser.fromFullName(
+      id: user.uid,
+      fullName: _pendingDisplayName ?? identity.displayName ?? placeholderName,
+      phone: identity.phone ?? '',
+      email: identity.email,
+      profileImageUrl: identity.photoUrl,
+    );
   }
 
   @override
@@ -80,6 +96,48 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   AppUser? get currentUser => _currentUser;
+
+  @override
+  Future<void> requestEmailCode(
+    String email, {
+    bool signUp = false,
+    String? displayName,
+    String? phone,
+  }) async {
+    if (displayName != null && displayName.trim().isNotEmpty) {
+      _pendingDisplayName = displayName.trim();
+    }
+    if (phone != null && phone.trim().isNotEmpty) _pendingPhone = phone.trim();
+    _pendingSignUp = signUp;
+    await _emailCodes({
+      'action': 'send',
+      'email': email.trim().toLowerCase(),
+      'purpose': signUp ? 'signup' : 'signin',
+      if (_pendingDisplayName != null) 'name': _pendingDisplayName,
+    });
+  }
+
+  @override
+  Future<void> verifyEmailCode(String email, String code) async {
+    final reply = await _emailCodes({
+      'action': 'verify',
+      'email': email.trim().toLowerCase(),
+      'code': code.trim(),
+      'purpose': _pendingSignUp ? 'signup' : 'signin',
+      if (_pendingDisplayName != null) 'name': _pendingDisplayName,
+    });
+    final token = reply['token'];
+    if (token is! String || token.isEmpty) {
+      throw AuthMessage('The sign-in service gave no session. Try again.');
+    }
+    try {
+      // The function found or created the Firebase user for this email;
+      // from here on it is an ordinary Firebase session.
+      await _auth.signInWithCustomToken(token);
+    } on FirebaseAuthException catch (e) {
+      throw AuthMessage(describeFirebaseAuthError(e));
+    }
+  }
 
   @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
@@ -218,6 +276,7 @@ class FirebaseAuthRepository implements AuthRepository {
     _verificationId = null;
     _webConfirmation = null;
     _pendingDisplayName = null;
+    _pendingPhone = null;
     if (!kIsWeb) {
       try {
         await GoogleSignIn.instance.signOut();
@@ -259,6 +318,27 @@ String describeFirebaseAuthError(FirebaseAuthException e) => switch (e.code) {
       };
 
 /// A sign-in problem in words the screen can show as it is.
+/// The email-otp Edge Function through the Supabase client. Its error
+/// replies carry `{error: {code, message}}`; the message is shown as is.
+Future<Map<String, dynamic>> _invokeEmailOtp(Map<String, dynamic> body) async {
+  try {
+    final res = await supabase.Supabase.instance.client.functions.invoke(
+      'email-otp',
+      body: body,
+    );
+    return (res.data as Map).cast<String, dynamic>();
+  } on supabase.FunctionException catch (e) {
+    final details = e.details;
+    if (details is Map && details['error'] is Map) {
+      final message = (details['error'] as Map)['message'];
+      if (message is String && message.isNotEmpty) throw AuthMessage(message);
+    }
+    throw AuthMessage(
+      'Could not reach the sign-in service (${e.status}). Try again.',
+    );
+  }
+}
+
 class AuthMessage implements Exception {
   final String message;
 

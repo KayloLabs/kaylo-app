@@ -1,0 +1,97 @@
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
+import 'package:uuid/uuid.dart';
+import '../../auth/application/current_user_provider.dart';
+import '../../booking/application/bookings_providers.dart';
+import '../../home/application/home_providers.dart';
+import 'care_providers.dart';
+
+/// Kept for the lifetime of a checkout screen, so retries reuse its pending booking.
+class CareCheckout {
+  String? _requestId;
+  String? _fingerprint;
+  Future<bool> pay(
+    WidgetRef ref, {
+    required String kind,
+    required Map<String, dynamic> details,
+    required double mockAmount,
+  }) async {
+    final fingerprint = '$kind:$details';
+    if (_fingerprint != fingerprint) {
+      _requestId = const Uuid().v4();
+      _fingerprint = fingerprint;
+    }
+    final String bookingId;
+    if (useMockData) {
+      final services = await ref
+          .read(homeRepositoryProvider)
+          .getServicesByCategory('care');
+      final service = services
+          .where((s) => s.name.toLowerCase().contains(kind))
+          .firstOrNull;
+      if (service == null) {
+        throw StateError('This care service is unavailable.');
+      }
+      final booking = await ref
+          .read(bookingsRepositoryProvider)
+          .createBooking(
+            Booking(
+              id: _requestId!,
+              userId: ref.read(currentUserIdProvider)!,
+              serviceId: service.id,
+              scheduledAt: DateTime.parse(details['date'] as String),
+              status: BookingStatus.pending,
+              totalAmount: mockAmount,
+            ),
+          );
+      bookingId = booking.id;
+    } else {
+      bookingId =
+          await ref
+                  .read(supabaseClientProvider)
+                  .rpc(
+                    'create_care_checkout',
+                    params: {
+                      'p_request_id': _requestId,
+                      'p_kind': kind,
+                      'p_details': details,
+                    },
+                  )
+              as String;
+      final row = await ref
+          .read(supabaseClientProvider)
+          .from('bookings')
+          .select('status')
+          .eq('booking_id', bookingId)
+          .single();
+      if (row['status'] == 'confirmed') {
+        _refresh(ref);
+        return true;
+      }
+    }
+    final outcome = await ref
+        .read(paymentGatewayProvider)
+        .pay(bookingId: bookingId, email: ref.read(currentUserProvider)?.email);
+    _refresh(ref);
+    if (!outcome.paid) {
+      throw StateError(
+        outcome.message ??
+            'Payment was not completed. Your appointment is not confirmed.',
+      );
+    }
+    if (useMockData) {
+      await ref
+          .read(bookingsRepositoryProvider)
+          .updateBookingStatus(bookingId, BookingStatus.confirmed);
+    }
+    return true;
+  }
+
+  void _refresh(WidgetRef ref) {
+    if (!ref.context.mounted) return;
+    ref.invalidate(userBookingsProvider);
+    ref.invalidate(doctorAppointmentsProvider);
+    ref.invalidate(caregiverBookingsProvider);
+  }
+}

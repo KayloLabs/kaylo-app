@@ -1,3 +1,5 @@
+import 'package:kaylo_core/config/app_env.dart';
+import '../../application/care_checkout.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -38,6 +40,8 @@ class _DoctorAppointmentScreenState
   late final TextEditingController _patientController;
   late final TextEditingController _notesController;
 
+  final _checkout = CareCheckout();
+  bool _paying = false;
   String? _selectedSpecialty;
   Doctor? _selectedDoctor;
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
@@ -89,7 +93,9 @@ class _DoctorAppointmentScreenState
 
   String _formatDateChip(DateTime date, BuildContext context) {
     try {
-      return DateFormat.MMMEd(Localizations.localeOf(context).toString()).format(date);
+      return DateFormat.MMMEd(
+        Localizations.localeOf(context).toString(),
+      ).format(date);
     } catch (_) {
       return DateFormat.MMMEd('en').format(date);
     }
@@ -97,7 +103,9 @@ class _DoctorAppointmentScreenState
 
   String _formatUpcomingDate(DateTime date, BuildContext context) {
     try {
-      return DateFormat.yMMMd(Localizations.localeOf(context).toString()).format(date);
+      return DateFormat.yMMMd(
+        Localizations.localeOf(context).toString(),
+      ).format(date);
     } catch (_) {
       return DateFormat.yMMMd('en').format(date);
     }
@@ -114,53 +122,56 @@ class _DoctorAppointmentScreenState
       }
     });
 
-    return Theme(
-      data: AppTheme.careTheme,
-      child: Builder(
-        builder: (context) {
-          return Scaffold(
-            backgroundColor: Theme.of(context).scaffoldBackgroundColor,
-            appBar: AppBar(
-              title: Text(
-                l10n.doctorAppointment,
-                style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 22,
+    return PopScope(
+      canPop: !_paying,
+      child: Theme(
+        data: AppTheme.careTheme,
+        child: Builder(
+          builder: (context) {
+            return Scaffold(
+              backgroundColor: Theme.of(context).scaffoldBackgroundColor,
+              appBar: AppBar(
+                title: Text(
+                  l10n.doctorAppointment,
+                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
+                    fontWeight: FontWeight.bold,
+                    fontSize: 22,
+                  ),
                 ),
+                leading: IconButton(
+                  icon: const Icon(Icons.arrow_back_ios_new_rounded),
+                  onPressed: () {
+                    KayloFeedback.tap();
+                    context.pop();
+                  },
+                ),
+                bottom: TabBar(
+                  controller: _tabController,
+                  indicatorColor: AppColors.careAccent,
+                  labelColor: AppColors.careAccent,
+                  unselectedLabelColor: AppColors.textSecondary,
+                  labelStyle: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
+                  tabs: [
+                    Tab(text: l10n.bookNow),
+                    Tab(text: l10n.upcomingAppointments),
+                  ],
+                ),
+                backgroundColor: Colors.transparent,
+                elevation: 0,
               ),
-              leading: IconButton(
-                icon: const Icon(Icons.arrow_back_ios_new_rounded),
-                onPressed: () {
-                  KayloFeedback.tap();
-                  context.pop();
-                },
-              ),
-              bottom: TabBar(
+              body: TabBarView(
                 controller: _tabController,
-                indicatorColor: AppColors.careAccent,
-                labelColor: AppColors.careAccent,
-                unselectedLabelColor: AppColors.textSecondary,
-                labelStyle: const TextStyle(
-                  fontSize: 16,
-                  fontWeight: FontWeight.bold,
-                ),
-                tabs: [
-                  Tab(text: l10n.bookNow),
-                  Tab(text: l10n.upcomingAppointments),
+                children: [
+                  _buildBookingTab(context, l10n),
+                  _buildUpcomingTab(context, l10n),
                 ],
               ),
-              backgroundColor: Colors.transparent,
-              elevation: 0,
-            ),
-            body: TabBarView(
-              controller: _tabController,
-              children: [
-                _buildBookingTab(context, l10n),
-                _buildUpcomingTab(context, l10n),
-              ],
-            ),
-          );
-        },
+            );
+          },
+        ),
       ),
     );
   }
@@ -432,10 +443,14 @@ class _DoctorAppointmentScreenState
 
           // Confirm & Book Button
           KayloButton(
-            text:
-                '${l10n.confirmAppointment} (₹${_selectedDoctor!.consultationFee.toInt()})',
+            text: (_paying
+                ? 'Opening payment…'
+                : 'Pay & book (₹${_selectedDoctor!.consultationFee.toInt()})'),
             icon: Icons.check_circle_rounded,
-            onPressed: (_selectedDoctor != null && _selectedTimeSlot != null)
+            onPressed:
+                (!_paying &&
+                    _selectedDoctor != null &&
+                    _selectedTimeSlot != null)
                 ? () async {
                     KayloFeedback.press();
                     final user = ref.read(currentUserProvider);
@@ -460,18 +475,46 @@ class _DoctorAppointmentScreenState
                       notes: notes,
                     );
 
+                    setState(() => _paying = true);
                     try {
-                      await ref
-                          .read(doctorAppointmentsProvider.notifier)
-                          .bookAppointment(appointment);
-                    } catch (_) {
+                      final slot = DateFormat(
+                        'hh:mm a',
+                        'en',
+                      ).parse(_selectedTimeSlot!);
+                      await _checkout.pay(
+                        ref,
+                        kind: 'doctor',
+                        mockAmount: _selectedDoctor!.consultationFee,
+                        details: {
+                          'provider_id': _selectedDoctor!.id,
+                          'date': DateFormat(
+                            'yyyy-MM-dd',
+                          ).format(_selectedDate),
+                          'time':
+                              '${slot.hour.toString().padLeft(2, '0')}:${slot.minute.toString().padLeft(2, '0')}',
+                          'time_slot': _selectedTimeSlot,
+                          'consultation_type': _consultationType,
+                          'patient_name': patient,
+                          'notes': notes,
+                        },
+                      );
+                      if (useMockData) {
+                        await ref
+                            .read(doctorAppointmentsProvider.notifier)
+                            .bookAppointment(appointment);
+                      }
+                    } catch (error) {
                       if (!context.mounted) return;
                       KayloFeedback.alert();
                       KayloSnackbar.showError(
                         context,
-                        l10n.somethingWentWrong,
+                        error is StateError
+                            ? error.message.toString()
+                            : 'Could not complete payment. Your appointment is not confirmed. Please try again.',
                       );
                       return;
+                    } finally {
+                      if (mounted) setState(() => _paying = false);
                     }
 
                     if (!context.mounted) return;

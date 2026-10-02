@@ -1,3 +1,4 @@
+import 'payment_methods_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -9,7 +10,6 @@ import 'package:kaylo_ui/widgets/avatar_circle.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
-import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
@@ -38,10 +38,12 @@ class ProfileScreen extends ConsumerWidget {
     }
 
     // Real counts; a dash while a list is still loading.
-    final bookings =
-        ref.watch(userBookingsProvider).whenOrNull(data: (list) => list);
-    final addresses =
-        ref.watch(savedAddressesProvider).whenOrNull(data: (list) => list);
+    final bookings = ref
+        .watch(userBookingsProvider)
+        .whenOrNull(data: (list) => list);
+    final addresses = ref
+        .watch(savedAddressesProvider)
+        .whenOrNull(data: (list) => list);
     final completed = bookings
         ?.where((b) => b.status == BookingStatus.completed)
         .length;
@@ -175,8 +177,11 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.account_balance_wallet_rounded,
                     color: AppColors.careAccent,
                     title: l10n.paymentMethods,
-                    onTap: () =>
-                        KayloSnackbar.showInfo(context, l10n.comingSoon),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PaymentMethodsScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),

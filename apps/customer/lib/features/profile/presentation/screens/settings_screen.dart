@@ -1,3 +1,5 @@
+import 'delete_account_screen.dart';
+import 'legal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -216,19 +218,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: const Text('Terms of Service'),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Terms of Service'),
-                      content: const Text(
-                        'These are the terms of service. By using this app, you agree to our terms.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
-                        ),
-                      ],
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LegalScreen(privacy: false),
                     ),
                   ),
                 ),
@@ -243,19 +235,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: const Text('Privacy Policy'),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Privacy Policy'),
-                      content: const Text(
-                        'Your privacy is important to us. We do not share your personal information with third parties without your consent.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
-                        ),
-                      ],
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LegalScreen(privacy: true),
                     ),
                   ),
                 ),
@@ -263,6 +245,21 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
+          KayloListTile(
+            leading: const Icon(
+              Icons.person_remove_outlined,
+              color: Colors.red,
+            ),
+            title: const Text(
+              'Delete account',
+              style: TextStyle(color: Colors.red),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const DeleteAccountScreen()),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           Center(
             child: Text(
               l10n.madeInKerala,

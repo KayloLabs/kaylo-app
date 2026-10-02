@@ -107,8 +107,7 @@ export function escapeHtml(text: string): string {
 export function emailShell(
   title: string,
   bodyHtml: string,
-  options: { subtitle?: string; watermark?: boolean; showLocation?: boolean } =
-    {},
+  options: { subtitle?: string; watermark?: boolean } = {},
 ): string {
   const bg = options.watermark
     ? `background="${watermarkUrl}" style="background:#FFFFFF url('${watermarkUrl}') no-repeat center 55%;background-size:420px;"`
@@ -140,9 +139,7 @@ export function emailShell(
     </table>
   </td></tr>
   <tr><td align="center" style="background:${brand.tint};padding:18px 32px;font-size:12px;color:${brand.muted};line-height:1.6;">
-    Kaylo · ${
-    options.showLocation === false ? "" : "Kannur, Kerala · "
-  }<a href="mailto:${
+    Kaylo · <a href="mailto:${
     escapeHtml(gmailUser)
   }" style="color:${brand.green};text-decoration:none;">${
     escapeHtml(gmailUser)

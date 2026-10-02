@@ -171,7 +171,6 @@ async function send(
        <tr><td style="padding:0 32px 30px;font-size:13px;color:${brand.muted};line-height:1.6;">
          The code expires in ${CODE_TTL_MINUTES} minutes. If you did not ask for it, you can ignore this email; nothing happens without the code.
        </td></tr>`,
-      { showLocation: false },
     ),
   });
   return json({ ok: true, expires_in_minutes: CODE_TTL_MINUTES });

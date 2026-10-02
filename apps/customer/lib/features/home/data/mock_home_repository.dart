@@ -75,6 +75,14 @@ class MockHomeRepository implements HomeRepository {
       basePrice: 700,
     ),
     ServiceItem(
+      id: 'care-doctor',
+      name: 'Doctor Appointment',
+      category: 'care',
+      description: 'Book a doctor consultation',
+      iconPath: 'assets_kaylo/3d_transparent/mode_care.png',
+      basePrice: 500,
+    ),
+    ServiceItem(
       id: '9',
       name: 'Medicine Delivery',
       category: 'care',

@@ -297,13 +297,13 @@ The demo build (`USE_MOCK=true`) still accepts 1234 and sends nothing.
 
 ## Faculty demo: Android SOS and OTP email
 
-The optional SIM fallback uses Android phone calls. The live app defaults to the new in-app call flow described below. Hold for three uninterrupted seconds. Kaylo asks for call and phone-state permissions, then calls the primary contact first. When the current call ends, return to Kaylo; the next call starts after three seconds on screen. Stop remaining calls cancels the queue, without ending a call already in progress. Leaving the SOS screen stops remaining calls. Numbers are validated before starting; duplicate phone numbers are called once. Normal SIM charges apply. The app shows attempts, which do not confirm the recipient answered, and does not claim SMS or location delivery. New SIM calls are not inserted into the legacy SOS alert history.
+The optional SIM fallback uses Android phone calls. The live app defaults to the new in-app call flow described below. Hold for three uninterrupted seconds. Kaylo asks for call and phone-state permissions, then calls the primary contact first. When the current call ends, return to Kaylo; the next call starts after three seconds on screen. Stop remaining calls cancels the queue, without ending a call already in progress. Leaving the SOS screen stops remaining calls. A saved number that cannot be dialled is skipped and counted on screen, so one mistyped contact never blocks the rest; short codes such as 112 are accepted (Android opens the dialler for emergency numbers instead of calling them directly). Duplicate phone numbers are called once. A call that never starts, for example with no SIM or in flight mode, is passed over a few seconds after returning to Kaylo. Normal SIM charges apply. The app shows attempts, which do not confirm the recipient answered, and does not claim SMS or location delivery. New SIM calls are not inserted into the legacy SOS alert history.
 
 Sample builds start with no emergency contacts, so fictional sample numbers are never dialled. Add your demo contacts first.
 
 Use a real Android phone with an active SIM, select a default voice SIM on dual-SIM devices, and test the permission prompts and call sequence with your demo contacts before the review. Calls do not continue automatically while Kaylo remains in the background. An OS process termination can stop the remaining queue.
 
-The OTP email no longer includes Kannur, Kerala. Its six digits can be selected or touched and held to copy. Redeploy only `email-otp` to update outgoing mail:
+No Kaylo email (sign-in code, invoice, booking received) carries a location line; the footer is just the name and the support address. The six digits of a sign-in code can be selected, or touched and held, to copy. Redeploy only `email-otp` to update outgoing mail:
 
 ```sh
 supabase functions deploy email-otp --no-verify-jwt
@@ -314,7 +314,7 @@ For the optional browser Copy OTP button, host `apps/customer/web/copy-code.html
 
 ## Care demo update, 2 October 2026
 
-Migrations 0012, 0013 and 0014 were applied to project `jeiwfvnkxubykrzjzktm` through the Management API. This project did not have a Supabase migration-history table. Do not reapply these migrations without checking the deployed schema.
+Migrations 0012, 0013 and 0014 were applied to project `jeiwfvnkxubykrzjzktm` through the Management API. This project did not have a Supabase migration-history table. All three are safe to run again: tables, triggers and policies are only created when missing, so a rerun keeps the roles 0014 widened. `setup_all.sql` includes them for a fresh project.
 
 Doctor and caregiver checkout now create a pending shared booking and linked care record. The server reads the provider fee. A verified successful payment confirms the linked record; cancellation/completion follows the booking. Payment methods opens secure Razorpay card checkout for pending bookings. Saved-card availability depends on Razorpay tokenisation configuration. Physical NFC card enrolment is not implemented by this gateway integration.
 

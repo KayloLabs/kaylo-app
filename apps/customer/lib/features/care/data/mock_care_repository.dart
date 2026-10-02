@@ -175,44 +175,15 @@ class MockCareRepository implements CareRepository {
     ),
   ];
 
-  final List<EmergencyContact> _contacts = [
-    const EmergencyContact(
-      id: 'c1',
-      name: 'Arjun Nair',
-      relation: 'Son',
-      phone: '+91 98470 12345',
-      isPrimary: true,
-    ),
-    const EmergencyContact(
-      id: 'c2',
-      name: 'Dr. Priya Mathew',
-      relation: 'Family physician',
-      phone: '+91 94471 88990',
-    ),
-    const EmergencyContact(
-      id: 'c3',
-      name: 'Sneha Nair',
-      relation: 'Daughter',
-      phone: '+91 98472 54321',
-    ),
-    const EmergencyContact(
-      id: 'c4',
-      name: 'Emergency helpline',
-      relation: 'Ambulance and police',
-      phone: '112',
-    ),
-  ];
+  // Real SIM calling must never use fictional contacts from sample data.
+  final List<EmergencyContact> _contacts;
+  final List<SosAlert> _alerts;
 
-  final List<SosAlert> _alerts = [
-    SosAlert(
-      id: 'sos-1',
-      triggeredAt: DateTime.now().subtract(const Duration(days: 3, hours: 2)),
-      status: SosStatus.resolved,
-      notifiedContacts: 4,
-      primaryContactName: 'Arjun Nair',
-      location: 'Kannur, Kerala',
-    ),
-  ];
+  MockCareRepository({
+    List<EmergencyContact> emergencyContacts = const [],
+    List<SosAlert> sosHistory = const [],
+  }) : _contacts = [...emergencyContacts],
+       _alerts = [...sosHistory];
 
   static const _latency = Duration(milliseconds: 300);
 

@@ -9,6 +9,35 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String sosCallWaiting(String name) {
+    return 'Next: $name. The call starts after 3 seconds in Kaylo.';
+  }
+
+  @override
+  String sosCallProgress(int attempted, int total) {
+    return '$attempted of $total calls attempted';
+  }
+
+  @override
+  String get sosCallsFinished =>
+      'Call sequence finished. An attempted call does not confirm someone answered.';
+
+  @override
+  String get sosCallsStopped =>
+      'Remaining calls stopped. An ongoing call can be ended in your phone app.';
+
+  @override
+  String get sosStopCalls => 'Stop remaining calls';
+
+  @override
+  String get sosAndroidOnly => 'SIM calling is available on Android phones.';
+
+  @override
+  String careDosesTaken(int taken, int total) {
+    return '$taken of $total doses taken';
+  }
+
+  @override
   String get hello => 'Hello';
 
   @override
@@ -884,10 +913,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sosHoldHint =>
-      'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.';
+      'Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.';
 
   @override
-  String get sosReleasedEarly => 'Keep holding for 3 seconds to send an alert';
+  String get sosReleasedEarly => 'Keep holding for 3 seconds to start calling';
 
   @override
   String get sosSentTitle => 'Help is on the way';

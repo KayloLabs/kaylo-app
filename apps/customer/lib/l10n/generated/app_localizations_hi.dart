@@ -9,6 +9,35 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
+  String sosCallWaiting(String name) {
+    return 'अगला: $name। Kaylo में 3 सेकंड बाद कॉल शुरू होगी।';
+  }
+
+  @override
+  String sosCallProgress(int attempted, int total) {
+    return '$total में से $attempted कॉल करने का प्रयास किया';
+  }
+
+  @override
+  String get sosCallsFinished =>
+      'कॉल क्रम पूरा हुआ। कॉल का प्रयास यह पुष्टि नहीं करता कि किसी ने जवाब दिया।';
+
+  @override
+  String get sosCallsStopped =>
+      'बाकी कॉल रोक दी गई हैं। चल रही कॉल फोन ऐप में समाप्त करें।';
+
+  @override
+  String get sosStopCalls => 'बाकी कॉल रोकें';
+
+  @override
+  String get sosAndroidOnly => 'SIM कॉलिंग Android फोन पर उपलब्ध है।';
+
+  @override
+  String careDosesTaken(int taken, int total) {
+    return '$total में से $taken खुराक ली गई';
+  }
+
+  @override
   String get hello => 'नमस्ते';
 
   @override
@@ -882,10 +911,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get sosHoldHint =>
-      'बटन को 3 सेकंड दबाकर रखें। आपके आपातकालीन संपर्कों को तुरंत आपकी लोकेशन मिलेगी।';
+      'अपने SIM से संपर्कों को कॉल करने के लिए 3 सेकंड दबाए रखें। प्राथमिक संपर्क को पहले कॉल किया जाएगा। हर कॉल के बाद आगे बढ़ने के लिए Kaylo में लौटें। सामान्य SIM शुल्क लागू हैं।';
 
   @override
-  String get sosReleasedEarly => 'अलर्ट भेजने के लिए 3 सेकंड दबाए रखें';
+  String get sosReleasedEarly => 'कॉल शुरू करने के लिए 3 सेकंड दबाए रखें';
 
   @override
   String get sosSentTitle => 'मदद आ रही है';

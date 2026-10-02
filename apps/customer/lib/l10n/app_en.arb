@@ -1,4 +1,38 @@
 {
+  "sosCallWaiting": "Next: {name}. The call starts after 3 seconds in Kaylo.",
+  "sosCallProgress": "{attempted} of {total} calls attempted",
+  "sosCallsFinished": "Call sequence finished. An attempted call does not confirm someone answered.",
+  "sosCallsStopped": "Remaining calls stopped. An ongoing call can be ended in your phone app.",
+  "sosStopCalls": "Stop remaining calls",
+  "sosAndroidOnly": "SIM calling is available on Android phones.",
+  "@sosCallWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@sosCallProgress": {
+    "placeholders": {
+      "attempted": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "careDosesTaken": "{taken} of {total} doses taken",
+  "@careDosesTaken": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "@@locale": "en",
   "hello": "Hello",
   "searchServices": "Search services…",
@@ -96,7 +130,7 @@
   "popularSubServices": "Popular Sub-services",
   "selectSubServices": "Select sub-services",
   "startingFrom": "Starts from",
-  "bookNow": "Book Now",
+  "bookNow": "Book now",
   "bookService": "Book Service",
   "workersAvailable": "workers available",
   "availableWorkers": "Available Workers",
@@ -135,8 +169,8 @@
   "selectSpecialty": "Select Specialty",
   "availableDoctors": "Available Doctors",
   "consultationFee": "Consultation Fee",
-  "selectDate": "Select Date",
-  "selectTimeSlot": "Select Time Slot",
+  "selectDate": "Date",
+  "selectTimeSlot": "Time slot",
   "morning": "Morning",
   "afternoon": "Afternoon",
   "evening": "Evening",
@@ -221,11 +255,8 @@
   },
   "noWorkersYet": "Workers for this service are being onboarded",
   "liveTotalNote": "Your total updates live as you set the quantity on the next step.",
-  "bookNow": "Book now",
   "scheduleTitle": "Schedule",
-  "selectDate": "Date",
   "change": "Change",
-  "selectTimeSlot": "Time slot",
   "quantity": "Quantity",
   "priceEach": "{price} each",
   "@priceEach": {
@@ -383,8 +414,8 @@
       }
     }
   },
-  "sosHoldHint": "Press and hold the button for 3 seconds. Your emergency contacts get your location right away.",
-  "sosReleasedEarly": "Keep holding for 3 seconds to send an alert",
+  "sosHoldHint": "Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.",
+  "sosReleasedEarly": "Keep holding for 3 seconds to start calling",
   "sosSentTitle": "Help is on the way",
   "sosSentContacts": "{count, plural, =1{1 contact alerted with your location} other{{count} contacts alerted with your location}}",
   "@sosSentContacts": {

@@ -102,6 +102,48 @@ abstract class AppLocalizations {
     Locale('ta'),
   ];
 
+  /// No description provided for @sosCallWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {name}. The call starts after 3 seconds in Kaylo.'**
+  String sosCallWaiting(String name);
+
+  /// No description provided for @sosCallProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{attempted} of {total} calls attempted'**
+  String sosCallProgress(int attempted, int total);
+
+  /// No description provided for @sosCallsFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Call sequence finished. An attempted call does not confirm someone answered.'**
+  String get sosCallsFinished;
+
+  /// No description provided for @sosCallsStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining calls stopped. An ongoing call can be ended in your phone app.'**
+  String get sosCallsStopped;
+
+  /// No description provided for @sosStopCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop remaining calls'**
+  String get sosStopCalls;
+
+  /// No description provided for @sosAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM calling is available on Android phones.'**
+  String get sosAndroidOnly;
+
+  /// No description provided for @careDosesTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} doses taken'**
+  String careDosesTaken(int taken, int total);
+
   /// No description provided for @hello.
   ///
   /// In en, this message translates to:
@@ -1701,13 +1743,13 @@ abstract class AppLocalizations {
   /// No description provided for @sosHoldHint.
   ///
   /// In en, this message translates to:
-  /// **'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.'**
+  /// **'Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.'**
   String get sosHoldHint;
 
   /// No description provided for @sosReleasedEarly.
   ///
   /// In en, this message translates to:
-  /// **'Keep holding for 3 seconds to send an alert'**
+  /// **'Keep holding for 3 seconds to start calling'**
   String get sosReleasedEarly;
 
   /// No description provided for @sosSentTitle.

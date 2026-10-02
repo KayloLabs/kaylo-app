@@ -50,7 +50,7 @@ async function adminAccessToken(): Promise<string> {
   const sa = serviceAccount();
   const assertion = await new SignJWT({
     scope:
-      "https://www.googleapis.com/auth/identitytoolkit https://www.googleapis.com/auth/firebase",
+      "https://www.googleapis.com/auth/identitytoolkit https://www.googleapis.com/auth/firebase https://www.googleapis.com/auth/firebase.messaging",
   })
     .setProtectedHeader({ alg: "RS256", typ: "JWT" })
     .setIssuer(sa.client_email)
@@ -127,3 +127,18 @@ export async function deleteFirebaseUser(uid: string): Promise<void> {
     throw new Error(`Firebase account deletion failed (${res.status})`);
   }
 }
+
+export async function sendCareCallPush(token: string, callId: string, name: string): Promise<boolean> {
+  const res = await fetch(`https://fcm.googleapis.com/v1/projects/${serviceAccount().project_id}/messages:send`, {
+    method: "POST", headers: await adminHeaders(),
+    body: JSON.stringify({ message: {
+      token, notification: { title: "Kaylo SOS", body: `${name} needs help. Open Kaylo to join the call.` },
+      data: { type: "care_call", call_id: callId },
+      android: { priority: "high", ttl: "120s", notification: { channel_id: "kaylo_sos", sound: "default", tag: `care_call_${callId}` } },
+      apns: { payload: { aps: { sound: "default" } } },
+    } }),
+  });
+  return res.ok;
+}
+
+export function firebaseProjectId(): string { return serviceAccount().project_id; }

@@ -9,6 +9,35 @@ class AppLocalizationsMl extends AppLocalizations {
   AppLocalizationsMl([String locale = 'ml']) : super(locale);
 
   @override
+  String sosCallWaiting(String name) {
+    return 'അടുത്തത്: $name. Kaylo-യിൽ 3 സെക്കൻഡിന് ശേഷം വിളിക്കും.';
+  }
+
+  @override
+  String sosCallProgress(int attempted, int total) {
+    return '$total കോളുകളിൽ $attempted വിളിക്കാൻ ശ്രമിച്ചു';
+  }
+
+  @override
+  String get sosCallsFinished =>
+      'വിളിക്കുന്ന ക്രമം പൂർത്തിയായി. വിളിക്കാൻ ശ്രമിച്ചത് മറുപടി ലഭിച്ചതായി സ്ഥിരീകരിക്കുന്നില്ല.';
+
+  @override
+  String get sosCallsStopped =>
+      'ശേഷിക്കുന്ന കോളുകൾ നിർത്തി. നിലവിലെ കോൾ ഫോൺ ആപ്പിൽ അവസാനിപ്പിക്കാം.';
+
+  @override
+  String get sosStopCalls => 'ശേഷിക്കുന്ന കോളുകൾ നിർത്തുക';
+
+  @override
+  String get sosAndroidOnly => 'SIM കോളുകൾ Android ഫോണുകളിൽ ലഭ്യമാണ്.';
+
+  @override
+  String careDosesTaken(int taken, int total) {
+    return '$total ഡോസുകളിൽ $taken എടുത്തു';
+  }
+
+  @override
   String get hello => 'നമസ്കാരം';
 
   @override
@@ -889,10 +918,10 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get sosHoldHint =>
-      'ബട്ടൺ 3 സെക്കൻഡ് അമർത്തിപ്പിടിക്കുക. നിങ്ങളുടെ അടിയന്തര ബന്ധങ്ങൾക്ക് ഉടൻ ലൊക്കേഷൻ ലഭിക്കും.';
+      'SIM വഴി ബന്ധങ്ങളെ വിളിക്കാൻ 3 സെക്കൻഡ് പിടിക്കുക. പ്രാഥമിക ബന്ധത്തെ ആദ്യം വിളിക്കും. ഓരോ കോളും അവസാനിച്ച ശേഷം തുടരാൻ Kaylo-യിലേക്ക് മടങ്ങുക. സാധാരണ SIM നിരക്കുകൾ ബാധകമാണ്.';
 
   @override
-  String get sosReleasedEarly => 'അലേർട്ട് അയയ്ക്കാൻ 3 സെക്കൻഡ് പിടിക്കുക';
+  String get sosReleasedEarly => 'വിളിക്കാൻ 3 സെക്കൻഡ് അമർത്തിപ്പിടിക്കുക';
 
   @override
   String get sosSentTitle => 'സഹായം വരുന്നു';

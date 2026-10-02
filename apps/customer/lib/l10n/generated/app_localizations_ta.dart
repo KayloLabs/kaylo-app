@@ -9,6 +9,35 @@ class AppLocalizationsTa extends AppLocalizations {
   AppLocalizationsTa([String locale = 'ta']) : super(locale);
 
   @override
+  String sosCallWaiting(String name) {
+    return 'அடுத்து: $name. Kaylo-வில் 3 விநாடிகளுக்குப் பிறகு அழைப்பு தொடங்கும்.';
+  }
+
+  @override
+  String sosCallProgress(int attempted, int total) {
+    return '$total அழைப்புகளில் $attempted முயற்சிக்கப்பட்டன';
+  }
+
+  @override
+  String get sosCallsFinished =>
+      'அழைப்பு வரிசை முடிந்தது. அழைக்க முயன்றது ஒருவர் பதிலளித்ததை உறுதி செய்யாது.';
+
+  @override
+  String get sosCallsStopped =>
+      'மீதமுள்ள அழைப்புகள் நிறுத்தப்பட்டன. நடப்பு அழைப்பை ஃபோன் செயலியில் முடிக்கலாம்.';
+
+  @override
+  String get sosStopCalls => 'மீதமுள்ள அழைப்புகளை நிறுத்து';
+
+  @override
+  String get sosAndroidOnly => 'SIM அழைப்பு Android ஃபோன்களில் கிடைக்கும்.';
+
+  @override
+  String careDosesTaken(int taken, int total) {
+    return '$total அளவுகளில் $taken எடுக்கப்பட்டது';
+  }
+
+  @override
   String get hello => 'வணக்கம்';
 
   @override
@@ -894,10 +923,10 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get sosHoldHint =>
-      'பொத்தானை 3 விநாடிகள் அழுத்திப் பிடிக்கவும். உங்கள் அவசரத் தொடர்புகளுக்கு உடனே உங்கள் இருப்பிடம் கிடைக்கும்.';
+      'SIM மூலம் தொடர்புகளை அழைக்க 3 விநாடிகள் பிடிக்கவும். முதன்மைத் தொடர்பு முதலில் அழைக்கப்படும். ஒவ்வொரு அழைப்பின் பின்னரும் தொடர Kaylo-க்கு திரும்பவும். வழக்கமான SIM கட்டணங்கள் பொருந்தும்.';
 
   @override
-  String get sosReleasedEarly => 'அலர்ட் அனுப்ப 3 விநாடிகள் பிடித்திருக்கவும்';
+  String get sosReleasedEarly => 'அழைக்க 3 விநாடிகள் பிடிக்கவும்';
 
   @override
   String get sosSentTitle => 'உதவி வந்துகொண்டிருக்கிறது';

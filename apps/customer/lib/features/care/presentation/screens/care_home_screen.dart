@@ -1,3 +1,4 @@
+import 'trusted_contacts_screen.dart';
 import 'prescriptions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -136,6 +137,18 @@ class CareHomeScreen extends ConsumerWidget {
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const PrescriptionsScreen(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  _CareActionCard(
+                    icon: Icons.group_add_outlined,
+                    color: AppColors.brandPrimary,
+                    title: 'Trusted contacts',
+                    subtitle: 'Connect family and doctors for SOS calls',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const TrustedContactsScreen(),
                       ),
                     ),
                   ),

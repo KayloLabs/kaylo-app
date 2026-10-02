@@ -1616,4 +1616,404 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payNowSubtitle => 'Cards, netbanking or UPI, secured by Razorpay';
+
+  @override
+  String get prescriptions => 'Prescriptions';
+
+  @override
+  String get prescriptionsSubtitle => 'Scan, read and keep your health records';
+
+  @override
+  String get trustedContacts => 'Trusted contacts';
+
+  @override
+  String get trustedContactsSubtitle =>
+      'Connect family and doctors for SOS calls';
+
+  @override
+  String get sosStartFailedContacts =>
+      'Could not start SOS. Check your connection and trusted contacts.';
+
+  @override
+  String get sosStartFailed => 'Could not start SOS. Please try again.';
+
+  @override
+  String get sosModeKaylo => 'Kaylo call';
+
+  @override
+  String get sosModeSim => 'SIM call';
+
+  @override
+  String get manageTrustedContacts => 'Manage trusted contacts';
+
+  @override
+  String get sosKayloHoldHint =>
+      'Hold for 3 seconds to invite your trusted Kaylo contacts. They can join the call together. An invitation does not mean someone has answered.';
+
+  @override
+  String get contactsOpenFailed => 'Could not open phone contacts.';
+
+  @override
+  String get chooseFromPhoneContacts => 'Choose from phone contacts';
+
+  @override
+  String sosContactsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contacts were skipped: their numbers cannot be dialled.',
+      one: '1 contact was skipped: its number cannot be dialled.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomingSosTitle => 'Incoming Kaylo SOS';
+
+  @override
+  String get incomingSosSubtitle => 'A trusted contact needs help';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get joinCall => 'Join call';
+
+  @override
+  String get signInLiveForContacts =>
+      'Sign into the live app to connect trusted contacts.';
+
+  @override
+  String get couldNotConnectRetry => 'Could not connect. Please try again.';
+
+  @override
+  String get refreshConnections => 'Refresh connections';
+
+  @override
+  String get trustedCircleTitle => 'Bring your circle into Kaylo';
+
+  @override
+  String get trustedCircleBody =>
+      'Invite up to five family members or doctors who use Kaylo. When they accept your code, they can receive your SOS alerts and join the same voice call.';
+
+  @override
+  String get getInviteCode => 'Get my invite code';
+
+  @override
+  String get inviteCodeCopied => 'Invite code copied';
+
+  @override
+  String get copyCode => 'Copy code';
+
+  @override
+  String get inviteCodeValidity =>
+      'Valid for seven days. Share only with people you trust.';
+
+  @override
+  String get acceptInviteTitle => 'Accept someone’s invitation';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get acceptInvitation => 'Accept invitation';
+
+  @override
+  String get invitationAccepted =>
+      'Invitation accepted. You are now connected and can receive their SOS alerts.';
+
+  @override
+  String get yourConnections => 'Your connections';
+
+  @override
+  String get noConnectionsYet => 'No connections yet';
+
+  @override
+  String get receivesYourSos => 'Receives your SOS alerts';
+
+  @override
+  String get youReceiveTheirSos => 'You receive their SOS alerts';
+
+  @override
+  String get removeConnection => 'Remove connection';
+
+  @override
+  String get removeConnectionTitle => 'Remove connection?';
+
+  @override
+  String get removeConnectionBody =>
+      'This connection will no longer receive SOS call invitations.';
+
+  @override
+  String get contactsLoadFailedRetry => 'Could not load contacts. Retry';
+
+  @override
+  String get callTitle => 'Kaylo SOS call';
+
+  @override
+  String get callEnded => 'Call ended';
+
+  @override
+  String get callYourCircle => 'Your trusted circle';
+
+  @override
+  String get callCouldNotConnect => 'Could not connect';
+
+  @override
+  String get callConnecting => 'Connecting…';
+
+  @override
+  String get callKeepOpen => 'Keep Kaylo open during the call.';
+
+  @override
+  String get retryCall => 'Retry call';
+
+  @override
+  String get callErrorRoom =>
+      'This call is unavailable or has ended. Return to SOS to start a new call.';
+
+  @override
+  String get callErrorSettings =>
+      'Could not load call settings. Check your connection and retry.';
+
+  @override
+  String get callErrorMicrophone =>
+      'Could not access the microphone. Check microphone access for Kaylo and retry.';
+
+  @override
+  String get callErrorJoin =>
+      'Could not join this call. Retry, or ask the caller to start a new SOS call.';
+
+  @override
+  String get callInterrupted => 'Connection interrupted. Retrying…';
+
+  @override
+  String get callPeerConnected => 'Connected';
+
+  @override
+  String get callPeerFailed => 'Connection failed';
+
+  @override
+  String get callPeerReconnecting => 'Reconnecting';
+
+  @override
+  String get callPeerConnecting => 'Connecting';
+
+  @override
+  String get callYou => 'You';
+
+  @override
+  String get callYouMuted => 'You • Muted';
+
+  @override
+  String get callInvitedWaiting => 'Invited • Waiting to answer';
+
+  @override
+  String get callDeclined => 'Declined';
+
+  @override
+  String get callLeft => 'Left the call';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get speaker => 'Speaker';
+
+  @override
+  String get callAudioOutputFailed =>
+      'Could not change audio output. The call is still active.';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get callEndForEveryone => 'End call for everyone';
+
+  @override
+  String get callLeave => 'Leave call';
+
+  @override
+  String get prescriptionsLoadFailed =>
+      'Could not load prescriptions. Please try again.';
+
+  @override
+  String get actionFailed => 'Could not complete that action.';
+
+  @override
+  String get prescriptionSaveFailed =>
+      'Could not save the prescription. Please try again.';
+
+  @override
+  String get prescriptionsHeadline => 'Your health records, together';
+
+  @override
+  String get prescriptionsIntro =>
+      'Scan a prescription or type a previous record. PDFs are saved privately on this device.';
+
+  @override
+  String get prescriptionsAndroidOnly =>
+      'Prescription scanning and PDFs are currently available in the Android app.';
+
+  @override
+  String get scanOrPhotos => 'Scan / photos';
+
+  @override
+  String get typeRecord => 'Type record';
+
+  @override
+  String get searchPrescriptions => 'Search prescriptions';
+
+  @override
+  String get noPrescriptionsYet => 'No prescriptions yet';
+
+  @override
+  String get noMatchingPrescriptions => 'No matching prescriptions';
+
+  @override
+  String get prescriptionNeedsTitleText => 'Add a title and prescription text.';
+
+  @override
+  String get prescriptionRecord => 'Prescription record';
+
+  @override
+  String get reviewPrescription => 'Review prescription';
+
+  @override
+  String get deletePrescription => 'Delete prescription';
+
+  @override
+  String get deletePrescriptionTitle => 'Delete prescription?';
+
+  @override
+  String get deletePrescriptionBody =>
+      'The PDF and text will be removed from this device.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get prescriptionReviewHint =>
+      'Review the extracted text against the original. Handwriting may be incomplete or incorrect; confirm medicine names and doses with your doctor.';
+
+  @override
+  String get viewOriginalPdf => 'View original PDF';
+
+  @override
+  String get titleLabel => 'Title';
+
+  @override
+  String get extractedTextNotes => 'Extracted text / notes';
+
+  @override
+  String get prescriptionDetails => 'Prescription details';
+
+  @override
+  String get prescriptionEditHint =>
+      'Editing this text keeps the original scanned PDF unchanged.';
+
+  @override
+  String get saving => 'Saving…';
+
+  @override
+  String get savePrescription => 'Save prescription';
+
+  @override
+  String get openSavedPdf => 'Open saved PDF';
+
+  @override
+  String get shareSavedPdf => 'Share saved PDF';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteRequiresLive =>
+      'Account deletion requires a signed-in live account.';
+
+  @override
+  String get deleteNotConfirmed => 'Deletion was not confirmed. Please retry.';
+
+  @override
+  String get deleteFailed => 'Could not delete the account. Please try again.';
+
+  @override
+  String get deleteAccountHeadline => 'Permanently delete your Kaylo account?';
+
+  @override
+  String get deleteAccountBody =>
+      'This removes your sign-in, profile, bookings, messages, care records and prescriptions stored on this device. It cannot be undone. Complete or cancel active bookings first. For unresolved payments, contact kayloapp@gmail.com.';
+
+  @override
+  String get deleteAccountNote =>
+      'Payment processors may retain transaction records. Documents you previously shared are not removed from other people’s devices.';
+
+  @override
+  String get typeDeleteToConfirm => 'Type DELETE to confirm';
+
+  @override
+  String get deleting => 'Deleting…';
+
+  @override
+  String get deleteMyAccount => 'Delete my account';
+
+  @override
+  String get paymentVerified => 'Payment verified. Your booking is confirmed.';
+
+  @override
+  String get paymentNotCompleted => 'Payment was not completed.';
+
+  @override
+  String get checkoutOpenFailed =>
+      'Could not open secure checkout. Please try again.';
+
+  @override
+  String get cardsAndUpi => 'Cards and UPI';
+
+  @override
+  String get paymentMethodsBody =>
+      'Enter a card manually or choose UPI in secure Razorpay checkout. Where supported, choose Razorpay’s save-card option to use that card again. Saved cards are managed inside checkout.';
+
+  @override
+  String get paymentMethodsNote =>
+      'Kaylo does not store your full card number, CVV or PIN. NFC card enrolment is not supported by the current payment integration.';
+
+  @override
+  String get completePendingPayment => 'Complete a pending payment';
+
+  @override
+  String get noPendingPayments =>
+      'Your next booking will open checkout, where you can add or select a card.';
+
+  @override
+  String pendingBookingLine(String id, String date) {
+    return 'Booking $id • $date';
+  }
+
+  @override
+  String get bookingsLoadFailedRetry => 'Could not load bookings. Retry';
+
+  @override
+  String get openingPayment => 'Opening payment…';
+
+  @override
+  String get payAndBook => 'Pay & book';
+
+  @override
+  String get appointmentPaymentFailed =>
+      'Could not complete payment. Your appointment is not confirmed. Please try again.';
+
+  @override
+  String get visitPaymentFailed =>
+      'Could not complete payment. Your visit is not confirmed. Please try again.';
+
+  @override
+  String get careServiceUnavailable => 'This care service is unavailable.';
+
+  @override
+  String get appointmentNotConfirmed =>
+      'Payment was not completed. Your appointment is not confirmed.';
 }

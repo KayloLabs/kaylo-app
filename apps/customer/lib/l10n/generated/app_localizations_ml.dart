@@ -1626,4 +1626,418 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം';
+
+  @override
+  String get prescriptions => 'കുറിപ്പടികൾ';
+
+  @override
+  String get prescriptionsSubtitle =>
+      'നിങ്ങളുടെ ആരോഗ്യ രേഖകൾ സ്കാൻ ചെയ്ത് വായിച്ച് സൂക്ഷിക്കുക';
+
+  @override
+  String get trustedContacts => 'വിശ്വസ്ത കോൺടാക്റ്റുകൾ';
+
+  @override
+  String get trustedContactsSubtitle =>
+      'SOS കോളുകൾക്കായി കുടുംബത്തെയും ഡോക്ടർമാരെയും ബന്ധിപ്പിക്കുക';
+
+  @override
+  String get sosStartFailedContacts =>
+      'SOS ആരംഭിക്കാനായില്ല. നിങ്ങളുടെ കണക്ഷനും വിശ്വസ്ത കോൺടാക്റ്റുകളും പരിശോധിക്കുക.';
+
+  @override
+  String get sosStartFailed => 'SOS ആരംഭിക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get sosModeKaylo => 'കെയ്‌ലോ കോൾ';
+
+  @override
+  String get sosModeSim => 'സിം കോൾ';
+
+  @override
+  String get manageTrustedContacts => 'വിശ്വസ്ത കോൺടാക്റ്റുകൾ നിയന്ത്രിക്കുക';
+
+  @override
+  String get sosKayloHoldHint =>
+      'നിങ്ങളുടെ വിശ്വസ്ത കെയ്‌ലോ കോൺടാക്റ്റുകളെ ക്ഷണിക്കാൻ 3 സെക്കൻഡ് അമർത്തിപ്പിടിക്കുക. അവർക്ക് ഒരുമിച്ച് കോളിൽ ചേരാം. ക്ഷണം അയച്ചു എന്നതിനർത്ഥം ആരെങ്കിലും ഉത്തരം നൽകി എന്നല്ല.';
+
+  @override
+  String get contactsOpenFailed => 'ഫോൺ കോൺടാക്റ്റുകൾ തുറക്കാനായില്ല.';
+
+  @override
+  String get chooseFromPhoneContacts =>
+      'ഫോൺ കോൺടാക്റ്റുകളിൽ നിന്ന് തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String sosContactsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other:
+          '$count കോൺടാക്റ്റുകൾ ഒഴിവാക്കി: ആ നമ്പറുകളിലേക്ക് വിളിക്കാനാവില്ല.',
+      one: '1 കോൺടാക്റ്റ് ഒഴിവാക്കി: ആ നമ്പറിലേക്ക് വിളിക്കാനാവില്ല.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomingSosTitle => 'കെയ്‌ലോ SOS വരുന്നു';
+
+  @override
+  String get incomingSosSubtitle => 'ഒരു വിശ്വസ്ത കോൺടാക്റ്റിന് സഹായം വേണം';
+
+  @override
+  String get decline => 'നിരസിക്കുക';
+
+  @override
+  String get joinCall => 'കോളിൽ ചേരുക';
+
+  @override
+  String get signInLiveForContacts =>
+      'വിശ്വസ്ത കോൺടാക്റ്റുകളെ ബന്ധിപ്പിക്കാൻ ലൈവ് ആപ്പിൽ സൈൻ ഇൻ ചെയ്യുക.';
+
+  @override
+  String get couldNotConnectRetry =>
+      'ബന്ധിപ്പിക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get refreshConnections => 'കണക്ഷനുകൾ പുതുക്കുക';
+
+  @override
+  String get trustedCircleTitle =>
+      'നിങ്ങളുടെ പ്രിയപ്പെട്ടവരെ കെയ്‌ലോയിലേക്ക് കൊണ്ടുവരൂ';
+
+  @override
+  String get trustedCircleBody =>
+      'കെയ്‌ലോ ഉപയോഗിക്കുന്ന അഞ്ച് കുടുംബാംഗങ്ങളെയോ ഡോക്ടർമാരെയോ വരെ ക്ഷണിക്കാം. അവർ നിങ്ങളുടെ കോഡ് സ്വീകരിച്ചാൽ, നിങ്ങളുടെ SOS അലേർട്ടുകൾ അവർക്ക് ലഭിക്കുകയും ഒരേ വോയ്‌സ് കോളിൽ ചേരാനാവുകയും ചെയ്യും.';
+
+  @override
+  String get getInviteCode => 'എന്റെ ക്ഷണ കോഡ് നേടുക';
+
+  @override
+  String get inviteCodeCopied => 'ക്ഷണ കോഡ് പകർത്തി';
+
+  @override
+  String get copyCode => 'കോഡ് പകർത്തുക';
+
+  @override
+  String get inviteCodeValidity =>
+      'ഏഴ് ദിവസത്തേക്ക് സാധുവാണ്. നിങ്ങൾ വിശ്വസിക്കുന്നവരുമായി മാത്രം പങ്കിടുക.';
+
+  @override
+  String get acceptInviteTitle => 'ഒരാളുടെ ക്ഷണം സ്വീകരിക്കുക';
+
+  @override
+  String get inviteCode => 'ക്ഷണ കോഡ്';
+
+  @override
+  String get acceptInvitation => 'ക്ഷണം സ്വീകരിക്കുക';
+
+  @override
+  String get invitationAccepted =>
+      'ക്ഷണം സ്വീകരിച്ചു. നിങ്ങൾ ഇപ്പോൾ ബന്ധിപ്പിക്കപ്പെട്ടു; അവരുടെ SOS അലേർട്ടുകൾ നിങ്ങൾക്ക് ലഭിക്കും.';
+
+  @override
+  String get yourConnections => 'നിങ്ങളുടെ കണക്ഷനുകൾ';
+
+  @override
+  String get noConnectionsYet => 'ഇതുവരെ കണക്ഷനുകളില്ല';
+
+  @override
+  String get receivesYourSos => 'നിങ്ങളുടെ SOS അലേർട്ടുകൾ ലഭിക്കുന്നു';
+
+  @override
+  String get youReceiveTheirSos =>
+      'അവരുടെ SOS അലേർട്ടുകൾ നിങ്ങൾക്ക് ലഭിക്കുന്നു';
+
+  @override
+  String get removeConnection => 'കണക്ഷൻ നീക്കം ചെയ്യുക';
+
+  @override
+  String get removeConnectionTitle => 'കണക്ഷൻ നീക്കം ചെയ്യണോ?';
+
+  @override
+  String get removeConnectionBody =>
+      'ഈ കണക്ഷന് ഇനി SOS കോൾ ക്ഷണങ്ങൾ ലഭിക്കില്ല.';
+
+  @override
+  String get contactsLoadFailedRetry =>
+      'കോൺടാക്റ്റുകൾ ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക';
+
+  @override
+  String get callTitle => 'കെയ്‌ലോ SOS കോൾ';
+
+  @override
+  String get callEnded => 'കോൾ അവസാനിച്ചു';
+
+  @override
+  String get callYourCircle => 'നിങ്ങളുടെ വിശ്വസ്ത വലയം';
+
+  @override
+  String get callCouldNotConnect => 'കണക്റ്റ് ചെയ്യാനായില്ല';
+
+  @override
+  String get callConnecting => 'കണക്റ്റ് ചെയ്യുന്നു…';
+
+  @override
+  String get callKeepOpen => 'കോൾ സമയത്ത് കെയ്‌ലോ തുറന്നുവയ്ക്കുക.';
+
+  @override
+  String get retryCall => 'കോൾ വീണ്ടും ശ്രമിക്കുക';
+
+  @override
+  String get callErrorRoom =>
+      'ഈ കോൾ ലഭ്യമല്ല അല്ലെങ്കിൽ അവസാനിച്ചു. പുതിയ കോൾ തുടങ്ങാൻ SOS-ലേക്ക് മടങ്ങുക.';
+
+  @override
+  String get callErrorSettings =>
+      'കോൾ ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get callErrorMicrophone =>
+      'മൈക്രോഫോൺ ഉപയോഗിക്കാനായില്ല. കെയ്‌ലോയ്ക്കുള്ള മൈക്രോഫോൺ അനുമതി പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get callErrorJoin =>
+      'ഈ കോളിൽ ചേരാനായില്ല. വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ വിളിച്ചയാളോട് പുതിയ SOS കോൾ തുടങ്ങാൻ പറയുക.';
+
+  @override
+  String get callInterrupted => 'കണക്ഷൻ തടസ്സപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുന്നു…';
+
+  @override
+  String get callPeerConnected => 'കണക്റ്റ് ചെയ്തു';
+
+  @override
+  String get callPeerFailed => 'കണക്ഷൻ പരാജയപ്പെട്ടു';
+
+  @override
+  String get callPeerReconnecting => 'വീണ്ടും കണക്റ്റ് ചെയ്യുന്നു';
+
+  @override
+  String get callPeerConnecting => 'കണക്റ്റ് ചെയ്യുന്നു';
+
+  @override
+  String get callYou => 'നിങ്ങൾ';
+
+  @override
+  String get callYouMuted => 'നിങ്ങൾ • മ്യൂട്ട് ചെയ്തു';
+
+  @override
+  String get callInvitedWaiting => 'ക്ഷണിച്ചു • ഉത്തരത്തിനായി കാത്തിരിക്കുന്നു';
+
+  @override
+  String get callDeclined => 'നിരസിച്ചു';
+
+  @override
+  String get callLeft => 'കോൾ വിട്ടു';
+
+  @override
+  String get mute => 'മ്യൂട്ട്';
+
+  @override
+  String get unmute => 'അൺമ്യൂട്ട്';
+
+  @override
+  String get speaker => 'സ്പീക്കർ';
+
+  @override
+  String get callAudioOutputFailed =>
+      'ഓഡിയോ ഔട്ട്‌പുട്ട് മാറ്റാനായില്ല. കോൾ ഇപ്പോഴും സജീവമാണ്.';
+
+  @override
+  String get close => 'അടയ്ക്കുക';
+
+  @override
+  String get callEndForEveryone => 'എല്ലാവർക്കും കോൾ അവസാനിപ്പിക്കുക';
+
+  @override
+  String get callLeave => 'കോൾ വിടുക';
+
+  @override
+  String get prescriptionsLoadFailed =>
+      'കുറിപ്പടികൾ ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get actionFailed => 'ആ പ്രവർത്തനം പൂർത്തിയാക്കാനായില്ല.';
+
+  @override
+  String get prescriptionSaveFailed =>
+      'കുറിപ്പടി സേവ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get prescriptionsHeadline => 'നിങ്ങളുടെ ആരോഗ്യ രേഖകൾ, ഒരിടത്ത്';
+
+  @override
+  String get prescriptionsIntro =>
+      'ഒരു കുറിപ്പടി സ്കാൻ ചെയ്യുക അല്ലെങ്കിൽ പഴയ രേഖ ടൈപ്പ് ചെയ്യുക. PDF-കൾ ഈ ഉപകരണത്തിൽ സ്വകാര്യമായി സൂക്ഷിക്കുന്നു.';
+
+  @override
+  String get prescriptionsAndroidOnly =>
+      'കുറിപ്പടി സ്കാനിംഗും PDF-കളും നിലവിൽ Android ആപ്പിൽ ലഭ്യമാണ്.';
+
+  @override
+  String get scanOrPhotos => 'സ്കാൻ / ഫോട്ടോകൾ';
+
+  @override
+  String get typeRecord => 'രേഖ ടൈപ്പ് ചെയ്യുക';
+
+  @override
+  String get searchPrescriptions => 'കുറിപ്പടികൾ തിരയുക';
+
+  @override
+  String get noPrescriptionsYet => 'ഇതുവരെ കുറിപ്പടികളില്ല';
+
+  @override
+  String get noMatchingPrescriptions => 'പൊരുത്തപ്പെടുന്ന കുറിപ്പടികളില്ല';
+
+  @override
+  String get prescriptionNeedsTitleText =>
+      'ഒരു തലക്കെട്ടും കുറിപ്പടിയുടെ വിവരങ്ങളും ചേർക്കുക.';
+
+  @override
+  String get prescriptionRecord => 'കുറിപ്പടി രേഖ';
+
+  @override
+  String get reviewPrescription => 'കുറിപ്പടി പരിശോധിക്കുക';
+
+  @override
+  String get deletePrescription => 'കുറിപ്പടി ഇല്ലാതാക്കുക';
+
+  @override
+  String get deletePrescriptionTitle => 'കുറിപ്പടി ഇല്ലാതാക്കണോ?';
+
+  @override
+  String get deletePrescriptionBody =>
+      'PDF-ഉം ടെക്സ്റ്റും ഈ ഉപകരണത്തിൽ നിന്ന് നീക്കം ചെയ്യും.';
+
+  @override
+  String get delete => 'ഇല്ലാതാക്കുക';
+
+  @override
+  String get prescriptionReviewHint =>
+      'എടുത്ത ടെക്സ്റ്റ് യഥാർത്ഥ കുറിപ്പടിയുമായി ഒത്തുനോക്കുക. കൈയക്ഷരം അപൂർണ്ണമോ തെറ്റോ ആകാം; മരുന്നുകളുടെ പേരും അളവും ഡോക്ടറോട് ചോദിച്ച് ഉറപ്പാക്കുക.';
+
+  @override
+  String get viewOriginalPdf => 'യഥാർത്ഥ PDF കാണുക';
+
+  @override
+  String get titleLabel => 'തലക്കെട്ട്';
+
+  @override
+  String get extractedTextNotes => 'എടുത്ത ടെക്സ്റ്റ് / കുറിപ്പുകൾ';
+
+  @override
+  String get prescriptionDetails => 'കുറിപ്പടി വിവരങ്ങൾ';
+
+  @override
+  String get prescriptionEditHint =>
+      'ഈ ടെക്സ്റ്റ് തിരുത്തിയാലും സ്കാൻ ചെയ്ത യഥാർത്ഥ PDF മാറില്ല.';
+
+  @override
+  String get saving => 'സേവ് ചെയ്യുന്നു…';
+
+  @override
+  String get savePrescription => 'കുറിപ്പടി സേവ് ചെയ്യുക';
+
+  @override
+  String get openSavedPdf => 'സേവ് ചെയ്ത PDF തുറക്കുക';
+
+  @override
+  String get shareSavedPdf => 'സേവ് ചെയ്ത PDF പങ്കിടുക';
+
+  @override
+  String get deleteAccount => 'അക്കൗണ്ട് ഇല്ലാതാക്കുക';
+
+  @override
+  String get deleteRequiresLive =>
+      'അക്കൗണ്ട് ഇല്ലാതാക്കാൻ സൈൻ ഇൻ ചെയ്ത ലൈവ് അക്കൗണ്ട് വേണം.';
+
+  @override
+  String get deleteNotConfirmed =>
+      'ഇല്ലാതാക്കൽ സ്ഥിരീകരിച്ചില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get deleteFailed =>
+      'അക്കൗണ്ട് ഇല്ലാതാക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get deleteAccountHeadline =>
+      'നിങ്ങളുടെ കെയ്‌ലോ അക്കൗണ്ട് എന്നെന്നേക്കുമായി ഇല്ലാതാക്കണോ?';
+
+  @override
+  String get deleteAccountBody =>
+      'ഇത് നിങ്ങളുടെ സൈൻ-ഇൻ, പ്രൊഫൈൽ, ബുക്കിംഗുകൾ, സന്ദേശങ്ങൾ, കെയർ രേഖകൾ, ഈ ഉപകരണത്തിലുള്ള കുറിപ്പടികൾ എന്നിവ നീക്കം ചെയ്യും. ഇത് പഴയപടിയാക്കാനാവില്ല. സജീവമായ ബുക്കിംഗുകൾ ആദ്യം പൂർത്തിയാക്കുകയോ റദ്ദാക്കുകയോ ചെയ്യുക. തീർപ്പാകാത്ത പേയ്‌മെന്റുകൾക്ക് kayloapp@gmail.com-ൽ ബന്ധപ്പെടുക.';
+
+  @override
+  String get deleteAccountNote =>
+      'പേയ്‌മെന്റ് സേവനദാതാക്കൾ ഇടപാട് രേഖകൾ സൂക്ഷിച്ചേക്കാം. നിങ്ങൾ മുമ്പ് പങ്കിട്ട രേഖകൾ മറ്റുള്ളവരുടെ ഉപകരണങ്ങളിൽ നിന്ന് നീക്കം ചെയ്യപ്പെടില്ല.';
+
+  @override
+  String get typeDeleteToConfirm =>
+      'സ്ഥിരീകരിക്കാൻ DELETE എന്ന് ടൈപ്പ് ചെയ്യുക';
+
+  @override
+  String get deleting => 'ഇല്ലാതാക്കുന്നു…';
+
+  @override
+  String get deleteMyAccount => 'എന്റെ അക്കൗണ്ട് ഇല്ലാതാക്കുക';
+
+  @override
+  String get paymentVerified =>
+      'പേയ്‌മെന്റ് സ്ഥിരീകരിച്ചു. നിങ്ങളുടെ ബുക്കിംഗ് ഉറപ്പായി.';
+
+  @override
+  String get paymentNotCompleted => 'പേയ്‌മെന്റ് പൂർത്തിയായില്ല.';
+
+  @override
+  String get checkoutOpenFailed =>
+      'സുരക്ഷിത ചെക്കൗട്ട് തുറക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get cardsAndUpi => 'കാർഡുകളും UPI-യും';
+
+  @override
+  String get paymentMethodsBody =>
+      'സുരക്ഷിതമായ Razorpay ചെക്കൗട്ടിൽ കാർഡ് വിവരങ്ങൾ നൽകുകയോ UPI തിരഞ്ഞെടുക്കുകയോ ചെയ്യാം. ലഭ്യമാണെങ്കിൽ, ആ കാർഡ് വീണ്ടും ഉപയോഗിക്കാൻ Razorpay-യുടെ കാർഡ് സേവ് ചെയ്യാനുള്ള ഓപ്ഷൻ തിരഞ്ഞെടുക്കുക. സേവ് ചെയ്ത കാർഡുകൾ ചെക്കൗട്ടിനുള്ളിൽ തന്നെ നിയന്ത്രിക്കാം.';
+
+  @override
+  String get paymentMethodsNote =>
+      'കെയ്‌ലോ നിങ്ങളുടെ മുഴുവൻ കാർഡ് നമ്പറോ CVV-യോ PIN-ഓ സൂക്ഷിക്കുന്നില്ല. നിലവിലെ പേയ്‌മെന്റ് സംവിധാനത്തിൽ NFC വഴി കാർഡ് ചേർക്കാനാവില്ല.';
+
+  @override
+  String get completePendingPayment => 'ബാക്കിയുള്ള പേയ്‌മെന്റ് പൂർത്തിയാക്കുക';
+
+  @override
+  String get noPendingPayments =>
+      'നിങ്ങളുടെ അടുത്ത ബുക്കിംഗിൽ ചെക്കൗട്ട് തുറക്കും; അവിടെ കാർഡ് ചേർക്കുകയോ തിരഞ്ഞെടുക്കുകയോ ചെയ്യാം.';
+
+  @override
+  String pendingBookingLine(String id, String date) {
+    return 'ബുക്കിംഗ് $id • $date';
+  }
+
+  @override
+  String get bookingsLoadFailedRetry =>
+      'ബുക്കിംഗുകൾ ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക';
+
+  @override
+  String get openingPayment => 'പേയ്‌മെന്റ് തുറക്കുന്നു…';
+
+  @override
+  String get payAndBook => 'പണമടച്ച് ബുക്ക് ചെയ്യുക';
+
+  @override
+  String get appointmentPaymentFailed =>
+      'പേയ്‌മെന്റ് പൂർത്തിയാക്കാനായില്ല. നിങ്ങളുടെ അപ്പോയിന്റ്മെന്റ് ഉറപ്പായിട്ടില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get visitPaymentFailed =>
+      'പേയ്‌മെന്റ് പൂർത്തിയാക്കാനായില്ല. നിങ്ങളുടെ സന്ദർശനം ഉറപ്പായിട്ടില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get careServiceUnavailable => 'ഈ കെയർ സേവനം ലഭ്യമല്ല.';
+
+  @override
+  String get appointmentNotConfirmed =>
+      'പേയ്‌മെന്റ് പൂർത്തിയായില്ല. നിങ്ങളുടെ അപ്പോയിന്റ്മെന്റ് ഉറപ്പായിട്ടില്ല.';
 }

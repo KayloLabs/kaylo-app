@@ -11,6 +11,7 @@ import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
+import '../../l10n/generated/app_localizations.dart';
 
 class KayloBottomNav extends ConsumerStatefulWidget {
   final StatefulNavigationShell navigationShell;
@@ -123,12 +124,16 @@ class _KayloBottomNavState extends ConsumerState<KayloBottomNav>
                     color: Theme.of(context).colorScheme.errorContainer,
                     child: ListTile(
                       leading: const Icon(Icons.emergency),
-                      title: const Text('Incoming Kaylo SOS'),
-                      subtitle: const Text('A trusted contact needs help'),
+                      title: Text(
+                        AppLocalizations.of(context)!.incomingSosTitle,
+                      ),
+                      subtitle: Text(
+                        AppLocalizations.of(context)!.incomingSosSubtitle,
+                      ),
                       trailing: Wrap(
                         children: [
                           IconButton(
-                            tooltip: 'Decline',
+                            tooltip: AppLocalizations.of(context)!.decline,
                             icon: const Icon(Icons.call_end),
                             onPressed: () async {
                               try {
@@ -146,7 +151,7 @@ class _KayloBottomNavState extends ConsumerState<KayloBottomNav>
                             },
                           ),
                           IconButton(
-                            tooltip: 'Join call',
+                            tooltip: AppLocalizations.of(context)!.joinCall,
                             icon: const Icon(Icons.call),
                             onPressed: () =>
                                 Navigator.of(context, rootNavigator: true).push(

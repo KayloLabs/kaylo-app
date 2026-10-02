@@ -132,8 +132,8 @@ class CareHomeScreen extends ConsumerWidget {
                   _CareActionCard(
                     icon: Icons.document_scanner_outlined,
                     color: AppColors.careAccent,
-                    title: 'Prescriptions',
-                    subtitle: 'Scan, read and keep your health records',
+                    title: l10n.prescriptions,
+                    subtitle: l10n.prescriptionsSubtitle,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const PrescriptionsScreen(),
@@ -144,8 +144,8 @@ class CareHomeScreen extends ConsumerWidget {
                   _CareActionCard(
                     icon: Icons.group_add_outlined,
                     color: AppColors.brandPrimary,
-                    title: 'Trusted contacts',
-                    subtitle: 'Connect family and doctors for SOS calls',
+                    title: l10n.trustedContacts,
+                    subtitle: l10n.trustedContactsSubtitle,
                     onTap: () => Navigator.of(context).push(
                       MaterialPageRoute(
                         builder: (_) => const TrustedContactsScreen(),

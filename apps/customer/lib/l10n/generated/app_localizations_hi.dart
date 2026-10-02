@@ -1614,4 +1614,411 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'कार्ड, नेटबैंकिंग या UPI, Razorpay द्वारा सुरक्षित';
+
+  @override
+  String get prescriptions => 'नुस्खे';
+
+  @override
+  String get prescriptionsSubtitle =>
+      'अपने स्वास्थ्य रिकॉर्ड स्कैन करें, पढ़ें और सुरक्षित रखें';
+
+  @override
+  String get trustedContacts => 'भरोसेमंद संपर्क';
+
+  @override
+  String get trustedContactsSubtitle =>
+      'SOS कॉल के लिए परिवार और डॉक्टरों को जोड़ें';
+
+  @override
+  String get sosStartFailedContacts =>
+      'SOS शुरू नहीं हो सका। अपना कनेक्शन और भरोसेमंद संपर्क जांचें।';
+
+  @override
+  String get sosStartFailed => 'SOS शुरू नहीं हो सका। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get sosModeKaylo => 'कायलो कॉल';
+
+  @override
+  String get sosModeSim => 'सिम कॉल';
+
+  @override
+  String get manageTrustedContacts => 'भरोसेमंद संपर्क प्रबंधित करें';
+
+  @override
+  String get sosKayloHoldHint =>
+      'अपने भरोसेमंद कायलो संपर्कों को बुलाने के लिए 3 सेकंड दबाकर रखें। वे एक साथ कॉल में जुड़ सकते हैं। आमंत्रण भेजने का मतलब यह नहीं कि किसी ने जवाब दिया है।';
+
+  @override
+  String get contactsOpenFailed => 'फ़ोन संपर्क नहीं खुल सके।';
+
+  @override
+  String get chooseFromPhoneContacts => 'फ़ोन संपर्कों से चुनें';
+
+  @override
+  String sosContactsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count संपर्क छोड़े गए: उनके नंबर डायल नहीं हो सकते।',
+      one: '1 संपर्क छोड़ा गया: उसका नंबर डायल नहीं हो सकता।',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomingSosTitle => 'कायलो SOS आ रहा है';
+
+  @override
+  String get incomingSosSubtitle => 'एक भरोसेमंद संपर्क को मदद चाहिए';
+
+  @override
+  String get decline => 'अस्वीकार करें';
+
+  @override
+  String get joinCall => 'कॉल में जुड़ें';
+
+  @override
+  String get signInLiveForContacts =>
+      'भरोसेमंद संपर्क जोड़ने के लिए लाइव ऐप में साइन इन करें।';
+
+  @override
+  String get couldNotConnectRetry =>
+      'कनेक्ट नहीं हो सका। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get refreshConnections => 'कनेक्शन रीफ़्रेश करें';
+
+  @override
+  String get trustedCircleTitle => 'अपनों को कायलो में लाएं';
+
+  @override
+  String get trustedCircleBody =>
+      'कायलो इस्तेमाल करने वाले अधिकतम पांच परिजनों या डॉक्टरों को आमंत्रित करें। आपका कोड स्वीकार करने पर उन्हें आपके SOS अलर्ट मिलेंगे और वे उसी वॉइस कॉल में जुड़ सकेंगे।';
+
+  @override
+  String get getInviteCode => 'मेरा आमंत्रण कोड पाएं';
+
+  @override
+  String get inviteCodeCopied => 'आमंत्रण कोड कॉपी हो गया';
+
+  @override
+  String get copyCode => 'कोड कॉपी करें';
+
+  @override
+  String get inviteCodeValidity =>
+      'सात दिन तक मान्य। केवल भरोसेमंद लोगों के साथ साझा करें।';
+
+  @override
+  String get acceptInviteTitle => 'किसी का आमंत्रण स्वीकार करें';
+
+  @override
+  String get inviteCode => 'आमंत्रण कोड';
+
+  @override
+  String get acceptInvitation => 'आमंत्रण स्वीकार करें';
+
+  @override
+  String get invitationAccepted =>
+      'आमंत्रण स्वीकार हुआ। अब आप जुड़ गए हैं और उनके SOS अलर्ट पा सकते हैं।';
+
+  @override
+  String get yourConnections => 'आपके कनेक्शन';
+
+  @override
+  String get noConnectionsYet => 'अभी कोई कनेक्शन नहीं';
+
+  @override
+  String get receivesYourSos => 'आपके SOS अलर्ट पाते हैं';
+
+  @override
+  String get youReceiveTheirSos => 'आपको उनके SOS अलर्ट मिलते हैं';
+
+  @override
+  String get removeConnection => 'कनेक्शन हटाएं';
+
+  @override
+  String get removeConnectionTitle => 'कनेक्शन हटाएं?';
+
+  @override
+  String get removeConnectionBody =>
+      'इस कनेक्शन को अब SOS कॉल के आमंत्रण नहीं मिलेंगे।';
+
+  @override
+  String get contactsLoadFailedRetry =>
+      'संपर्क लोड नहीं हो सके। फिर कोशिश करें';
+
+  @override
+  String get callTitle => 'कायलो SOS कॉल';
+
+  @override
+  String get callEnded => 'कॉल समाप्त';
+
+  @override
+  String get callYourCircle => 'आपका भरोसेमंद समूह';
+
+  @override
+  String get callCouldNotConnect => 'कनेक्ट नहीं हो सका';
+
+  @override
+  String get callConnecting => 'कनेक्ट हो रहा है…';
+
+  @override
+  String get callKeepOpen => 'कॉल के दौरान कायलो खुला रखें।';
+
+  @override
+  String get retryCall => 'कॉल फिर से आज़माएं';
+
+  @override
+  String get callErrorRoom =>
+      'यह कॉल उपलब्ध नहीं है या समाप्त हो चुकी है। नई कॉल शुरू करने के लिए SOS पर लौटें।';
+
+  @override
+  String get callErrorSettings =>
+      'कॉल सेटिंग लोड नहीं हो सकीं। अपना कनेक्शन जांचकर फिर कोशिश करें।';
+
+  @override
+  String get callErrorMicrophone =>
+      'माइक्रोफ़ोन तक पहुंच नहीं हो सकी। कायलो के लिए माइक्रोफ़ोन अनुमति जांचकर फिर कोशिश करें।';
+
+  @override
+  String get callErrorJoin =>
+      'इस कॉल में जुड़ नहीं सके। फिर कोशिश करें, या कॉल करने वाले से नई SOS कॉल शुरू करने को कहें।';
+
+  @override
+  String get callInterrupted => 'कनेक्शन बाधित हुआ। फिर कोशिश हो रही है…';
+
+  @override
+  String get callPeerConnected => 'कनेक्ट हो गया';
+
+  @override
+  String get callPeerFailed => 'कनेक्शन विफल';
+
+  @override
+  String get callPeerReconnecting => 'फिर से कनेक्ट हो रहा है';
+
+  @override
+  String get callPeerConnecting => 'कनेक्ट हो रहा है';
+
+  @override
+  String get callYou => 'आप';
+
+  @override
+  String get callYouMuted => 'आप • म्यूट';
+
+  @override
+  String get callInvitedWaiting => 'आमंत्रित • जवाब का इंतज़ार';
+
+  @override
+  String get callDeclined => 'अस्वीकार किया';
+
+  @override
+  String get callLeft => 'कॉल छोड़ दी';
+
+  @override
+  String get mute => 'म्यूट';
+
+  @override
+  String get unmute => 'अनम्यूट';
+
+  @override
+  String get speaker => 'स्पीकर';
+
+  @override
+  String get callAudioOutputFailed =>
+      'ऑडियो आउटपुट नहीं बदल सका। कॉल अभी भी चालू है।';
+
+  @override
+  String get close => 'बंद करें';
+
+  @override
+  String get callEndForEveryone => 'सबके लिए कॉल समाप्त करें';
+
+  @override
+  String get callLeave => 'कॉल छोड़ें';
+
+  @override
+  String get prescriptionsLoadFailed =>
+      'नुस्खे लोड नहीं हो सके। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get actionFailed => 'वह कार्रवाई पूरी नहीं हो सकी।';
+
+  @override
+  String get prescriptionSaveFailed =>
+      'नुस्खा सहेजा नहीं जा सका। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get prescriptionsHeadline => 'आपके स्वास्थ्य रिकॉर्ड, एक जगह';
+
+  @override
+  String get prescriptionsIntro =>
+      'नुस्खा स्कैन करें या पुराना रिकॉर्ड टाइप करें। PDF इस डिवाइस पर निजी रूप से सहेजे जाते हैं।';
+
+  @override
+  String get prescriptionsAndroidOnly =>
+      'नुस्खा स्कैनिंग और PDF फ़िलहाल Android ऐप में उपलब्ध हैं।';
+
+  @override
+  String get scanOrPhotos => 'स्कैन / फ़ोटो';
+
+  @override
+  String get typeRecord => 'रिकॉर्ड टाइप करें';
+
+  @override
+  String get searchPrescriptions => 'नुस्खे खोजें';
+
+  @override
+  String get noPrescriptionsYet => 'अभी कोई नुस्खा नहीं';
+
+  @override
+  String get noMatchingPrescriptions => 'कोई मिलता-जुलता नुस्खा नहीं';
+
+  @override
+  String get prescriptionNeedsTitleText =>
+      'एक शीर्षक और नुस्खे का विवरण जोड़ें।';
+
+  @override
+  String get prescriptionRecord => 'नुस्खे का रिकॉर्ड';
+
+  @override
+  String get reviewPrescription => 'नुस्खे की जांच करें';
+
+  @override
+  String get deletePrescription => 'नुस्खा हटाएं';
+
+  @override
+  String get deletePrescriptionTitle => 'नुस्खा हटाएं?';
+
+  @override
+  String get deletePrescriptionBody =>
+      'PDF और टेक्स्ट इस डिवाइस से हटा दिए जाएंगे।';
+
+  @override
+  String get delete => 'हटाएं';
+
+  @override
+  String get prescriptionReviewHint =>
+      'निकाले गए टेक्स्ट को मूल नुस्खे से मिलाएं। हस्तलेख अधूरा या गलत हो सकता है; दवाओं के नाम और खुराक अपने डॉक्टर से पक्का करें।';
+
+  @override
+  String get viewOriginalPdf => 'मूल PDF देखें';
+
+  @override
+  String get titleLabel => 'शीर्षक';
+
+  @override
+  String get extractedTextNotes => 'निकाला गया टेक्स्ट / नोट्स';
+
+  @override
+  String get prescriptionDetails => 'नुस्खे का विवरण';
+
+  @override
+  String get prescriptionEditHint =>
+      'यह टेक्स्ट बदलने पर भी मूल स्कैन किया गया PDF वैसा ही रहता है।';
+
+  @override
+  String get saving => 'सहेजा जा रहा है…';
+
+  @override
+  String get savePrescription => 'नुस्खा सहेजें';
+
+  @override
+  String get openSavedPdf => 'सहेजा गया PDF खोलें';
+
+  @override
+  String get shareSavedPdf => 'सहेजा गया PDF साझा करें';
+
+  @override
+  String get deleteAccount => 'खाता हटाएं';
+
+  @override
+  String get deleteRequiresLive =>
+      'खाता हटाने के लिए साइन इन किया हुआ लाइव खाता चाहिए।';
+
+  @override
+  String get deleteNotConfirmed =>
+      'हटाने की पुष्टि नहीं हुई। कृपया फिर कोशिश करें।';
+
+  @override
+  String get deleteFailed => 'खाता हटाया नहीं जा सका। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get deleteAccountHeadline => 'अपना कायलो खाता हमेशा के लिए हटाएं?';
+
+  @override
+  String get deleteAccountBody =>
+      'इससे आपका साइन-इन, प्रोफ़ाइल, बुकिंग, संदेश, केयर रिकॉर्ड और इस डिवाइस पर रखे नुस्खे हट जाएंगे। इसे वापस नहीं किया जा सकता। पहले चालू बुकिंग पूरी करें या रद्द करें। अटके हुए भुगतान के लिए kayloapp@gmail.com पर संपर्क करें।';
+
+  @override
+  String get deleteAccountNote =>
+      'भुगतान सेवाएं लेन-देन के रिकॉर्ड रख सकती हैं। आपने पहले जो दस्तावेज़ साझा किए हैं, वे दूसरों के डिवाइस से नहीं हटते।';
+
+  @override
+  String get typeDeleteToConfirm => 'पुष्टि के लिए DELETE टाइप करें';
+
+  @override
+  String get deleting => 'हटाया जा रहा है…';
+
+  @override
+  String get deleteMyAccount => 'मेरा खाता हटाएं';
+
+  @override
+  String get paymentVerified =>
+      'भुगतान की पुष्टि हुई। आपकी बुकिंग पक्की हो गई।';
+
+  @override
+  String get paymentNotCompleted => 'भुगतान पूरा नहीं हुआ।';
+
+  @override
+  String get checkoutOpenFailed =>
+      'सुरक्षित चेकआउट नहीं खुल सका। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get cardsAndUpi => 'कार्ड और UPI';
+
+  @override
+  String get paymentMethodsBody =>
+      'सुरक्षित Razorpay चेकआउट में कार्ड की जानकारी भरें या UPI चुनें। जहां सुविधा हो, उस कार्ड को दोबारा इस्तेमाल करने के लिए Razorpay का कार्ड सहेजने का विकल्प चुनें। सहेजे गए कार्ड चेकआउट के अंदर ही संभाले जाते हैं।';
+
+  @override
+  String get paymentMethodsNote =>
+      'कायलो आपका पूरा कार्ड नंबर, CVV या PIN नहीं रखता। मौजूदा भुगतान व्यवस्था में NFC से कार्ड जोड़ना उपलब्ध नहीं है।';
+
+  @override
+  String get completePendingPayment => 'बाकी भुगतान पूरा करें';
+
+  @override
+  String get noPendingPayments =>
+      'आपकी अगली बुकिंग पर चेकआउट खुलेगा, जहां आप कार्ड जोड़ या चुन सकते हैं।';
+
+  @override
+  String pendingBookingLine(String id, String date) {
+    return 'बुकिंग $id • $date';
+  }
+
+  @override
+  String get bookingsLoadFailedRetry =>
+      'बुकिंग लोड नहीं हो सकीं। फिर कोशिश करें';
+
+  @override
+  String get openingPayment => 'भुगतान खुल रहा है…';
+
+  @override
+  String get payAndBook => 'भुगतान करके बुक करें';
+
+  @override
+  String get appointmentPaymentFailed =>
+      'भुगतान पूरा नहीं हो सका। आपकी अपॉइंटमेंट पक्की नहीं हुई है। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get visitPaymentFailed =>
+      'भुगतान पूरा नहीं हो सका। आपकी विज़िट पक्की नहीं हुई है। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get careServiceUnavailable => 'यह केयर सेवा उपलब्ध नहीं है।';
+
+  @override
+  String get appointmentNotConfirmed =>
+      'भुगतान पूरा नहीं हुआ। आपकी अपॉइंटमेंट पक्की नहीं हुई है।';
 }

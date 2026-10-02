@@ -444,8 +444,8 @@ class _DoctorAppointmentScreenState
           // Confirm & Book Button
           KayloButton(
             text: (_paying
-                ? 'Opening payment…'
-                : 'Pay & book (₹${_selectedDoctor!.consultationFee.toInt()})'),
+                ? l10n.openingPayment
+                : '${l10n.payAndBook} (₹${_selectedDoctor!.consultationFee.toInt()})'),
             icon: Icons.check_circle_rounded,
             onPressed:
                 (!_paying &&
@@ -510,7 +510,7 @@ class _DoctorAppointmentScreenState
                         context,
                         error is StateError
                             ? error.message.toString()
-                            : 'Could not complete payment. Your appointment is not confirmed. Please try again.',
+                            : l10n.appointmentPaymentFailed,
                       );
                       return;
                     } finally {

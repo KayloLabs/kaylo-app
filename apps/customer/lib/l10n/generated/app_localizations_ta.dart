@@ -1636,4 +1636,421 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'கார்டு, நெட்பேங்கிங் அல்லது UPI, Razorpay மூலம் பாதுகாப்பானது';
+
+  @override
+  String get prescriptions => 'மருந்துச் சீட்டுகள்';
+
+  @override
+  String get prescriptionsSubtitle =>
+      'உங்கள் உடல்நலப் பதிவுகளை ஸ்கேன் செய்து, படித்து, பாதுகாக்கவும்';
+
+  @override
+  String get trustedContacts => 'நம்பகமான தொடர்புகள்';
+
+  @override
+  String get trustedContactsSubtitle =>
+      'SOS அழைப்புகளுக்கு குடும்பத்தினரையும் மருத்துவர்களையும் இணைக்கவும்';
+
+  @override
+  String get sosStartFailedContacts =>
+      'SOS தொடங்க முடியவில்லை. உங்கள் இணைப்பையும் நம்பகமான தொடர்புகளையும் சரிபார்க்கவும்.';
+
+  @override
+  String get sosStartFailed =>
+      'SOS தொடங்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get sosModeKaylo => 'கெய்லோ அழைப்பு';
+
+  @override
+  String get sosModeSim => 'சிம் அழைப்பு';
+
+  @override
+  String get manageTrustedContacts => 'நம்பகமான தொடர்புகளை நிர்வகிக்கவும்';
+
+  @override
+  String get sosKayloHoldHint =>
+      'உங்கள் நம்பகமான கெய்லோ தொடர்புகளை அழைக்க 3 விநாடிகள் அழுத்திப் பிடிக்கவும். அவர்கள் ஒன்றாக அழைப்பில் சேரலாம். அழைப்பிதழ் அனுப்பியதால் யாரோ பதிலளித்தார்கள் என்று பொருள் அல்ல.';
+
+  @override
+  String get contactsOpenFailed => 'தொலைபேசி தொடர்புகளைத் திறக்க முடியவில்லை.';
+
+  @override
+  String get chooseFromPhoneContacts =>
+      'தொலைபேசி தொடர்புகளிலிருந்து தேர்வுசெய்க';
+
+  @override
+  String sosContactsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count தொடர்புகள் தவிர்க்கப்பட்டன: அந்த எண்களை அழைக்க முடியாது.',
+      one: '1 தொடர்பு தவிர்க்கப்பட்டது: அந்த எண்ணை அழைக்க முடியாது.',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get incomingSosTitle => 'கெய்லோ SOS வருகிறது';
+
+  @override
+  String get incomingSosSubtitle => 'நம்பகமான தொடர்பு ஒருவருக்கு உதவி தேவை';
+
+  @override
+  String get decline => 'நிராகரி';
+
+  @override
+  String get joinCall => 'அழைப்பில் சேர்';
+
+  @override
+  String get signInLiveForContacts =>
+      'நம்பகமான தொடர்புகளை இணைக்க நேரடி செயலியில் உள்நுழையவும்.';
+
+  @override
+  String get couldNotConnectRetry =>
+      'இணைக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get refreshConnections => 'இணைப்புகளைப் புதுப்பி';
+
+  @override
+  String get trustedCircleTitle =>
+      'உங்கள் அன்புக்குரியவர்களை கெய்லோவிற்குக் கொண்டு வாருங்கள்';
+
+  @override
+  String get trustedCircleBody =>
+      'கெய்லோ பயன்படுத்தும் ஐந்து குடும்பத்தினர் அல்லது மருத்துவர்கள் வரை அழைக்கலாம். அவர்கள் உங்கள் குறியீட்டை ஏற்றால், உங்கள் SOS எச்சரிக்கைகளைப் பெற்று அதே குரல் அழைப்பில் சேர முடியும்.';
+
+  @override
+  String get getInviteCode => 'என் அழைப்புக் குறியீட்டைப் பெறு';
+
+  @override
+  String get inviteCodeCopied => 'அழைப்புக் குறியீடு நகலெடுக்கப்பட்டது';
+
+  @override
+  String get copyCode => 'குறியீட்டை நகலெடு';
+
+  @override
+  String get inviteCodeValidity =>
+      'ஏழு நாட்களுக்குச் செல்லுபடியாகும். நீங்கள் நம்புபவர்களுடன் மட்டும் பகிரவும்.';
+
+  @override
+  String get acceptInviteTitle => 'ஒருவரின் அழைப்பை ஏற்கவும்';
+
+  @override
+  String get inviteCode => 'அழைப்புக் குறியீடு';
+
+  @override
+  String get acceptInvitation => 'அழைப்பை ஏற்கவும்';
+
+  @override
+  String get invitationAccepted =>
+      'அழைப்பு ஏற்கப்பட்டது. இப்போது நீங்கள் இணைக்கப்பட்டுள்ளீர்கள்; அவர்களின் SOS எச்சரிக்கைகளைப் பெறலாம்.';
+
+  @override
+  String get yourConnections => 'உங்கள் இணைப்புகள்';
+
+  @override
+  String get noConnectionsYet => 'இதுவரை இணைப்புகள் இல்லை';
+
+  @override
+  String get receivesYourSos => 'உங்கள் SOS எச்சரிக்கைகளைப் பெறுகிறார்';
+
+  @override
+  String get youReceiveTheirSos =>
+      'அவர்களின் SOS எச்சரிக்கைகளை நீங்கள் பெறுகிறீர்கள்';
+
+  @override
+  String get removeConnection => 'இணைப்பை அகற்று';
+
+  @override
+  String get removeConnectionTitle => 'இணைப்பை அகற்றவா?';
+
+  @override
+  String get removeConnectionBody =>
+      'இந்த இணைப்புக்கு இனி SOS அழைப்பு அழைப்பிதழ்கள் வராது.';
+
+  @override
+  String get contactsLoadFailedRetry =>
+      'தொடர்புகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சி';
+
+  @override
+  String get callTitle => 'கெய்லோ SOS அழைப்பு';
+
+  @override
+  String get callEnded => 'அழைப்பு முடிந்தது';
+
+  @override
+  String get callYourCircle => 'உங்கள் நம்பகமான வட்டம்';
+
+  @override
+  String get callCouldNotConnect => 'இணைக்க முடியவில்லை';
+
+  @override
+  String get callConnecting => 'இணைக்கிறது…';
+
+  @override
+  String get callKeepOpen =>
+      'அழைப்பின் போது கெய்லோவைத் திறந்தே வைத்திருக்கவும்.';
+
+  @override
+  String get retryCall => 'அழைப்பை மீண்டும் முயற்சி';
+
+  @override
+  String get callErrorRoom =>
+      'இந்த அழைப்பு கிடைக்கவில்லை அல்லது முடிந்துவிட்டது. புதிய அழைப்பைத் தொடங்க SOS-க்குத் திரும்பவும்.';
+
+  @override
+  String get callErrorSettings =>
+      'அழைப்பு அமைப்புகளை ஏற்ற முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get callErrorMicrophone =>
+      'மைக்ரோஃபோனை அணுக முடியவில்லை. கெய்லோவிற்கான மைக்ரோஃபோன் அனுமதியைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get callErrorJoin =>
+      'இந்த அழைப்பில் சேர முடியவில்லை. மீண்டும் முயற்சிக்கவும், அல்லது அழைத்தவரிடம் புதிய SOS அழைப்பைத் தொடங்கச் சொல்லவும்.';
+
+  @override
+  String get callInterrupted => 'இணைப்பு தடைபட்டது. மீண்டும் முயற்சிக்கிறது…';
+
+  @override
+  String get callPeerConnected => 'இணைக்கப்பட்டது';
+
+  @override
+  String get callPeerFailed => 'இணைப்பு தோல்வி';
+
+  @override
+  String get callPeerReconnecting => 'மீண்டும் இணைக்கிறது';
+
+  @override
+  String get callPeerConnecting => 'இணைக்கிறது';
+
+  @override
+  String get callYou => 'நீங்கள்';
+
+  @override
+  String get callYouMuted => 'நீங்கள் • ஒலியடக்கப்பட்டது';
+
+  @override
+  String get callInvitedWaiting =>
+      'அழைக்கப்பட்டார் • பதிலுக்காகக் காத்திருக்கிறது';
+
+  @override
+  String get callDeclined => 'நிராகரித்தார்';
+
+  @override
+  String get callLeft => 'அழைப்பிலிருந்து வெளியேறினார்';
+
+  @override
+  String get mute => 'ஒலியடக்கு';
+
+  @override
+  String get unmute => 'ஒலி இயக்கு';
+
+  @override
+  String get speaker => 'ஸ்பீக்கர்';
+
+  @override
+  String get callAudioOutputFailed =>
+      'ஒலி வெளியீட்டை மாற்ற முடியவில்லை. அழைப்பு இன்னும் செயலில் உள்ளது.';
+
+  @override
+  String get close => 'மூடு';
+
+  @override
+  String get callEndForEveryone => 'அனைவருக்கும் அழைப்பை முடி';
+
+  @override
+  String get callLeave => 'அழைப்பிலிருந்து வெளியேறு';
+
+  @override
+  String get prescriptionsLoadFailed =>
+      'மருந்துச் சீட்டுகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get actionFailed => 'அந்தச் செயலை முடிக்க முடியவில்லை.';
+
+  @override
+  String get prescriptionSaveFailed =>
+      'மருந்துச் சீட்டைச் சேமிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get prescriptionsHeadline => 'உங்கள் உடல்நலப் பதிவுகள், ஒரே இடத்தில்';
+
+  @override
+  String get prescriptionsIntro =>
+      'மருந்துச் சீட்டை ஸ்கேன் செய்யவும் அல்லது பழைய பதிவைத் தட்டச்சு செய்யவும். PDF-கள் இந்தச் சாதனத்தில் தனிப்பட்ட முறையில் சேமிக்கப்படும்.';
+
+  @override
+  String get prescriptionsAndroidOnly =>
+      'மருந்துச் சீட்டு ஸ்கேனிங்கும் PDF-களும் தற்போது Android செயலியில் கிடைக்கின்றன.';
+
+  @override
+  String get scanOrPhotos => 'ஸ்கேன் / படங்கள்';
+
+  @override
+  String get typeRecord => 'பதிவைத் தட்டச்சு செய்';
+
+  @override
+  String get searchPrescriptions => 'மருந்துச் சீட்டுகளைத் தேடு';
+
+  @override
+  String get noPrescriptionsYet => 'இதுவரை மருந்துச் சீட்டுகள் இல்லை';
+
+  @override
+  String get noMatchingPrescriptions => 'பொருந்தும் மருந்துச் சீட்டுகள் இல்லை';
+
+  @override
+  String get prescriptionNeedsTitleText =>
+      'ஒரு தலைப்பையும் மருந்துச் சீட்டு விவரத்தையும் சேர்க்கவும்.';
+
+  @override
+  String get prescriptionRecord => 'மருந்துச் சீட்டுப் பதிவு';
+
+  @override
+  String get reviewPrescription => 'மருந்துச் சீட்டைச் சரிபார்';
+
+  @override
+  String get deletePrescription => 'மருந்துச் சீட்டை நீக்கு';
+
+  @override
+  String get deletePrescriptionTitle => 'மருந்துச் சீட்டை நீக்கவா?';
+
+  @override
+  String get deletePrescriptionBody =>
+      'PDF மற்றும் உரை இந்தச் சாதனத்திலிருந்து அகற்றப்படும்.';
+
+  @override
+  String get delete => 'நீக்கு';
+
+  @override
+  String get prescriptionReviewHint =>
+      'பிரித்தெடுக்கப்பட்ட உரையை அசல் சீட்டுடன் ஒப்பிட்டுப் பாருங்கள். கையெழுத்து முழுமையற்றதாகவோ தவறாகவோ இருக்கலாம்; மருந்துப் பெயர்களையும் அளவுகளையும் உங்கள் மருத்துவரிடம் உறுதிப்படுத்தவும்.';
+
+  @override
+  String get viewOriginalPdf => 'அசல் PDF-ஐப் பார்';
+
+  @override
+  String get titleLabel => 'தலைப்பு';
+
+  @override
+  String get extractedTextNotes => 'பிரித்தெடுத்த உரை / குறிப்புகள்';
+
+  @override
+  String get prescriptionDetails => 'மருந்துச் சீட்டு விவரங்கள்';
+
+  @override
+  String get prescriptionEditHint =>
+      'இந்த உரையைத் திருத்தினாலும் அசல் ஸ்கேன் செய்த PDF மாறாது.';
+
+  @override
+  String get saving => 'சேமிக்கிறது…';
+
+  @override
+  String get savePrescription => 'மருந்துச் சீட்டைச் சேமி';
+
+  @override
+  String get openSavedPdf => 'சேமித்த PDF-ஐத் திற';
+
+  @override
+  String get shareSavedPdf => 'சேமித்த PDF-ஐப் பகிர்';
+
+  @override
+  String get deleteAccount => 'கணக்கை நீக்கு';
+
+  @override
+  String get deleteRequiresLive =>
+      'கணக்கை நீக்க, உள்நுழைந்த நேரடி கணக்கு தேவை.';
+
+  @override
+  String get deleteNotConfirmed =>
+      'நீக்கம் உறுதிப்படுத்தப்படவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get deleteFailed =>
+      'கணக்கை நீக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get deleteAccountHeadline =>
+      'உங்கள் கெய்லோ கணக்கை நிரந்தரமாக நீக்கவா?';
+
+  @override
+  String get deleteAccountBody =>
+      'இது உங்கள் உள்நுழைவு, சுயவிவரம், முன்பதிவுகள், செய்திகள், பராமரிப்புப் பதிவுகள் மற்றும் இந்தச் சாதனத்தில் உள்ள மருந்துச் சீட்டுகளை அகற்றும். இதைத் திரும்பப் பெற முடியாது. செயலில் உள்ள முன்பதிவுகளை முதலில் முடிக்கவும் அல்லது ரத்து செய்யவும். தீர்க்கப்படாத கட்டணங்களுக்கு kayloapp@gmail.com-ஐத் தொடர்பு கொள்ளவும்.';
+
+  @override
+  String get deleteAccountNote =>
+      'கட்டணச் சேவை நிறுவனங்கள் பரிவர்த்தனைப் பதிவுகளை வைத்திருக்கலாம். நீங்கள் முன்பு பகிர்ந்த ஆவணங்கள் பிறரின் சாதனங்களிலிருந்து அகற்றப்படாது.';
+
+  @override
+  String get typeDeleteToConfirm =>
+      'உறுதிப்படுத்த DELETE எனத் தட்டச்சு செய்யவும்';
+
+  @override
+  String get deleting => 'நீக்குகிறது…';
+
+  @override
+  String get deleteMyAccount => 'என் கணக்கை நீக்கு';
+
+  @override
+  String get paymentVerified =>
+      'கட்டணம் சரிபார்க்கப்பட்டது. உங்கள் முன்பதிவு உறுதியானது.';
+
+  @override
+  String get paymentNotCompleted => 'கட்டணம் நிறைவடையவில்லை.';
+
+  @override
+  String get checkoutOpenFailed =>
+      'பாதுகாப்பான செக்அவுட்டைத் திறக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get cardsAndUpi => 'கார்டுகள் மற்றும் UPI';
+
+  @override
+  String get paymentMethodsBody =>
+      'பாதுகாப்பான Razorpay செக்அவுட்டில் கார்டு விவரங்களை உள்ளிடவும் அல்லது UPI-ஐத் தேர்ந்தெடுக்கவும். வசதி இருந்தால், அந்தக் கார்டை மீண்டும் பயன்படுத்த Razorpay-இன் கார்டு சேமிப்பு விருப்பத்தைத் தேர்ந்தெடுக்கவும். சேமித்த கார்டுகள் செக்அவுட்டிலேயே நிர்வகிக்கப்படும்.';
+
+  @override
+  String get paymentMethodsNote =>
+      'கெய்லோ உங்கள் முழு கார்டு எண், CVV அல்லது PIN-ஐச் சேமிப்பதில்லை. தற்போதைய கட்டண அமைப்பில் NFC மூலம் கார்டு சேர்க்கும் வசதி இல்லை.';
+
+  @override
+  String get completePendingPayment => 'நிலுவையில் உள்ள கட்டணத்தை முடிக்கவும்';
+
+  @override
+  String get noPendingPayments =>
+      'உங்கள் அடுத்த முன்பதிவில் செக்அவுட் திறக்கும்; அங்கே கார்டைச் சேர்க்கலாம் அல்லது தேர்ந்தெடுக்கலாம்.';
+
+  @override
+  String pendingBookingLine(String id, String date) {
+    return 'முன்பதிவு $id • $date';
+  }
+
+  @override
+  String get bookingsLoadFailedRetry =>
+      'முன்பதிவுகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சி';
+
+  @override
+  String get openingPayment => 'கட்டணப் பக்கம் திறக்கிறது…';
+
+  @override
+  String get payAndBook => 'பணம் செலுத்தி முன்பதிவு செய்';
+
+  @override
+  String get appointmentPaymentFailed =>
+      'கட்டணத்தை முடிக்க முடியவில்லை. உங்கள் சந்திப்பு உறுதியாகவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get visitPaymentFailed =>
+      'கட்டணத்தை முடிக்க முடியவில்லை. உங்கள் வருகை உறுதியாகவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get careServiceUnavailable =>
+      'இந்தப் பராமரிப்புச் சேவை கிடைக்கவில்லை.';
+
+  @override
+  String get appointmentNotConfirmed =>
+      'கட்டணம் நிறைவடையவில்லை. உங்கள் சந்திப்பு உறுதியாகவில்லை.';
 }

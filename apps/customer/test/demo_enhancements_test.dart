@@ -7,6 +7,7 @@ import 'package:kaylo/core/widgets/kaylo_bottom_nav.dart';
 import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/features/care/application/care_calls.dart';
 import 'package:kaylo/features/care/presentation/screens/prescriptions_screen.dart';
+import 'package:kaylo/l10n/generated/app_localizations.dart';
 
 void main() {
   TestWidgetsFlutterBinding.ensureInitialized();
@@ -76,7 +77,11 @@ void main() {
       await tester.pumpWidget(
         ProviderScope(
           overrides: [currentUserIdProvider.overrideWithValue('test-owner')],
-          child: const MaterialApp(home: PrescriptionsScreen()),
+          child: const MaterialApp(
+            localizationsDelegates: AppLocalizations.localizationsDelegates,
+            supportedLocales: AppLocalizations.supportedLocales,
+            home: PrescriptionsScreen(),
+          ),
         ),
       );
       await tester.pumpAndSettle();

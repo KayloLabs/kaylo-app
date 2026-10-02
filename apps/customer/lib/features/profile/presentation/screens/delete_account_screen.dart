@@ -8,6 +8,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../../../auth/application/session_controller.dart';
 import '../../../care/presentation/screens/prescriptions_screen.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class DeleteAccountScreen extends ConsumerStatefulWidget {
   const DeleteAccountScreen({super.key});
@@ -17,6 +18,7 @@ class DeleteAccountScreen extends ConsumerStatefulWidget {
 }
 
 class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
   final _confirmation = TextEditingController();
   bool _busy = false;
   String? _error;
@@ -28,6 +30,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
 
   Future<void> _delete() async {
     if (_busy || _confirmation.text != 'DELETE') return;
+    final l10n = _l10n;
     setState(() {
       _busy = true;
       _error = null;
@@ -35,14 +38,14 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
     try {
       final userId = ref.read(currentUserIdProvider);
       if (useMockData) {
-        throw StateError('Account deletion requires a signed-in live account.');
+        throw StateError(l10n.deleteRequiresLive);
       }
       final response = await ref
           .read(supabaseClientProvider)
           .functions
           .invoke('delete-account', body: {'confirmation': 'DELETE'});
       if (response.data is! Map || response.data['deleted'] != true) {
-        throw StateError('Deletion was not confirmed. Please retry.');
+        throw StateError(l10n.deleteNotConfirmed);
       }
       // Clear private local records before invalidating the session.
       if (!kIsWeb &&
@@ -58,18 +61,14 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
           ? details['error']['message']
           : null;
       if (mounted) {
-        setState(
-          () => _error =
-              message?.toString() ??
-              'Could not delete the account. Please try again.',
-        );
+        setState(() => _error = message?.toString() ?? l10n.deleteFailed);
       }
     } catch (e) {
       if (mounted) {
         setState(
           () => _error = e is StateError
               ? e.message.toString()
-              : 'Could not delete the account. Please try again.',
+              : l10n.deleteFailed,
         );
       }
     } finally {
@@ -81,31 +80,25 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
   Widget build(BuildContext context) => PopScope(
     canPop: !_busy,
     child: Scaffold(
-      appBar: AppBar(title: const Text('Delete account')),
+      appBar: AppBar(title: Text(_l10n.deleteAccount)),
       body: ListView(
         padding: const EdgeInsets.all(24),
         children: [
           const Icon(Icons.person_remove_outlined, size: 56, color: Colors.red),
           const SizedBox(height: 24),
           Text(
-            'Permanently delete your Kaylo account?',
+            _l10n.deleteAccountHeadline,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 16),
-          const Text(
-            'This removes your sign-in, profile, bookings, messages, care records and prescriptions stored on this device. It cannot be undone. Complete or cancel active bookings first. For unresolved payments, contact kayloapp@gmail.com.',
-          ),
+          Text(_l10n.deleteAccountBody),
           const SizedBox(height: 12),
-          const Text(
-            'Payment processors may retain transaction records. Documents you previously shared are not removed from other people’s devices.',
-          ),
+          Text(_l10n.deleteAccountNote),
           const SizedBox(height: 24),
           TextField(
             controller: _confirmation,
             enabled: !_busy,
-            decoration: const InputDecoration(
-              labelText: 'Type DELETE to confirm',
-            ),
+            decoration: InputDecoration(labelText: _l10n.typeDeleteToConfirm),
             onChanged: (_) => setState(() {}),
           ),
           if (_error != null)
@@ -117,7 +110,7 @@ class _DeleteAccountScreenState extends ConsumerState<DeleteAccountScreen> {
           FilledButton(
             onPressed: _busy || _confirmation.text != 'DELETE' ? null : _delete,
             style: FilledButton.styleFrom(backgroundColor: Colors.red.shade700),
-            child: Text(_busy ? 'Deleting…' : 'Delete my account'),
+            child: Text(_busy ? _l10n.deleting : _l10n.deleteMyAccount),
           ),
         ],
       ),

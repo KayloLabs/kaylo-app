@@ -147,16 +147,12 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
         if (mounted) {
           KayloSnackbar.showError(
             context,
-            message?.toString() ??
-                'Could not start SOS. Check your connection and trusted contacts.',
+            message?.toString() ?? l10n.sosStartFailedContacts,
           );
         }
       } catch (_) {
         if (mounted) {
-          KayloSnackbar.showError(
-            context,
-            'Could not start SOS. Please try again.',
-          );
+          KayloSnackbar.showError(context, l10n.sosStartFailed);
         }
       } finally {
         if (mounted) setState(() => _sending = false);
@@ -223,16 +219,16 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
       title: l10n.emergencySos,
       children: [
         SegmentedButton<bool>(
-          segments: const [
+          segments: [
             ButtonSegment(
               value: true,
-              icon: Icon(Icons.groups_outlined),
-              label: Text('Kaylo call'),
+              icon: const Icon(Icons.groups_outlined),
+              label: Text(l10n.sosModeKaylo),
             ),
             ButtonSegment(
               value: false,
-              icon: Icon(Icons.sim_card_outlined),
-              label: Text('SIM call'),
+              icon: const Icon(Icons.sim_card_outlined),
+              label: Text(l10n.sosModeSim),
             ),
           ],
           selected: {_inApp},
@@ -251,13 +247,11 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
                     ),
                   ),
             icon: const Icon(Icons.group_add_outlined),
-            label: const Text('Manage trusted contacts'),
+            label: Text(l10n.manageTrustedContacts),
           ),
         const SizedBox(height: AppSpacing.l),
         Text(
-          _inApp
-              ? 'Hold for 3 seconds to invite your trusted Kaylo contacts. They can join the call together. An invitation does not mean someone has answered.'
-              : l10n.sosHoldHint,
+          _inApp ? l10n.sosKayloHoldHint : l10n.sosHoldHint,
           textAlign: TextAlign.center,
           style: Theme.of(
             context,
@@ -295,6 +289,15 @@ class _EmergencySosScreenState extends ConsumerState<EmergencySosScreen>
                   }, style: Theme.of(context).textTheme.titleMedium),
                   const SizedBox(height: AppSpacing.s),
                   Text(l10n.sosCallProgress(state.attempted, state.total)),
+                  if (state.skipped > 0) ...[
+                    const SizedBox(height: AppSpacing.xs),
+                    Text(
+                      l10n.sosContactsSkipped(state.skipped),
+                      style: Theme.of(
+                        context,
+                      ).textTheme.bodySmall?.copyWith(color: AppColors.error),
+                    ),
+                  ],
                   if (state.running)
                     TextButton.icon(
                       onPressed: _stopCalls,
@@ -654,12 +657,15 @@ class _AddContactSheetState extends ConsumerState<_AddContactSheet> {
       if (mounted) {
         KayloSnackbar.showError(
           context,
-          error.message ?? 'Could not open phone contacts.',
+          error.message ?? AppLocalizations.of(context)!.contactsOpenFailed,
         );
       }
     } catch (_) {
       if (mounted) {
-        KayloSnackbar.showError(context, 'Could not open phone contacts.');
+        KayloSnackbar.showError(
+          context,
+          AppLocalizations.of(context)!.contactsOpenFailed,
+        );
       }
     } finally {
       if (mounted) setState(() => _picking = false);
@@ -717,7 +723,7 @@ class _AddContactSheetState extends ConsumerState<_AddContactSheet> {
             OutlinedButton.icon(
               onPressed: _saving || _picking ? null : _pickContact,
               icon: const Icon(Icons.contacts_outlined),
-              label: const Text('Choose from phone contacts'),
+              label: Text(l10n.chooseFromPhoneContacts),
             ),
             const SizedBox(height: AppSpacing.m),
           ],

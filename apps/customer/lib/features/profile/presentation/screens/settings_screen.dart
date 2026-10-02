@@ -250,9 +250,9 @@ class SettingsScreen extends ConsumerWidget {
               Icons.person_remove_outlined,
               color: Colors.red,
             ),
-            title: const Text(
-              'Delete account',
-              style: TextStyle(color: Colors.red),
+            title: Text(
+              l10n.deleteAccount,
+              style: const TextStyle(color: Colors.red),
             ),
             trailing: const Icon(Icons.chevron_right),
             onTap: () => Navigator.of(context).push(

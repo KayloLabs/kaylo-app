@@ -352,8 +352,8 @@ class _CaregiverBookingScreenState
 
                     KayloButton(
                       text: _paying
-                          ? 'Opening payment…'
-                          : 'Pay & book • ₹${_calculateTotal().toInt()}',
+                          ? l10n.openingPayment
+                          : '${l10n.payAndBook} • ₹${_calculateTotal().toInt()}',
                       icon: Icons.check_circle_rounded,
                       onPressed: _paying || _selectedCaregiver == null
                           ? null
@@ -407,7 +407,7 @@ class _CaregiverBookingScreenState
                                   context,
                                   error is StateError
                                       ? error.message.toString()
-                                      : 'Could not complete payment. Your visit is not confirmed. Please try again.',
+                                      : l10n.visitPaymentFailed,
                                 );
                                 return;
                               } finally {

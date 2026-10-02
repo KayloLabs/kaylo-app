@@ -6,6 +6,7 @@ import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import '../../home/application/home_providers.dart';
 import 'care_providers.dart';
+import '../../../l10n/generated/app_localizations.dart';
 
 /// Kept for the lifetime of a checkout screen, so retries reuse its pending booking.
 class CareCheckout {
@@ -17,6 +18,7 @@ class CareCheckout {
     required Map<String, dynamic> details,
     required double mockAmount,
   }) async {
+    final l10n = AppLocalizations.of(ref.context)!;
     final fingerprint = '$kind:$details';
     if (_fingerprint != fingerprint) {
       _requestId = const Uuid().v4();
@@ -31,7 +33,7 @@ class CareCheckout {
           .where((s) => s.name.toLowerCase().contains(kind))
           .firstOrNull;
       if (service == null) {
-        throw StateError('This care service is unavailable.');
+        throw StateError(l10n.careServiceUnavailable);
       }
       final booking = await ref
           .read(bookingsRepositoryProvider)
@@ -75,10 +77,7 @@ class CareCheckout {
         .pay(bookingId: bookingId, email: ref.read(currentUserProvider)?.email);
     _refresh(ref);
     if (!outcome.paid) {
-      throw StateError(
-        outcome.message ??
-            'Payment was not completed. Your appointment is not confirmed.',
-      );
+      throw StateError(outcome.message ?? l10n.appointmentNotConfirmed);
     }
     if (useMockData) {
       await ref

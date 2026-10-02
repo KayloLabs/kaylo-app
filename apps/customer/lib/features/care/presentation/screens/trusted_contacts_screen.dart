@@ -6,6 +6,7 @@ import 'package:kaylo_core/network/supabase_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../../application/care_calls.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class TrustedContactsScreen extends ConsumerStatefulWidget {
   const TrustedContactsScreen({super.key});
@@ -15,6 +16,7 @@ class TrustedContactsScreen extends ConsumerStatefulWidget {
 }
 
 class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
   String? _code;
   String? _error;
   bool _inviteAccepted = false;
@@ -34,7 +36,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
     });
     try {
       if (useMockData) {
-        throw StateError('Sign into the live app to connect trusted contacts.');
+        throw StateError(_l10n.signInLiveForContacts);
       }
       await action();
     } catch (e) {
@@ -44,7 +46,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
               ? e.message
               : e is StateError
               ? e.message.toString()
-              : 'Could not connect. Please try again.',
+              : _l10n.couldNotConnectRetry,
         );
       }
     } finally {
@@ -58,10 +60,10 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
     final pid = ref.watch(currentUserIdProvider);
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Trusted contacts'),
+        title: Text(_l10n.trustedContacts),
         actions: [
           IconButton(
-            tooltip: 'Refresh connections',
+            tooltip: _l10n.refreshConnections,
             icon: const Icon(Icons.refresh),
             onPressed: () => ref.invalidate(careConnectionsProvider),
           ),
@@ -71,13 +73,11 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
         padding: const EdgeInsets.all(24),
         children: [
           Text(
-            'Bring your circle into Kaylo',
+            _l10n.trustedCircleTitle,
             style: Theme.of(context).textTheme.headlineSmall,
           ),
           const SizedBox(height: 12),
-          const Text(
-            'Invite up to five family members or doctors who use Kaylo. When they accept your code, they can receive your SOS alerts and join the same voice call.',
-          ),
+          Text(_l10n.trustedCircleBody),
           const SizedBox(height: 20),
           FilledButton.icon(
             onPressed: _busy
@@ -91,7 +91,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                     if (mounted) setState(() => _code = code);
                   }),
             icon: const Icon(Icons.person_add_alt),
-            label: const Text('Get my invite code'),
+            label: Text(_l10n.getInviteCode),
           ),
           if (_code != null)
             Card(
@@ -108,23 +108,21 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                         await Clipboard.setData(ClipboardData(text: _code!));
                         if (context.mounted) {
                           ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(content: Text('Invite code copied')),
+                            SnackBar(content: Text(_l10n.inviteCodeCopied)),
                           );
                         }
                       },
                       icon: const Icon(Icons.copy),
-                      label: const Text('Copy code'),
+                      label: Text(_l10n.copyCode),
                     ),
-                    const Text(
-                      'Valid for seven days. Share only with people you trust.',
-                    ),
+                    Text(_l10n.inviteCodeValidity),
                   ],
                 ),
               ),
             ),
           const SizedBox(height: 28),
           Text(
-            'Accept someone’s invitation',
+            _l10n.acceptInviteTitle,
             style: Theme.of(context).textTheme.titleMedium,
           ),
           const SizedBox(height: 12),
@@ -132,7 +130,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
             controller: _invite,
             maxLength: 32,
             autocorrect: false,
-            decoration: const InputDecoration(labelText: 'Invite code'),
+            decoration: InputDecoration(labelText: _l10n.inviteCode),
           ),
           OutlinedButton(
             onPressed: _busy
@@ -150,7 +148,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                     ref.invalidate(careConnectionsProvider);
                     setState(() => _inviteAccepted = true);
                   }),
-            child: const Text('Accept invitation'),
+            child: Text(_l10n.acceptInvitation),
           ),
           if (_busy) const LinearProgressIndicator(),
           if (_inviteAccepted)
@@ -164,11 +162,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                     color: Theme.of(context).colorScheme.primary,
                   ),
                   const SizedBox(width: 8),
-                  const Expanded(
-                    child: Text(
-                      'Invitation accepted. You are now connected and can receive their SOS alerts.',
-                    ),
-                  ),
+                  Expanded(child: Text(_l10n.invitationAccepted)),
                 ],
               ),
             ),
@@ -176,16 +170,16 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
             Text(_error!, style: const TextStyle(color: Colors.red)),
           const SizedBox(height: 24),
           Text(
-            'Your connections',
+            _l10n.yourConnections,
             style: Theme.of(context).textTheme.titleLarge,
           ),
           connections.when(
             data: (rows) => Column(
               children: [
                 if (rows.isEmpty)
-                  const Padding(
-                    padding: EdgeInsets.all(24),
-                    child: Text('No connections yet'),
+                  Padding(
+                    padding: const EdgeInsets.all(24),
+                    child: Text(_l10n.noConnectionsYet),
                   ),
                 for (final row in rows)
                   Card(
@@ -199,11 +193,11 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                       ),
                       subtitle: Text(
                         row['owner_id'] == pid
-                            ? 'Receives your SOS alerts'
-                            : 'You receive their SOS alerts',
+                            ? _l10n.receivesYourSos
+                            : _l10n.youReceiveTheirSos,
                       ),
                       trailing: IconButton(
-                        tooltip: 'Remove connection',
+                        tooltip: _l10n.removeConnection,
                         icon: const Icon(Icons.close),
                         onPressed: _busy
                             ? null
@@ -211,20 +205,18 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
                                 final remove = await showDialog<bool>(
                                   context: context,
                                   builder: (ctx) => AlertDialog(
-                                    title: const Text('Remove connection?'),
-                                    content: const Text(
-                                      'This connection will no longer receive SOS call invitations.',
-                                    ),
+                                    title: Text(_l10n.removeConnectionTitle),
+                                    content: Text(_l10n.removeConnectionBody),
                                     actions: [
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, false),
-                                        child: const Text('Cancel'),
+                                        child: Text(_l10n.cancel),
                                       ),
                                       TextButton(
                                         onPressed: () =>
                                             Navigator.pop(ctx, true),
-                                        child: const Text('Remove'),
+                                        child: Text(_l10n.removeContact),
                                       ),
                                     ],
                                   ),
@@ -247,7 +239,7 @@ class _TrustedContactsScreenState extends ConsumerState<TrustedContactsScreen> {
             ),
             error: (_, _) => TextButton(
               onPressed: () => ref.invalidate(careConnectionsProvider),
-              child: const Text('Could not load contacts. Retry'),
+              child: Text(_l10n.contactsLoadFailedRetry),
             ),
             loading: () => const LinearProgressIndicator(),
           ),

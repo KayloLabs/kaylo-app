@@ -7,6 +7,7 @@ import 'package:kaylo_core/network/supabase_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../../application/care_calls.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 
 class CareCallScreen extends ConsumerStatefulWidget {
   final String callId;
@@ -16,6 +17,7 @@ class CareCallScreen extends ConsumerStatefulWidget {
 }
 
 class _CareCallScreenState extends ConsumerState<CareCallScreen> {
+  AppLocalizations get _l10n => AppLocalizations.of(context)!;
   late final SupabaseClient _client = ref.read(supabaseClientProvider);
   late final String _pid = ref.read(currentUserIdProvider)!;
   final Map<String, RTCPeerConnection> _peers = {};
@@ -107,14 +109,10 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
         setState(() {
           _ready = false;
           _error = switch (stage) {
-            'room' =>
-              'This call is unavailable or has ended. Return to SOS to start a new call.',
-            'settings' =>
-              'Could not load call settings. Check your connection and retry.',
-            'microphone' =>
-              'Could not access the microphone. Check microphone access for Kaylo and retry.',
-            _ =>
-              'Could not join this call. Retry, or ask the caller to start a new SOS call.',
+            'room' => _l10n.callErrorRoom,
+            'settings' => _l10n.callErrorSettings,
+            'microphone' => _l10n.callErrorMicrophone,
+            _ => _l10n.callErrorJoin,
           };
         });
       }
@@ -161,12 +159,13 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
       if (!mounted || _ended) return;
       setState(
         () => _states[id] = switch (state) {
-          RTCPeerConnectionState.RTCPeerConnectionStateConnected => 'Connected',
+          RTCPeerConnectionState.RTCPeerConnectionStateConnected =>
+            _l10n.callPeerConnected,
           RTCPeerConnectionState.RTCPeerConnectionStateFailed =>
-            'Connection failed',
+            _l10n.callPeerFailed,
           RTCPeerConnectionState.RTCPeerConnectionStateDisconnected =>
-            'Reconnecting',
-          _ => 'Connecting',
+            _l10n.callPeerReconnecting,
+          _ => _l10n.callPeerConnecting,
         },
       );
     };
@@ -236,9 +235,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
       for (final signal in signals) {
         final id = signal['sender_id'] as String;
         final p = signal['payload'] as Map<String, dynamic>;
-        final sender = members
-            .where((m) => m['person_id'] == id)
-            .firstOrNull;
+        final sender = members.where((m) => m['person_id'] == id).firstOrNull;
         // The member list was read a moment before the signals, so a
         // sender who has just joined can still show as invited. Leave
         // their signal for the next poll rather than losing the offer.
@@ -284,7 +281,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
       }
     } catch (_) {
       if (mounted && !_ended) {
-        setState(() => _error = 'Connection interrupted. Retrying…');
+        setState(() => _error = _l10n.callInterrupted);
       }
     } finally {
       _polling = false;
@@ -348,7 +345,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
     },
     child: Scaffold(
       appBar: AppBar(
-        title: const Text('Kaylo SOS call'),
+        title: Text(_l10n.callTitle),
         leading: IconButton(
           onPressed: _leave,
           icon: const Icon(Icons.arrow_back),
@@ -367,16 +364,16 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
               const SizedBox(height: 16),
               Text(
                 _ended
-                    ? 'Call ended'
+                    ? _l10n.callEnded
                     : _ready
-                    ? 'Your trusted circle'
+                    ? _l10n.callYourCircle
                     : _error != null
-                    ? 'Could not connect'
-                    : 'Connecting…',
+                    ? _l10n.callCouldNotConnect
+                    : _l10n.callConnecting,
                 style: Theme.of(context).textTheme.headlineSmall,
               ),
               const SizedBox(height: 8),
-              const Text('Keep Kaylo open during the call.'),
+              Text(_l10n.callKeepOpen),
               if (_error != null)
                 Padding(
                   padding: const EdgeInsets.all(12),
@@ -386,7 +383,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                 OutlinedButton.icon(
                   onPressed: _starting ? null : _start,
                   icon: const Icon(Icons.refresh),
-                  label: const Text('Retry call'),
+                  label: Text(_l10n.retryCall),
                 ),
               Expanded(
                 child: ListView(
@@ -401,12 +398,15 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                         title: Text(member['name'] as String),
                         subtitle: Text(
                           member['person_id'] == _pid
-                              ? (_muted ? 'You • Muted' : 'You')
+                              ? (_muted ? _l10n.callYouMuted : _l10n.callYou)
                               : member['status'] == 'invited'
-                              ? 'Invited • Waiting to answer'
+                              ? _l10n.callInvitedWaiting
                               : member['status'] == 'joined'
-                              ? (_states[member['person_id']] ?? 'Connecting')
-                              : member['status'] as String,
+                              ? (_states[member['person_id']] ??
+                                    _l10n.callPeerConnecting)
+                              : member['status'] == 'declined'
+                              ? _l10n.callDeclined
+                              : _l10n.callLeft,
                         ),
                       ),
                   ],
@@ -417,7 +417,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     IconButton.filledTonal(
-                      tooltip: _muted ? 'Unmute' : 'Mute',
+                      tooltip: _muted ? _l10n.unmute : _l10n.mute,
                       onPressed: !_ready
                           ? null
                           : () {
@@ -433,7 +433,7 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                     if (!kIsWeb) ...[
                       const SizedBox(width: 24),
                       IconButton.filledTonal(
-                        tooltip: 'Speaker',
+                        tooltip: _l10n.speaker,
                         onPressed: !_ready
                             ? null
                             : () async {
@@ -445,9 +445,9 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                                 } catch (_) {
                                   if (context.mounted) {
                                     ScaffoldMessenger.of(context).showSnackBar(
-                                      const SnackBar(
+                                      SnackBar(
                                         content: Text(
-                                          'Could not change audio output. The call is still active.',
+                                          _l10n.callAudioOutputFailed,
                                         ),
                                       ),
                                     );
@@ -468,10 +468,10 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
                 icon: const Icon(Icons.call_end),
                 label: Text(
                   _ended
-                      ? 'Close'
+                      ? _l10n.close
                       : _owner == _pid
-                      ? 'End call for everyone'
-                      : 'Leave call',
+                      ? _l10n.callEndForEveryone
+                      : _l10n.callLeave,
                 ),
               ),
             ],

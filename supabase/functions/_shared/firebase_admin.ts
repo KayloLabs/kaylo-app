@@ -115,3 +115,15 @@ export async function createUserWithEmail(
   }
   return (await res.json()).localId as string;
 }
+
+export async function deleteFirebaseUser(uid: string): Promise<void> {
+  const res = await fetch(`${accountsBase()}/accounts:delete`, {
+    method: "POST", headers: await adminHeaders(),
+    body: JSON.stringify({ localId: uid }),
+  });
+  if (!res.ok) {
+    const body = await res.json().catch(() => ({}));
+    if (body?.error?.message === "USER_NOT_FOUND") return;
+    throw new Error(`Firebase account deletion failed (${res.status})`);
+  }
+}

@@ -114,13 +114,14 @@ Deno.serve(async (request) => {
 
   const { data: invoiceNumber } = await service.rpc("next_invoice_number");
   const paidAt = new Date();
-  await service.from("payments").update({
+  const { error: recordError } = await service.from("payments").update({
     payment_status: "success",
     transaction_id: paymentId,
     paid_at: paidAt.toISOString(),
     invoice_number: invoiceNumber,
     payment_method: rzp.method ? `razorpay:${rzp.method}` : "razorpay",
   }).eq("payment_id", payment.payment_id);
+  if (recordError) return fail(503, "record-payment", "Payment was received but could not be recorded. Retry verification; do not pay again.");
   // The booking's status trigger sends the "Booking confirmed" notification.
   await service.from("bookings").update({ status: "confirmed" }).eq(
     "booking_id",

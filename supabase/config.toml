@@ -18,3 +18,12 @@ verify_jwt = false
 
 [functions.booking-email]
 verify_jwt = false
+
+# These two also read the caller's identity themselves: care-call checks
+# Google's signature on the Firebase token, delete-account lets the
+# database derive the account from it.
+[functions.care-call]
+verify_jwt = false
+
+[functions.delete-account]
+verify_jwt = false

@@ -36,6 +36,7 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
     private var pending: MethodChannel.Result? = null
     private var contacts = emptyList<Contact>()
     private var attempted = 0
+    private var skipped = 0
     private var status = "idle"
     private var error: String? = null
     private var foreground = false
@@ -44,6 +45,14 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
     private var modernListener: TelephonyCallback? = null
     private var legacyListener: PhoneStateListener? = null
     private val nextCall = Runnable { if (foreground && status == "waiting") placeNext() }
+    // A call that never starts (no SIM, flight mode, a dismissed SIM chooser)
+    // changes no call state, so without this the queue would wait for ever.
+    private val stalledCall = Runnable {
+        if (foreground && status == "calling" && !observedCall && !runCatching { telecom().isInCall }.getOrDefault(false)) {
+            if (attempted >= contacts.size) stop("finished")
+            else { status = "waiting"; emit(); placeNext() }
+        }
+    }
 
     override fun onListen(arguments: Any?, events: EventChannel.EventSink) {
         sink = events
@@ -71,11 +80,15 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
         }
         val raw = call.argument<List<Map<String, String>>>("contacts") ?: emptyList()
         val parsed = raw.map { Contact(it["name"] ?: "", (it["phone"] ?: "").replace(Regex("[\\s()\\-]"), "")) }
-        if (parsed.isEmpty() || parsed.any { !Regex("\\+?[0-9]{7,15}").matches(it.phone) }) {
+        // One mistyped number must not hold up the rest, so unusable ones are
+        // skipped. Three digits is enough: 112 and 108 are real numbers.
+        val usable = parsed.filter { Regex("\\+?[0-9]{3,15}").matches(it.phone) }
+        if (usable.isEmpty()) {
             result.error("invalid-number", "Check the saved contacts' phone numbers before calling.", null)
             return
         }
-        contacts = parsed.distinctBy { it.phone.removePrefix("+91").removePrefix("0091") }
+        contacts = usable.distinctBy { it.phone.removePrefix("+91").removePrefix("0091").removePrefix("0") }
+        skipped = parsed.size - usable.size
         attempted = 0
         error = null
         observedCall = false
@@ -147,6 +160,7 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
 
     private fun placeNext() {
         handler.removeCallbacks(nextCall)
+        handler.removeCallbacks(stalledCall)
         if (!foreground) return
         try {
             if (telecom().isInCall) return
@@ -157,13 +171,19 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
             activity.startActivity(Intent(Intent.ACTION_CALL, Uri.fromParts("tel", contact.phone, null)))
             attempted += 1
             emit()
+            handler.postDelayed(stalledCall, 6000)
         } catch (exception: Exception) {
             stop("failed", exception.message ?: "The call could not be started. Check your SIM and phone permissions.")
         }
     }
 
-    fun onResume() { foreground = true; scheduleNext() }
-    fun onPause() { foreground = false; handler.removeCallbacks(nextCall) }
+    fun onResume() {
+        foreground = true
+        scheduleNext()
+        handler.removeCallbacks(stalledCall)
+        if (status == "calling" && !observedCall) handler.postDelayed(stalledCall, 4000)
+    }
+    fun onPause() { foreground = false; handler.removeCallbacks(nextCall); handler.removeCallbacks(stalledCall) }
     private fun scheduleNext() {
         handler.removeCallbacks(nextCall)
         if (foreground && status == "waiting") handler.postDelayed(nextCall, 3000)
@@ -172,11 +192,12 @@ class SosCallCoordinator(private val activity: MainActivity) : EventChannel.Stre
     private fun snapshot(): Map<String, Any?> = mapOf(
         "status" to status, "attempted" to attempted, "total" to contacts.size,
         "name" to contacts.getOrNull(if (status == "waiting") attempted else attempted - 1)?.name,
-        "error" to error,
+        "skipped" to skipped, "error" to error,
     )
     private fun emit() { sink?.success(snapshot()) }
     private fun stop(nextStatus: String, message: String? = null) {
         handler.removeCallbacks(nextCall)
+        handler.removeCallbacks(stalledCall)
         status = nextStatus
         error = message
         unregisterListener()

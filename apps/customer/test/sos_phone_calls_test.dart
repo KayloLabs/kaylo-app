@@ -48,6 +48,39 @@ void main() {
     },
   );
 
+  test(
+    'a contact whose number cannot be dialled is reported, not fatal',
+    () async {
+      messenger.setMockMethodCallHandler(methods, (_) async {
+        return {
+          'status': 'calling',
+          'attempted': 1,
+          'total': 1,
+          'skipped': 1,
+          'name': 'Primary',
+        };
+      });
+      final state = await AndroidSosPhoneCalls().start([
+        const EmergencyContact(
+          id: 'primary',
+          name: 'Primary',
+          relation: 'Child',
+          phone: '+91 9000000002',
+          isPrimary: true,
+        ),
+        const EmergencyContact(
+          id: 'typo',
+          name: 'Typo',
+          relation: 'Friend',
+          phone: '98',
+        ),
+      ]);
+      expect(state.running, isTrue);
+      expect(state.total, 1);
+      expect(state.skipped, 1);
+    },
+  );
+
   test('stopping the sequence returns a stopped state', () async {
     messenger.setMockMethodCallHandler(methods, (call) async {
       expect(call.method, 'stop');

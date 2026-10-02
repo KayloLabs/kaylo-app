@@ -9,6 +9,7 @@ class SosCallState {
     required this.status,
     required this.attempted,
     required this.total,
+    this.skipped = 0,
     this.name,
     this.error,
   });
@@ -17,6 +18,7 @@ class SosCallState {
     status: value['status'] as String? ?? 'idle',
     attempted: value['attempted'] as int? ?? 0,
     total: value['total'] as int? ?? 0,
+    skipped: value['skipped'] as int? ?? 0,
     name: value['name'] as String?,
     error: value['error'] as String?,
   );
@@ -24,6 +26,9 @@ class SosCallState {
   final String status;
   final int attempted;
   final int total;
+
+  /// Saved contacts left out because their number cannot be dialled.
+  final int skipped;
   final String? name;
   final String? error;
   bool get running => status == 'calling' || status == 'waiting';

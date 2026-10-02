@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <meta name="robots" content="noindex, nofollow">
+  <title>Copy your Kaylo code</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; min-height: 100vh; display: grid; place-items: center; background: #F7F9F6; color: #16211B; font-family: system-ui, sans-serif; padding: 24px; }
+    main { width: 100%; max-width: 420px; background: white; border: 1px solid #E2E8E1; border-radius: 24px; padding: 32px; text-align: center; }
+    .brand { color: #2F7A4F; font-size: 26px; font-weight: 750; }
+    h1 { font-size: 22px; margin-top: 24px; }
+    p { color: #5C6B62; line-height: 1.6; }
+    input { width: 100%; border: 0; border-radius: 16px; background: #EFF3EE; padding: 18px; font: 700 36px system-ui, sans-serif; letter-spacing: 4px; text-align: center; color: #16211B; }
+    button { width: 100%; margin-top: 20px; padding: 16px; border: 0; border-radius: 14px; background: #2F7A4F; color: white; font: 700 18px system-ui, sans-serif; cursor: pointer; }
+    button:disabled { opacity: .55; cursor: default; }
+    :focus-visible { outline: 3px solid #8E9E8A; outline-offset: 4px; }
+  </style>
+</head>
+<body>
+  <main>
+    <div class="brand">Kaylo</div>
+    <h1>Copy your verification code</h1>
+    <input id="code" aria-label="Your six-digit code" readonly hidden autocomplete="off">
+    <button id="copy" disabled>Copy OTP</button>
+    <p id="status" role="status" aria-live="polite">Open this page using the link in your Kaylo email.</p>
+  </main>
+  <script>
+    const params = new URLSearchParams(location.hash.slice(1));
+    const code = params.get('code') || '';
+    const expires = Number(params.get('expires'));
+    history.replaceState(null, '', location.pathname + location.search);
+    const field = document.getElementById('code');
+    const button = document.getElementById('copy');
+    const status = document.getElementById('status');
+    let copied = false;
+    function update() {
+      if (!/^\d{6}$/.test(code) || !Number.isFinite(expires) || expires <= Date.now()) {
+        field.value = '';
+        field.hidden = true;
+        button.disabled = true;
+        status.textContent = 'This link is invalid or has expired. Request a new code in Kaylo.';
+        return false;
+      }
+      field.hidden = false;
+      field.value = code;
+      button.disabled = false;
+      if (!copied) status.textContent = 'Copy the code, then return to the Kaylo app.';
+      return true;
+    }
+    if (params.has('code')) update();
+    setInterval(() => { if (params.has('code')) update(); }, 1000);
+    button.addEventListener('click', async () => {
+      if (!update()) return;
+      try {
+        await navigator.clipboard.writeText(code);
+        if (!update()) return;
+        copied = true;
+        status.textContent = 'Code copied. Return to Kaylo and paste it.';
+        button.textContent = 'Copy again';
+      } catch (_) {
+        field.focus();
+        field.select();
+        status.textContent = 'Select the code and choose Copy, then return to Kaylo.';
+      }
+    });
+  </script>
+</body>
+</html>

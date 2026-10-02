@@ -4,6 +4,8 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:kaylo/features/care/presentation/screens/care_home_screen.dart';
 import 'package:kaylo/l10n/generated/app_localizations.dart';
 
+import 'support/test_app.dart';
+
 void main() {
   // The hub reads the reminders provider for its pending-dose badge, so
   // it needs a ProviderScope; with no session it simply shows no badge.
@@ -16,6 +18,7 @@ void main() {
   );
 
   testWidgets('Care Home renders its core actions', (tester) async {
+    useTallPhone(tester);
     await tester.pumpWidget(wrap(const CareHomeScreen()));
     await tester.pumpAndSettle();
 

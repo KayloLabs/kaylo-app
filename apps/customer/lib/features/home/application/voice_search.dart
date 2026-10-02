@@ -21,6 +21,41 @@ const int _weak = 2;
 /// Intent vocabulary per service family. The family key must be a
 /// substring of the English catalog name it targets.
 const Map<String, List<_Term>> _intents = {
+  'doctor': [
+    _Term('doctor', _strong),
+    _Term('appointment', _strong),
+    _Term('consultation', _strong),
+    _Term('ഡോക്ടർ', _strong),
+    _Term('மருத்துவர்', _strong),
+    _Term('डॉक्टर', _strong),
+  ],
+  'mechanic': [
+    _Term('mechanic', _strong),
+    _Term('engine', _strong),
+    _Term('car repair', _strong),
+    _Term('bike repair', _strong),
+  ],
+  'paint': [
+    _Term('paint', _strong),
+    _Term('പെയിന്റ്', _strong),
+    _Term('पेंट', _strong),
+  ],
+  'carpen': [
+    _Term('carpenter', _strong),
+    _Term('woodwork', _strong),
+    _Term('ആശാരി', _strong),
+    _Term('தச்சர்', _strong),
+  ],
+  'appliance': [
+    _Term('fridge', _strong),
+    _Term('washing machine', _strong),
+    _Term('refrigerator', _strong),
+  ],
+  'ac ': [
+    _Term('ac', _strong),
+    _Term('air conditioner', _strong),
+    _Term('air conditioning', _strong),
+  ],
   'plumb': [
     _Term('plumb', _strong),
     _Term('pipe', _strong),
@@ -202,7 +237,36 @@ const Map<String, List<_Term>> _intents = {
 
 /// Words too generic to count as a direct catalog-name hit
 /// ("house" must not drag every sentence to House Cleaning).
+const Set<String> _stopWords = {
+  'need',
+  'needs',
+  'want',
+  'someone',
+  'person',
+  'please',
+  'have',
+  'this',
+  'with',
+  'that',
+  'some',
+  'what',
+  'where',
+  'there',
+  'which',
+  'would',
+  'could',
+  'should',
+  'look',
+  'find',
+  'book',
+};
+
 const Set<String> _genericNameWords = {
+  'service',
+  'services',
+  'repair',
+  'technician',
+  'booking',
   'house',
   'home',
   'visit',
@@ -222,7 +286,7 @@ List<ServiceItem> matchServicesToTranscript(
   // shred every word in those scripts.
   final tokens = text
       .split(RegExp(r'[^\p{L}\p{M}\p{N}]+', unicode: true))
-      .where((t) => t.isNotEmpty)
+      .where((t) => t.isNotEmpty && !_stopWords.contains(t))
       .toList();
   if (tokens.isEmpty) return const [];
 
@@ -245,7 +309,9 @@ List<ServiceItem> matchServicesToTranscript(
       var best = 0;
       for (final term in terms) {
         final hit =
-            text.contains(term.text.toLowerCase()) ||
+            (term.text.contains(' ')
+                ? text.contains(term.text)
+                : tokens.contains(term.text)) ||
             tokens.any((t) => _fuzzyMatch(t, term.text.toLowerCase()));
         if (hit && term.weight > best) best = term.weight;
       }
@@ -272,7 +338,8 @@ bool _fuzzyMatch(String token, String term) {
   if (minLen >= 4 && (token.startsWith(term) || term.startsWith(token))) {
     return true;
   }
-  if (minLen < 4) return false;
+  // Four-letter lookalikes (trip/drip) are too ambiguous for fuzzy intent.
+  if (minLen < 5) return false;
   // Distance 2 only for long words: at 6-7 letters it lets unrelated
   // trades collide (plumber/climber, leaking/cleaning).
   final allowed = minLen >= 8 ? 2 : 1;

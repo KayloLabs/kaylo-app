@@ -147,7 +147,7 @@ class _PrescriptionsScreenState extends ConsumerState<PrescriptionsScreen> {
               ),
             const SizedBox(height: 16),
             TextField(
-              decoration: InputDecoration(
+              decoration: prescriptionInputDecoration(context).copyWith(
                 prefixIcon: const Icon(Icons.search),
                 hintText: _l10n.searchPrescriptions,
               ),
@@ -316,22 +316,39 @@ class _PrescriptionEditorState extends State<_PrescriptionEditor> {
           TextField(
             controller: _title,
             maxLength: 160,
-            decoration: InputDecoration(labelText: _l10n.titleLabel),
+            decoration: prescriptionInputDecoration(
+              context,
+            ).copyWith(labelText: _l10n.titleLabel),
           ),
           const SizedBox(height: 16),
           TextField(
             controller: _text,
+            onChanged: (_) => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
             minLines: 10,
             maxLines: 25,
             maxLength: 100000,
-            decoration: InputDecoration(
+            textCapitalization: TextCapitalization.sentences,
+            style: const TextStyle(height: 1.55),
+            decoration: prescriptionInputDecoration(context).copyWith(
               labelText: _scanned
                   ? _l10n.extractedTextNotes
                   : _l10n.prescriptionDetails,
               alignLabelWithHint: true,
             ),
           ),
-          if (_scanned) Text(_l10n.prescriptionEditHint),
+          if (_scanned) ...[
+            const SizedBox(height: 8),
+            Text(_l10n.prescriptionEditHint),
+            if (widget.document['ocrPartial'] == true ||
+                _text.text.trim().isEmpty)
+              Padding(
+                padding: const EdgeInsets.only(top: 12),
+                child: Text(
+                  _l10n.ocrNeedsReview,
+                  style: TextStyle(color: Theme.of(context).colorScheme.error),
+                ),
+              ),
+          ],
           const SizedBox(height: 24),
           FilledButton.icon(
             onPressed: _busy ? null : () => _action('save'),
@@ -353,5 +370,26 @@ class _PrescriptionEditorState extends State<_PrescriptionEditor> {
         ],
       ),
     ),
+  );
+}
+
+/// A document field has a fixed corner radius, including focus and error states.
+InputDecoration prescriptionInputDecoration(BuildContext context) {
+  final colors = Theme.of(context).colorScheme;
+  OutlineInputBorder border(Color color, [double width = 1]) =>
+      OutlineInputBorder(
+        borderRadius: BorderRadius.circular(18),
+        borderSide: BorderSide(color: color, width: width),
+      );
+  return InputDecoration(
+    filled: true,
+    fillColor: colors.surface,
+    contentPadding: const EdgeInsets.symmetric(horizontal: 18, vertical: 18),
+    border: border(colors.outlineVariant),
+    enabledBorder: border(colors.outlineVariant),
+    focusedBorder: border(colors.primary, 1.5),
+    errorBorder: border(colors.error),
+    focusedErrorBorder: border(colors.error, 1.5),
+    disabledBorder: border(colors.outlineVariant),
   );
 }

@@ -3665,6 +3665,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Payment was not completed. Your appointment is not confirmed.'**
   String get appointmentNotConfirmed;
+
+  /// No description provided for @hapticFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback'**
+  String get hapticFeedback;
+
+  /// No description provided for @soundEffects.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get soundEffects;
+
+  /// No description provided for @voiceStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting microphone…'**
+  String get voiceStarting;
+
+  /// No description provided for @ocrNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Some text could not be read. Check the original scan and correct the notes before using them.'**
+  String get ocrNeedsReview;
 }
 
 class _AppLocalizationsDelegate

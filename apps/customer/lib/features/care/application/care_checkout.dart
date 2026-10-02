@@ -1,3 +1,6 @@
+import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
+import '../../notifications/application/booking_reminders.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_core/network/supabase_providers.dart';
@@ -75,7 +78,6 @@ class CareCheckout {
     final outcome = await ref
         .read(paymentGatewayProvider)
         .pay(bookingId: bookingId, email: ref.read(currentUserProvider)?.email);
-    _refresh(ref);
     if (!outcome.paid) {
       throw StateError(outcome.message ?? l10n.appointmentNotConfirmed);
     }
@@ -84,6 +86,25 @@ class CareCheckout {
           .read(bookingsRepositoryProvider)
           .updateBookingStatus(bookingId, BookingStatus.confirmed);
     }
+    // Payment already succeeded. A notification or refresh failure must not
+    // present the checkout as unpaid or encourage a second payment.
+    try {
+      final bookings = await ref
+          .read(bookingsRepositoryProvider)
+          .getUserBookings(ref.read(currentUserIdProvider)!);
+      final confirmed = bookings.where((b) => b.id == bookingId).firstOrNull;
+      if (confirmed != null) {
+        await ref
+            .read(bookingRemindersProvider)
+            .received(
+              confirmed,
+              kind == 'doctor' ? l10n.doctorAppointment : l10n.caregiverBooking,
+            );
+      }
+      KayloFeedback.success();
+      ref.read(soundServiceProvider).playSuccess();
+    } catch (_) {}
+    _refresh(ref);
     return true;
   }
 

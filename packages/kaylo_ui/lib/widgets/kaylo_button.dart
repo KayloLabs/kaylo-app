@@ -5,7 +5,7 @@ import '../theme/app_shadows.dart';
 
 enum KayloButtonVariant { primary, secondary, outline }
 
-class KayloButton extends StatelessWidget {
+class KayloButton extends StatefulWidget {
   final String text;
   final VoidCallback? onPressed;
   final KayloButtonVariant variant;
@@ -21,6 +21,35 @@ class KayloButton extends StatelessWidget {
     this.icon,
   });
 
+  @override
+  State<KayloButton> createState() => _KayloButtonState();
+}
+
+class _KayloButtonState extends State<KayloButton> {
+  bool _pressed = false;
+  String get text => widget.text;
+  IconData? get icon => widget.icon;
+  bool get isLoading => widget.isLoading;
+  VoidCallback? get onPressed => widget.onPressed;
+  KayloButtonVariant get variant => widget.variant;
+
+  @override
+  Widget build(BuildContext context) => Listener(
+    onPointerDown: (_) {
+      if (onPressed != null && !isLoading) setState(() => _pressed = true);
+    },
+    onPointerUp: (_) => setState(() => _pressed = false),
+    onPointerCancel: (_) => setState(() => _pressed = false),
+    child: AnimatedScale(
+      scale: _pressed && !MediaQuery.disableAnimationsOf(context) ? .975 : 1,
+      duration: MediaQuery.disableAnimationsOf(context)
+          ? Duration.zero
+          : Duration(milliseconds: _pressed ? 90 : 260),
+      curve: Curves.easeOutCubic,
+      child: _buildButton(context),
+    ),
+  );
+
   /// Haptic + click on every press, from one place for all variants.
   VoidCallback? get _handlePress {
     if (isLoading || onPressed == null) return null;
@@ -30,8 +59,7 @@ class KayloButton extends StatelessWidget {
     };
   }
 
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildButton(BuildContext context) {
     final content = isLoading
         ? _buildLoadingIndicator()
         : _buildContent(context);

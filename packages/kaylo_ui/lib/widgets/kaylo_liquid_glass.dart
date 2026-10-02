@@ -235,9 +235,13 @@ class _KayloLiquidGlassState extends State<KayloLiquidGlass> {
         onTapCancel: () => _setPressed(false),
         onTap: widget.onTap,
         child: AnimatedScale(
-          scale: _pressed ? 0.965 : 1.0,
-          duration: Duration(milliseconds: _pressed ? 110 : 320),
-          curve: _pressed ? Curves.easeOut : Curves.elasticOut,
+          scale: _pressed && !MediaQuery.disableAnimationsOf(context)
+              ? 0.975
+              : 1.0,
+          duration: MediaQuery.disableAnimationsOf(context)
+              ? Duration.zero
+              : Duration(milliseconds: _pressed ? 110 : 320),
+          curve: Curves.easeOutCubic,
           child: result,
         ),
       );

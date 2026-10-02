@@ -872,5 +872,9 @@
   "appointmentPaymentFailed": "Could not complete payment. Your appointment is not confirmed. Please try again.",
   "visitPaymentFailed": "Could not complete payment. Your visit is not confirmed. Please try again.",
   "careServiceUnavailable": "This care service is unavailable.",
-  "appointmentNotConfirmed": "Payment was not completed. Your appointment is not confirmed."
+  "appointmentNotConfirmed": "Payment was not completed. Your appointment is not confirmed.",
+  "hapticFeedback": "Haptic feedback",
+  "soundEffects": "Sound effects",
+  "voiceStarting": "Starting microphone…",
+  "ocrNeedsReview": "Some text could not be read. Check the original scan and correct the notes before using them."
 }

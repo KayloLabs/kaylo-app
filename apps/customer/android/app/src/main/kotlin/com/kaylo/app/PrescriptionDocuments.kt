@@ -2,6 +2,12 @@ package com.kaylo.app
 
 import android.app.Activity
 import android.content.Intent
+import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.ColorMatrix
+import android.graphics.ColorMatrixColorFilter
+import android.graphics.Canvas
+import java.util.concurrent.TimeUnit
 import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.pdf.PdfDocument
@@ -49,7 +55,7 @@ class PrescriptionDocuments(private val activity: Activity) {
                     val value: Any? = when (call.method) {
                         "list" -> dir.listFiles()?.filter { it.extension == "json" }?.map {
                             val j = JSONObject(it.readText())
-                            mapOf("id" to j.getString("id"), "title" to j.getString("title"), "text" to j.getString("text"), "createdAt" to j.getLong("createdAt"), "scanned" to j.optBoolean("scanned"))
+                            mapOf("id" to j.getString("id"), "title" to j.getString("title"), "text" to j.getString("text"), "createdAt" to j.getLong("createdAt"), "scanned" to j.optBoolean("scanned"), "ocrPartial" to j.optBoolean("ocrPartial"), "pageCount" to j.optInt("pageCount", 1))
                         }?.sortedByDescending { it["createdAt"] as Long } ?: emptyList<Any>()
                         "save" -> {
                             val title = call.argument<String>("title")?.trim().orEmpty()
@@ -61,7 +67,7 @@ class PrescriptionDocuments(private val activity: Activity) {
                             if (scanned) require(pdf.exists()) { "The scanned PDF is missing. Scan it again." }
                             else { require(text.isNotEmpty()) { "Enter the prescription text." }; typedPdf(pdf, title, text) }
                             val data = JSONObject().put("id", id).put("title", title).put("text", text)
-                                .put("createdAt", call.argument<Number>("createdAt")?.toLong() ?: System.currentTimeMillis()).put("scanned", scanned)
+                                .put("createdAt", call.argument<Number>("createdAt")?.toLong() ?: System.currentTimeMillis()).put("scanned", scanned).put("ocrPartial", call.argument<Boolean>("ocrPartial") ?: false).put("pageCount", call.argument<Number>("pageCount")?.toInt() ?: 1)
                             val target = file(dir, id, "json")
                             val temp = File(target.path + ".tmp"); temp.writeText(data.toString()); check(temp.renameTo(target))
                             true
@@ -114,14 +120,46 @@ class PrescriptionDocuments(private val activity: Activity) {
                 activity.contentResolver.openInputStream(uri)!!.use { input -> file(dir, id, "pdf").outputStream().use { input.copyTo(it) } }
                 val recognizer = TextRecognition.getClient(TextRecognizerOptions.DEFAULT_OPTIONS)
                 val texts = mutableListOf<String>()
+                var partial = false
                 try {
                     for (page in scan?.pages.orEmpty()) {
-                        val image = InputImage.fromFilePath(activity, page.imageUri)
-                        texts.add(com.google.android.gms.tasks.Tasks.await(recognizer.process(image)).text)
+                        // Each corrected, full-resolution scan is independent: a bad
+                        // page must not prevent recognition of the remaining pages.
+                        try {
+                            val image = InputImage.fromFilePath(activity, page.imageUri)
+                            var text = com.google.android.gms.tasks.Tasks.await(recognizer.process(image), 20, TimeUnit.SECONDS).text
+                            // Only retry weak scans. A moderate greyscale contrast
+                            // pass can recover faint ink without binarising dosage dots.
+                            if (text.count { it.isLetterOrDigit() } < 40) {
+                              try {
+                                val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+                                activity.contentResolver.openInputStream(page.imageUri)?.use { BitmapFactory.decodeStream(it, null, options) }
+                                options.inJustDecodeBounds = false
+                                while (maxOf(options.outWidth, options.outHeight) / options.inSampleSize.coerceAtLeast(1) > 3000) {
+                                    options.inSampleSize = options.inSampleSize.coerceAtLeast(1) * 2
+                                }
+                                val bitmap = activity.contentResolver.openInputStream(page.imageUri)?.use { BitmapFactory.decodeStream(it, null, options) }
+                                if (bitmap != null) {
+                                    try {
+                                        val enhanced = Bitmap.createBitmap(bitmap.width, bitmap.height, Bitmap.Config.ARGB_8888)
+                                        try {
+                                            val matrix = ColorMatrix().apply { setSaturation(0f) }
+                                            matrix.postConcat(ColorMatrix(floatArrayOf(1.2f,0f,0f,0f,-18f, 0f,1.2f,0f,0f,-18f, 0f,0f,1.2f,0f,-18f, 0f,0f,0f,1f,0f)))
+                                            Canvas(enhanced).drawBitmap(bitmap, 0f, 0f, Paint().apply { colorFilter = ColorMatrixColorFilter(matrix) })
+                                            val retry = com.google.android.gms.tasks.Tasks.await(recognizer.process(InputImage.fromBitmap(enhanced, 0)), 20, TimeUnit.SECONDS).text
+                                            if (retry.count { it.isLetterOrDigit() } > text.count { it.isLetterOrDigit() }) text = retry
+                                        } finally { enhanced.recycle() }
+                                    } finally { bitmap.recycle() }
+                                }
+                              } catch (_: Exception) { /* Keep the original OCR if enhancement fails. */ }
+                            }
+                            if (text.isBlank()) partial = true
+                            texts.add(text.trim())
+                        } catch (_: Exception) { partial = true; texts.add("") }
                     }
-                } catch (_: Exception) { /* Preserve the scan even if OCR cannot read it. */ }
-                finally { recognizer.close() }
-                finishScan(mapOf("id" to id, "text" to texts.joinToString("\n\n"), "createdAt" to System.currentTimeMillis(), "scanned" to true), null)
+                } finally { recognizer.close() }
+                finishScan(mapOf("id" to id, "text" to texts.joinToString("\n\n"), "ocrPartial" to partial,
+                    "pageCount" to scan?.pages.orEmpty().size, "createdAt" to System.currentTimeMillis(), "scanned" to true), null)
             } catch (e: Exception) { file(dir, id, "pdf").delete(); finishScan(null, e.message) }
         }
         return true

@@ -68,6 +68,8 @@ dependencies:
   flutter_map: ^8.3.2
   latlong2: ^0.10.1
   razorpay_flutter: ^1.4.7
+  flutter_local_notifications: ^19.5.0
+  timezone: ^0.10.1
   uuid: ^4.5.3
   flutter_webrtc: ^1.6.2+hotfix.3
 

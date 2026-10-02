@@ -8,6 +8,7 @@ import UIKit
     _ application: UIApplication,
     didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?
   ) -> Bool {
+    UNUserNotificationCenter.current().delegate = self
     // Google Maps (location picker). GMSApiKey in Info.plist expands the
     // GOOGLE_MAPS_API_KEY build setting from ios/Flutter/Maps.xcconfig;
     // without one the map shows Kaylo's placeholder instead.

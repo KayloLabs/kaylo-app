@@ -1,29 +1,39 @@
+import 'dart:async';
 import 'package:flutter/services.dart';
 
-/// Centralised tactile and audible feedback for the whole app.
-///
-/// Three tiers, matched to the weight of the action:
-///  - [tap]    light tick for selections (tabs, toggles, list rows)
-///  - [press]  firmer thump for primary actions (buttons, confirmations)
-///  - [alert]  strong pulse reserved for critical actions (SOS)
-///
-/// Every call is safe on every platform: haptics and system sounds
-/// quietly no-op where unsupported (web, desktop), so callers never
-/// need to guard.
+/// Small, intentional feedback. Drag detents stay silent; completed actions
+/// use sound. Preferences are configured by each app at startup.
 class KayloFeedback {
   KayloFeedback._();
+  static bool hapticsEnabled = true;
+  static bool soundsEnabled = true;
+  static DateTime? _lastSelection;
+  static void _safe(Future<void> task) =>
+      unawaited(task.catchError((Object _) {}));
+  static void selection() {
+    final now = DateTime.now();
+    if (_lastSelection != null &&
+        now.difference(_lastSelection!).inMilliseconds < 45) {
+      return;
+    }
+    _lastSelection = now;
+    if (hapticsEnabled) _safe(HapticFeedback.selectionClick());
+  }
 
   static void tap() {
-    HapticFeedback.selectionClick();
-    SystemSound.play(SystemSoundType.click);
+    selection();
   }
 
   static void press() {
-    HapticFeedback.lightImpact();
-    SystemSound.play(SystemSoundType.click);
+    if (hapticsEnabled) _safe(HapticFeedback.lightImpact());
+    if (soundsEnabled) _safe(SystemSound.play(SystemSoundType.click));
+  }
+
+  static void success() {
+    if (hapticsEnabled) _safe(HapticFeedback.mediumImpact());
   }
 
   static void alert() {
-    HapticFeedback.heavyImpact();
+    if (hapticsEnabled) _safe(HapticFeedback.heavyImpact());
   }
 }

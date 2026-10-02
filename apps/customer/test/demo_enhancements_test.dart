@@ -41,7 +41,7 @@ void main() {
     );
     await tester.pumpAndSettle();
     final gesture = await tester.startGesture(
-      tester.getCenter(find.byIcon(Icons.home)),
+      tester.getCenter(find.byIcon(Icons.home_rounded)),
     );
     await tester.pump(const Duration(milliseconds: 600));
     await gesture.moveTo(tester.getCenter(find.byIcon(Icons.person_outline)));
@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
     expect(find.text('Page 4'), findsOneWidget);
     final cancelled = await tester.startGesture(
-      tester.getCenter(find.byIcon(Icons.person)),
+      tester.getCenter(find.byIcon(Icons.person_rounded)),
     );
     await tester.pump(const Duration(milliseconds: 600));
     await cancelled.moveTo(tester.getCenter(find.byIcon(Icons.home_outlined)));
@@ -87,7 +87,9 @@ void main() {
       await tester.pumpAndSettle();
       await tester.tap(find.text('Type record'));
       await tester.pumpAndSettle();
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Save prescription'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Save prescription'));
       await tester.pumpAndSettle();
       expect(calls.where((c) => c.method == 'save'), isEmpty);
@@ -95,7 +97,9 @@ void main() {
         find.byType(TextField).at(1),
         'Previous prescription record',
       );
+      await tester.pumpAndSettle();
       await tester.ensureVisible(find.text('Save prescription'));
+      await tester.pumpAndSettle();
       await tester.tap(find.text('Save prescription'));
       await tester.pumpAndSettle();
       final save = calls.singleWhere((c) => c.method == 'save');

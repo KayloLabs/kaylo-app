@@ -2053,4 +2053,17 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get appointmentNotConfirmed =>
       'கட்டணம் நிறைவடையவில்லை. உங்கள் சந்திப்பு உறுதியாகவில்லை.';
+
+  @override
+  String get hapticFeedback => 'தொடு உணர்வு';
+
+  @override
+  String get soundEffects => 'ஒலி விளைவுகள்';
+
+  @override
+  String get voiceStarting => 'மைக்ரோஃபோன் தொடங்குகிறது…';
+
+  @override
+  String get ocrNeedsReview =>
+      'சில எழுத்துகளைப் படிக்க முடியவில்லை. அசல் ஸ்கேனைப் பார்த்து குறிப்புகளைத் திருத்தவும்.';
 }

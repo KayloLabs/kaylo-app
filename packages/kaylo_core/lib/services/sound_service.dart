@@ -1,3 +1,4 @@
+import 'feedback_service.dart';
 import 'package:audioplayers/audioplayers.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -14,6 +15,7 @@ class AudioSoundService implements SoundService {
 
   @override
   Future<void> playSuccess() async {
+    if (!KayloFeedback.soundsEnabled) return;
     try {
       _player ??= AudioPlayer();
       await _player!.play(AssetSource('success.wav'));

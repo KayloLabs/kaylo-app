@@ -2021,4 +2021,17 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get appointmentNotConfirmed =>
       'भुगतान पूरा नहीं हुआ। आपकी अपॉइंटमेंट पक्की नहीं हुई है।';
+
+  @override
+  String get hapticFeedback => 'हैप्टिक प्रतिक्रिया';
+
+  @override
+  String get soundEffects => 'ध्वनि प्रभाव';
+
+  @override
+  String get voiceStarting => 'माइक्रोफ़ोन शुरू हो रहा है…';
+
+  @override
+  String get ocrNeedsReview =>
+      'कुछ पाठ पढ़ा नहीं जा सका। मूल स्कैन देखकर नोट्स सही करें।';
 }

@@ -21,6 +21,10 @@ void main() {
     _service('6', 'House Cleaning', 'home'),
     _service('7', 'Caregiver Visit', 'care'),
     _service('8', 'Medicine Delivery', 'care'),
+    _service('9', 'AC Technician', 'home'),
+    _service('10', 'Doctor Appointment', 'care'),
+    _service('11', 'Appliance Repair', 'home'),
+    _service('12', 'Carpentry', 'home'),
   ];
 
   String top(String transcript) =>
@@ -143,6 +147,17 @@ void main() {
     });
   });
 
+  test('new services and short words match whole tokens', () {
+    expect(top('my air conditioner needs service'), 'AC Technician');
+    expect(top('book a doctor appointment'), 'Doctor Appointment');
+    expect(top('the washing machine is broken'), 'Appliance Repair');
+    expect(top('woodwork for a cupboard'), 'Carpentry');
+    expect(
+      matchServicesToTranscript('a fantastic trip to the mountains', pool),
+      isEmpty,
+    );
+    expect(matchServicesToTranscript('what happened yesterday', pool), isEmpty);
+  });
   group('no false positives', () {
     test('unrelated speech', () {
       expect(

@@ -1,3 +1,4 @@
+import '../../notifications/application/booking_reminders.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kaylo_core/models/booking.dart';
@@ -138,7 +139,16 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
 
     state = result;
     final booking = result.whenOrNull(data: (b) => b);
-    if (booking != null) ref.invalidate(userBookingsProvider);
+    if (booking != null) {
+      try {
+        await ref
+            .read(bookingRemindersProvider)
+            .received(booking, draft.service.name);
+      } catch (_) {
+        /* Booking is already saved. */
+      }
+      ref.invalidate(userBookingsProvider);
+    }
     return booking;
   }
 }

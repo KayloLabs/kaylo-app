@@ -2016,4 +2016,17 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get appointmentNotConfirmed =>
       'Payment was not completed. Your appointment is not confirmed.';
+
+  @override
+  String get hapticFeedback => 'Haptic feedback';
+
+  @override
+  String get soundEffects => 'Sound effects';
+
+  @override
+  String get voiceStarting => 'Starting microphone…';
+
+  @override
+  String get ocrNeedsReview =>
+      'Some text could not be read. Check the original scan and correct the notes before using them.';
 }

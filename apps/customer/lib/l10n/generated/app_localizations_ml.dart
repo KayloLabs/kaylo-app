@@ -2040,4 +2040,17 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get appointmentNotConfirmed =>
       'പേയ്‌മെന്റ് പൂർത്തിയായില്ല. നിങ്ങളുടെ അപ്പോയിന്റ്മെന്റ് ഉറപ്പായിട്ടില്ല.';
+
+  @override
+  String get hapticFeedback => 'ഹാപ്റ്റിക് പ്രതികരണം';
+
+  @override
+  String get soundEffects => 'ശബ്ദ ഇഫക്റ്റുകൾ';
+
+  @override
+  String get voiceStarting => 'മൈക്രോഫോൺ ആരംഭിക്കുന്നു…';
+
+  @override
+  String get ocrNeedsReview =>
+      'ചില വാക്കുകൾ വായിക്കാൻ കഴിഞ്ഞില്ല. യഥാർത്ഥ സ്കാൻ പരിശോധിച്ച് കുറിപ്പുകൾ തിരുത്തുക.';
 }

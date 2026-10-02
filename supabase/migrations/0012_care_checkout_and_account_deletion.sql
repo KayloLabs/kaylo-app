@@ -1,3 +1,5 @@
+-- Care checkout through verified payment, and account deletion.
+-- Safe to run more than once.
 begin;
 insert into services(service_id,category_id,service_name,description,base_price,estimated_duration_minutes)
 select '20000000-0000-4000-8000-000000000099',category_id,'Doctor Appointment','Book a doctor consultation',500,30
@@ -61,6 +63,7 @@ begin
   end if;
   return new;
 end $$;
+drop trigger if exists confirm_paid_care_booking on payments;
 create trigger confirm_paid_care_booking after insert or update of payment_status on payments for each row execute function confirm_paid_care_booking();
 create or replace function sync_care_booking_status()
 returns trigger language plpgsql security definer set search_path=public as $$
@@ -71,10 +74,11 @@ begin
   end if;
   return new;
 end $$;
+drop trigger if exists sync_care_booking_status on bookings;
 create trigger sync_care_booking_status after update of status on bookings for each row execute function sync_care_booking_status();
 
 -- Private retry journal. No customer can inspect another deletion request.
-create table account_deletion_requests (
+create table if not exists account_deletion_requests (
   auth_subject text primary key, requested_at timestamptz not null default now(),
   auth_deleted_at timestamptz
 );

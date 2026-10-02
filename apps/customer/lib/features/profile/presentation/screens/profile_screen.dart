@@ -51,8 +51,15 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.l),
+          // Let the content scroll behind the floating navigation pill.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.l,
+            AppSpacing.l,
+            AppSpacing.l,
+            120,
+          ),
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),

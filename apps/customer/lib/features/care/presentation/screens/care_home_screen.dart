@@ -1,3 +1,4 @@
+import 'prescriptions_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -10,18 +11,16 @@ import 'package:kaylo_ui/theme/app_theme.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/care_providers.dart';
 
-/// Kaylo Care hub. Runs under [AppTheme.careTheme] — larger text, 56x56+
+/// Kaylo Care hub. Runs under [AppTheme.careTheme] with larger text, 56x56+
 /// tap targets, high contrast, no glass effects: clarity beats decoration
-/// for senior users. Medicine Reminders and SOS are live; Doctor
-/// Appointment and Caregiver Booking arrive with M3's booking flows.
+/// for senior users.
 class CareHomeScreen extends ConsumerWidget {
   const CareHomeScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final pendingDoses = ref
-        .watch(medicineRemindersProvider)
-        .whenOrNull(data: (list) => list.where((r) => !r.isTakenToday).length);
+    final reminders = ref.watch(medicineRemindersProvider).asData?.value;
+    final pendingDoses = reminders?.where((r) => !r.isTakenToday).length;
 
     return Theme(
       data: AppTheme.careTheme,
@@ -40,35 +39,81 @@ class CareHomeScreen extends ConsumerWidget {
                   120, // clearance for the bottom nav
                 ),
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 56,
-                        height: 56,
-                        decoration: BoxDecoration(
-                          color: AppColors.careAccent.withValues(alpha: 0.15),
-                          borderRadius: BorderRadius.circular(18),
-                        ),
-                        child: const Icon(
-                          Icons.favorite_rounded,
-                          color: AppColors.careAccent,
-                          size: 30,
-                        ),
+                  Container(
+                    padding: const EdgeInsets.all(AppSpacing.l),
+                    decoration: BoxDecoration(
+                      color: AppColors.careAccent.withValues(alpha: 0.08),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: AppColors.careAccent.withValues(alpha: 0.12),
                       ),
-                      const SizedBox(width: AppSpacing.l),
-                      Expanded(
-                        child: Text(
-                          l10n.kayloCare,
-                          style: Theme.of(context).textTheme.displaySmall,
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Row(
+                          children: [
+                            Container(
+                              width: 56,
+                              height: 56,
+                              decoration: BoxDecoration(
+                                color: AppColors.careAccent.withValues(
+                                  alpha: 0.15,
+                                ),
+                                borderRadius: BorderRadius.circular(18),
+                              ),
+                              child: const Icon(
+                                Icons.favorite_rounded,
+                                color: AppColors.careAccent,
+                                size: 30,
+                              ),
+                            ),
+                            const SizedBox(width: AppSpacing.l),
+                            Expanded(
+                              child: Text(
+                                l10n.kayloCare,
+                                style: Theme.of(context).textTheme.displaySmall,
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: AppSpacing.m),
-                  Text(
-                    l10n.careHomeGreeting,
-                    style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: AppColors.textSecondary,
+                        const SizedBox(height: AppSpacing.m),
+                        Text(
+                          l10n.careHomeGreeting,
+                          style: Theme.of(context).textTheme.bodyLarge
+                              ?.copyWith(color: AppColors.textSecondary),
+                        ),
+                        if (reminders != null && reminders.isNotEmpty) ...[
+                          const SizedBox(height: AppSpacing.l),
+                          Text(
+                            l10n.todaysMedicines,
+                            style: Theme.of(context).textTheme.titleSmall,
+                          ),
+                          const SizedBox(height: AppSpacing.s),
+                          Text(
+                            l10n.careDosesTaken(
+                              reminders.length - pendingDoses!,
+                              reminders.length,
+                            ),
+                            style: Theme.of(context).textTheme.bodySmall,
+                          ),
+                          const SizedBox(height: AppSpacing.m),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(8),
+                            child: LinearProgressIndicator(
+                              value:
+                                  (reminders.length - pendingDoses) /
+                                  reminders.length,
+                              minHeight: 8,
+                              color: AppColors.careAccent,
+                              backgroundColor: AppColors.careAccent.withValues(
+                                alpha: 0.14,
+                              ),
+                              semanticsLabel: l10n.todaysMedicines,
+                            ),
+                          ),
+                        ],
+                      ],
                     ),
                   ),
                   const SizedBox(height: AppSpacing.xxl),
@@ -83,6 +128,18 @@ class CareHomeScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.l),
 
+                  _CareActionCard(
+                    icon: Icons.document_scanner_outlined,
+                    color: AppColors.careAccent,
+                    title: 'Prescriptions',
+                    subtitle: 'Scan, read and keep your health records',
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PrescriptionsScreen(),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(height: AppSpacing.l),
                   _CareActionCard(
                     icon: Icons.alarm_rounded,
                     color: AppColors.careAccent,
@@ -213,6 +270,11 @@ class _CareActionCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
+      margin: EdgeInsets.zero,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+        side: BorderSide(color: color.withValues(alpha: 0.16)),
+      ),
       child: InkWell(
         borderRadius: BorderRadius.circular(20),
         onTap: onTap,

@@ -236,9 +236,14 @@ class _CareCallScreenState extends ConsumerState<CareCallScreen> {
       for (final signal in signals) {
         final id = signal['sender_id'] as String;
         final p = signal['payload'] as Map<String, dynamic>;
-        if (!members.any(
-          (m) => m['person_id'] == id && m['status'] == 'joined',
-        )) {
+        final sender = members
+            .where((m) => m['person_id'] == id)
+            .firstOrNull;
+        // The member list was read a moment before the signals, so a
+        // sender who has just joined can still show as invited. Leave
+        // their signal for the next poll rather than losing the offer.
+        if (sender?['status'] == 'invited') break;
+        if (sender?['status'] != 'joined') {
           _lastSignal = signal['id'] as int;
           continue;
         }

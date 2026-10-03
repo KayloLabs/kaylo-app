@@ -17,6 +17,7 @@ import 'package:kaylo_ui/widgets/search_bar_field.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/search_controller.dart';
+import '../../application/home_providers.dart';
 import '../widgets/search_filters_sheet.dart';
 import '../widgets/voice_search_overlay.dart';
 
@@ -134,6 +135,18 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         child: Column(
           children: [
             _FilterChips(filters: searchState.filters),
+            if (searchState.hasError)
+              ListTile(
+                leading: const Icon(Icons.cloud_off_rounded),
+                title: Text(l10n.somethingWentWrong),
+                trailing: IconButton(
+                  tooltip: MaterialLocalizations.of(
+                    context,
+                  ).refreshIndicatorSemanticLabel,
+                  icon: const Icon(Icons.refresh_rounded),
+                  onPressed: ref.read(searchControllerProvider.notifier).retry,
+                ),
+              ),
             Expanded(
               child: searchState.isLoading
                   ? ListView.separated(
@@ -221,26 +234,24 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
         Wrap(
           spacing: AppSpacing.s,
           runSpacing: AppSpacing.s,
-          children:
-              [
-                'Plumbing',
-                'Electrical',
-                'House Cleaning',
-                'AC Service',
-                'Carpentry',
-                'Caregiver',
-                'Painting',
-              ].map((term) {
-                return ActionChip(
+          children: (ref.watch(fullCatalogProvider).asData?.value ?? [])
+              .where(
+                (service) =>
+                    service.name.toLowerCase() != 'more' &&
+                    (service.isPopular || service.category == 'care'),
+              )
+              .map(
+                (service) => ActionChip(
                   avatar: const Icon(Icons.trending_up_rounded, size: 16),
-                  label: Text(term),
+                  label: Text(service.name),
                   onPressed: () {
                     KayloFeedback.tap();
-                    _search(term);
-                    notifier.addRecentSearch(term);
+                    _search(service.name);
+                    notifier.addRecentSearch(service.name);
                   },
-                );
-              }).toList(),
+                ),
+              )
+              .toList(),
         ),
       ],
     );
@@ -257,6 +268,9 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
     final query = state.query.trim();
     final notifier = ref.read(searchControllerProvider.notifier);
 
+    if (state.hasError && services.isEmpty && workers.isEmpty) {
+      return const SizedBox.shrink();
+    }
     if (services.isEmpty && workers.isEmpty) {
       return Center(
         child: Padding(
@@ -373,11 +387,13 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                 onTap: () {
                   KayloFeedback.tap();
                   notifier.addRecentSearch(worker.name);
-                  // With a service the profile's Book button knows what
-                  // to book; the first skill is the natural choice.
-                  final serviceId = worker.skillIds.isEmpty
+                  // Keep the searched trade when a professional has
+                  // several skills, so Book opens the intended service.
+                  final matchedService =
+                      state.results.workerServiceIds[worker.id];
+                  final serviceId = matchedService == null
                       ? ''
-                      : '&serviceId=${worker.skillIds.first}';
+                      : '&serviceId=$matchedService';
                   context.push(
                     '${Routes.workerProfile}?workerId=${worker.id}$serviceId',
                     extra: worker,
@@ -427,22 +443,32 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       ),
                     ),
                     const SizedBox(width: AppSpacing.s),
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      children: [
-                        Text(
-                          '${formatRupees(worker.hourlyRate ?? 300)}/hr',
-                          style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: AppColors.brandPrimary,
-                            fontSize: 13,
+                    SizedBox(
+                      width: 110,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            worker.hourlyRate == null
+                                ? l10n.priceOnVisit
+                                : '${formatRupees(worker.hourlyRate!)}/hr',
+                            maxLines: 2,
+                            textAlign: TextAlign.end,
+                            overflow: TextOverflow.ellipsis,
+                            style: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              color: AppColors.brandPrimary,
+                              fontSize: 13,
+                            ),
                           ),
-                        ),
-                        Text(
-                          worker.location,
-                          style: TextStyle(fontSize: 11, color: secondary),
-                        ),
-                      ],
+                          Text(
+                            worker.location,
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(fontSize: 11, color: secondary),
+                          ),
+                        ],
+                      ),
                     ),
                     const SizedBox(width: 4),
                     Icon(Icons.chevron_right_rounded, color: secondary),

@@ -35,6 +35,29 @@ const Map<String, List<_Term>> _intents = {
     _Term('car repair', _strong),
     _Term('bike repair', _strong),
   ],
+  'prun': [
+    _Term('pruning', _strong),
+    _Term('trim branches', _strong),
+    _Term('tree trimming', _strong),
+    _Term('tree cutting', _strong),
+    _Term('cut tree', _strong),
+    _Term('remove tree', _strong),
+    _Term('cut branches', _strong),
+    _Term('overhanging branches', _strong),
+    _Term('മരം മുറി', _strong),
+    _Term('கிளை', _strong),
+    _Term('छंटाई', _strong),
+  ],
+  'plot clear': [
+    _Term('plot clearing', _strong),
+    _Term('clear land', _strong),
+    _Term('clear plot', _strong),
+    _Term('brush cutter', _strong),
+    _Term('bush', _strong),
+    _Term('കാട് വെട്ട', _strong),
+    _Term('காடு வெட்ட', _strong),
+    _Term('झाड़ी', _strong),
+  ],
   'paint': [
     _Term('paint', _strong),
     _Term('പെയിന്റ്', _strong),
@@ -43,6 +66,10 @@ const Map<String, List<_Term>> _intents = {
   'carpen': [
     _Term('carpenter', _strong),
     _Term('woodwork', _strong),
+    _Term('furniture', _strong),
+    _Term('cupboard', _strong),
+    _Term('door repair', _strong),
+    _Term('chair repair', _strong),
     _Term('ആശാരി', _strong),
     _Term('தச்சர்', _strong),
   ],
@@ -50,11 +77,22 @@ const Map<String, List<_Term>> _intents = {
     _Term('fridge', _strong),
     _Term('washing machine', _strong),
     _Term('refrigerator', _strong),
+    _Term('tv', _strong),
+    _Term('television', _strong),
+    _Term('microwave', _strong),
+    _Term('oven', _strong),
+    _Term('ഫ്രിഡ്ജ്', _strong),
+    _Term('வாஷிங் மெஷின்', _strong),
+    _Term('फ्रिज', _strong),
   ],
   'ac ': [
     _Term('ac', _strong),
     _Term('air conditioner', _strong),
     _Term('air conditioning', _strong),
+    _Term('aircon', _strong),
+    _Term('എസി', _strong),
+    _Term('ஏசி', _strong),
+    _Term('एसी', _strong),
   ],
   'plumb': [
     _Term('plumb', _strong),
@@ -135,6 +173,7 @@ const Map<String, List<_Term>> _intents = {
     _Term('தேங்காய்', _strong),
     _Term('தென்னை', _strong),
     _Term('नारियल', _strong),
+    _Term('harvest', _weak),
     _Term('tree', _weak),
     _Term('മരം', _weak),
     _Term('மரம்', _weak),
@@ -149,6 +188,7 @@ const Map<String, List<_Term>> _intents = {
     _Term('பாக்கு', _strong),
     _Term('கமுகு', _strong),
     _Term('सुपारी', _strong),
+    _Term('harvest', _weak),
   ],
   'garden': [
     _Term('garden', _strong),
@@ -259,6 +299,15 @@ const Set<String> _stopWords = {
   'look',
   'find',
   'book',
+  'help',
+  'looking',
+  'work',
+  'working',
+  'broken',
+  'problem',
+  'issue',
+  'from',
+  'after',
 };
 
 const Set<String> _genericNameWords = {
@@ -274,54 +323,144 @@ const Set<String> _genericNameWords = {
   'harvesting',
 };
 
-/// Ranks catalog services against a spoken sentence, best first.
+/// Equipment and trade names carry more intent than generic actions. For
+/// example, "clean my AC" should not advertise house cleaning, and
+/// "my fridge leaks" should find appliance repair before plumbing.
+const Map<String, List<String>> _subjects = {
+  'plumb': ['plumber', 'plumbing'],
+  'electric': ['electrician', 'electrical'],
+  'caregiver': ['caregiver', 'nurse', 'nursing'],
+  'paint': ['painter', 'painting'],
+  'clean': ['house cleaning'],
+  'ac ': [
+    'ac',
+    'air conditioner',
+    'air conditioning',
+    'aircon',
+    'എസി',
+    'ஏசி',
+    'एसी',
+  ],
+  'appliance': [
+    'fridge',
+    'refrigerator',
+    'washing machine',
+    'tv',
+    'television',
+    'microwave',
+    'oven',
+  ],
+  'coconut': ['coconut', 'തേങ്ങ', 'തെങ്ങ', 'தேங்காய்', 'தென்னை', 'नारियल'],
+  'arecanut': [
+    'arecanut',
+    'areca',
+    'betel',
+    'അടയ്ക്ക',
+    'കവുങ്ങ',
+    'பாக்கு',
+    'सुपारी',
+  ],
+  'doctor': ['doctor', 'consultation', 'ഡോക്ടർ', 'மருத்துவர்', 'डॉक्टर'],
+  'medicine': [
+    'medicine',
+    'tablet',
+    'pills',
+    'pharmacy',
+    'മരുന്ന',
+    'மருந்த',
+    'மாத்திரை',
+    'दवा',
+  ],
+  'carpen': [
+    'carpenter',
+    'carpentry',
+    'woodwork',
+    'furniture',
+    'cupboard',
+    'ആശാരി',
+    'தச்சர்',
+  ],
+  'mechanic': ['mechanic', 'engine', 'car repair', 'bike repair'],
+  'prun': [
+    'pruning',
+    'branches',
+    'tree trimming',
+    'tree cutting',
+    'cut tree',
+    'remove tree',
+  ],
+  'plot clear': ['plot', 'clear land', 'brush cutter', 'bush'],
+};
+
+String _normalise(String text) => text
+    .toLowerCase()
+    .trim()
+    .replaceAll(RegExp(r'[^\p{L}\p{M}\p{N}]+', unicode: true), ' ')
+    .trim();
+
+bool _termMatches(String text, List<String> tokens, String term) {
+  if (term.contains(' ')) return ' $text '.contains(' $term ');
+  return tokens.any((token) => _fuzzyMatch(token, term));
+}
+
+/// Shared typed/voice ranking. Catalog descriptions are supporting prose,
+/// never an unweighted substring match ("AC" used to match "maintenance").
 List<ServiceItem> matchServicesToTranscript(
   String transcript,
   List<ServiceItem> pool,
 ) {
-  final text = transcript.toLowerCase().trim();
+  final text = _normalise(transcript);
   if (text.isEmpty) return const [];
-  // Keep combining marks (\p{M}) with their letters: Tamil, Malayalam
-  // and Devanagari vowel signs are marks, and splitting on them would
-  // shred every word in those scripts.
-  final tokens = text
-      .split(RegExp(r'[^\p{L}\p{M}\p{N}]+', unicode: true))
-      .where((t) => t.isNotEmpty && !_stopWords.contains(t))
-      .toList();
+  final tokens = text.split(' ').where((t) => !_stopWords.contains(t)).toList();
   if (tokens.isEmpty) return const [];
-
-  final scored = <(ServiceItem, int)>[];
+  final subjects = {
+    for (final entry in _subjects.entries)
+      if (entry.value.any((term) => _termMatches(text, tokens, term)))
+        entry.key,
+  };
+  final scored = <(ServiceItem, int, bool)>[];
   for (final service in pool) {
-    final name = service.name.toLowerCase();
-    var score = 0;
-
-    // Direct hit: a spoken token fuzzily matches a specific name word.
-    for (final nameWord in name.split(' ')) {
-      if (nameWord.length < 4 || _genericNameWords.contains(nameWord)) {
-        continue;
-      }
-      if (tokens.any((t) => _fuzzyMatch(t, nameWord))) score += _strong + 1;
+    final name = _normalise(service.name);
+    var score = name == text ? 100 : 0;
+    var strongHit = score > 0;
+    final serviceFamilies = _intents.keys
+        .where((family) => name.contains(family))
+        .toSet();
+    final hasSubject = subjects.any(serviceFamilies.contains);
+    // A specific requested appliance/crop excludes incidental problem words.
+    // Exact named services remain available for requests with multiple jobs.
+    final directlyNamed = ' $text '.contains(' $name ');
+    if (subjects.isNotEmpty && !hasSubject && !directlyNamed) {
+      continue;
     }
-
-    // Intent hit: the sentence carries this family's vocabulary.
-    _intents.forEach((family, terms) {
-      if (!name.contains(family)) return;
+    if (hasSubject) score += 20;
+    for (final nameWord in name.split(' ')) {
+      if (nameWord.length < 4 || _genericNameWords.contains(nameWord)) continue;
+      if (tokens.any((token) => _fuzzyMatch(token, nameWord))) {
+        score += _strong + 1;
+        strongHit = true;
+      }
+    }
+    for (final family in serviceFamilies) {
       var best = 0;
-      for (final term in terms) {
-        final hit =
-            (term.text.contains(' ')
-                ? text.contains(term.text)
-                : tokens.contains(term.text)) ||
-            tokens.any((t) => _fuzzyMatch(t, term.text.toLowerCase()));
-        if (hit && term.weight > best) best = term.weight;
+      for (final term in _intents[family]!) {
+        if (_termMatches(text, tokens, term.text) && term.weight > best) {
+          best = term.weight;
+        }
       }
       score += best;
-    });
-
-    if (score > 0) scored.add((service, score));
+      strongHit = strongHit || best >= _strong;
+    }
+    if (score > 0) scored.add((service, score, strongHit));
   }
-
-  scored.sort((a, b) => b.$2.compareTo(a.$2));
+  // Weak context such as "father" must not add caregiving to a medicine
+  // request. Retain it only when there is no more specific service intent.
+  final hasStrongHit = scored.any((entry) => entry.$3);
+  scored.removeWhere((entry) => hasStrongHit && !entry.$3);
+  scored.sort((a, b) {
+    final relevance = b.$2.compareTo(a.$2);
+    return relevance != 0 ? relevance : a.$1.name.compareTo(b.$1.name);
+  });
   return [for (final entry in scored) entry.$1];
 }
 

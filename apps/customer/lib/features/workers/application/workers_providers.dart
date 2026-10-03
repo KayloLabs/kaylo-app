@@ -101,7 +101,8 @@ final filteredWorkersProvider = FutureProvider.family<List<Worker>, String>((
     if (filter.minRating != null && w.rating < filter.minRating!) {
       return false;
     }
-    if (filter.maxPrice != null && (w.hourlyRate ?? 0) > filter.maxPrice!) {
+    if (filter.maxPrice != null &&
+        (w.hourlyRate == null || w.hourlyRate! > filter.maxPrice!)) {
       return false;
     }
     if (filter.availableToday && !w.isAvailable) {
@@ -118,29 +119,59 @@ final filteredWorkersProvider = FutureProvider.family<List<Worker>, String>((
       result.sort((a, b) => b.rating.compareTo(a.rating));
       break;
     case WorkerSort.priceLowToHigh:
-      result.sort((a, b) => (a.hourlyRate ?? 0).compareTo(b.hourlyRate ?? 0));
+      result.sort((a, b) => compareWorkerRates(a, b));
       break;
     case WorkerSort.priceHighToLow:
-      result.sort((a, b) => (b.hourlyRate ?? 0).compareTo(a.hourlyRate ?? 0));
+      result.sort((a, b) => compareWorkerRates(a, b, descending: true));
       break;
     case WorkerSort.experience:
       result.sort((a, b) => b.totalJobs.compareTo(a.totalJobs));
       break;
     case WorkerSort.distance:
-      final userLoc = ref.watch(userLocationProvider).label.toLowerCase();
-      final nearby = <Worker>[];
-      final others = <Worker>[];
-      for (final w in result) {
-        final wLoc = w.location.toLowerCase();
-        if (wLoc.isNotEmpty && (userLoc.contains(wLoc) || wLoc.contains(userLoc))) {
-          nearby.add(w);
-        } else {
-          others.add(w);
-        }
-      }
-      result = [...nearby, ...others];
+      final location = ref.watch(userLocationProvider);
+      result.sort((a, b) {
+        final nearby = localityScore(
+          b.location,
+          location,
+        ).compareTo(localityScore(a.location, location));
+        return nearby != 0 ? nearby : b.rating.compareTo(a.rating);
+      });
       break;
   }
 
   return result;
 });
+
+/// Unknown hourly rates stay last, including descending order.
+int compareWorkerRates(Worker a, Worker b, {bool descending = false}) {
+  if (a.hourlyRate == null && b.hourlyRate != null) return 1;
+  if (a.hourlyRate != null && b.hourlyRate == null) return -1;
+  final order = descending
+      ? (b.hourlyRate ?? 0).compareTo(a.hourlyRate ?? 0)
+      : (a.hourlyRate ?? 0).compareTo(b.hourlyRate ?? 0);
+  return order != 0 ? order : b.rating.compareTo(a.rating);
+}
+
+/// The current worker view exposes district names, not worker coordinates.
+/// Rank shared localities without mistaking a saved label like "Home" or a
+/// state shared by every worker for proximity. No kilometre claim is made.
+int localityScore(String workerLocation, UserLocation active) {
+  final ignored = {
+    'home',
+    'work',
+    'farm',
+    'kerala',
+    'india',
+    'road',
+    'street',
+    'district',
+  };
+  Set<String> tokens(String value) => value
+      .toLowerCase()
+      .split(RegExp(r'[^\p{L}\p{M}]+', unicode: true))
+      .where((word) => word.length > 2 && !ignored.contains(word))
+      .toSet();
+  final workerTokens = tokens(workerLocation);
+  final activeTokens = tokens('${active.addressLine ?? ''} ${active.label}');
+  return workerTokens.intersection(activeTokens).length;
+}

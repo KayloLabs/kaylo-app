@@ -876,5 +876,22 @@
   "hapticFeedback": "Haptic feedback",
   "soundEffects": "Sound effects",
   "voiceStarting": "Starting microphone…",
-  "ocrNeedsReview": "Some text could not be read. Check the original scan and correct the notes before using them."
+  "ocrNeedsReview": "Some text could not be read. Check the original scan and correct the notes before using them.",
+  "allBookings": "All bookings",
+  "noCompletedBookings": "No completed bookings yet",
+  "noCompletedBookingsDescription": "Your completed jobs will appear here once the work is done.",
+  "verificationRecord": "Verification record",
+  "refreshVerification": "Refresh verification status",
+  "verificationLoadError": "Could not load the current verification status. Please try again.",
+  "kayloVerified": "Verified on Kaylo",
+  "notYetVerified": "Not yet verified",
+  "viewVerification": "View verification record",
+  "verificationRecorded": "This professional’s profile is marked as verified in Kaylo.",
+  "verificationNotRecorded": "No verified status is recorded for this profile.",
+  "listedServices": "Listed services",
+  "profileReference": "Profile reference",
+  "serviceArea": "Service area",
+  "verificationScope": "This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.",
+  "selectOnMap": "Choose on map",
+  "chooseAddress": "Choose an address"
 }

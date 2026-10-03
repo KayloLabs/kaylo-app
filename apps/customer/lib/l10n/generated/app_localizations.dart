@@ -3689,6 +3689,108 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Some text could not be read. Check the original scan and correct the notes before using them.'**
   String get ocrNeedsReview;
+
+  /// No description provided for @allBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'All bookings'**
+  String get allBookings;
+
+  /// No description provided for @noCompletedBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed bookings yet'**
+  String get noCompletedBookings;
+
+  /// No description provided for @noCompletedBookingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your completed jobs will appear here once the work is done.'**
+  String get noCompletedBookingsDescription;
+
+  /// No description provided for @verificationRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification record'**
+  String get verificationRecord;
+
+  /// No description provided for @refreshVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh verification status'**
+  String get refreshVerification;
+
+  /// No description provided for @verificationLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the current verification status. Please try again.'**
+  String get verificationLoadError;
+
+  /// No description provided for @kayloVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified on Kaylo'**
+  String get kayloVerified;
+
+  /// No description provided for @notYetVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet verified'**
+  String get notYetVerified;
+
+  /// No description provided for @viewVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'View verification record'**
+  String get viewVerification;
+
+  /// No description provided for @verificationRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'This professional’s profile is marked as verified in Kaylo.'**
+  String get verificationRecorded;
+
+  /// No description provided for @verificationNotRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No verified status is recorded for this profile.'**
+  String get verificationNotRecorded;
+
+  /// No description provided for @listedServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Listed services'**
+  String get listedServices;
+
+  /// No description provided for @profileReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile reference'**
+  String get profileReference;
+
+  /// No description provided for @serviceArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Service area'**
+  String get serviceArea;
+
+  /// No description provided for @verificationScope.
+  ///
+  /// In en, this message translates to:
+  /// **'This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.'**
+  String get verificationScope;
+
+  /// No description provided for @selectOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose on map'**
+  String get selectOnMap;
+
+  /// No description provided for @chooseAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an address'**
+  String get chooseAddress;
 }
 
 class _AppLocalizationsDelegate

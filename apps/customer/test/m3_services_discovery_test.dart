@@ -253,54 +253,51 @@ void main() {
   );
 
   group('M3 - Review Polish & Discovery Verification Tests', () {
-    testWidgets(
-      'Worker profile shows real rating and review count, no < 30m',
-      (tester) async {
-        useTallPhone(tester);
-        final worker = Worker(
-          id: 'w_test_1',
-          name: 'Suresh Babu',
-          profileImageUrl: '',
-          rating: 4.8,
-          reviewsCount: 124,
-          skillIds: const ['1'],
-          location: 'Kochi',
-          trustScore: 95,
-          isVerified: true,
-          hourlyRate: 350,
-          totalJobs: 88,
-        );
+    testWidgets('Worker profile shows real rating and review count, no < 30m', (
+      tester,
+    ) async {
+      useTallPhone(tester);
+      final worker = Worker(
+        id: 'w_test_1',
+        name: 'Suresh Babu',
+        profileImageUrl: '',
+        rating: 4.8,
+        reviewsCount: 124,
+        skillIds: const ['1'],
+        location: 'Kochi',
+        trustScore: 95,
+        isVerified: true,
+        hourlyRate: 350,
+        totalJobs: 88,
+      );
 
-        final widget = await testApp(
-          initialLocation: Routes.workerProfile,
-          routes: [
-            GoRoute(
-              path: Routes.workerProfile,
-              builder: (_, _) => WorkerProfileScreen(
-                workerId: 'w_test_1',
-                initialWorker: worker,
-              ),
+      final widget = await testApp(
+        initialLocation: Routes.workerProfile,
+        routes: [
+          GoRoute(
+            path: Routes.workerProfile,
+            builder: (_, _) => WorkerProfileScreen(
+              workerId: 'w_test_1',
+              initialWorker: worker,
             ),
-          ],
-          overrides: [
-            workerDetailProvider('w_test_1').overrideWith(
-              (ref) async => worker,
-            ),
-            workerReviewsProvider('w_test_1').overrideWith((ref) async => []),
-          ],
-        );
+          ),
+        ],
+        overrides: [
+          workerDetailProvider('w_test_1').overrideWith((ref) async => worker),
+          workerReviewsProvider('w_test_1').overrideWith((ref) async => []),
+        ],
+      );
 
-        await tester.pumpWidget(widget);
-        await settle(tester);
+      await tester.pumpWidget(widget);
+      await settle(tester);
 
-        expect(find.text('4.8'), findsWidgets);
-        expect(find.text('124'), findsOneWidget);
-        expect(find.textContaining('< 30m'), findsNothing);
-      },
-    );
+      expect(find.text('4.8'), findsWidgets);
+      expect(find.text('124'), findsOneWidget);
+      expect(find.textContaining('< 30m'), findsNothing);
+    });
 
     testWidgets(
-      'Certifications appear for verified worker',
+      'Verified worker exposes a record without inventing qualification checks',
       (tester) async {
         useTallPhone(tester);
         final verifiedWorker = Worker(
@@ -329,23 +326,25 @@ void main() {
             ),
           ],
           overrides: [
-            workerDetailProvider('w_ver').overrideWith(
-              (ref) async => verifiedWorker,
-            ),
+            workerDetailProvider(
+              'w_ver',
+            ).overrideWith((ref) async => verifiedWorker),
             workerReviewsProvider('w_ver').overrideWith((ref) async => []),
           ],
         );
         await tester.pumpWidget(appVerified);
         await settle(tester);
 
-        expect(find.text('Government ID verified'), findsOneWidget);
-        expect(find.text('Police clearance verified'), findsOneWidget);
-        expect(find.text('Kaylo skill certified'), findsOneWidget);
+        expect(find.text('Verified on Kaylo'), findsOneWidget);
+        expect(find.text('View verification record'), findsOneWidget);
+        expect(find.text('Government ID verified'), findsNothing);
+        expect(find.text('Police clearance verified'), findsNothing);
+        expect(find.text('Kaylo skill certified'), findsNothing);
       },
     );
 
     testWidgets(
-      'Verification pending appears for unverified worker and no certs',
+      'Unverified worker has no certification or implied check in progress',
       (tester) async {
         useTallPhone(tester);
         final unverifiedWorker = Worker(
@@ -374,143 +373,142 @@ void main() {
             ),
           ],
           overrides: [
-            workerDetailProvider('w_unver').overrideWith(
-              (ref) async => unverifiedWorker,
-            ),
+            workerDetailProvider(
+              'w_unver',
+            ).overrideWith((ref) async => unverifiedWorker),
             workerReviewsProvider('w_unver').overrideWith((ref) async => []),
           ],
         );
         await tester.pumpWidget(appUnverified);
         await settle(tester);
 
-        expect(find.text('Verification in progress'), findsOneWidget);
+        expect(find.text('Not yet verified'), findsOneWidget);
+        expect(find.text('View verification record'), findsNothing);
         expect(find.text('Government ID verified'), findsNothing);
       },
     );
 
-    testWidgets(
-      'Service Details shows computed rating from worker reviews',
-      (tester) async {
-        useTallPhone(tester);
-        final testService = ServiceItem(
-          id: 'srv_1',
-          name: 'Plumbing',
-          category: 'home',
-          basePrice: 500,
-          description: 'Plumbing service',
-          iconPath: '',
-          isPopular: true,
-        );
+    testWidgets('Service Details shows computed rating from worker reviews', (
+      tester,
+    ) async {
+      useTallPhone(tester);
+      final testService = ServiceItem(
+        id: 'srv_1',
+        name: 'Plumbing',
+        category: 'home',
+        basePrice: 500,
+        description: 'Plumbing service',
+        iconPath: '',
+        isPopular: true,
+      );
 
-        final appWithReviews = await testApp(
-          initialLocation: Routes.serviceDetails,
-          routes: [
-            GoRoute(
-              path: Routes.serviceDetails,
-              builder: (_, _) => ServiceDetailsScreen(
-                serviceId: 'srv_1',
-                initialService: testService,
+      final appWithReviews = await testApp(
+        initialLocation: Routes.serviceDetails,
+        routes: [
+          GoRoute(
+            path: Routes.serviceDetails,
+            builder: (_, _) => ServiceDetailsScreen(
+              serviceId: 'srv_1',
+              initialService: testService,
+            ),
+          ),
+        ],
+        overrides: [
+          serviceDetailProvider(
+            'srv_1',
+          ).overrideWith((ref) async => testService),
+          workerListProvider('srv_1').overrideWith(
+            (ref) async => [
+              Worker(
+                id: 'w1',
+                name: 'Worker 1',
+                profileImageUrl: '',
+                rating: 4.0,
+                reviewsCount: 10,
+                skillIds: const ['1'],
+                location: 'Kochi',
+                trustScore: 85,
+                totalJobs: 15,
+                isVerified: true,
+                hourlyRate: 300,
               ),
-            ),
-          ],
-          overrides: [
-            serviceDetailProvider('srv_1').overrideWith(
-              (ref) async => testService,
-            ),
-            workerListProvider('srv_1').overrideWith(
-              (ref) async => [
-                Worker(
-                  id: 'w1',
-                  name: 'Worker 1',
-                  profileImageUrl: '',
-                  rating: 4.0,
-                  reviewsCount: 10,
-                  skillIds: const ['1'],
-                  location: 'Kochi',
-                  trustScore: 85,
-                  totalJobs: 15,
-                  isVerified: true,
-                  hourlyRate: 300,
-                ),
-                Worker(
-                  id: 'w2',
-                  name: 'Worker 2',
-                  profileImageUrl: '',
-                  rating: 5.0,
-                  reviewsCount: 10,
-                  skillIds: const ['1'],
-                  location: 'Kochi',
-                  trustScore: 92,
-                  totalJobs: 25,
-                  isVerified: true,
-                  hourlyRate: 350,
-                ),
-              ],
-            ),
-          ],
-        );
-        await tester.pumpWidget(appWithReviews);
-        await settle(tester);
-
-        // Weighted average: (4.0*10 + 5.0*10)/20 = 4.5
-        expect(find.text('4.5'), findsOneWidget);
-      },
-    );
-
-    testWidgets(
-      'Service Details shows "New" when workers have no reviews',
-      (tester) async {
-        useTallPhone(tester);
-        final testService = ServiceItem(
-          id: 'srv_1',
-          name: 'Plumbing',
-          category: 'home',
-          basePrice: 500,
-          description: 'Plumbing service',
-          iconPath: '',
-          isPopular: true,
-        );
-
-        final appNoReviews = await testApp(
-          initialLocation: Routes.serviceDetails,
-          routes: [
-            GoRoute(
-              path: Routes.serviceDetails,
-              builder: (_, _) => ServiceDetailsScreen(
-                serviceId: 'srv_1',
-                initialService: testService,
+              Worker(
+                id: 'w2',
+                name: 'Worker 2',
+                profileImageUrl: '',
+                rating: 5.0,
+                reviewsCount: 10,
+                skillIds: const ['1'],
+                location: 'Kochi',
+                trustScore: 92,
+                totalJobs: 25,
+                isVerified: true,
+                hourlyRate: 350,
               ),
-            ),
-          ],
-          overrides: [
-            serviceDetailProvider('srv_1').overrideWith(
-              (ref) async => testService,
-            ),
-            workerListProvider('srv_1').overrideWith(
-              (ref) async => [
-                Worker(
-                  id: 'w3',
-                  name: 'Worker 3',
-                  profileImageUrl: '',
-                  rating: 0.0,
-                  reviewsCount: 0,
-                  skillIds: const ['1'],
-                  location: 'Kochi',
-                  trustScore: 70,
-                  totalJobs: 0,
-                  isVerified: true,
-                  hourlyRate: 300,
-                ),
-              ],
-            ),
-          ],
-        );
-        await tester.pumpWidget(appNoReviews);
-        await settle(tester);
+            ],
+          ),
+        ],
+      );
+      await tester.pumpWidget(appWithReviews);
+      await settle(tester);
 
-        expect(find.text('New'), findsOneWidget);
-      },
-    );
+      // Weighted average: (4.0*10 + 5.0*10)/20 = 4.5
+      expect(find.text('4.5'), findsOneWidget);
+    });
+
+    testWidgets('Service Details shows "New" when workers have no reviews', (
+      tester,
+    ) async {
+      useTallPhone(tester);
+      final testService = ServiceItem(
+        id: 'srv_1',
+        name: 'Plumbing',
+        category: 'home',
+        basePrice: 500,
+        description: 'Plumbing service',
+        iconPath: '',
+        isPopular: true,
+      );
+
+      final appNoReviews = await testApp(
+        initialLocation: Routes.serviceDetails,
+        routes: [
+          GoRoute(
+            path: Routes.serviceDetails,
+            builder: (_, _) => ServiceDetailsScreen(
+              serviceId: 'srv_1',
+              initialService: testService,
+            ),
+          ),
+        ],
+        overrides: [
+          serviceDetailProvider(
+            'srv_1',
+          ).overrideWith((ref) async => testService),
+          workerListProvider('srv_1').overrideWith(
+            (ref) async => [
+              Worker(
+                id: 'w3',
+                name: 'Worker 3',
+                profileImageUrl: '',
+                rating: 0.0,
+                reviewsCount: 0,
+                skillIds: const ['1'],
+                location: 'Kochi',
+                trustScore: 70,
+                totalJobs: 0,
+                isVerified: true,
+                hourlyRate: 300,
+              ),
+            ],
+          ),
+        ],
+      );
+      await tester.pumpWidget(appNoReviews);
+      await settle(tester);
+
+      expect(find.text('New'), findsOneWidget);
+    });
 
     test(
       '"Nearby first" puts workers from customer district at the top',

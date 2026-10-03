@@ -2053,4 +2053,60 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get ocrNeedsReview =>
       'ചില വാക്കുകൾ വായിക്കാൻ കഴിഞ്ഞില്ല. യഥാർത്ഥ സ്കാൻ പരിശോധിച്ച് കുറിപ്പുകൾ തിരുത്തുക.';
+
+  @override
+  String get allBookings => 'എല്ലാ ബുക്കിങ്ങുകളും';
+
+  @override
+  String get noCompletedBookings => 'പൂർത്തിയായ ബുക്കിങ്ങുകളില്ല';
+
+  @override
+  String get noCompletedBookingsDescription =>
+      'ജോലി പൂർത്തിയായാൽ ആ ബുക്കിങ്ങുകൾ ഇവിടെ കാണാം.';
+
+  @override
+  String get verificationRecord => 'പരിശോധനാ രേഖ';
+
+  @override
+  String get refreshVerification => 'പരിശോധനാ നില പുതുക്കുക';
+
+  @override
+  String get verificationLoadError =>
+      'നിലവിലെ പരിശോധനാ നില ലഭ്യമാക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get kayloVerified => 'Kaylo-യിൽ പരിശോധിച്ചത്';
+
+  @override
+  String get notYetVerified => 'ഇതുവരെ പരിശോധിച്ചിട്ടില്ല';
+
+  @override
+  String get viewVerification => 'പരിശോധനാ രേഖ കാണുക';
+
+  @override
+  String get verificationRecorded =>
+      'ഈ പ്രൊഫഷണലിന്റെ പ്രൊഫൈൽ Kaylo-യിൽ പരിശോധിച്ചതായി രേഖപ്പെടുത്തിയിട്ടുണ്ട്.';
+
+  @override
+  String get verificationNotRecorded =>
+      'ഈ പ്രൊഫൈലിൽ പരിശോധിച്ചതായി രേഖപ്പെടുത്തിയിട്ടില്ല.';
+
+  @override
+  String get listedServices => 'ലിസ്റ്റ് ചെയ്ത സേവനങ്ങൾ';
+
+  @override
+  String get profileReference => 'പ്രൊഫൈൽ റഫറൻസ്';
+
+  @override
+  String get serviceArea => 'സേവന മേഖല';
+
+  @override
+  String get verificationScope =>
+      'ഈ രേഖ പ്രൊഫൈലിന്റെ നിലവിലെ നിലയാണ് കാണിക്കുന്നത്. അനുബന്ധ രേഖകളും പരിശോധനാ വിശദാംശങ്ങളും ലഭ്യമല്ല. ഇത് സർക്കാർ ലൈസൻസോ പ്രൊഫഷണൽ യോഗ്യതയോ അല്ല.';
+
+  @override
+  String get selectOnMap => 'മാപ്പിൽ തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String get chooseAddress => 'ഒരു വിലാസം തിരഞ്ഞെടുക്കുക';
 }

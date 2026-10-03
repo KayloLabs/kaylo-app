@@ -270,7 +270,10 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             routes: [
               GoRoute(
                 path: Routes.bookings,
-                builder: (context, state) => const BookingsScreen(),
+                builder: (context, state) => BookingsScreen(
+                  completedOnly:
+                      state.uri.queryParameters['status'] == 'completed',
+                ),
                 routes: [
                   GoRoute(
                     path: ':bookingId', // Routes.bookingDetails(id)

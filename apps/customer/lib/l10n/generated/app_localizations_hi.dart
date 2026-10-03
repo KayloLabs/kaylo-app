@@ -2034,4 +2034,60 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get ocrNeedsReview =>
       'कुछ पाठ पढ़ा नहीं जा सका। मूल स्कैन देखकर नोट्स सही करें।';
+
+  @override
+  String get allBookings => 'सभी बुकिंग';
+
+  @override
+  String get noCompletedBookings => 'अभी कोई पूरी हुई बुकिंग नहीं है';
+
+  @override
+  String get noCompletedBookingsDescription =>
+      'काम पूरा होने पर आपकी बुकिंग यहाँ दिखाई देंगी।';
+
+  @override
+  String get verificationRecord => 'सत्यापन रिकॉर्ड';
+
+  @override
+  String get refreshVerification => 'सत्यापन स्थिति रीफ़्रेश करें';
+
+  @override
+  String get verificationLoadError =>
+      'वर्तमान सत्यापन स्थिति लोड नहीं हो सकी। फिर से कोशिश करें।';
+
+  @override
+  String get kayloVerified => 'Kaylo पर सत्यापित';
+
+  @override
+  String get notYetVerified => 'अभी सत्यापित नहीं है';
+
+  @override
+  String get viewVerification => 'सत्यापन रिकॉर्ड देखें';
+
+  @override
+  String get verificationRecorded =>
+      'इस पेशेवर की प्रोफ़ाइल Kaylo में सत्यापित के रूप में दर्ज है।';
+
+  @override
+  String get verificationNotRecorded =>
+      'इस प्रोफ़ाइल के लिए सत्यापित स्थिति दर्ज नहीं है।';
+
+  @override
+  String get listedServices => 'सूचीबद्ध सेवाएँ';
+
+  @override
+  String get profileReference => 'प्रोफ़ाइल संदर्भ';
+
+  @override
+  String get serviceArea => 'सेवा क्षेत्र';
+
+  @override
+  String get verificationScope =>
+      'यह रिकॉर्ड प्रोफ़ाइल की वर्तमान स्थिति दिखाता है। सहायक दस्तावेज़ और जाँच के विवरण उपलब्ध नहीं हैं। यह सरकारी लाइसेंस या पेशेवर योग्यता नहीं है।';
+
+  @override
+  String get selectOnMap => 'मानचित्र पर चुनें';
+
+  @override
+  String get chooseAddress => 'पता चुनें';
 }

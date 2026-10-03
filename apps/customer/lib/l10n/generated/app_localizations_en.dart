@@ -2029,4 +2029,60 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get ocrNeedsReview =>
       'Some text could not be read. Check the original scan and correct the notes before using them.';
+
+  @override
+  String get allBookings => 'All bookings';
+
+  @override
+  String get noCompletedBookings => 'No completed bookings yet';
+
+  @override
+  String get noCompletedBookingsDescription =>
+      'Your completed jobs will appear here once the work is done.';
+
+  @override
+  String get verificationRecord => 'Verification record';
+
+  @override
+  String get refreshVerification => 'Refresh verification status';
+
+  @override
+  String get verificationLoadError =>
+      'Could not load the current verification status. Please try again.';
+
+  @override
+  String get kayloVerified => 'Verified on Kaylo';
+
+  @override
+  String get notYetVerified => 'Not yet verified';
+
+  @override
+  String get viewVerification => 'View verification record';
+
+  @override
+  String get verificationRecorded =>
+      'This professional’s profile is marked as verified in Kaylo.';
+
+  @override
+  String get verificationNotRecorded =>
+      'No verified status is recorded for this profile.';
+
+  @override
+  String get listedServices => 'Listed services';
+
+  @override
+  String get profileReference => 'Profile reference';
+
+  @override
+  String get serviceArea => 'Service area';
+
+  @override
+  String get verificationScope =>
+      'This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.';
+
+  @override
+  String get selectOnMap => 'Choose on map';
+
+  @override
+  String get chooseAddress => 'Choose an address';
 }

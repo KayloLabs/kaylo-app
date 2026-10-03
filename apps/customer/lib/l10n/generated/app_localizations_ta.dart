@@ -2066,4 +2066,60 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get ocrNeedsReview =>
       'சில எழுத்துகளைப் படிக்க முடியவில்லை. அசல் ஸ்கேனைப் பார்த்து குறிப்புகளைத் திருத்தவும்.';
+
+  @override
+  String get allBookings => 'அனைத்து முன்பதிவுகளும்';
+
+  @override
+  String get noCompletedBookings => 'முடிந்த முன்பதிவுகள் இன்னும் இல்லை';
+
+  @override
+  String get noCompletedBookingsDescription =>
+      'வேலை முடிந்ததும் உங்கள் முன்பதிவுகள் இங்கே தோன்றும்.';
+
+  @override
+  String get verificationRecord => 'சரிபார்ப்பு பதிவு';
+
+  @override
+  String get refreshVerification => 'சரிபார்ப்பு நிலையைப் புதுப்பிக்கவும்';
+
+  @override
+  String get verificationLoadError =>
+      'தற்போதைய சரிபார்ப்பு நிலையை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get kayloVerified => 'Kaylo-வில் சரிபார்க்கப்பட்டது';
+
+  @override
+  String get notYetVerified => 'இன்னும் சரிபார்க்கப்படவில்லை';
+
+  @override
+  String get viewVerification => 'சரிபார்ப்பு பதிவைப் பார்க்கவும்';
+
+  @override
+  String get verificationRecorded =>
+      'இந்த நிபுணரின் சுயவிவரம் Kaylo-வில் சரிபார்க்கப்பட்டதாகப் பதிவாகியுள்ளது.';
+
+  @override
+  String get verificationNotRecorded =>
+      'இந்தச் சுயவிவரத்தில் சரிபார்க்கப்பட்ட நிலை பதிவாகவில்லை.';
+
+  @override
+  String get listedServices => 'பட்டியலிடப்பட்ட சேவைகள்';
+
+  @override
+  String get profileReference => 'சுயவிவரக் குறிப்பு';
+
+  @override
+  String get serviceArea => 'சேவைப் பகுதி';
+
+  @override
+  String get verificationScope =>
+      'இந்தப் பதிவு சுயவிவரத்தின் தற்போதைய நிலையைக் காட்டுகிறது. ஆதார ஆவணங்களும் சரிபார்ப்பு விவரங்களும் கிடைக்கவில்லை. இது அரசு உரிமமோ தொழில்முறைத் தகுதியோ அல்ல.';
+
+  @override
+  String get selectOnMap => 'வரைபடத்தில் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get chooseAddress => 'முகவரியைத் தேர்ந்தெடுக்கவும்';
 }

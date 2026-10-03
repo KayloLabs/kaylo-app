@@ -614,5 +614,22 @@
   "hapticFeedback": "हैप्टिक प्रतिक्रिया",
   "soundEffects": "ध्वनि प्रभाव",
   "voiceStarting": "माइक्रोफ़ोन शुरू हो रहा है…",
-  "ocrNeedsReview": "कुछ पाठ पढ़ा नहीं जा सका। मूल स्कैन देखकर नोट्स सही करें।"
+  "ocrNeedsReview": "कुछ पाठ पढ़ा नहीं जा सका। मूल स्कैन देखकर नोट्स सही करें।",
+  "allBookings": "सभी बुकिंग",
+  "noCompletedBookings": "अभी कोई पूरी हुई बुकिंग नहीं है",
+  "noCompletedBookingsDescription": "काम पूरा होने पर आपकी बुकिंग यहाँ दिखाई देंगी।",
+  "verificationRecord": "सत्यापन रिकॉर्ड",
+  "refreshVerification": "सत्यापन स्थिति रीफ़्रेश करें",
+  "verificationLoadError": "वर्तमान सत्यापन स्थिति लोड नहीं हो सकी। फिर से कोशिश करें।",
+  "kayloVerified": "Kaylo पर सत्यापित",
+  "notYetVerified": "अभी सत्यापित नहीं है",
+  "viewVerification": "सत्यापन रिकॉर्ड देखें",
+  "verificationRecorded": "इस पेशेवर की प्रोफ़ाइल Kaylo में सत्यापित के रूप में दर्ज है।",
+  "verificationNotRecorded": "इस प्रोफ़ाइल के लिए सत्यापित स्थिति दर्ज नहीं है।",
+  "listedServices": "सूचीबद्ध सेवाएँ",
+  "profileReference": "प्रोफ़ाइल संदर्भ",
+  "serviceArea": "सेवा क्षेत्र",
+  "verificationScope": "यह रिकॉर्ड प्रोफ़ाइल की वर्तमान स्थिति दिखाता है। सहायक दस्तावेज़ और जाँच के विवरण उपलब्ध नहीं हैं। यह सरकारी लाइसेंस या पेशेवर योग्यता नहीं है।",
+  "selectOnMap": "मानचित्र पर चुनें",
+  "chooseAddress": "पता चुनें"
 }

@@ -8,6 +8,7 @@ import '../data/local_addresses_repository.dart';
 import '../data/supabase_addresses_repository.dart';
 import '../domain/addresses_repository.dart';
 import '../domain/saved_address.dart';
+import '../../home/application/user_location_provider.dart';
 
 final addressesRepositoryProvider = Provider<AddressesRepository>((ref) {
   if (useMockData) {
@@ -59,7 +60,25 @@ class AddressesController {
   }
 
   Future<void> remove(String addressId) async {
-    await _repo.removeAddress(_userId, addressId);
+    final userId = _userId;
+    await _repo.removeAddress(userId, addressId);
+    if (_userId == userId) {
+      final active = _ref.read(userLocationProvider);
+      if (active.savedAddressId == addressId) {
+        // Keep the chosen point usable, but remove the deleted database id
+        // so the next booking does not reference a non-existent address.
+        await _ref
+            .read(userLocationProvider.notifier)
+            .set(
+              UserLocation(
+                label: active.label,
+                addressLine: active.addressLine,
+                latitude: active.latitude,
+                longitude: active.longitude,
+              ),
+            );
+      }
+    }
     _ref.invalidate(savedAddressesProvider);
   }
 

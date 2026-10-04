@@ -39,6 +39,9 @@ class FarmBookingDraft {
   final FarmTimeSlot slot;
   final int quantity;
   final String address;
+  final String? locationId;
+  final double? latitude;
+  final double? longitude;
 
   /// Set when the customer picked a specific worker on the way in
   /// (worker list or profile); null lets Kaylo assign one.
@@ -51,7 +54,16 @@ class FarmBookingDraft {
     required this.quantity,
     required this.address,
     this.workerId,
+    this.locationId,
+    this.latitude,
+    this.longitude,
   });
+
+  /// Keep the exact pin in the worker's existing instructions field, including
+  /// one-off locations that the customer did not choose to save permanently.
+  String get bookingNotes => latitude != null && longitude != null
+      ? '$address\nMap: https://www.google.com/maps/search/?api=1&query=$latitude,$longitude'
+      : address;
 
   double get total => service.basePrice * quantity;
 
@@ -68,6 +80,10 @@ class FarmBookingDraft {
     FarmTimeSlot? slot,
     int? quantity,
     String? address,
+    String? locationId,
+    double? latitude,
+    double? longitude,
+    bool clearLocation = false,
   }) {
     return FarmBookingDraft(
       service: service,
@@ -76,6 +92,9 @@ class FarmBookingDraft {
       quantity: quantity ?? this.quantity,
       address: address ?? this.address,
       workerId: workerId,
+      locationId: clearLocation ? null : locationId ?? this.locationId,
+      latitude: clearLocation ? null : latitude ?? this.latitude,
+      longitude: clearLocation ? null : longitude ?? this.longitude,
     );
   }
 }

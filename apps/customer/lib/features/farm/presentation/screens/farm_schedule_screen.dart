@@ -18,6 +18,8 @@ import 'package:kaylo_ui/widgets/price_tag.dart';
 import '../../../../core/widgets/use_my_location_button.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../profile/application/addresses_providers.dart';
+import '../../../home/application/user_location_provider.dart';
+import '../../../home/presentation/widgets/location_picker_sheet.dart';
 import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
@@ -78,6 +80,7 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
   void initState() {
     super.initState();
     final now = DateTime.now();
+    final activeLocation = ref.read(userLocationProvider);
     _draft = FarmBookingDraft(
       service: widget.service,
       date: DateTime(now.year, now.month, now.day + 1),
@@ -89,9 +92,27 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
         FarmUnit.hour => 2,
         FarmUnit.visit => 1,
       },
-      address: '',
+      address: activeLocation.isFallback ? '' : activeLocation.fullAddress,
+      locationId: activeLocation.savedAddressId,
+      latitude: activeLocation.latitude,
+      longitude: activeLocation.longitude,
       workerId: widget.workerId,
     );
+    _addressController.text = _draft.address;
+  }
+
+  void _applyLocation(UserLocation location) {
+    setState(() {
+      _addressController.text = location.fullAddress;
+      _draft = _draft
+          .copyWith(clearLocation: true)
+          .copyWith(
+            address: location.fullAddress,
+            locationId: location.savedAddressId,
+            latitude: location.latitude,
+            longitude: location.longitude,
+          );
+    });
   }
 
   @override
@@ -310,6 +331,9 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
             label: _isFarm ? l10n.farmAddress : l10n.serviceAddress,
             hintText: l10n.farmAddressHint,
             controller: _addressController,
+            onChanged: (value) => setState(() {
+              _draft = _draft.copyWith(address: value, clearLocation: true);
+            }),
             prefixIcon: const Icon(Icons.pin_drop_rounded),
           ),
           const SizedBox(height: AppSpacing.s),
@@ -320,10 +344,23 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
             runSpacing: AppSpacing.s,
             children: [
               UseMyLocationButton(
-                onResolved: (resolved) => setState(() {
-                  _addressController.text =
-                      resolved.addressLine ?? resolved.label;
-                }),
+                onResolved: (resolved) =>
+                    _applyLocation(UserLocation.fromResolved(resolved)),
+              ),
+              ActionChip(
+                avatar: const Icon(Icons.map_outlined, size: 18),
+                label: Text(l10n.selectOnMap),
+                onPressed: () async {
+                  final selected = await showMapLocationPickerSheet(
+                    context,
+                    initialLocation: UserLocation(
+                      label: _draft.address,
+                      latitude: _draft.latitude,
+                      longitude: _draft.longitude,
+                    ),
+                  );
+                  if (selected != null && mounted) _applyLocation(selected);
+                },
               ),
               for (final address
                   in ref
@@ -335,7 +372,7 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                   label: Text(address.label),
                   onPressed: () {
                     KayloFeedback.tap();
-                    setState(() => _addressController.text = address.line);
+                    _applyLocation(UserLocation.fromSavedAddress(address));
                   },
                 ),
             ],

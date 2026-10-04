@@ -331,3 +331,14 @@ For reliable calls across mobile networks, configure `CARE_ICE_SERVERS_JSON` wit
 Migration 0014 fixes empty Care connection lists for existing Firebase sessions without a `role` claim. Supabase verifies their Firebase JWT but routes database requests as `anon`. Care policies now use the same verified-subject/person and call-membership checks for both `anon` and `authenticated`. RLS remains enabled. Rolled-back tests in `supabase/tests/care_firebase_access.sql` check contact visibility and signaling for both session roles, and reject unrelated or unsigned access. No Firebase token claims or accounts were changed. See https://supabase.com/docs/guides/auth/third-party/firebase-auth for the role-claim behavior.
 
 SOS offers Kaylo calls and Android SIM calls. The SIM flow supports manual contact entry and Android's phone-number picker, which reads only the selected contact URI without broad address-book permission. Selected details are reviewed before saving to the existing emergency-contact list. Calls proceed one at a time, primary contact first; return to Kaylo after each call to continue the queue. Chrome does not support the native contact picker or SIM calls. Native contact selection and carrier behavior still require an Android device check; no APK was rebuilt for this change.
+
+
+## Booking offers and saved locations
+
+Apply `supabase/migrations/0015_booking_offers.sql` once in the Kaylo project SQL editor before testing live offers. It adds booking subtotal and coupon fields, validates each coupon for the current customer, and saves the discounted amount before Razorpay creates its order. It also preserves Care visit notes and saved location IDs in the primary booking. Existing non-discounted bookings remain compatible.
+
+Approved demo offers: FIRST100 saves ₹100 on the first booking of ₹499 or more; KAYLO150 saves ₹150 on ₹1,499 or more; WEEKEND100 saves ₹100 on ₹999 or more on Saturday/Sunday in India; NEXT75 saves ₹75 on ₹799 or more after a confirmed booking. Each code is once per account, one code per booking. Cancelled bookings release their coupon. Scratch reveal is a local animation; eligibility and redemption are checked by the database.
+
+`supabase/tests/booking_offers.sql` contains rollback-only SQL checks using synthetic accounts. Run it after the migration; it does not keep test bookings. Customer tests cover eligible amounts, failed-payment retry totals, search relevance, saved-address switching, and booking coordinate handoff.
+
+The worker verification screen displays the existing Kaylo verification status. There are no uploaded qualification documents, verification dates, or independent check records in the current schema; the UI does not invent them.

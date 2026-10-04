@@ -65,6 +65,9 @@ class MockBookingsRepository implements BookingsRepository {
       totalAmount: booking.totalAmount,
       locationId: booking.locationId,
       notes: booking.notes,
+      subtotalAmount: booking.subtotalAmount,
+      discountAmount: booking.discountAmount,
+      offerCode: booking.offerCode,
     );
     _mockBookings.add(newBooking);
     return newBooking;
@@ -90,6 +93,8 @@ class MockBookingsRepository implements BookingsRepository {
     if (index != -1) _mockBookings[index] = update(_mockBookings[index]);
   }
 
+  void applyOffer(Booking booking) => _replace(booking.id, (_) => booking);
+
   Booking _copy(Booking old, {BookingStatus? status, DateTime? scheduledAt}) {
     return Booking(
       id: old.id,
@@ -102,6 +107,9 @@ class MockBookingsRepository implements BookingsRepository {
       locationId: old.locationId,
       notes: old.notes,
       finalCost: old.finalCost,
+      subtotalAmount: old.subtotalAmount,
+      discountAmount: old.discountAmount,
+      offerCode: old.offerCode,
     );
   }
 }

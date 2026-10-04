@@ -98,6 +98,9 @@ class SupabaseBookingsRepository implements BookingsRepository {
       locationId: row['location_id'] as String?,
       notes: row['notes'] as String?,
       finalCost: (row['final_cost'] as num?)?.toDouble(),
+      subtotalAmount: (row['subtotal_amount'] as num?)?.toDouble(),
+      discountAmount: (row['discount_amount'] as num?)?.toDouble() ?? 0,
+      offerCode: row['offer_code'] as String?,
     );
   }
 

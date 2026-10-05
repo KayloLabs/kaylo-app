@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kaylo_core/models/worker.dart';
 import 'package:kaylo_core/models/service_item.dart';
 import 'package:kaylo_ui/widgets/kaylo_button.dart';
+import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 import 'package:kaylo/core/router/routes.dart';
 import 'package:kaylo/features/home/application/home_providers.dart';
 import 'package:kaylo/features/home/application/user_location_provider.dart';
@@ -608,7 +609,12 @@ void main() {
 
         // Patient field starts with signed-in user's name ("Nimal User")
         final patientField = tester.widget<TextFormField>(
-          find.byType(TextFormField).first,
+          find.descendant(
+            of: find.byWidgetPredicate(
+              (w) => w is KayloTextField && w.label == 'Who is it for?',
+            ),
+            matching: find.byType(TextFormField),
+          ),
         );
         expect(patientField.controller?.text, equals('Nimal User'));
 
@@ -629,6 +635,16 @@ void main() {
           find.byType(KayloButton),
         );
         expect(buttonAfter.onPressed, isNotNull);
+
+        // A home visit needs a real destination, never the fallback town.
+        await tester.tap(find.byType(KayloButton));
+        await tester.pump();
+        expect(find.text('Please enter the service address'), findsOneWidget);
+        expect(find.text('Choose an address'), findsOneWidget);
+
+        await tester.tap(find.text('Video Teleconsult'));
+        await settle(tester);
+        expect(find.text('Service address'), findsNothing);
       },
     );
   });

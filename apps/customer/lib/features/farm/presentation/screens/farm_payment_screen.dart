@@ -24,6 +24,8 @@ import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
+import '../../../offers/domain/kaylo_offer.dart';
+import '../../../offers/presentation/offers_screen.dart';
 
 class FarmPaymentScreen extends ConsumerStatefulWidget {
   /// Null when the route was reached without a draft (deep link, reload);
@@ -38,6 +40,9 @@ class FarmPaymentScreen extends ConsumerStatefulWidget {
 
 class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
   PaymentMethod _method = PaymentMethod.online;
+  KayloOffer? _offer;
+  double _payable(FarmBookingDraft draft) =>
+      draft.total - (_offer?.savings(draft.total) ?? 0);
 
   /// Where the invoice goes. Prefilled from the profile; people who
   /// signed up by phone have none, so they type one here.
@@ -80,7 +85,14 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
 
     final booking = await ref
         .read(farmCheckoutControllerProvider.notifier)
-        .confirm(draft: draft, method: _method, email: emailOk ? email : null);
+        .confirm(
+          draft: draft,
+          method: _method,
+          email: emailOk ? email : null,
+          offerCode: _offer?.appliesTo(draft.total) == true
+              ? _offer!.code
+              : null,
+        );
     if (!mounted) return;
 
     if (booking == null) {
@@ -198,6 +210,13 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                   isFarm ? l10n.farmAddress : l10n.serviceAddress,
                   draft.address,
                 ),
+                if ((_offer?.savings(draft.total) ?? 0) > 0) ...[
+                  summaryRow('Subtotal', formatRupees(draft.total)),
+                  summaryRow(
+                    'Offer • ${_offer!.code}',
+                    '−${formatRupees(_offer!.discount)}',
+                  ),
+                ],
                 const Padding(
                   padding: EdgeInsets.symmetric(vertical: AppSpacing.s),
                   child: Divider(height: 1),
@@ -211,14 +230,24 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                         fontWeight: FontWeight.w700,
                       ),
                     ),
-                    PriceTag(amount: draft.total, isLarge: true),
+                    PriceTag(amount: _payable(draft), isLarge: true),
                   ],
                 ),
               ],
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
-
+          OfferSelector(
+            subtotal: draft.total,
+            selected: _offer,
+            enabled:
+                !isProcessing &&
+                !ref
+                    .read(farmCheckoutControllerProvider.notifier)
+                    .hasStartedPayment,
+            onChanged: (offer) => setState(() => _offer = offer),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           SectionHeader(title: l10n.paymentMethod),
           const SizedBox(height: AppSpacing.m),
           _PaymentOption(
@@ -262,7 +291,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         child: KayloButton(
           text: _method == PaymentMethod.payAfterService
               ? l10n.confirmBooking
-              : l10n.confirmAndPay(formatRupees(draft.total)),
+              : l10n.confirmAndPay(formatRupees(_payable(draft))),
           icon: Icons.lock_rounded,
           isLoading: isProcessing,
           onPressed: () => _confirm(draft),

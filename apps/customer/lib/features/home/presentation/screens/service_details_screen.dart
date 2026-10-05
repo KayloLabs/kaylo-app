@@ -223,44 +223,44 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                     ),
                               ),
                             ),
-                            ref.watch(workerListProvider(widget.serviceId)).when(
-                              data: (workers) {
-                                int totalReviews = 0;
-                                double weightedRatingSum = 0;
-                                for (final w in workers) {
-                                  if (w.reviewsCount > 0) {
-                                    totalReviews += w.reviewsCount.toInt();
-                                    weightedRatingSum +=
-                                        w.rating * w.reviewsCount;
-                                  }
-                                }
-                                if (totalReviews == 0) {
-                                  return Text(
-                                    l10n.newService,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondary,
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                  );
-                                }
-                                final avgRating =
-                                    weightedRatingSum / totalReviews;
-                                return RatingStars(
-                                  rating: avgRating,
-                                  reviewCount: totalReviews,
-                                );
-                              },
-                              loading: () => const ShimmerBox(
-                                width: 110,
-                                height: 20,
-                              ),
-                              error: (_, _) => const SizedBox.shrink(),
-                            ),
+                            ref
+                                .watch(workerListProvider(widget.serviceId))
+                                .when(
+                                  data: (workers) {
+                                    int totalReviews = 0;
+                                    double weightedRatingSum = 0;
+                                    for (final w in workers) {
+                                      if (w.reviewsCount > 0) {
+                                        totalReviews += w.reviewsCount.toInt();
+                                        weightedRatingSum +=
+                                            w.rating * w.reviewsCount;
+                                      }
+                                    }
+                                    if (totalReviews == 0) {
+                                      return Text(
+                                        l10n.newService,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .bodyMedium
+                                            ?.copyWith(
+                                              color: isDark
+                                                  ? AppColors.textSecondaryDark
+                                                  : AppColors.textSecondary,
+                                              fontWeight: FontWeight.w600,
+                                            ),
+                                      );
+                                    }
+                                    final avgRating =
+                                        weightedRatingSum / totalReviews;
+                                    return RatingStars(
+                                      rating: avgRating,
+                                      reviewCount: totalReviews,
+                                    );
+                                  },
+                                  loading: () =>
+                                      const ShimmerBox(width: 110, height: 20),
+                                  error: (_, _) => const SizedBox.shrink(),
+                                ),
                           ],
                         ),
                         const SizedBox(height: AppSpacing.s),
@@ -313,6 +313,24 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                               subService,
                             );
                             return FilterChip(
+                              showCheckmark: false,
+                              avatar: SizedBox(
+                                width: 18,
+                                height: 18,
+                                child: AnimatedSwitcher(
+                                  duration:
+                                      MediaQuery.disableAnimationsOf(context)
+                                      ? Duration.zero
+                                      : const Duration(milliseconds: 160),
+                                  child: Icon(
+                                    isSelected
+                                        ? Icons.check_rounded
+                                        : Icons.add_rounded,
+                                    key: ValueKey(isSelected),
+                                    size: 18,
+                                  ),
+                                ),
+                              ),
                               label: Text(subService),
                               selected: isSelected,
                               onSelected: (selected) {

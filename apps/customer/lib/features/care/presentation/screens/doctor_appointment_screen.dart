@@ -1,5 +1,6 @@
 import 'package:kaylo_core/config/app_env.dart';
 import '../../application/care_checkout.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -7,6 +8,7 @@ import 'package:go_router/go_router.dart';
 import 'package:intl/intl.dart';
 import 'package:kaylo_core/models/app_user.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_radius.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
@@ -24,6 +26,10 @@ import '../../../auth/application/current_user_provider.dart';
 import '../../application/care_providers.dart';
 import '../../domain/models/appointment.dart';
 import '../../domain/models/doctor.dart';
+import '../../../offers/domain/kaylo_offer.dart';
+import '../../../offers/presentation/offers_screen.dart';
+import '../../../home/application/user_location_provider.dart';
+import '../../../home/presentation/widgets/saved_location_chooser.dart';
 
 class DoctorAppointmentScreen extends ConsumerStatefulWidget {
   const DoctorAppointmentScreen({super.key});
@@ -39,9 +45,15 @@ class _DoctorAppointmentScreenState
   late final TabController _tabController;
   late final TextEditingController _patientController;
   late final TextEditingController _notesController;
+  final _addressController = TextEditingController();
+  UserLocation? _visitLocation;
 
   final _checkout = CareCheckout();
   bool _paying = false;
+  KayloOffer? _offer;
+  double get _payable =>
+      (_selectedDoctor?.consultationFee ?? 0) -
+      (_offer?.savings(_selectedDoctor?.consultationFee ?? 0) ?? 0);
   String? _selectedSpecialty;
   Doctor? _selectedDoctor;
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
@@ -64,12 +76,18 @@ class _DoctorAppointmentScreenState
     final user = ref.read(currentUserProvider);
     _patientController = TextEditingController(text: user?.fullName ?? '');
     _notesController = TextEditingController();
+    final current = ref.read(userLocationProvider);
+    if (!current.isFallback) {
+      _visitLocation = current;
+      _addressController.text = current.fullAddress;
+    }
   }
 
   @override
   void dispose() {
     _patientController.dispose();
     _notesController.dispose();
+    _addressController.dispose();
     _tabController.dispose();
     super.dispose();
   }
@@ -195,7 +213,7 @@ class _DoctorAppointmentScreenState
         ),
         const SizedBox(height: AppSpacing.m),
         SizedBox(
-          height: 48,
+          height: 48 * MediaQuery.textScalerOf(context).scale(1).clamp(1, 2),
           child: ListView.separated(
             scrollDirection: Axis.horizontal,
             itemCount: _specialties.length,
@@ -206,6 +224,7 @@ class _DoctorAppointmentScreenState
                   (_selectedSpecialty == null && spec == 'All') ||
                   _selectedSpecialty == spec;
               return ChoiceChip(
+                showCheckmark: false,
                 label: Text(spec == 'All' ? spec : _specialtyLabel(spec, l10n)),
                 selected: isSelected,
                 onSelected: (selected) {
@@ -386,6 +405,7 @@ class _DoctorAppointmentScreenState
             children: _selectedDoctor!.timeSlots.map((slot) {
               final isSelected = _selectedTimeSlot == slot;
               return ChoiceChip(
+                showCheckmark: false,
                 label: Text(slot),
                 selected: isSelected,
                 onSelected: (selected) {
@@ -429,6 +449,37 @@ class _DoctorAppointmentScreenState
           ),
           const SizedBox(height: AppSpacing.xl),
 
+          if (_consultationType == 'homeVisit') ...[
+            KayloTextField(
+              label: l10n.serviceAddress,
+              hintText: l10n.farmAddressHint,
+              controller: _addressController,
+              prefixIcon: const Icon(Icons.place_outlined),
+              onChanged: (_) => setState(() => _visitLocation = null),
+            ),
+            Align(
+              alignment: Alignment.centerLeft,
+              child: TextButton.icon(
+                icon: const Icon(Icons.map_outlined),
+                label: Text(l10n.chooseAddress),
+                onPressed: _paying
+                    ? null
+                    : () async {
+                        final chosen = await showSavedLocationChooser(
+                          context,
+                          initialLocation: _visitLocation,
+                        );
+                        if (chosen == null || !mounted) return;
+                        setState(() {
+                          _visitLocation = chosen;
+                          _addressController.text = chosen.fullAddress;
+                        });
+                      },
+              ),
+            ),
+            const SizedBox(height: AppSpacing.l),
+          ],
+
           // Who is it for? & Notes
           KayloTextField(
             label: l10n.whoIsItFor,
@@ -441,11 +492,18 @@ class _DoctorAppointmentScreenState
           ),
           const SizedBox(height: AppSpacing.xxl),
 
+          OfferSelector(
+            subtotal: _selectedDoctor!.consultationFee,
+            selected: _offer,
+            enabled: !_paying && !_checkout.hasStartedPayment,
+            onChanged: (offer) => setState(() => _offer = offer),
+          ),
+          const SizedBox(height: AppSpacing.l),
           // Confirm & Book Button
           KayloButton(
             text: (_paying
                 ? l10n.openingPayment
-                : '${l10n.payAndBook} (₹${_selectedDoctor!.consultationFee.toInt()})'),
+                : '${l10n.payAndBook} (${formatRupees(_payable)})'),
             icon: Icons.check_circle_rounded,
             onPressed:
                 (!_paying &&
@@ -453,13 +511,26 @@ class _DoctorAppointmentScreenState
                     _selectedTimeSlot != null)
                 ? () async {
                     KayloFeedback.press();
+                    final homeVisit = _consultationType == 'homeVisit';
+                    if (homeVisit && _addressController.text.trim().isEmpty) {
+                      KayloSnackbar.showError(
+                        context,
+                        l10n.serviceAddressRequired,
+                      );
+                      return;
+                    }
                     final user = ref.read(currentUserProvider);
                     final patient = _patientController.text.trim().isNotEmpty
                         ? _patientController.text.trim()
                         : (user?.fullName ?? '');
-                    final notes = _notesController.text.trim().isNotEmpty
-                        ? _notesController.text.trim()
-                        : null;
+                    final instructions = [
+                      if (homeVisit)
+                        _visitLocation?.bookingNotes ??
+                            _addressController.text.trim(),
+                      if (_notesController.text.trim().isNotEmpty)
+                        _notesController.text.trim(),
+                    ].join('\n');
+                    final notes = instructions.isEmpty ? null : instructions;
 
                     final appointment = DoctorAppointment(
                       id: 'apt_${DateTime.now().millisecondsSinceEpoch}',
@@ -485,6 +556,13 @@ class _DoctorAppointmentScreenState
                         ref,
                         kind: 'doctor',
                         mockAmount: _selectedDoctor!.consultationFee,
+                        offerCode:
+                            _offer?.appliesTo(
+                                  _selectedDoctor!.consultationFee,
+                                ) ==
+                                true
+                            ? _offer!.code
+                            : null,
                         details: {
                           'provider_id': _selectedDoctor!.id,
                           'date': DateFormat(
@@ -496,6 +574,9 @@ class _DoctorAppointmentScreenState
                           'consultation_type': _consultationType,
                           'patient_name': patient,
                           'notes': notes,
+                          'location_id': homeVisit
+                              ? _visitLocation?.savedAddressId
+                              : null,
                         },
                       );
                       if (useMockData) {
@@ -508,7 +589,9 @@ class _DoctorAppointmentScreenState
                       KayloFeedback.alert();
                       KayloSnackbar.showError(
                         context,
-                        error is StateError
+                        error is AppFailure
+                            ? error.message
+                            : error is StateError
                             ? error.message.toString()
                             : l10n.appointmentPaymentFailed,
                       );

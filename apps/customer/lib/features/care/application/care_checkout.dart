@@ -10,23 +10,31 @@ import '../../booking/application/bookings_providers.dart';
 import '../../home/application/home_providers.dart';
 import 'care_providers.dart';
 import '../../../l10n/generated/app_localizations.dart';
+import '../../offers/application/offers_providers.dart';
 
 /// Kept for the lifetime of a checkout screen, so retries reuse its pending booking.
 class CareCheckout {
   String? _requestId;
   String? _fingerprint;
+  Booking? _mockBooking;
+  bool _hasStartedPayment = false;
+  bool get hasStartedPayment => _hasStartedPayment;
   Future<bool> pay(
     WidgetRef ref, {
     required String kind,
     required Map<String, dynamic> details,
     required double mockAmount,
+    String? offerCode,
   }) async {
     final l10n = AppLocalizations.of(ref.context)!;
     final fingerprint = '$kind:$details';
-    if (_fingerprint != fingerprint) {
+    if (_fingerprint != fingerprint || _requestId == null) {
       _requestId = const Uuid().v4();
       _fingerprint = fingerprint;
+      _mockBooking = null;
+      _hasStartedPayment = false;
     }
+    if (_mockBooking?.status == BookingStatus.confirmed) return true;
     final String bookingId;
     if (useMockData) {
       final services = await ref
@@ -38,18 +46,23 @@ class CareCheckout {
       if (service == null) {
         throw StateError(l10n.careServiceUnavailable);
       }
-      final booking = await ref
-          .read(bookingsRepositoryProvider)
-          .createBooking(
-            Booking(
-              id: _requestId!,
-              userId: ref.read(currentUserIdProvider)!,
-              serviceId: service.id,
-              scheduledAt: DateTime.parse(details['date'] as String),
-              status: BookingStatus.pending,
-              totalAmount: mockAmount,
-            ),
-          );
+      final booking =
+          _mockBooking ??
+          await ref
+              .read(bookingsRepositoryProvider)
+              .createBooking(
+                Booking(
+                  id: _requestId!,
+                  userId: ref.read(currentUserIdProvider)!,
+                  serviceId: service.id,
+                  scheduledAt: DateTime.parse(details['date'] as String),
+                  status: BookingStatus.pending,
+                  totalAmount: mockAmount,
+                  notes: details['notes'] as String?,
+                  locationId: details['location_id'] as String?,
+                ),
+              );
+      _mockBooking = booking;
       bookingId = booking.id;
     } else {
       bookingId =
@@ -75,6 +88,36 @@ class CareCheckout {
         return true;
       }
     }
+    if (offerCode != null) {
+      try {
+        final discounted = await ref.read(bookingOfferApplierProvider)(
+          _mockBooking ??
+              Booking(
+                id: bookingId,
+                userId: ref.read(currentUserIdProvider)!,
+                serviceId: kind,
+                scheduledAt: DateTime.parse(details['date'] as String),
+                status: BookingStatus.pending,
+                totalAmount: mockAmount,
+              ),
+          offerCode,
+        );
+        if (useMockData) _mockBooking = discounted;
+      } catch (_) {
+        if (!_hasStartedPayment) {
+          try {
+            await ref
+                .read(bookingsRepositoryProvider)
+                .updateBookingStatus(bookingId, BookingStatus.cancelled);
+            _requestId = null;
+            _mockBooking = null;
+            _refresh(ref);
+          } catch (_) {}
+        }
+        rethrow;
+      }
+    }
+    _hasStartedPayment = true;
     final outcome = await ref
         .read(paymentGatewayProvider)
         .pay(bookingId: bookingId, email: ref.read(currentUserProvider)?.email);
@@ -85,6 +128,7 @@ class CareCheckout {
       await ref
           .read(bookingsRepositoryProvider)
           .updateBookingStatus(bookingId, BookingStatus.confirmed);
+      _mockBooking = _mockBooking?.copyWith(status: BookingStatus.confirmed);
     }
     // Payment already succeeded. A notification or refresh failure must not
     // present the checkout as unpaid or encourage a second payment.
@@ -111,6 +155,7 @@ class CareCheckout {
   void _refresh(WidgetRef ref) {
     if (!ref.context.mounted) return;
     ref.invalidate(userBookingsProvider);
+    ref.invalidate(offersProvider);
     ref.invalidate(doctorAppointmentsProvider);
     ref.invalidate(caregiverBookingsProvider);
   }

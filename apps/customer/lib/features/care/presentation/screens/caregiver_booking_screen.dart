@@ -1,4 +1,8 @@
 import 'package:kaylo_core/config/app_env.dart';
+import 'package:kaylo_core/network/app_failure.dart';
+import 'package:kaylo_core/utils/money.dart';
+import '../../../offers/domain/kaylo_offer.dart';
+import '../../../offers/presentation/offers_screen.dart';
 import 'package:intl/intl.dart';
 import '../../application/care_checkout.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +24,9 @@ import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/care_providers.dart';
 import '../../domain/models/caregiver.dart';
+import '../../../home/application/user_location_provider.dart';
+import '../../../home/presentation/widgets/saved_location_chooser.dart';
+import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 
 class CaregiverBookingScreen extends ConsumerStatefulWidget {
   const CaregiverBookingScreen({super.key});
@@ -32,6 +39,28 @@ class CaregiverBookingScreen extends ConsumerStatefulWidget {
 class _CaregiverBookingScreenState
     extends ConsumerState<CaregiverBookingScreen> {
   final _checkout = CareCheckout();
+  KayloOffer? _offer;
+  double get _discount => _offer?.savings(_calculateTotal()) ?? 0;
+  double get _payable => _calculateTotal() - _discount;
+  final _address = TextEditingController();
+  UserLocation? _visitLocation;
+
+  @override
+  void initState() {
+    super.initState();
+    final current = ref.read(userLocationProvider);
+    if (!current.isFallback) {
+      _visitLocation = current;
+      _address.text = current.fullAddress;
+    }
+  }
+
+  @override
+  void dispose() {
+    _address.dispose();
+    super.dispose();
+  }
+
   bool _paying = false;
   Caregiver? _selectedCaregiver;
   int _selectedHours = 4;
@@ -99,6 +128,7 @@ class _CaregiverBookingScreenState
                         return ChoiceChip(
                           label: Text(type),
                           selected: isSelected,
+                          showCheckmark: false,
                           onSelected: (selected) {
                             KayloFeedback.tap();
                             setState(() {
@@ -266,50 +296,46 @@ class _CaregiverBookingScreenState
                       ),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Row(
+                    Wrap(
+                      spacing: AppSpacing.s,
+                      runSpacing: AppSpacing.s,
                       children: _hourOptions.map((hrs) {
                         final isSelected = _selectedHours == hrs;
-                        return Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: OutlinedButton(
-                              style: OutlinedButton.styleFrom(
-                                backgroundColor: isSelected
-                                    ? AppColors.careAccent.withValues(
-                                        alpha: 0.15,
-                                      )
-                                    : Colors.transparent,
-                                side: BorderSide(
-                                  color: isSelected
-                                      ? AppColors.careAccent
-                                      : Colors.grey.shade400,
-                                  width: isSelected ? 2 : 1,
-                                ),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    AppRadius.button,
-                                  ),
-                                ),
-                                padding: const EdgeInsets.symmetric(
-                                  vertical: AppSpacing.m,
-                                ),
+                        return OutlinedButton(
+                          style: OutlinedButton.styleFrom(
+                            backgroundColor: isSelected
+                                ? AppColors.careAccent.withValues(alpha: 0.15)
+                                : Colors.transparent,
+                            side: BorderSide(
+                              color: isSelected
+                                  ? AppColors.careAccent
+                                  : Colors.grey.shade400,
+                              width: isSelected ? 2 : 1,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(
+                                AppRadius.button,
                               ),
-                              onPressed: () {
-                                KayloFeedback.tap();
-                                setState(() {
-                                  _selectedHours = hrs;
-                                });
-                              },
-                              child: Text(
-                                '$hrs hrs',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 14,
-                                  color: isSelected
-                                      ? AppColors.careAccent
-                                      : AppColors.textPrimary,
-                                ),
-                              ),
+                            ),
+                            padding: const EdgeInsets.symmetric(
+                              vertical: AppSpacing.m,
+                              horizontal: AppSpacing.m,
+                            ),
+                          ),
+                          onPressed: () {
+                            KayloFeedback.tap();
+                            setState(() {
+                              _selectedHours = hrs;
+                            });
+                          },
+                          child: Text(
+                            '$hrs hrs',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 14,
+                              color: isSelected
+                                  ? AppColors.careAccent
+                                  : AppColors.textPrimary,
                             ),
                           ),
                         );
@@ -326,18 +352,18 @@ class _CaregiverBookingScreenState
                       ),
                     ),
                     const SizedBox(height: AppSpacing.m),
-                    Row(
+                    Wrap(
+                      spacing: AppSpacing.s,
+                      runSpacing: AppSpacing.s,
                       children: [
                         _buildDateChip(
                           'Tomorrow',
                           DateTime.now().add(const Duration(days: 1)),
                         ),
-                        const SizedBox(width: AppSpacing.s),
                         _buildDateChip(
                           'In 2 Days',
                           DateTime.now().add(const Duration(days: 2)),
                         ),
-                        const SizedBox(width: AppSpacing.s),
                         _buildDateChip(
                           'In 3 Days',
                           DateTime.now().add(const Duration(days: 3)),
@@ -345,19 +371,62 @@ class _CaregiverBookingScreenState
                       ],
                     ),
 
+                    const SizedBox(height: AppSpacing.xl),
+                    KayloTextField(
+                      label: l10n.serviceAddress,
+                      hintText: l10n.farmAddressHint,
+                      controller: _address,
+                      prefixIcon: const Icon(Icons.place_outlined),
+                      onChanged: (_) => setState(() => _visitLocation = null),
+                    ),
+                    Align(
+                      alignment: Alignment.centerLeft,
+                      child: TextButton.icon(
+                        icon: const Icon(Icons.map_outlined),
+                        label: Text(l10n.chooseAddress),
+                        onPressed: _paying
+                            ? null
+                            : () async {
+                                final chosen = await showSavedLocationChooser(
+                                  context,
+                                  initialLocation: _visitLocation,
+                                );
+                                if (chosen == null || !mounted) return;
+                                setState(() {
+                                  _visitLocation = chosen;
+                                  _address.text = chosen.fullAddress;
+                                });
+                              },
+                      ),
+                    ),
+
                     // Total & Book Button
                     const SizedBox(height: AppSpacing.xxl),
                     _buildTotalCard(l10n),
+                    const SizedBox(height: AppSpacing.l),
+                    OfferSelector(
+                      subtotal: _calculateTotal(),
+                      selected: _offer,
+                      enabled: !_paying && !_checkout.hasStartedPayment,
+                      onChanged: (offer) => setState(() => _offer = offer),
+                    ),
                     const SizedBox(height: AppSpacing.l),
 
                     KayloButton(
                       text: _paying
                           ? l10n.openingPayment
-                          : '${l10n.payAndBook} • ₹${_calculateTotal().toInt()}',
+                          : '${l10n.payAndBook} • ${formatRupees(_payable)}',
                       icon: Icons.check_circle_rounded,
                       onPressed: _paying || _selectedCaregiver == null
                           ? null
                           : () async {
+                              if (_address.text.trim().isEmpty) {
+                                KayloSnackbar.showError(
+                                  context,
+                                  l10n.serviceAddressRequired,
+                                );
+                                return;
+                              }
                               KayloFeedback.press();
                               final caregiver = _selectedCaregiver!;
 
@@ -372,9 +441,11 @@ class _CaregiverBookingScreenState
                                 startTime: '09:00 AM',
                                 hours: _selectedHours,
                                 hourlyRate: caregiver.hourlyRate,
-                                totalAmount: total,
+                                totalAmount: _payable,
                                 careType: _selectedCareType,
-                                notes: 'Caregiver visit for senior',
+                                notes:
+                                    _visitLocation?.bookingNotes ??
+                                    _address.text.trim(),
                                 status: 'confirmed',
                               );
 
@@ -384,6 +455,9 @@ class _CaregiverBookingScreenState
                                   ref,
                                   kind: 'caregiver',
                                   mockAmount: total,
+                                  offerCode: _offer?.appliesTo(total) == true
+                                      ? _offer!.code
+                                      : null,
                                   details: {
                                     'provider_id': caregiver.id,
                                     'date': DateFormat(
@@ -394,6 +468,8 @@ class _CaregiverBookingScreenState
                                     'hours': _selectedHours,
                                     'care_type': _selectedCareType,
                                     'notes': record.notes,
+                                    'location_id':
+                                        _visitLocation?.savedAddressId,
                                   },
                                 );
                                 if (useMockData) {
@@ -405,7 +481,9 @@ class _CaregiverBookingScreenState
                                 if (!context.mounted) return;
                                 KayloSnackbar.showError(
                                   context,
-                                  error is StateError
+                                  error is AppFailure
+                                      ? error.message
+                                      : error is StateError
                                       ? error.message.toString()
                                       : l10n.visitPaymentFailed,
                                 );
@@ -445,48 +523,47 @@ class _CaregiverBookingScreenState
         _selectedDate.month == date.month &&
         _selectedDate.year == date.year;
 
-    return Expanded(
-      child: OutlinedButton(
-        style: OutlinedButton.styleFrom(
-          backgroundColor: isSelected
-              ? AppColors.careAccent.withValues(alpha: 0.15)
-              : Colors.transparent,
-          side: BorderSide(
-            color: isSelected ? AppColors.careAccent : Colors.grey.shade400,
-            width: isSelected ? 2 : 1,
-          ),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(AppRadius.button),
-          ),
-          padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
+    return OutlinedButton(
+      style: OutlinedButton.styleFrom(
+        backgroundColor: isSelected
+            ? AppColors.careAccent.withValues(alpha: 0.15)
+            : Colors.transparent,
+        side: BorderSide(
+          color: isSelected ? AppColors.careAccent : Colors.grey.shade400,
+          width: isSelected ? 2 : 1,
         ),
-        onPressed: () {
-          KayloFeedback.tap();
-          setState(() {
-            _selectedDate = date;
-          });
-        },
-        child: Column(
-          children: [
-            Text(
-              label,
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: isSelected
-                    ? AppColors.careAccent
-                    : AppColors.textPrimary,
-                fontSize: 14,
-              ),
-            ),
-            Text(
-              '${date.day}/${date.month}',
-              style: const TextStyle(
-                fontSize: 12,
-                color: AppColors.textSecondary,
-              ),
-            ),
-          ],
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(AppRadius.button),
         ),
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.m,
+          horizontal: AppSpacing.l,
+        ),
+      ),
+      onPressed: () {
+        KayloFeedback.tap();
+        setState(() {
+          _selectedDate = date;
+        });
+      },
+      child: Column(
+        children: [
+          Text(
+            label,
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: isSelected ? AppColors.careAccent : AppColors.textPrimary,
+              fontSize: 14,
+            ),
+          ),
+          Text(
+            '${date.day}/${date.month}',
+            style: const TextStyle(
+              fontSize: 12,
+              color: AppColors.textSecondary,
+            ),
+          ),
+        ],
       ),
     );
   }
@@ -506,13 +583,16 @@ class _CaregiverBookingScreenState
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  '${_selectedCaregiver?.name ?? "Caregiver"} ($rate/hr × $_selectedHours hrs)',
-                  style: const TextStyle(
-                    fontSize: 14,
-                    color: AppColors.textSecondary,
+                Expanded(
+                  child: Text(
+                    '${_selectedCaregiver?.name ?? "Caregiver"} ($rate/hr × $_selectedHours hrs)',
+                    style: const TextStyle(
+                      fontSize: 14,
+                      color: AppColors.textSecondary,
+                    ),
                   ),
                 ),
+                const SizedBox(width: AppSpacing.m),
                 Text(
                   '₹${total.toInt()}',
                   style: const TextStyle(
@@ -523,18 +603,36 @@ class _CaregiverBookingScreenState
               ],
             ),
             const Divider(height: AppSpacing.l),
+            if (_discount > 0)
+              Padding(
+                padding: const EdgeInsets.only(bottom: AppSpacing.m),
+                child: Row(
+                  children: [
+                    Expanded(child: Text('Offer • ${_offer!.code}')),
+                    Text(
+                      '−${formatRupees(_discount)}',
+                      style: const TextStyle(
+                        color: AppColors.careAccent,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Text(
-                  l10n.totalAmount,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
+                Expanded(
+                  child: Text(
+                    l10n.totalAmount,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                 ),
                 Text(
-                  '₹${total.toInt()}',
+                  formatRupees(_payable),
                   style: const TextStyle(
                     fontSize: 22,
                     fontWeight: FontWeight.bold,

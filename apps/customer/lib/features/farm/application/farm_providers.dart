@@ -13,6 +13,7 @@ import '../../booking/domain/payment_method.dart';
 import '../../home/application/home_providers.dart';
 import '../../workers/application/workers_providers.dart';
 import '../domain/farm_booking_draft.dart';
+import '../../offers/application/offers_providers.dart';
 
 /// Every farm service in the catalog.
 final farmServicesProvider = FutureProvider.autoDispose<List<ServiceItem>>((
@@ -71,6 +72,10 @@ final farmCheckoutControllerProvider =
 /// same booking instead of creating another.
 class FarmCheckoutController extends AsyncNotifier<Booking?> {
   Booking? _unpaid;
+  bool _hasStartedPayment = false;
+
+  /// An order can exist after a cancelled payment sheet, so keep its price.
+  bool get hasStartedPayment => _hasStartedPayment;
 
   @override
   Future<Booking?> build() async => null;
@@ -79,6 +84,7 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
     required FarmBookingDraft draft,
     required PaymentMethod method,
     String? email,
+    String? offerCode,
   }) async {
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
@@ -100,11 +106,39 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         scheduledAt: draft.scheduledAt,
         status: BookingStatus.pending,
         totalAmount: draft.total,
-        notes: draft.address,
+        locationId: draft.locationId,
+        notes: draft.bookingNotes,
       );
 
+      Future<Booking> applyOffer(Booking created) async {
+        try {
+          return await ref.read(bookingOfferApplierProvider)(
+            created,
+            offerCode,
+          );
+        } catch (_) {
+          // Release eligibility only before any gateway attempt. If cancelling
+          // fails, retain the existing row so a retry cannot duplicate it.
+          if (!_hasStartedPayment && created.status == BookingStatus.pending) {
+            try {
+              await repo.updateBookingStatus(
+                created.id,
+                BookingStatus.cancelled,
+              );
+              _unpaid = null;
+              ref.invalidate(userBookingsProvider);
+              ref.invalidate(offersProvider);
+            } catch (_) {}
+          }
+          rethrow;
+        }
+      }
+
       if (method == PaymentMethod.payAfterService) {
-        final booking = await repo.createBooking(create());
+        final created = _unpaid ?? await repo.createBooking(create());
+        _unpaid = created;
+        final booking = await applyOffer(created);
+        _unpaid = null;
         // A note by email, when there is an address for it; the booking
         // stands either way.
         if (!useMockData && email != null && email.isNotEmpty) {
@@ -117,8 +151,11 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         return booking;
       }
 
-      final booking = _unpaid ?? await repo.createBooking(create());
+      final created = _unpaid ?? await repo.createBooking(create());
+      _unpaid = created;
+      final booking = await applyOffer(created);
       _unpaid = booking;
+      _hasStartedPayment = true;
       final outcome = await ref
           .read(paymentGatewayProvider)
           .pay(bookingId: booking.id, email: email);
@@ -148,6 +185,7 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         /* Booking is already saved. */
       }
       ref.invalidate(userBookingsProvider);
+      ref.invalidate(offersProvider);
     }
     return booking;
   }

@@ -1,10 +1,9 @@
 import 'dart:math' as math;
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
-import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
+import 'liquid_nav_surface.dart';
 
 /// One continuous lens. Dragging previews a destination; release commits it.
 /// A cancelled gesture returns to the current tab without navigating.
@@ -23,11 +22,19 @@ class LiquidTabBar extends StatefulWidget {
 }
 
 class _LiquidTabBarState extends State<LiquidTabBar>
-    with SingleTickerProviderStateMixin {
+    with TickerProviderStateMixin {
   late final _position = AnimationController.unbounded(
     vsync: this,
     value: widget.index.toDouble(),
   );
+  late final _press = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 170),
+    reverseDuration: const Duration(milliseconds: 260),
+  );
+  final _clock = Stopwatch()..start();
+  int? _lastDragTime;
+  double _dragVelocity = 0;
   bool _dragging = false;
   int? _preview;
   static const _icons = [
@@ -46,7 +53,7 @@ class _LiquidTabBarState extends State<LiquidTabBar>
   ];
 
   bool get _reduce => MediaQuery.disableAnimationsOf(context);
-  void _settle(double target) {
+  void _settle(double target, {double? velocity}) {
     if (_reduce) {
       _position.value = target;
       return;
@@ -56,7 +63,7 @@ class _LiquidTabBarState extends State<LiquidTabBar>
         const SpringDescription(mass: 1, stiffness: 420, damping: 34),
         _position.value,
         target,
-        _position.velocity.clamp(-8.0, 8.0),
+        (velocity ?? _position.velocity).clamp(-8.0, 8.0),
       ),
     );
   }
@@ -73,6 +80,16 @@ class _LiquidTabBarState extends State<LiquidTabBar>
     final logical = rtl ? width * 5 - x : x;
     final position = (logical / width - .5).clamp(0.0, 4.0);
     final next = (logical / width).floor().clamp(0, 4);
+    final now = _clock.elapsedMicroseconds;
+    if (_lastDragTime != null) {
+      final seconds = (now - _lastDragTime!) / 1000000;
+      if (seconds > .001) {
+        _dragVelocity =
+            ((_dragVelocity * .4) + (position - _position.value) / seconds * .6)
+                .clamp(-10.0, 10.0);
+      }
+    }
+    _lastDragTime = now;
     if (_preview != next) KayloFeedback.selection();
     setState(() {
       _dragging = true;
@@ -88,12 +105,16 @@ class _LiquidTabBarState extends State<LiquidTabBar>
       _dragging = false;
       _preview = null;
     });
-    _settle(next.toDouble());
+    _settle(next.toDouble(), velocity: cancel ? 0 : _dragVelocity);
+    _lastDragTime = null;
+    _dragVelocity = 0;
     if (!cancel && next != widget.index) widget.onSelected(next);
   }
 
   @override
   void dispose() {
+    _press.dispose();
+    _clock.stop();
     _position.dispose();
     super.dispose();
   }
@@ -101,101 +122,51 @@ class _LiquidTabBarState extends State<LiquidTabBar>
   @override
   Widget build(BuildContext context) {
     final dark = Theme.of(context).brightness == Brightness.dark;
-    final contrast = MediaQuery.highContrastOf(context);
     final rtl = Directionality.of(context) == TextDirection.rtl;
-    return KayloLiquidGlass(
-      borderRadius: 34,
-      colorOverlay: contrast
-          ? Theme.of(context).colorScheme.surface
-          : (dark ? const Color(0xFF14271D) : const Color(0xFFF7FAF6))
-                .withValues(alpha: dark ? .62 : .34),
-      padding: const EdgeInsets.all(7),
-      child: LayoutBuilder(
-        builder: (context, constraints) {
-          final width = constraints.maxWidth / 5;
-          return GestureDetector(
-            behavior: HitTestBehavior.opaque,
-            onHorizontalDragStart: (d) => _drag(d.localPosition.dx, width, rtl),
-            onHorizontalDragUpdate: (d) =>
-                _drag(d.localPosition.dx, width, rtl),
-            onHorizontalDragEnd: (_) => _end(),
-            onHorizontalDragCancel: () => _end(cancel: true),
-            onLongPressStart: (d) => _drag(d.localPosition.dx, width, rtl),
-            onLongPressMoveUpdate: (d) => _drag(d.localPosition.dx, width, rtl),
-            onLongPressEnd: (_) => _end(),
-            onLongPressCancel: () => _end(cancel: true),
-            child: AnimatedBuilder(
-              animation: _position,
-              builder: (context, _) {
-                final p = _position.value.clamp(0.0, 4.0);
-                final physical = rtl ? 4 - p : p;
-                final stretch = _reduce
-                    ? 0.0
-                    : math.min(.13, _position.velocity.abs() * .014);
-                return SizedBox(
-                  height: 52,
-                  child: Stack(
-                    clipBehavior: Clip.none,
-                    children: [
-                      Positioned(
-                        left: physical * width,
-                        top: 1,
-                        width: width,
-                        height: 50,
-                        child: IgnorePointer(
-                          child: AnimatedScale(
-                            scale: _dragging && !_reduce ? 1.08 : 1,
-                            duration: _reduce
-                                ? Duration.zero
-                                : const Duration(milliseconds: 180),
-                            curve: Curves.easeOutCubic,
-                            child: Transform.scale(
-                              scaleX: 1 + stretch,
-                              scaleY: 1 - stretch * .35,
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(28),
-                                child: BackdropFilter(
-                                  filter: ImageFilter.blur(
-                                    sigmaX: 6,
-                                    sigmaY: 6,
-                                  ),
-                                  child: DecoratedBox(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(28),
-                                      gradient: LinearGradient(
-                                        begin: Alignment(
-                                          -.8 + physical * .4,
-                                          -1,
-                                        ),
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          Colors.white.withValues(
-                                            alpha: dark ? .3 : .76,
-                                          ),
-                                          AppColors.brandPrimary.withValues(
-                                            alpha: dark ? .22 : .12,
-                                          ),
-                                          Colors.white.withValues(
-                                            alpha: dark ? .12 : .44,
-                                          ),
-                                        ],
-                                        stops: const [0, .58, 1],
-                                      ),
-                                      border: Border.all(
-                                        color: Colors.white.withValues(
-                                          alpha: dark ? .45 : .85,
-                                        ),
-                                        width: 1,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Row(
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final width = (constraints.maxWidth - 14) / 5;
+        return Listener(
+          onPointerDown: (_) {
+            if (!_reduce) _press.forward();
+          },
+          onPointerUp: (_) => _press.reverse(),
+          onPointerCancel: (_) {
+            _press.reverse();
+            _end(cancel: true);
+          },
+          child: AnimatedBuilder(
+            animation: Listenable.merge([_position, _press]),
+            builder: (context, _) {
+              final p = _position.value.clamp(0.0, 4.0);
+              final physical = rtl ? 4 - p : p;
+              final speed = _dragging ? _dragVelocity : _position.velocity;
+              final stretch = _reduce ? 0.0 : math.min(.15, speed.abs() * .016);
+              return LiquidNavSurface(
+                position: physical,
+                stretch: stretch,
+                press: _reduce
+                    ? 0
+                    : Curves.easeOutCubic.transform(_press.value),
+                child: Padding(
+                  padding: const EdgeInsets.all(7),
+                  child: GestureDetector(
+                    behavior: HitTestBehavior.opaque,
+                    onHorizontalDragStart: (d) =>
+                        _drag(d.localPosition.dx, width, rtl),
+                    onHorizontalDragUpdate: (d) =>
+                        _drag(d.localPosition.dx, width, rtl),
+                    onHorizontalDragEnd: (_) => _end(),
+                    onHorizontalDragCancel: () => _end(cancel: true),
+                    onLongPressStart: (d) =>
+                        _drag(d.localPosition.dx, width, rtl),
+                    onLongPressMoveUpdate: (d) =>
+                        _drag(d.localPosition.dx, width, rtl),
+                    onLongPressEnd: (_) => _end(),
+                    onLongPressCancel: () => _end(cancel: true),
+                    child: SizedBox(
+                      height: 52,
+                      child: Row(
                         children: List.generate(5, (i) {
                           final influence = (1 - (p - i).abs()).clamp(0.0, 1.0);
                           final selected = (_preview ?? widget.index) == i;
@@ -229,7 +200,7 @@ class _LiquidTabBarState extends State<LiquidTabBar>
                                         size: 24,
                                         color: Color.lerp(
                                           dark
-                                              ? Colors.white60
+                                              ? Colors.white70
                                               : AppColors.textSecondary,
                                           dark
                                               ? Colors.white
@@ -245,14 +216,14 @@ class _LiquidTabBarState extends State<LiquidTabBar>
                           );
                         }),
                       ),
-                    ],
+                    ),
                   ),
-                );
-              },
-            ),
-          );
-        },
-      ),
+                ),
+              );
+            },
+          ),
+        );
+      },
     );
   }
 }

@@ -65,27 +65,34 @@ class CareCheckout {
       _mockBooking = booking;
       bookingId = booking.id;
     } else {
-      bookingId =
-          await ref
-                  .read(supabaseClientProvider)
-                  .rpc(
-                    'create_care_checkout',
-                    params: {
-                      'p_request_id': _requestId,
-                      'p_kind': kind,
-                      'p_details': details,
-                    },
-                  )
-              as String;
-      final row = await ref
-          .read(supabaseClientProvider)
-          .from('bookings')
-          .select('status')
-          .eq('booking_id', bookingId)
-          .single();
-      if (row['status'] == 'confirmed') {
-        _refresh(ref);
-        return true;
+      try {
+        bookingId =
+            await ref
+                    .read(supabaseClientProvider)
+                    .rpc(
+                      'create_care_checkout',
+                      params: {
+                        'p_request_id': _requestId,
+                        'p_kind': kind,
+                        'p_details': details,
+                      },
+                    )
+                as String;
+        final row = await ref
+            .read(supabaseClientProvider)
+            .from('bookings')
+            .select('status')
+            .eq('booking_id', bookingId)
+            .single();
+        if (row['status'] == 'confirmed') {
+          _refresh(ref);
+          return true;
+        }
+      } catch (error) {
+        // The booking could not be made, so payment never opens. Pass on
+        // what the server said (not signed in, an address that is not on
+        // this account, no connection) instead of a general "could not pay".
+        throw mapSupabaseError(error);
       }
     }
     if (offerCode != null) {

@@ -29,6 +29,11 @@ class KayloFeedback {
     if (soundsEnabled) _safe(SystemSound.play(SystemSoundType.click));
   }
 
+  /// A light tap with no click, for moments that bring their own sound.
+  static void soft() {
+    if (hapticsEnabled) _safe(HapticFeedback.lightImpact());
+  }
+
   static void success() {
     if (hapticsEnabled) _safe(HapticFeedback.mediumImpact());
   }

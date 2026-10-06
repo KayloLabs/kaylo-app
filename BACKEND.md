@@ -339,6 +339,8 @@ Apply `supabase/migrations/0015_booking_offers.sql` once in the Kaylo project SQ
 
 Approved demo offers: FIRST100 saves ₹100 on the first booking of ₹499 or more; KAYLO150 saves ₹150 on ₹1,499 or more; WEEKEND100 saves ₹100 on ₹999 or more on Saturday/Sunday in India; NEXT75 saves ₹75 on ₹799 or more after a confirmed booking. Each code is once per account, one code per booking. Cancelled bookings release their coupon. Scratch reveal is a local animation; eligibility and redemption are checked by the database.
 
+The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are synthesised by `apps/customer/tool/make_sounds.py` into `apps/customer/assets/`; nothing is a recording.
+
 `supabase/tests/booking_offers.sql` contains rollback-only SQL checks using synthetic accounts. Run it after the migration; it does not keep test bookings. Customer tests cover eligible amounts, failed-payment retry totals, search relevance, saved-address switching, and booking coordinate handoff.
 
 The worker verification screen displays the existing Kaylo verification status. There are no uploaded qualification documents, verification dates, or independent check records in the current schema; the UI does not invent them.

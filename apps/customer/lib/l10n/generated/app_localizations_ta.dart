@@ -2336,4 +2336,10 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get bannerRewardsBody =>
       'உங்கள் சலுகைகளையும் ஸ்க்ராட்ச் வெகுமதிகளையும் பாருங்கள்';
+
+  @override
+  String get secretTagline => 'ஒரு சிறிய அக்கறை நீண்ட தூரம் கொண்டு செல்லும்.';
+
+  @override
+  String get secretSemantics => 'கெய்லோ. அக்கறையுடன் உருவாக்கப்பட்டது.';
 }

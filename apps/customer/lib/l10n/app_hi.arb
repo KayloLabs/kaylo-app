@@ -739,5 +739,7 @@
   "bannerWelcomeTitle": "दिल से स्वागत। ₹100 हमारी ओर से।",
   "bannerWelcomeBody": "आपका पहली बुकिंग का ऑफ़र तैयार है",
   "bannerRewardsTitle": "बहुत बढ़िया। थोड़ी और खुशी।",
-  "bannerRewardsBody": "अपने ऑफ़र और स्क्रैच रिवॉर्ड देखें"
+  "bannerRewardsBody": "अपने ऑफ़र और स्क्रैच रिवॉर्ड देखें",
+  "secretTagline": "थोड़ी सी परवाह बहुत दूर तक जाती है।",
+  "secretSemantics": "कायलो। परवाह से बनाया गया।"
 }

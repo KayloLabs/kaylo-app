@@ -1,17 +1,23 @@
 import 'dart:math' as math;
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 
+import '../../../../l10n/generated/app_localizations.dart';
+
 /// The original brand layers, brought to life as a small tactile keepsake.
-class KayloSecret extends StatefulWidget {
+/// The mark draws itself in, a bell lands with the dot, and every tap after
+/// that plays the next note of a short scale.
+class KayloSecret extends ConsumerStatefulWidget {
   const KayloSecret({super.key});
   @override
-  State<KayloSecret> createState() => _KayloSecretState();
+  ConsumerState<KayloSecret> createState() => _KayloSecretState();
 }
 
-class _KayloSecretState extends State<KayloSecret>
+class _KayloSecretState extends ConsumerState<KayloSecret>
     with TickerProviderStateMixin {
   late final _intro = AnimationController(
     vsync: this,
@@ -21,18 +27,42 @@ class _KayloSecretState extends State<KayloSecret>
     vsync: this,
     duration: const Duration(milliseconds: 1000),
   );
+
+  /// Up the scale and back down, so idle tapping turns into a little tune.
+  static const _tune = [0, 1, 2, 3, 4, 3, 2, 1];
+
+  /// Where in the intro the dot starts to land; the bell rings with it.
+  static const _dotLands = .45;
   Offset _lean = Offset.zero;
   bool _started = false;
+  bool _rung = false;
+  int _taps = 0;
+
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    if (_started) return;
+    _started = true;
     if (MediaQuery.disableAnimationsOf(context)) {
+      // Reduced motion skips the drawing-in, not the welcome.
       _intro.value = 1;
       _touch.value = 1;
-    } else if (!_started) {
+      _ring();
+    } else {
+      _intro.addListener(_ringWhenDotLands);
       _intro.forward();
     }
-    _started = true;
+  }
+
+  void _ringWhenDotLands() {
+    if (_intro.value >= _dotLands) _ring();
+  }
+
+  void _ring() {
+    if (_rung) return;
+    _rung = true;
+    KayloFeedback.soft();
+    ref.read(soundServiceProvider).play(KayloSound.logoChime);
   }
 
   @override
@@ -43,12 +73,15 @@ class _KayloSecretState extends State<KayloSecret>
   }
 
   void _play() {
-    KayloFeedback.press();
+    KayloFeedback.soft();
+    final note = KayloSound.notes[_tune[_taps++ % _tune.length]];
+    ref.read(soundServiceProvider).play(note);
     if (!MediaQuery.disableAnimationsOf(context)) _touch.forward(from: 0);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final dark = Theme.of(context).brightness == Brightness.dark;
     final reduce = MediaQuery.disableAnimationsOf(context);
     final ink = dark ? const Color(0xFFA9DEC0) : AppColors.brandPrimary;
@@ -68,7 +101,7 @@ class _KayloSecretState extends State<KayloSecret>
             ),
             Center(
               child: Semantics(
-                label: 'Kaylo. Made with care.',
+                label: l10n.secretSemantics,
                 button: true,
                 child: GestureDetector(
                   onTap: _play,
@@ -106,7 +139,7 @@ class _KayloSecretState extends State<KayloSecret>
                             curve: Curves.easeInOutCubic,
                           ).transform(_intro.value);
                           final dot = const Interval(
-                            .45,
+                            _dotLands,
                             .8,
                             curve: Curves.easeOutBack,
                           ).transform(_intro.value);
@@ -114,6 +147,11 @@ class _KayloSecretState extends State<KayloSecret>
                             .65,
                             1,
                             curve: Curves.easeOutCubic,
+                          ).transform(_intro.value);
+                          // The ring the bell sends out as the dot lands.
+                          final landing = const Interval(
+                            _dotLands,
+                            1,
                           ).transform(_intro.value);
                           final bounce =
                               math.sin(_touch.value * math.pi * 2) *
@@ -128,7 +166,11 @@ class _KayloSecretState extends State<KayloSecret>
                               if (!reduce)
                                 Positioned.fill(
                                   child: CustomPaint(
-                                    painter: _Ripples(_touch.value, ink),
+                                    painter: _Ripples(
+                                      touch: _touch.value,
+                                      landing: landing,
+                                      color: ink,
+                                    ),
                                   ),
                                 ),
                               Transform.translate(
@@ -163,10 +205,13 @@ class _KayloSecretState extends State<KayloSecret>
                               ),
                               Positioned(
                                 bottom: 28,
+                                left: 0,
+                                right: 0,
                                 child: Opacity(
                                   opacity: word,
                                   child: Text(
-                                    'A little care goes a long way.',
+                                    l10n.secretTagline,
+                                    textAlign: TextAlign.center,
                                     style: Theme.of(context)
                                         .textTheme
                                         .bodyMedium
@@ -190,28 +235,50 @@ class _KayloSecretState extends State<KayloSecret>
   }
 }
 
+/// Sound made visible: a ring spreading from the mark when the bell rings
+/// and on every tap, with a scatter of seeds on a tap.
 class _Ripples extends CustomPainter {
-  final double t;
+  final double touch;
+  final double landing;
   final Color color;
-  _Ripples(this.t, this.color);
+  _Ripples({required this.touch, required this.landing, required this.color});
+
+  void _ring(Canvas canvas, Offset center, double t, double reach) {
+    if (t <= 0 || t >= 1) return;
+    final eased = Curves.easeOutCubic.transform(t);
+    canvas.drawCircle(
+      center,
+      70 + reach * eased,
+      Paint()
+        ..style = PaintingStyle.stroke
+        ..strokeWidth = 2.2 * (1 - t) + .4
+        ..color = color.withValues(alpha: (1 - t) * .38),
+    );
+  }
+
   @override
   void paint(Canvas canvas, Size size) {
-    if (t == 0 || t == 1) return;
     final center = size.center(Offset.zero);
+    _ring(canvas, center, landing, 150);
+    _ring(canvas, center, touch, 120);
+    // A second, slower ring trails the first, the way a struck bell hums.
+    _ring(canvas, center, (touch - .12) / .88, 80);
+    if (touch == 0 || touch == 1) return;
     for (var i = 0; i < 10; i++) {
       final angle = i * math.pi / 5;
-      final radius = 95 + 90 * Curves.easeOutCubic.transform(t);
+      final radius = 95 + 90 * Curves.easeOutCubic.transform(touch);
       final point = center + Offset(math.cos(angle), math.sin(angle)) * radius;
       canvas.drawCircle(
         point,
-        2.5 * (1 - t),
-        Paint()..color = color.withValues(alpha: (1 - t) * .6),
+        2.5 * (1 - touch),
+        Paint()..color = color.withValues(alpha: (1 - touch) * .6),
       );
     }
   }
 
   @override
-  bool shouldRepaint(_Ripples old) => old.t != t || old.color != color;
+  bool shouldRepaint(_Ripples old) =>
+      old.touch != touch || old.landing != landing || old.color != color;
 }
 
 class _LogoReveal extends CustomClipper<Rect> {

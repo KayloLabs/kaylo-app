@@ -2322,4 +2322,10 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get bannerRewardsBody =>
       'നിങ്ങളുടെ ഓഫറുകളും സ്ക്രാച്ച് റിവാർഡുകളും കാണുക';
+
+  @override
+  String get secretTagline => 'ഒരു ചെറിയ കരുതൽ ഏറെ ദൂരം കൊണ്ടുപോകും.';
+
+  @override
+  String get secretSemantics => 'കെയ്‌ലോ. കരുതലോടെ നിർമ്മിച്ചത്.';
 }

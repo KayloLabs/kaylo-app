@@ -4145,6 +4145,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Explore your offers & scratch rewards'**
   String get bannerRewardsBody;
+
+  /// No description provided for @secretTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'A little care goes a long way.'**
+  String get secretTagline;
+
+  /// No description provided for @secretSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo. Made with care.'**
+  String get secretSemantics;
 }
 
 class _AppLocalizationsDelegate

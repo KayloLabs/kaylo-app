@@ -6,6 +6,7 @@ import 'package:kaylo/features/profile/presentation/widgets/kaylo_secret.dart';
 import 'package:kaylo/core/widgets/liquid_tab_bar.dart';
 import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/l10n/generated/app_localizations.dart';
+import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_core/services/storage_service.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -18,11 +19,13 @@ void main() {
       addTearDown(tester.view.reset);
       SharedPreferences.setMockInitialValues({});
       final prefs = await SharedPreferences.getInstance();
+      final sounds = SilentSoundService();
       await tester.pumpWidget(
         ProviderScope(
           overrides: [
             sharedPreferencesProvider.overrideWithValue(prefs),
             currentUserProvider.overrideWithValue(null),
+            soundServiceProvider.overrideWithValue(sounds),
           ],
           child: const MaterialApp(
             localizationsDelegates: AppLocalizations.localizationsDelegates,
@@ -42,6 +45,14 @@ void main() {
       await tester.pumpAndSettle();
       expect(find.byType(KayloSecret), findsOneWidget);
       expect(tester.takeException(), isNull);
+      // Four rising notes on the way in, then the bell as the mark lands.
+      expect(sounds.played, [
+        ...KayloSound.notes.take(4),
+        KayloSound.logoChime,
+      ]);
+      await tester.tap(find.byType(KayloSecret));
+      await tester.pumpAndSettle();
+      expect(sounds.played.last, KayloSound.note1);
       await tester.tap(find.byIcon(Icons.close_rounded));
       await tester.pumpAndSettle();
       expect(find.byType(KayloSecret), findsNothing);

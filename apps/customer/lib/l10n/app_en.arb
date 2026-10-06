@@ -1001,5 +1001,7 @@
   "bannerWelcomeTitle": "A warm welcome. ₹100 on us.",
   "bannerWelcomeBody": "Your first-booking offer is unlocked",
   "bannerRewardsTitle": "Good work. A little extra joy.",
-  "bannerRewardsBody": "Explore your offers & scratch rewards"
+  "bannerRewardsBody": "Explore your offers & scratch rewards",
+  "secretTagline": "A little care goes a long way.",
+  "secretSemantics": "Kaylo. Made with care."
 }

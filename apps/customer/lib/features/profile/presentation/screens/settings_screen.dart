@@ -13,6 +13,7 @@ import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import 'package:kaylo_ui/widgets/avatar_circle.dart';
@@ -38,7 +39,13 @@ class _SettingsScreenState extends ConsumerState<SettingsScreen> {
     }
     _lastVersionTap = now;
     KayloFeedback.selection();
-    if (++_versionTaps == 5) {
+    _versionTaps++;
+    // Each tap climbs one note of the scale; the fifth opens the page,
+    // where the bell answers.
+    if (_versionTaps < 5) {
+      ref.read(soundServiceProvider).play(KayloSound.notes[_versionTaps - 1]);
+    }
+    if (_versionTaps == 5) {
       _versionTaps = 0;
       KayloFeedback.success();
       showDialog<void>(

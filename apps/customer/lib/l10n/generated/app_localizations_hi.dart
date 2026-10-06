@@ -2300,4 +2300,10 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get bannerRewardsBody => 'अपने ऑफ़र और स्क्रैच रिवॉर्ड देखें';
+
+  @override
+  String get secretTagline => 'थोड़ी सी परवाह बहुत दूर तक जाती है।';
+
+  @override
+  String get secretSemantics => 'कायलो। परवाह से बनाया गया।';
 }

@@ -2295,4 +2295,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bannerRewardsBody => 'Explore your offers & scratch rewards';
+
+  @override
+  String get secretTagline => 'A little care goes a long way.';
+
+  @override
+  String get secretSemantics => 'Kaylo. Made with care.';
 }

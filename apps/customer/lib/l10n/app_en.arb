@@ -704,5 +704,19 @@
   "invoiceEmailRequired": "Enter an email address for the invoice",
   "confirmationEmail": "Email for the confirmation (optional)",
   "payNow": "Pay now",
-  "payNowSubtitle": "Cards, netbanking or UPI, secured by Razorpay"
+  "payNowSubtitle": "Cards, netbanking or UPI, secured by Razorpay",
+  "addPaymentMethod": "Add payment method",
+  "upiId": "UPI ID",
+  "cardNumber": "Card number",
+  "setDefault": "Set as default",
+  "removeMethod": "Remove method",
+  "defaultTag": "Default",
+  "noPaymentMethods": "No saved payment methods yet",
+  "noPaymentMethodsSubtitle": "Add a UPI ID or card for faster checkouts",
+  "cardHolderName": "Cardholder name",
+  "cardExpiry": "Expiry (MM/YY)",
+  "deletePaymentMethodConfirm": "Remove this payment method?",
+  "paymentMethodAdded": "Payment method added",
+  "paymentMethodRemoved": "Payment method removed",
+  "savePaymentMethod": "Save method"
 }

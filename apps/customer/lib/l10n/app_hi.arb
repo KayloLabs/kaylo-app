@@ -469,5 +469,19 @@
   "invoiceEmailRequired": "इनवॉइस के लिए एक ईमेल पता भरें",
   "confirmationEmail": "पुष्टि के लिए ईमेल (वैकल्पिक)",
   "payNow": "अभी भुगतान करें",
-  "payNowSubtitle": "कार्ड, नेटबैंकिंग या UPI, Razorpay द्वारा सुरक्षित"
+  "payNowSubtitle": "कार्ड, नेटबैंकिंग या UPI, Razorpay द्वारा सुरक्षित",
+  "addPaymentMethod": "भुगतान का तरीका जोड़ें",
+  "upiId": "यूपीआई आईडी",
+  "cardNumber": "कार्ड नंबर",
+  "setDefault": "डिफ़ॉल्ट के रूप में सेट करें",
+  "removeMethod": "तरीका हटाएं",
+  "defaultTag": "डिफ़ॉल्ट",
+  "noPaymentMethods": "कोई सहेजा गया भुगतान तरीका नहीं",
+  "noPaymentMethodsSubtitle": "त्वरित चेकआउट के लिए यूपीआई आईडी या कार्ड जोड़ें",
+  "cardHolderName": "कार्डधारक का नाम",
+  "cardExpiry": "समाप्ति (MM/YY)",
+  "deletePaymentMethodConfirm": "क्या यह भुगतान तरीका हटाना चाहते हैं?",
+  "paymentMethodAdded": "भुगतान का तरीका जोड़ा गया",
+  "paymentMethodRemoved": "भुगतान का तरीका हटाया गया",
+  "savePaymentMethod": "तरीका सहेजें"
 }

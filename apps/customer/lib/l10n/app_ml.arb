@@ -469,5 +469,19 @@
   "invoiceEmailRequired": "ഇൻവോയ്‌സിനായി ഒരു ഇമെയിൽ വിലാസം നൽകുക",
   "confirmationEmail": "സ്ഥിരീകരണത്തിനുള്ള ഇമെയിൽ (ഐച്ഛികം)",
   "payNow": "ഇപ്പോൾ പണമടയ്ക്കുക",
-  "payNowSubtitle": "കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം"
+  "payNowSubtitle": "കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം",
+  "addPaymentMethod": "പേയ്മെന്റ് രീതി ചേർക്കുക",
+  "upiId": "യുപിഐ ഐഡി",
+  "cardNumber": "കാർഡ് നമ്പർ",
+  "setDefault": "ഡിഫോൾട്ടായി സജ്ജീകരിക്കുക",
+  "removeMethod": "രീതി നീക്കം ചെയ്യുക",
+  "defaultTag": "ഡിഫോൾട്ട്",
+  "noPaymentMethods": "സംരക്ഷിച്ച പേയ്മെന്റ് രീതികളൊന്നുമില്ല",
+  "noPaymentMethodsSubtitle": "വേഗത്തിലുള്ള ചെക്കൗട്ടിനായി യുപിഐ ഐഡിയോ കാർഡോ ചേർക്കുക",
+  "cardHolderName": "കാർഡുടമയുടെ പേര്",
+  "cardExpiry": "കാലഹരണ തീയതി (MM/YY)",
+  "deletePaymentMethodConfirm": "ഈ പേയ്മെന്റ് രീതി നീക്കം ചെയ്യണോ?",
+  "paymentMethodAdded": "പേയ്മെന്റ് രീതി ചേർത്തു",
+  "paymentMethodRemoved": "പേയ്മെന്റ് രീതി നീക്കം ചെയ്തു",
+  "savePaymentMethod": "രീതി സംരക്ഷിക്കുക"
 }

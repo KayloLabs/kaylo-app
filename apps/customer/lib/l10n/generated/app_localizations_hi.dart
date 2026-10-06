@@ -1585,4 +1585,48 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'कार्ड, नेटबैंकिंग या UPI, Razorpay द्वारा सुरक्षित';
+
+  @override
+  String get addPaymentMethod => 'भुगतान का तरीका जोड़ें';
+
+  @override
+  String get upiId => 'यूपीआई आईडी';
+
+  @override
+  String get cardNumber => 'कार्ड नंबर';
+
+  @override
+  String get setDefault => 'डिफ़ॉल्ट के रूप में सेट करें';
+
+  @override
+  String get removeMethod => 'तरीका हटाएं';
+
+  @override
+  String get defaultTag => 'डिफ़ॉल्ट';
+
+  @override
+  String get noPaymentMethods => 'कोई सहेजा गया भुगतान तरीका नहीं';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'त्वरित चेकआउट के लिए यूपीआई आईडी या कार्ड जोड़ें';
+
+  @override
+  String get cardHolderName => 'कार्डधारक का नाम';
+
+  @override
+  String get cardExpiry => 'समाप्ति (MM/YY)';
+
+  @override
+  String get deletePaymentMethodConfirm =>
+      'क्या यह भुगतान तरीका हटाना चाहते हैं?';
+
+  @override
+  String get paymentMethodAdded => 'भुगतान का तरीका जोड़ा गया';
+
+  @override
+  String get paymentMethodRemoved => 'भुगतान का तरीका हटाया गया';
+
+  @override
+  String get savePaymentMethod => 'तरीका सहेजें';
 }

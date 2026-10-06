@@ -469,5 +469,19 @@
   "invoiceEmailRequired": "இன்வாய்ஸிற்கு ஒரு மின்னஞ்சல் முகவரியை உள்ளிடவும்",
   "confirmationEmail": "உறுதிப்படுத்தலுக்கான மின்னஞ்சல் (விருப்பத்தேர்வு)",
   "payNow": "இப்போது செலுத்து",
-  "payNowSubtitle": "கார்டு, நெட்பேங்கிங் அல்லது UPI, Razorpay மூலம் பாதுகாப்பானது"
+  "payNowSubtitle": "கார்டு, நெட்பேங்கிங் அல்லது UPI, Razorpay மூலம் பாதுகாப்பானது",
+  "addPaymentMethod": "பணம் செலுத்தும் முறையைச் சேர்க்கவும்",
+  "upiId": "யுபிஐ ஐடி",
+  "cardNumber": "அட்டை எண்",
+  "setDefault": "இயல்புநிலையாக அமைக்கவும்",
+  "removeMethod": "முறையை நீக்கு",
+  "defaultTag": "இயல்புநிலை",
+  "noPaymentMethods": "சேமிக்கப்பட்ட கட்டண முறைகள் இல்லை",
+  "noPaymentMethodsSubtitle": "விரைவான கட்டணத்திற்கு யுபிஐ ஐடி அல்லது அட்டையைச் சேர்க்கவும்",
+  "cardHolderName": "அட்டைதாரர் பெயர்",
+  "cardExpiry": "காலாவதி (MM/YY)",
+  "deletePaymentMethodConfirm": "இந்த கட்டண முறையை நீக்கவா?",
+  "paymentMethodAdded": "கட்டண முறை சேர்க்கப்பட்டது",
+  "paymentMethodRemoved": "கட்டண முறை நீக்கப்பட்டது",
+  "savePaymentMethod": "முறையைச் சேமிக்கவும்"
 }

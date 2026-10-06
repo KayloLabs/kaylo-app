@@ -1587,4 +1587,47 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get payNowSubtitle => 'Cards, netbanking or UPI, secured by Razorpay';
+
+  @override
+  String get addPaymentMethod => 'Add payment method';
+
+  @override
+  String get upiId => 'UPI ID';
+
+  @override
+  String get cardNumber => 'Card number';
+
+  @override
+  String get setDefault => 'Set as default';
+
+  @override
+  String get removeMethod => 'Remove method';
+
+  @override
+  String get defaultTag => 'Default';
+
+  @override
+  String get noPaymentMethods => 'No saved payment methods yet';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'Add a UPI ID or card for faster checkouts';
+
+  @override
+  String get cardHolderName => 'Cardholder name';
+
+  @override
+  String get cardExpiry => 'Expiry (MM/YY)';
+
+  @override
+  String get deletePaymentMethodConfirm => 'Remove this payment method?';
+
+  @override
+  String get paymentMethodAdded => 'Payment method added';
+
+  @override
+  String get paymentMethodRemoved => 'Payment method removed';
+
+  @override
+  String get savePaymentMethod => 'Save method';
 }

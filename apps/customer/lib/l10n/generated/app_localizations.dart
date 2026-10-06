@@ -2903,6 +2903,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Cards, netbanking or UPI, secured by Razorpay'**
   String get payNowSubtitle;
+
+  /// No description provided for @addPaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Add payment method'**
+  String get addPaymentMethod;
+
+  /// No description provided for @upiId.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI ID'**
+  String get upiId;
+
+  /// No description provided for @cardNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Card number'**
+  String get cardNumber;
+
+  /// No description provided for @setDefault.
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default'**
+  String get setDefault;
+
+  /// No description provided for @removeMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove method'**
+  String get removeMethod;
+
+  /// No description provided for @defaultTag.
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultTag;
+
+  /// No description provided for @noPaymentMethods.
+  ///
+  /// In en, this message translates to:
+  /// **'No saved payment methods yet'**
+  String get noPaymentMethods;
+
+  /// No description provided for @noPaymentMethodsSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a UPI ID or card for faster checkouts'**
+  String get noPaymentMethodsSubtitle;
+
+  /// No description provided for @cardHolderName.
+  ///
+  /// In en, this message translates to:
+  /// **'Cardholder name'**
+  String get cardHolderName;
+
+  /// No description provided for @cardExpiry.
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry (MM/YY)'**
+  String get cardExpiry;
+
+  /// No description provided for @deletePaymentMethodConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this payment method?'**
+  String get deletePaymentMethodConfirm;
+
+  /// No description provided for @paymentMethodAdded.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method added'**
+  String get paymentMethodAdded;
+
+  /// No description provided for @paymentMethodRemoved.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method removed'**
+  String get paymentMethodRemoved;
+
+  /// No description provided for @savePaymentMethod.
+  ///
+  /// In en, this message translates to:
+  /// **'Save method'**
+  String get savePaymentMethod;
 }
 
 class _AppLocalizationsDelegate

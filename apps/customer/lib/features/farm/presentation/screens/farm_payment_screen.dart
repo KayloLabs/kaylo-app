@@ -24,6 +24,7 @@ import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
+import '../../../payments/application/payment_methods_providers.dart';
 
 class FarmPaymentScreen extends ConsumerStatefulWidget {
   /// Null when the route was reached without a draft (deep link, reload);
@@ -137,6 +138,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
     final isFarm = draft.service.category == 'farm';
     final workerName = _workerName(draft);
     final isProcessing = ref.watch(farmCheckoutControllerProvider).isLoading;
+    final savedMethod = ref.watch(defaultPaymentMethodProvider);
 
     Widget summaryRow(String label, String value) => Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
@@ -229,6 +231,44 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
             subtitle: l10n.payNowSubtitle,
             onSelect: (m) => setState(() => _method = m),
           ),
+          if (_method == PaymentMethod.online && savedMethod != null) ...[
+            const SizedBox(height: AppSpacing.xs),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+              child: Row(
+                children: [
+                  Icon(
+                    savedMethod.type.isUpi
+                        ? Icons.account_balance_wallet_rounded
+                        : Icons.credit_card_rounded,
+                    size: 16,
+                    color: AppColors.brandPrimary,
+                  ),
+                  const SizedBox(width: AppSpacing.s),
+                  Expanded(
+                    child: Text(
+                      '${savedMethod.label} (${savedMethod.detail})',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            color: secondary,
+                            fontWeight: FontWeight.w500,
+                          ),
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () => context.push(Routes.paymentMethods),
+                    style: TextButton.styleFrom(
+                      padding: const EdgeInsets.symmetric(horizontal: 8),
+                      minimumSize: Size.zero,
+                      tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    ),
+                    child: const Text('Change', style: TextStyle(fontSize: 12)),
+                  ),
+                ],
+              ),
+            ),
+          ],
           const SizedBox(height: AppSpacing.s),
           _PaymentOption(
             method: PaymentMethod.payAfterService,

@@ -1597,4 +1597,47 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'കാർഡ്, നെറ്റ്ബാങ്കിംഗ് അല്ലെങ്കിൽ UPI, Razorpay വഴി സുരക്ഷിതം';
+
+  @override
+  String get addPaymentMethod => 'പേയ്മെന്റ് രീതി ചേർക്കുക';
+
+  @override
+  String get upiId => 'യുപിഐ ഐഡി';
+
+  @override
+  String get cardNumber => 'കാർഡ് നമ്പർ';
+
+  @override
+  String get setDefault => 'ഡിഫോൾട്ടായി സജ്ജീകരിക്കുക';
+
+  @override
+  String get removeMethod => 'രീതി നീക്കം ചെയ്യുക';
+
+  @override
+  String get defaultTag => 'ഡിഫോൾട്ട്';
+
+  @override
+  String get noPaymentMethods => 'സംരക്ഷിച്ച പേയ്മെന്റ് രീതികളൊന്നുമില്ല';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'വേഗത്തിലുള്ള ചെക്കൗട്ടിനായി യുപിഐ ഐഡിയോ കാർഡോ ചേർക്കുക';
+
+  @override
+  String get cardHolderName => 'കാർഡുടമയുടെ പേര്';
+
+  @override
+  String get cardExpiry => 'കാലഹരണ തീയതി (MM/YY)';
+
+  @override
+  String get deletePaymentMethodConfirm => 'ഈ പേയ്മെന്റ് രീതി നീക്കം ചെയ്യണോ?';
+
+  @override
+  String get paymentMethodAdded => 'പേയ്മെന്റ് രീതി ചേർത്തു';
+
+  @override
+  String get paymentMethodRemoved => 'പേയ്മെന്റ് രീതി നീക്കം ചെയ്തു';
+
+  @override
+  String get savePaymentMethod => 'രീതി സംരക്ഷിക്കുക';
 }

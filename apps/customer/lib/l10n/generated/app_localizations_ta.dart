@@ -1607,4 +1607,47 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get payNowSubtitle =>
       'கார்டு, நெட்பேங்கிங் அல்லது UPI, Razorpay மூலம் பாதுகாப்பானது';
+
+  @override
+  String get addPaymentMethod => 'பணம் செலுத்தும் முறையைச் சேர்க்கவும்';
+
+  @override
+  String get upiId => 'யுபிஐ ஐடி';
+
+  @override
+  String get cardNumber => 'அட்டை எண்';
+
+  @override
+  String get setDefault => 'இயல்புநிலையாக அமைக்கவும்';
+
+  @override
+  String get removeMethod => 'முறையை நீக்கு';
+
+  @override
+  String get defaultTag => 'இயல்புநிலை';
+
+  @override
+  String get noPaymentMethods => 'சேமிக்கப்பட்ட கட்டண முறைகள் இல்லை';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'விரைவான கட்டணத்திற்கு யுபிஐ ஐடி அல்லது அட்டையைச் சேர்க்கவும்';
+
+  @override
+  String get cardHolderName => 'அட்டைதாரர் பெயர்';
+
+  @override
+  String get cardExpiry => 'காலாவதி (MM/YY)';
+
+  @override
+  String get deletePaymentMethodConfirm => 'இந்த கட்டண முறையை நீக்கவா?';
+
+  @override
+  String get paymentMethodAdded => 'கட்டண முறை சேர்க்கப்பட்டது';
+
+  @override
+  String get paymentMethodRemoved => 'கட்டண முறை நீக்கப்பட்டது';
+
+  @override
+  String get savePaymentMethod => 'முறையைச் சேமிக்கவும்';
 }

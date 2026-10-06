@@ -11,7 +11,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w1',
       scheduledAt: DateTime(2026, 7, 14, 9),
       status: BookingStatus.completed,
-      totalAmount: 1000,
+      totalAmount: 500,
       notes: 'Thekkedath House, Kaloor',
     ),
     Booking(
@@ -21,7 +21,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w2',
       scheduledAt: DateTime(2026, 8, 2, 10),
       status: BookingStatus.completed,
-      totalAmount: 1000,
+      totalAmount: 500,
       notes: 'Thekkedath House, Kaloor',
     ),
     // Always a few days ahead, so the demo (and the details screen's
@@ -33,7 +33,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w2',
       scheduledAt: _daysFromNow(3, hour: 15),
       status: BookingStatus.confirmed,
-      totalAmount: 500,
+      totalAmount: 300,
       notes: 'Thekkedath House, Kaloor',
     ),
   ];

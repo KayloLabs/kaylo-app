@@ -51,7 +51,7 @@ void main() {
       final service = await homeRepo.getServiceById('4');
       expect(service, isNotNull);
       expect(service!.name, equals('Plumbing'));
-      expect(service.basePrice, equals(500.0));
+      expect(service.basePrice, equals(300.0));
     });
 
     test('searchServices matches substring query case-insensitively', () async {

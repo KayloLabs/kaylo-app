@@ -358,6 +358,26 @@ One code per booking. Cancelled bookings release their coupon. An online checkou
 
 Offer wording is translated in the app by code (`offer_copy.dart`), with the database's English as the fallback for a code the installed build does not know; `reason_code` in the response says why an offer is closed. Scratch reveal is a local animation; eligibility and redemption are checked by the database. `supabase/tests/offer_rules.sql` covers the rules above with synthetic accounts and rolls back.
 
+`supabase/migrations/0017_realistic_prices.sql` resets the catalogue to everyday Kerala rates; run it after 0016. These are working estimates, not quoted rates, so adjust them freely. Farm work is priced per unit and the booking screen multiplies it out (ten trees, two hours or one visit to start with):
+
+| Service | Price | Per |
+| --- | --- | --- |
+| Coconut Plucking | 50 | tree |
+| Arecanut Harvesting | 30 | tree |
+| Tree Pruning | 300 | tree |
+| Plot Clearing | 300 | hour |
+| Gardening | 180 | hour |
+| Electrical | 250 | visit |
+| Plumbing, Appliance Repair | 300 | visit |
+| Carpentry | 350 | visit |
+| AC Service | 550 | visit |
+| House Cleaning, Painting | 600 | visit |
+| Medicine Delivery | 40 | delivery |
+| Doctor consultation | 250 to 600 | by speciality |
+| Caregiver | 130 to 150 | hour |
+
+The sample build's catalogue (`mock_home_repository.dart`, `mock_care_repository.dart`) carries the same figures.
+
 The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are synthesised by `apps/customer/tool/make_sounds.py` into `apps/customer/assets/`; nothing is a recording.
 
 `supabase/tests/booking_offers.sql` contains rollback-only SQL checks using synthetic accounts. Run it after the migration; it does not keep test bookings. Customer tests cover eligible amounts, failed-payment retry totals, search relevance, saved-address switching, and booking coordinate handoff.

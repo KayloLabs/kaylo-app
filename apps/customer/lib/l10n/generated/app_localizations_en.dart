@@ -2085,4 +2085,214 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get chooseAddress => 'Choose an address';
+
+  @override
+  String get offerFirst100Title => 'Your first one is special';
+
+  @override
+  String get offerFirst100Body =>
+      '₹100 off your first booking of ₹499 or more.';
+
+  @override
+  String get offerKaylo150Title => 'A little help with bigger jobs';
+
+  @override
+  String get offerKaylo150Body =>
+      '₹150 off a booking of ₹1,499 or more. Once per account.';
+
+  @override
+  String get offerWeekend100Title => 'A weekend well spent';
+
+  @override
+  String get offerWeekend100Body =>
+      '₹100 off ₹999 or more on Saturdays and Sundays. Once per account.';
+
+  @override
+  String get offerWeekday50Title => 'A midweek lift';
+
+  @override
+  String get offerWeekday50Body =>
+      '₹50 off ₹599 or more, Monday to Friday. Once per account.';
+
+  @override
+  String get offerHome80Title => 'Home, sorted';
+
+  @override
+  String get offerHome80Body =>
+      '₹80 off a home service of ₹499 or more. Once per account.';
+
+  @override
+  String get offerFarm125Title => 'For the land that feeds us';
+
+  @override
+  String get offerFarm125Body =>
+      '₹125 off a farm service of ₹999 or more. Once per account.';
+
+  @override
+  String get offerCare60Title => 'Care, made a little lighter';
+
+  @override
+  String get offerCare60Body =>
+      '₹60 off a Care booking of ₹399 or more. Once per account.';
+
+  @override
+  String get offerKaylo300Title => 'For the really big days';
+
+  @override
+  String get offerKaylo300Body =>
+      '₹300 off a booking of ₹2,999 or more. Once per account.';
+
+  @override
+  String get offerNext75Title => 'Something for next time';
+
+  @override
+  String get offerNext75Body =>
+      '₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.';
+
+  @override
+  String get offerThanks120Title => 'Three bookings in. Thank you.';
+
+  @override
+  String get offerThanks120Body =>
+      '₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.';
+
+  @override
+  String get offerReasonFirstOnly => 'For your first booking only';
+
+  @override
+  String get offerReasonUsed => 'Already used';
+
+  @override
+  String get offerReasonRewardUsed => 'Reward used';
+
+  @override
+  String get offerReasonWeekend => 'Available on weekends';
+
+  @override
+  String get offerReasonWeekday => 'Available Monday to Friday';
+
+  @override
+  String get offerReasonNeedsConfirmed =>
+      'Unlocks after your first confirmed booking';
+
+  @override
+  String get offerReasonNeedsThree => 'Unlocks after three confirmed bookings';
+
+  @override
+  String get offerReasonHomeOnly => 'For home services only';
+
+  @override
+  String get offerReasonFarmOnly => 'For farm services only';
+
+  @override
+  String get offerReasonCareOnly => 'For Care bookings only';
+
+  @override
+  String offerReasonAddMore(String amount) {
+    return 'Add $amount more to use this offer';
+  }
+
+  @override
+  String get offerNotAvailable => 'Offer not available';
+
+  @override
+  String get offersTitle => 'A little more Kaylo';
+
+  @override
+  String get offersHeadline => 'Everyday help.\nA little extra happiness.';
+
+  @override
+  String get offersIntro =>
+      'Thoughtful savings for the jobs that matter. One offer per booking.';
+
+  @override
+  String get offersLoadFailed => 'Your offers couldn’t load. Please try again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get enterCouponCode => 'Enter coupon code';
+
+  @override
+  String get couponNotFound => 'That code isn’t available';
+
+  @override
+  String get offersTerms =>
+      'Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.';
+
+  @override
+  String offerAmountOff(String amount) {
+    return '$amount off';
+  }
+
+  @override
+  String get applyOffer => 'Apply';
+
+  @override
+  String get removeOffer => 'Remove';
+
+  @override
+  String offerYouSave(String amount) {
+    return 'You save $amount';
+  }
+
+  @override
+  String get offersAndRewards => 'Offers & rewards';
+
+  @override
+  String offerCodeApplied(String code) {
+    return '$code applied';
+  }
+
+  @override
+  String get offerStampApplied => 'APPLIED';
+
+  @override
+  String offersReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers ready to use',
+      one: '1 offer ready to use',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourRewards => 'Your rewards';
+
+  @override
+  String get allOffers => 'All offers';
+
+  @override
+  String offerLabel(String code) {
+    return 'Offer • $code';
+  }
+
+  @override
+  String get scratchCoverTitle => 'A little thank you';
+
+  @override
+  String get scratchCoverHint => 'Scratch to reveal your reward';
+
+  @override
+  String get revealReward => 'Reveal reward';
+
+  @override
+  String scratchSemantics(String amount) {
+    return 'Scratch reward. Reveal $amount off a booking.';
+  }
+
+  @override
+  String get bannerWelcomeTitle => 'A warm welcome. ₹100 on us.';
+
+  @override
+  String get bannerWelcomeBody => 'Your first-booking offer is unlocked';
+
+  @override
+  String get bannerRewardsTitle => 'Good work. A little extra joy.';
+
+  @override
+  String get bannerRewardsBody => 'Explore your offers & scratch rewards';
 }

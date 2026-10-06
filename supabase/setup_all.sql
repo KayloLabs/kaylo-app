@@ -1395,3 +1395,281 @@ alter policy member_calls on care_calls to anon, authenticated;
 alter policy member_list on care_call_members to anon, authenticated;
 alter policy read_call_signal on care_call_signals to anon, authenticated;
 alter policy send_call_signal on care_call_signals to anon, authenticated;
+
+-- ============================================================
+-- 0015_booking_offers.sql
+-- ============================================================
+-- Demo offers approved for Kaylo. Payment orders already read estimated_cost.
+alter table bookings add column if not exists subtotal_amount numeric(10,2);
+alter table bookings add column if not exists discount_amount numeric(10,2) not null default 0;
+alter table bookings add column if not exists offer_code text;
+
+create or replace function kaylo_available_offers(p_exclude_booking uuid default null)
+returns jsonb language plpgsql stable security definer set search_path=public as $$
+declare
+  cid uuid := current_customer_id(); first_ok boolean; reward_ok boolean;
+  big_used boolean; weekend_used boolean; reward_used boolean; weekend boolean;
+begin
+  if cid is null then raise exception 'Sign in to see your offers'; end if;
+  select not exists(select 1 from bookings where customer_id=cid and status<>'cancelled'
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking)) into first_ok;
+  select exists(select 1 from bookings where customer_id=cid and status in ('confirmed','in_progress','completed')
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking)) into reward_ok;
+  select coalesce(bool_or(offer_code='KAYLO150'),false),
+         coalesce(bool_or(offer_code='WEEKEND100'),false), coalesce(bool_or(offer_code='NEXT75'),false)
+    into big_used,weekend_used,reward_used
+    from bookings where customer_id=cid and status<>'cancelled'
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking);
+  weekend := extract(isodow from now() at time zone 'Asia/Kolkata') in (6,7);
+  return jsonb_build_array(
+    jsonb_build_object('code','FIRST100','title','Your first one is special',
+      'description','₹100 off your first booking of ₹499 or more.',
+      'discount',100,'minimum',499,'eligible',first_ok,'scratch',false,
+      'reason',case when not first_ok then 'For your first booking only' end),
+    jsonb_build_object('code','KAYLO150','title','A little help with bigger jobs',
+      'description','₹150 off a booking of ₹1,499 or more. Once per account.',
+      'discount',150,'minimum',1499,'eligible',not big_used,'scratch',false,
+      'reason',case when big_used then 'Already used' end),
+    jsonb_build_object('code','WEEKEND100','title','A weekend well spent',
+      'description','₹100 off ₹999 or more on Saturdays and Sundays. Once per account.',
+      'discount',100,'minimum',999,'eligible',weekend and not weekend_used,'scratch',false,
+      'reason',case when weekend_used then 'Already used' when not weekend then 'Available on weekends' end),
+    jsonb_build_object('code','NEXT75','title','Something for next time',
+      'description','₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.',
+      'discount',75,'minimum',799,'eligible',reward_ok and not reward_used,'scratch',true,
+      'reason',case when reward_used then 'Reward used' when not reward_ok then 'Unlocks after your first confirmed booking' end)
+  );
+end $$;
+
+create or replace function kaylo_apply_booking_offer(p_booking_id uuid,p_code text)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare cid uuid:=current_customer_id(); b bookings%rowtype; offer jsonb; base numeric; amount numeric;
+begin
+  if cid is null then raise exception 'Sign in to apply an offer'; end if;
+  -- One customer cannot redeem the same offer on simultaneous checkouts.
+  perform 1 from customers where customer_id=cid for update;
+  select * into b from bookings where booking_id=p_booking_id and customer_id=cid for update;
+  if not found then raise exception 'Booking not found'; end if;
+  p_code:=upper(trim(p_code));
+  if b.status='cancelled' then raise exception 'This booking was cancelled'; end if;
+  if b.offer_code=p_code and b.discount_amount>0 then return to_jsonb(b); end if;
+  if b.status<>'pending' or exists(select 1 from payments where booking_id=b.booking_id and payment_status in ('pending','success')) then
+    raise exception 'This checkout has already started. Keep its current offer or start a new booking.';
+  end if;
+  select value into offer from jsonb_array_elements(kaylo_available_offers(b.booking_id)) where value->>'code'=p_code;
+  if offer is null then raise exception 'That coupon code is not available'; end if;
+  if not (offer->>'eligible')::boolean then raise exception '%',offer->>'reason'; end if;
+  base:=coalesce(b.subtotal_amount,b.estimated_cost);
+  amount:=(offer->>'discount')::numeric;
+  if base is null or base<(offer->>'minimum')::numeric or base<=amount then raise exception 'The booking does not meet this offer’s minimum amount'; end if;
+  update bookings set subtotal_amount=base,discount_amount=amount,offer_code=p_code,estimated_cost=base-amount
+    where booking_id=b.booking_id returning * into b;
+  update caregiver_bookings set total_amount=b.estimated_cost where booking_id=b.booking_id;
+  return to_jsonb(b);
+end $$;
+
+revoke all on function kaylo_available_offers(uuid) from public;
+revoke all on function kaylo_apply_booking_offer(uuid,text) from public;
+-- Firebase sessions may use anon; functions still require a verified customer's ID.
+grant execute on function kaylo_available_offers(uuid) to anon,authenticated;
+grant execute on function kaylo_apply_booking_offer(uuid,text) to anon,authenticated;
+-- Preserve chosen addresses and map pins in the primary Care booking too.
+create or replace function create_care_checkout(p_request_id uuid, p_kind text, p_details jsonb)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id(); bid uuid; sid uuid; fee numeric;
+  d doctors%rowtype; c caregivers%rowtype; scheduled date; slot time; hours int; chosen_location uuid;
+begin
+  if cid is null then raise exception 'Sign in first'; end if;
+  select booking_id into bid from bookings where booking_id=p_request_id and customer_id=cid;
+  if bid is not null then return bid; end if;
+  chosen_location := nullif(p_details->>'location_id','')::uuid;
+  if chosen_location is not null and not exists(select 1 from locations where location_id=chosen_location and person_id=current_person_id()) then
+    raise exception 'Choose an address saved to your account';
+  end if;
+  scheduled := (p_details->>'date')::date;
+  if scheduled < current_date then raise exception 'Choose a future appointment date'; end if;
+  slot := (p_details->>'time')::time;
+  if p_kind='doctor' then
+    select * into strict d from doctors where id=p_details->>'provider_id' and is_active;
+    fee := d.consultation_fee;
+    select service_id into sid from services where lower(service_name) like '%doctor%' limit 1;
+  elsif p_kind='caregiver' then
+    select * into strict c from caregivers where id=p_details->>'provider_id' and is_active;
+    hours := (p_details->>'hours')::int;
+    if hours not between 1 and 24 then raise exception 'Choose valid hours'; end if;
+    fee := c.hourly_rate*hours;
+    select service_id into sid from services where lower(service_name) like '%caregiver%' limit 1;
+  else raise exception 'Unknown care service'; end if;
+  if sid is null then raise exception 'This care service is not available for booking'; end if;
+  if fee is null or fee < 1 then raise exception 'This provider has no payable fee'; end if;
+  insert into bookings(booking_id,customer_id,service_id,booking_date,booking_time,status,estimated_cost,notes,location_id)
+    values(p_request_id,cid,sid,scheduled,slot,'pending',fee,concat_ws(E'\n',case when p_kind='doctor' then d.name else c.name end,nullif(p_details->>'notes','')),chosen_location)
+    returning booking_id into bid;
+  if p_kind='doctor' then
+    insert into doctor_appointments(id,booking_id,customer_id,doctor_id,doctor_name,specialty,hospital,appointment_date,time_slot,consultation_type,status,patient_name,notes)
+    values(bid::text,bid,cid,d.id,d.name,d.specialty,d.hospital,((scheduled+slot) at time zone 'Asia/Kolkata'),p_details->>'time_slot',p_details->>'consultation_type','pending',p_details->>'patient_name',p_details->>'notes');
+  else
+    insert into caregiver_bookings(id,booking_id,customer_id,caregiver_id,caregiver_name,visit_date,start_time,hours,hourly_rate,total_amount,care_type,notes,status)
+    values(bid::text,bid,cid,c.id,c.name,scheduled,p_details->>'time_slot',hours,c.hourly_rate,fee,p_details->>'care_type',p_details->>'notes','pending');
+  end if;
+  return bid;
+end $$;
+
+revoke all on function create_care_checkout(uuid,text,jsonb) from public;
+grant execute on function create_care_checkout(uuid,text,jsonb) to anon,authenticated;
+notify pgrst,'reload schema';
+
+-- ============================================================
+-- 0016_more_offers.sql
+-- ============================================================
+-- More offers, offers tied to one kind of service, and online checkouts
+-- that were opened but never paid no longer using up an offer.
+-- Replaces the two offer functions from 0015. Safe to run more than once;
+-- when re-applying older files, run this one after them.
+
+-- An online checkout that was opened and never paid: a Razorpay order
+-- exists for the booking, no payment succeeded. A pay-after-service
+-- booking has no payment row at all, so it still counts as a booking.
+create or replace function kaylo_unpaid_checkout(p_booking_id uuid, p_status booking_status)
+returns boolean language sql stable security definer set search_path = public as $$
+  select p_status = 'pending'
+    and exists(select 1 from payments where booking_id = p_booking_id and payment_method like 'razorpay%')
+    and not exists(select 1 from payments where booking_id = p_booking_id and payment_status = 'success');
+$$;
+-- Internal: only the offer functions below call it.
+revoke all on function kaylo_unpaid_checkout(uuid, booking_status) from public, anon, authenticated;
+
+-- Every offer with whether this customer can use it. `reason_code` lets the
+-- app explain in the customer's language; `reason` is the English fallback.
+-- `category` is a service_categories slug, or null for any booking.
+create or replace function kaylo_available_offers(p_exclude_booking uuid default null)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id();
+  rs text := chr(8377); -- the rupee sign, kept out of the source text
+  booked int; settled int; used text[]; dow int;
+begin
+  if cid is null then raise exception 'Sign in to see your offers'; end if;
+  select count(*),
+         count(*) filter (where b.status in ('confirmed', 'in_progress', 'completed')),
+         coalesce(array_agg(b.offer_code) filter (where b.offer_code is not null), '{}')
+    into booked, settled, used
+    from bookings b
+   where b.customer_id = cid and b.status <> 'cancelled'
+     and (p_exclude_booking is null or b.booking_id <> p_exclude_booking)
+     and not kaylo_unpaid_checkout(b.booking_id, b.status);
+  dow := extract(isodow from now() at time zone 'Asia/Kolkata');
+  return (
+    select jsonb_agg(jsonb_build_object(
+        'code', o.code, 'title', o.title, 'description', o.description,
+        'discount', o.discount, 'minimum', o.minimum, 'category', o.category,
+        'scratch', o.scratch, 'eligible', o.why is null, 'reason_code', o.why,
+        'reason', case o.why
+          when 'first_only' then 'For your first booking only'
+          when 'used' then 'Already used'
+          when 'reward_used' then 'Reward used'
+          when 'weekend_only' then 'Available on weekends'
+          when 'weekday_only' then 'Available Monday to Friday'
+          when 'needs_confirmed' then 'Unlocks after your first confirmed booking'
+          when 'needs_three' then 'Unlocks after three confirmed bookings'
+        end) order by o.pos)
+    from (values
+      (1, 'FIRST100', 'Your first one is special',
+        rs || '100 off your first booking of ' || rs || '499 or more.',
+        100, 499, null::text, false,
+        case when booked > 0 then 'first_only' end),
+      (2, 'KAYLO150', 'A little help with bigger jobs',
+        rs || '150 off a booking of ' || rs || '1,499 or more. Once per account.',
+        150, 1499, null, false,
+        case when 'KAYLO150' = any(used) then 'used' end),
+      (3, 'WEEKEND100', 'A weekend well spent',
+        rs || '100 off ' || rs || '999 or more on Saturdays and Sundays. Once per account.',
+        100, 999, null, false,
+        case when 'WEEKEND100' = any(used) then 'used' when dow not in (6, 7) then 'weekend_only' end),
+      (4, 'WEEKDAY50', 'A midweek lift',
+        rs || '50 off ' || rs || '599 or more, Monday to Friday. Once per account.',
+        50, 599, null, false,
+        case when 'WEEKDAY50' = any(used) then 'used' when dow in (6, 7) then 'weekday_only' end),
+      (5, 'HOME80', 'Home, sorted',
+        rs || '80 off a home service of ' || rs || '499 or more. Once per account.',
+        80, 499, 'home', false,
+        case when 'HOME80' = any(used) then 'used' end),
+      (6, 'FARM125', 'For the land that feeds us',
+        rs || '125 off a farm service of ' || rs || '999 or more. Once per account.',
+        125, 999, 'farm', false,
+        case when 'FARM125' = any(used) then 'used' end),
+      (7, 'CARE60', 'Care, made a little lighter',
+        rs || '60 off a Care booking of ' || rs || '399 or more. Once per account.',
+        60, 399, 'care', false,
+        case when 'CARE60' = any(used) then 'used' end),
+      (8, 'KAYLO300', 'For the really big days',
+        rs || '300 off a booking of ' || rs || '2,999 or more. Once per account.',
+        300, 2999, null, false,
+        case when 'KAYLO300' = any(used) then 'used' end),
+      (9, 'NEXT75', 'Something for next time',
+        rs || '75 off your next booking of ' || rs || '799 or more. Unlocks after a confirmed booking.',
+        75, 799, null, true,
+        case when 'NEXT75' = any(used) then 'reward_used' when settled < 1 then 'needs_confirmed' end),
+      (10, 'THANKS120', 'Three bookings in. Thank you.',
+        rs || '120 off a booking of ' || rs || '999 or more. Unlocks after three confirmed bookings.',
+        120, 999, null, true,
+        case when 'THANKS120' = any(used) then 'reward_used' when settled < 3 then 'needs_three' end)
+    ) as o(pos, code, title, description, discount, minimum, category, scratch, why)
+  );
+end $$;
+
+create or replace function kaylo_apply_booking_offer(p_booking_id uuid, p_code text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id(); b bookings%rowtype; offer jsonb;
+  base numeric; amount numeric; kind text;
+begin
+  if cid is null then raise exception 'Sign in to apply an offer'; end if;
+  -- One customer cannot redeem the same offer on simultaneous checkouts.
+  perform 1 from customers where customer_id = cid for update;
+  select * into b from bookings where booking_id = p_booking_id and customer_id = cid for update;
+  if not found then raise exception 'Booking not found'; end if;
+  p_code := upper(trim(p_code));
+  if b.status = 'cancelled' then raise exception 'This booking was cancelled'; end if;
+  if b.offer_code = p_code and b.discount_amount > 0 then return to_jsonb(b); end if;
+  if b.status <> 'pending' or exists(select 1 from payments where booking_id = b.booking_id and payment_status in ('pending', 'success')) then
+    raise exception 'This checkout has already started. Keep its current offer or start a new booking.';
+  end if;
+  select value into offer from jsonb_array_elements(kaylo_available_offers(b.booking_id)) where value->>'code' = p_code;
+  if offer is null then raise exception 'That coupon code is not available'; end if;
+  if not (offer->>'eligible')::boolean then raise exception '%', offer->>'reason'; end if;
+  if offer->>'category' is not null then
+    select c.slug into kind from services s join service_categories c on c.category_id = s.category_id
+     where s.service_id = b.service_id;
+    if kind is distinct from offer->>'category' then
+      raise exception 'This offer is for % bookings only', offer->>'category';
+    end if;
+  end if;
+  base := coalesce(b.subtotal_amount, b.estimated_cost);
+  amount := (offer->>'discount')::numeric;
+  if base is null or base < (offer->>'minimum')::numeric or base <= amount then
+    raise exception 'The booking does not meet the minimum amount for this offer';
+  end if;
+  -- The same code may still sit on a checkout this customer opened and never
+  -- paid. That booking gives it up here, so it cannot be paid later at the
+  -- discount: a new payment order always reads the current total.
+  with released as (
+    update bookings o
+       set estimated_cost = coalesce(o.subtotal_amount, o.estimated_cost), discount_amount = 0, offer_code = null
+     where o.customer_id = cid and o.booking_id <> b.booking_id and o.offer_code = p_code
+       and kaylo_unpaid_checkout(o.booking_id, o.status)
+    returning o.booking_id, o.estimated_cost)
+  update caregiver_bookings c set total_amount = r.estimated_cost from released r where c.booking_id = r.booking_id;
+  update bookings set subtotal_amount = base, discount_amount = amount, offer_code = p_code, estimated_cost = base - amount
+    where booking_id = b.booking_id returning * into b;
+  update caregiver_bookings set total_amount = b.estimated_cost where booking_id = b.booking_id;
+  return to_jsonb(b);
+end $$;
+
+revoke all on function kaylo_available_offers(uuid) from public;
+revoke all on function kaylo_apply_booking_offer(uuid, text) from public;
+-- Firebase sessions may use anon; both functions still require a verified customer.
+grant execute on function kaylo_available_offers(uuid) to anon, authenticated;
+grant execute on function kaylo_apply_booking_offer(uuid, text) to anon, authenticated;
+notify pgrst, 'reload schema';

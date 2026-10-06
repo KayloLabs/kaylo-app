@@ -1,25 +1,41 @@
-import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import 'package:kaylo_core/services/storage_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
+
+import '../../../l10n/generated/app_localizations.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../application/offers_providers.dart';
 import '../domain/kaylo_offer.dart';
+import 'offer_copy.dart';
+import 'offer_motion.dart';
+import 'offer_ticket.dart';
+import 'scratch_reward.dart';
+
+export 'scratch_reward.dart' show ScratchReward;
 
 const _green = AppColors.brandPrimary;
 
-Future<KayloOffer?> showKayloOffers(BuildContext context, {double? subtotal}) =>
-    Navigator.of(context).push<KayloOffer>(
-      MaterialPageRoute(builder: (_) => OffersScreen(subtotal: subtotal)),
-    );
+/// [category] is the kind of service being booked ('home', 'farm' or
+/// 'care'), so an offer for another kind explains itself instead of
+/// failing at checkout.
+Future<KayloOffer?> showKayloOffers(
+  BuildContext context, {
+  double? subtotal,
+  String? category,
+}) => Navigator.of(context).push<KayloOffer>(
+  MaterialPageRoute(
+    builder: (_) => OffersScreen(subtotal: subtotal, category: category),
+  ),
+);
 
 class OffersBanner extends ConsumerWidget {
   const OffersBanner({super.key});
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final first = ref
         .watch(offersProvider)
         .whenOrNull(
@@ -50,8 +66,8 @@ class OffersBanner extends ConsumerWidget {
                     children: [
                       Text(
                         first != null
-                            ? 'A warm welcome. ₹100 on us.'
-                            : 'Good work. A little extra joy.',
+                            ? l10n.bannerWelcomeTitle
+                            : l10n.bannerRewardsTitle,
                         style: const TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -62,8 +78,8 @@ class OffersBanner extends ConsumerWidget {
                       const SizedBox(height: 7),
                       Text(
                         first != null
-                            ? 'Your first-booking offer is unlocked'
-                            : 'Explore your offers & scratch rewards',
+                            ? l10n.bannerWelcomeBody
+                            : l10n.bannerRewardsBody,
                         style: const TextStyle(
                           color: Color(0xffd9e8df),
                           fontSize: 13,
@@ -88,134 +104,280 @@ class OffersBanner extends ConsumerWidget {
   }
 }
 
-/// A single checkout control shared by Home, Farm and Care.
-class OfferSelector extends ConsumerWidget {
+/// A single checkout control shared by Home, Farm and Care. When an offer
+/// lands, the saving counts up and a little paper flies from the tick.
+class OfferSelector extends StatefulWidget {
   final double subtotal;
+  final String? category;
   final KayloOffer? selected;
   final ValueChanged<KayloOffer?> onChanged;
   final bool enabled;
   const OfferSelector({
     super.key,
     required this.subtotal,
+    this.category,
     required this.selected,
     required this.onChanged,
     this.enabled = true,
   });
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final valid = selected?.appliesTo(subtotal) ?? false;
+  State<OfferSelector> createState() => _OfferSelectorState();
+}
+
+class _OfferSelectorState extends State<OfferSelector>
+    with SingleTickerProviderStateMixin {
+  late final _celebrate = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 900),
+  );
+  bool get _valid =>
+      widget.selected?.appliesTo(widget.subtotal, category: widget.category) ??
+      false;
+
+  @override
+  void didUpdateWidget(OfferSelector old) {
+    super.didUpdateWidget(old);
+    final arrived = _valid && widget.selected?.code != old.selected?.code;
+    if (arrived && !MediaQuery.disableAnimationsOf(context)) {
+      _celebrate.forward(from: 0);
+    }
+  }
+
+  @override
+  void dispose() {
+    _celebrate.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final selected = widget.selected;
+    final valid = _valid;
     final duration = MediaQuery.disableAnimationsOf(context)
         ? Duration.zero
         : const Duration(milliseconds: 280);
-    return AnimatedContainer(
-      duration: duration,
-      curve: Curves.easeOutCubic,
-      padding: const EdgeInsets.all(16),
-      decoration: BoxDecoration(
-        color: _green.withValues(alpha: valid ? .10 : .04),
-        borderRadius: BorderRadius.circular(18),
-        border: Border.all(color: _green.withValues(alpha: .2)),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
+    return Stack(
+      clipBehavior: Clip.none,
+      children: [
+        AnimatedContainer(
+          duration: duration,
+          curve: Curves.easeOutCubic,
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: _green.withValues(alpha: valid ? .10 : .04),
+            borderRadius: BorderRadius.circular(18),
+            border: Border.all(color: _green.withValues(alpha: .2)),
+          ),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Icon(
-                valid ? Icons.check_circle_rounded : Icons.local_offer_outlined,
-                color: _green,
-              ),
-              const SizedBox(width: 12),
-              Expanded(
-                child: AnimatedSwitcher(
-                  duration: duration,
-                  child: Text(
-                    valid
-                        ? 'You save ${formatRupees(selected!.discount)}'
-                        : 'Offers & rewards',
-                    key: ValueKey(valid ? selected!.code : 'none'),
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w700,
-                      fontSize: 16,
+              Row(
+                children: [
+                  AnimatedSwitcher(
+                    duration: duration,
+                    switchInCurve: Curves.easeOutBack,
+                    transitionBuilder: (child, animation) =>
+                        ScaleTransition(scale: animation, child: child),
+                    child: Icon(
+                      valid
+                          ? Icons.check_circle_rounded
+                          : Icons.local_offer_outlined,
+                      key: ValueKey(valid),
+                      color: _green,
                     ),
                   ),
+                  const SizedBox(width: 12),
+                  Expanded(
+                    child: AnimatedSwitcher(
+                      duration: duration,
+                      layoutBuilder: (current, previous) => Stack(
+                        alignment: Alignment.centerLeft,
+                        children: [...previous, ?current],
+                      ),
+                      child: valid
+                          // The saving counts up, so the eye catches it.
+                          ? TweenAnimationBuilder<double>(
+                              key: ValueKey(selected!.code),
+                              tween: Tween(
+                                begin: duration == Duration.zero
+                                    ? selected.discount
+                                    : 0.0,
+                                end: selected.discount,
+                              ),
+                              duration: const Duration(milliseconds: 600),
+                              curve: Curves.easeOutCubic,
+                              builder: (context, value, _) => Text(
+                                l10n.offerYouSave(
+                                  formatRupees(value.roundToDouble()),
+                                ),
+                                style: const TextStyle(
+                                  fontWeight: FontWeight.w700,
+                                  fontSize: 16,
+                                ),
+                              ),
+                            )
+                          : Text(
+                              l10n.offersAndRewards,
+                              key: const ValueKey('none'),
+                              style: const TextStyle(
+                                fontWeight: FontWeight.w700,
+                                fontSize: 16,
+                              ),
+                            ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: !widget.enabled
+                        ? null
+                        : () async {
+                            final offer = await showKayloOffers(
+                              context,
+                              subtotal: widget.subtotal,
+                              category: widget.category,
+                            );
+                            if (offer != null && context.mounted) {
+                              widget.onChanged(offer);
+                            }
+                          },
+                    child: Text(valid ? l10n.change : l10n.applyOffer),
+                  ),
+                ],
+              ),
+              if (selected != null)
+                Row(
+                  children: [
+                    Expanded(
+                      child: Text(
+                        valid
+                            ? l10n.offerCodeApplied(selected.code)
+                            : selected.reasonIn(
+                                    l10n,
+                                    widget.subtotal,
+                                    category: widget.category,
+                                  ) ??
+                                  l10n.offerNotAvailable,
+                        style: Theme.of(context).textTheme.bodySmall,
+                      ),
+                    ),
+                    TextButton(
+                      onPressed: widget.enabled
+                          ? () => widget.onChanged(null)
+                          : null,
+                      child: Text(l10n.removeOffer),
+                    ),
+                  ],
                 ),
-              ),
-              TextButton(
-                onPressed: !enabled
-                    ? null
-                    : () async {
-                        final offer = await showKayloOffers(
-                          context,
-                          subtotal: subtotal,
-                        );
-                        if (offer != null && context.mounted) {
-                          KayloFeedback.success();
-                          onChanged(offer);
-                        }
-                      },
-                child: Text(valid ? 'Change' : 'Apply'),
-              ),
             ],
           ),
-          if (selected != null)
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    valid
-                        ? '${selected!.code} applied'
-                        : selected!.reasonFor(subtotal) ??
-                              'Offer not available',
-                    style: Theme.of(context).textTheme.bodySmall,
-                  ),
+        ),
+        Positioned.fill(
+          child: IgnorePointer(
+            child: AnimatedBuilder(
+              animation: _celebrate,
+              builder: (context, _) => CustomPaint(
+                painter: PaperBurstPainter(
+                  t: _celebrate.value,
+                  origin: const Alignment(-.86, -.2),
+                  seed: selected?.code.hashCode ?? 7,
+                  pieces: 18,
+                  reach: .8,
                 ),
-                TextButton(
-                  onPressed: enabled ? () => onChanged(null) : null,
-                  child: const Text('Remove'),
-                ),
-              ],
+              ),
             ),
-        ],
-      ),
+          ),
+        ),
+      ],
     );
   }
 }
 
 class OffersScreen extends ConsumerStatefulWidget {
   final double? subtotal;
-  const OffersScreen({super.key, this.subtotal});
+  final String? category;
+  const OffersScreen({super.key, this.subtotal, this.category});
   @override
   ConsumerState<OffersScreen> createState() => _OffersScreenState();
 }
 
-class _OffersScreenState extends ConsumerState<OffersScreen> {
+class _OffersScreenState extends ConsumerState<OffersScreen>
+    with TickerProviderStateMixin {
   final _code = TextEditingController();
+  final _tickets = <String, GlobalKey>{};
+  late final _shake = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 420),
+  );
+  // The stamp coming down on the chosen ticket; the screen closes when
+  // it has landed.
+  late final _stamp = AnimationController(
+    vsync: this,
+    duration: const Duration(milliseconds: 620),
+  );
   String? _error;
+  KayloOffer? _chosen;
+
+  @override
+  void initState() {
+    super.initState();
+    _stamp.addStatusListener((status) {
+      if (status == AnimationStatus.completed && mounted) {
+        Navigator.pop(context, _chosen);
+      }
+    });
+  }
+
   @override
   void dispose() {
     _code.dispose();
+    _shake.dispose();
+    _stamp.dispose();
     super.dispose();
   }
 
+  void _refuse(String message) {
+    setState(() => _error = message);
+    KayloFeedback.alert();
+    if (!MediaQuery.disableAnimationsOf(context)) _shake.forward(from: 0);
+  }
+
   void _apply(KayloOffer offer) {
-    if (widget.subtotal == null) return;
-    if (!offer.appliesTo(widget.subtotal!)) {
-      setState(
-        () =>
-            _error = offer.reasonFor(widget.subtotal!) ?? 'Offer not available',
-      );
+    final subtotal = widget.subtotal;
+    if (subtotal == null || _chosen != null) return;
+    final l10n = AppLocalizations.of(context)!;
+    final reason = offer.reasonIn(l10n, subtotal, category: widget.category);
+    if (reason != null) {
+      _refuse(reason);
       return;
     }
-    Navigator.pop(context, offer);
+    KayloFeedback.success();
+    ref.read(soundServiceProvider).play(KayloSound.coupon);
+    if (MediaQuery.disableAnimationsOf(context)) {
+      Navigator.pop(context, offer);
+      return;
+    }
+    FocusScope.of(context).unfocus();
+    setState(() => _chosen = offer);
+    final ticket = _tickets[offer.code]?.currentContext;
+    if (ticket != null) {
+      Scrollable.ensureVisible(
+        ticket,
+        alignment: .3,
+        duration: const Duration(milliseconds: 220),
+        curve: Curves.easeOutCubic,
+      );
+    }
+    _stamp.forward(from: 0);
   }
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final offers = ref.watch(offersProvider);
     final user = ref.watch(currentUserIdProvider) ?? '';
+    final subtotal = widget.subtotal;
     return Scaffold(
-      appBar: AppBar(title: const Text('A little more Kaylo')),
+      appBar: AppBar(title: Text(l10n.offersTitle)),
       body: offers.when(
         loading: () => const Center(child: CircularProgressIndicator()),
         error: (_, _) => Center(
@@ -226,415 +388,165 @@ class _OffersScreenState extends ConsumerState<OffersScreen> {
               children: [
                 const Icon(Icons.local_offer_outlined, size: 40, color: _green),
                 const SizedBox(height: 16),
-                const Text('Your offers couldn’t load. Please try again.'),
+                Text(l10n.offersLoadFailed, textAlign: TextAlign.center),
                 TextButton(
                   onPressed: () => ref.invalidate(offersProvider),
-                  child: const Text('Try again'),
+                  child: Text(l10n.tryAgain),
                 ),
               ],
             ),
           ),
         ),
-        data: (items) => ListView(
-          padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
-          children: [
-            Text(
-              'Everyday help.\nA little extra happiness.',
-              style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                fontWeight: FontWeight.w700,
-                letterSpacing: -.8,
-                height: 1.12,
-              ),
+        data: (items) {
+          bool usable(KayloOffer o) =>
+              o.reasonIn(l10n, subtotal, category: widget.category) == null;
+          // Rewards waiting under foil come first; then what can be used
+          // now, then the rest, each group in the order it was sent.
+          final rewards = items.where((o) => o.scratch && o.eligible).toList();
+          final tickets = [
+            ...items.where((o) => !rewards.contains(o) && usable(o)),
+            ...items.where((o) => !rewards.contains(o) && !usable(o)),
+          ];
+          final ready = items.where(usable).length;
+          var row = 0;
+          Widget arriving(Widget child) => Entrance(index: row++, child: child);
+          Widget heading(String text) => Padding(
+            padding: const EdgeInsets.only(bottom: 14),
+            child: Text(
+              text,
+              style: Theme.of(
+                context,
+              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
             ),
-            const SizedBox(height: 12),
-            const Text(
-              'Thoughtful savings for the jobs that matter. One offer per booking.',
-              style: TextStyle(height: 1.5),
-            ),
-            if (widget.subtotal != null) ...[
-              const SizedBox(height: 24),
-              TextField(
-                controller: _code,
-                textCapitalization: TextCapitalization.characters,
-                decoration: InputDecoration(
-                  hintText: 'Enter coupon code',
-                  errorText: _error,
-                  border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                  suffixIcon: TextButton(
-                    onPressed: () {
-                      final match = items
-                          .where(
-                            (o) => o.code == _code.text.trim().toUpperCase(),
-                          )
-                          .firstOrNull;
-                      if (match == null) {
-                        setState(() => _error = 'That code isn’t available');
-                        return;
-                      }
-                      _apply(match);
-                    },
-                    child: const Text('Apply'),
-                  ),
-                ),
-                onChanged: (_) {
-                  if (_error != null) setState(() => _error = null);
-                },
-              ),
-            ],
-            const SizedBox(height: 28),
-            for (final item in items)
-              Padding(
-                padding: const EdgeInsets.only(bottom: 18),
-                child: item.scratch && item.eligible
-                    ? ScratchReward(
-                        key: ValueKey('$user:${item.code}'),
-                        offer: item,
-                        userId: user,
-                        subtotal: widget.subtotal,
-                        onApply: () => _apply(item),
-                      )
-                    : _OfferTicket(
-                        offer: item,
-                        subtotal: widget.subtotal,
-                        onApply: () => _apply(item),
-                      ),
-              ),
-            const SizedBox(height: 10),
-            const Text(
-              'Discounts reduce your booking total. They cannot be exchanged for cash or combined. '
-              'Cancelled bookings release their offer. Eligibility is checked again at checkout.',
-              style: TextStyle(fontSize: 12, height: 1.6),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _OfferTicket extends StatelessWidget {
-  final KayloOffer offer;
-  final double? subtotal;
-  final VoidCallback onApply;
-  const _OfferTicket({
-    required this.offer,
-    this.subtotal,
-    required this.onApply,
-  });
-  @override
-  Widget build(BuildContext context) {
-    final dark = Theme.of(context).brightness == Brightness.dark;
-    final available =
-        offer.eligible && (subtotal == null || offer.appliesTo(subtotal!));
-    return ClipPath(
-      clipper: _TicketClipper(),
-      child: Container(
-        decoration: BoxDecoration(
-          color: dark ? const Color(0xff25392e) : const Color(0xffe9eee4),
-          borderRadius: BorderRadius.circular(20),
-        ),
-        padding: const EdgeInsets.all(22),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  child: Text(
-                    '${formatRupees(offer.discount)} off',
-                    style: TextStyle(
-                      fontSize: 34,
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: -1.2,
-                      color: dark ? const Color(0xffd0e6b9) : _green,
-                    ),
-                  ),
-                ),
-                Icon(
-                  offer.scratch
-                      ? Icons.redeem_rounded
-                      : Icons.local_offer_outlined,
-                  color: _green,
-                  size: 30,
-                ),
-              ],
-            ),
-            const SizedBox(height: 6),
-            Text(
-              offer.title,
-              style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 17),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              offer.description,
-              style: const TextStyle(height: 1.5, fontSize: 13),
-            ),
-            const Padding(
-              padding: EdgeInsets.symmetric(vertical: 16),
-              child: Divider(height: 1),
-            ),
-            Row(
-              children: [
-                Expanded(
-                  child: Text(
-                    offer.code,
-                    style: const TextStyle(
-                      fontWeight: FontWeight.w800,
-                      letterSpacing: 1.3,
-                    ),
-                  ),
-                ),
-                if (subtotal != null && available)
-                  FilledButton(onPressed: onApply, child: const Text('Apply'))
-                else
-                  Icon(
-                    offer.eligible
-                        ? Icons.check_circle_outline
-                        : Icons.lock_outline_rounded,
-                    size: 20,
-                    color: _green,
-                  ),
-              ],
-            ),
-            if (!available)
-              Padding(
-                padding: const EdgeInsets.only(top: 8),
-                child: Text(
-                  subtotal != null
-                      ? offer.reasonFor(subtotal!) ?? ''
-                      : offer.unavailableReason ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).colorScheme.onSurfaceVariant,
-                  ),
-                ),
-              ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class _TicketClipper extends CustomClipper<Path> {
-  @override
-  Path getClip(Size size) {
-    final shape = Path()
-      ..addRRect(
-        RRect.fromRectAndRadius(Offset.zero & size, const Radius.circular(20)),
-      );
-    final cuts = Path()
-      ..addOval(Rect.fromCircle(center: Offset(0, size.height * .7), radius: 8))
-      ..addOval(
-        Rect.fromCircle(
-          center: Offset(size.width, size.height * .7),
-          radius: 8,
-        ),
-      );
-    return Path.combine(PathOperation.difference, shape, cuts);
-  }
-
-  @override
-  bool shouldReclip(_TicketClipper oldClipper) => false;
-}
-
-class ScratchReward extends ConsumerStatefulWidget {
-  final KayloOffer offer;
-  final String userId;
-  final double? subtotal;
-  final VoidCallback onApply;
-  const ScratchReward({
-    super.key,
-    required this.offer,
-    required this.userId,
-    this.subtotal,
-    required this.onApply,
-  });
-  @override
-  ConsumerState<ScratchReward> createState() => _ScratchRewardState();
-}
-
-class _ScratchRewardState extends ConsumerState<ScratchReward>
-    with SingleTickerProviderStateMixin {
-  final _strokes = <List<Offset>>[];
-  final _cells = <int>{};
-  late final AnimationController _reveal;
-  bool _opened = false;
-  String get _pref => 'offer_revealed_${widget.userId}_${widget.offer.code}';
-  @override
-  void initState() {
-    super.initState();
-    _opened = ref.read(sharedPreferencesProvider).getBool(_pref) ?? false;
-    _reveal = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 650),
-      value: _opened ? 1 : 0,
-    );
-  }
-
-  @override
-  void dispose() {
-    _reveal.dispose();
-    super.dispose();
-  }
-
-  void _open() {
-    if (_opened) return;
-    setState(() => _opened = true);
-    KayloFeedback.success();
-    ref.read(sharedPreferencesProvider).setBool(_pref, true);
-    if (MediaQuery.disableAnimationsOf(context)) {
-      _reveal.value = 1;
-    } else {
-      _reveal.forward();
-    }
-  }
-
-  void _scratch(Offset point, Size size) {
-    if (_opened || _strokes.isEmpty) return;
-    setState(() {
-      _strokes.last.add(point);
-      final x = (point.dx / size.width * 12).floor().clamp(0, 11);
-      final y = (point.dy / size.height * 8).floor().clamp(0, 7);
-      _cells.add(y * 12 + x);
-    });
-    if (_cells.length >= 24) _open();
-  }
-
-  @override
-  Widget build(BuildContext context) => Column(
-    children: [
-      AnimatedBuilder(
-        animation: _reveal,
-        builder: (context, _) => Transform.scale(
-          scale: 1 + math.sin(_reveal.value * math.pi) * .025,
-          child: Stack(
+          );
+          return ListView(
+            padding: const EdgeInsets.fromLTRB(24, 12, 24, 40),
             children: [
-              ExcludeSemantics(
-                excluding: !_opened,
-                child: IgnorePointer(
-                  ignoring: !_opened,
-                  child: _OfferTicket(
-                    offer: widget.offer,
-                    subtotal: widget.subtotal,
-                    onApply: widget.onApply,
+              arriving(
+                Text(
+                  l10n.offersHeadline,
+                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                    fontWeight: FontWeight.w700,
+                    letterSpacing: -.8,
+                    height: 1.12,
                   ),
                 ),
               ),
-              if (_reveal.value < 1)
-                Positioned.fill(
-                  child: Opacity(
-                    opacity: 1 - _reveal.value,
-                    child: LayoutBuilder(
-                      builder: (context, bounds) {
-                        final size = Size(bounds.maxWidth, bounds.maxHeight);
-                        return Semantics(
-                          label:
-                              'Scratch reward. Reveal ₹75 off your next booking.',
-                          button: true,
-                          onTap: _open,
-                          child: GestureDetector(
-                            onPanStart: (d) {
-                              _strokes.add([]);
-                              KayloFeedback.selection();
-                              _scratch(d.localPosition, size);
-                            },
-                            onPanUpdate: (d) => _scratch(d.localPosition, size),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(20),
-                              child: CustomPaint(
-                                painter: _ScratchCover(_strokes),
-                                child: const SizedBox.expand(),
-                              ),
-                            ),
-                          ),
-                        );
+              const SizedBox(height: 12),
+              arriving(
+                Text(l10n.offersIntro, style: const TextStyle(height: 1.5)),
+              ),
+              if (ready > 0) ...[
+                const SizedBox(height: 14),
+                arriving(
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Container(
+                      padding: const EdgeInsets.symmetric(
+                        horizontal: 12,
+                        vertical: 6,
+                      ),
+                      decoration: BoxDecoration(
+                        color: _green.withValues(alpha: .10),
+                        borderRadius: BorderRadius.circular(999),
+                      ),
+                      child: Text(
+                        l10n.offersReadyCount(ready),
+                        style: const TextStyle(
+                          color: _green,
+                          fontWeight: FontWeight.w700,
+                          fontSize: 13,
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              if (subtotal != null) ...[
+                const SizedBox(height: 24),
+                arriving(
+                  Shake(
+                    animation: _shake,
+                    child: TextField(
+                      controller: _code,
+                      enabled: _chosen == null,
+                      textCapitalization: TextCapitalization.characters,
+                      decoration: InputDecoration(
+                        hintText: l10n.enterCouponCode,
+                        errorText: _error,
+                        errorMaxLines: 3,
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(16),
+                        ),
+                        suffixIcon: TextButton(
+                          onPressed: () {
+                            final typed = _code.text.trim().toUpperCase();
+                            final match = items
+                                .where((o) => o.code == typed)
+                                .firstOrNull;
+                            if (match == null) {
+                              _refuse(l10n.couponNotFound);
+                              return;
+                            }
+                            _apply(match);
+                          },
+                          child: Text(l10n.applyOffer),
+                        ),
+                      ),
+                      onChanged: (_) {
+                        if (_error != null) setState(() => _error = null);
                       },
                     ),
                   ),
                 ),
+              ],
+              const SizedBox(height: 28),
+              if (rewards.isNotEmpty) arriving(heading(l10n.yourRewards)),
+              for (final item in rewards)
+                Padding(
+                  key: _tickets.putIfAbsent(item.code, GlobalKey.new),
+                  padding: const EdgeInsets.only(bottom: 18),
+                  child: arriving(
+                    ScratchReward(
+                      key: ValueKey('$user:${item.code}'),
+                      offer: item,
+                      userId: user,
+                      subtotal: subtotal,
+                      category: widget.category,
+                      onApply: () => _apply(item),
+                      stamp: _chosen?.code == item.code ? _stamp : null,
+                    ),
+                  ),
+                ),
+              if (rewards.isNotEmpty) ...[
+                const SizedBox(height: 8),
+                arriving(heading(l10n.allOffers)),
+              ],
+              for (final item in tickets)
+                Padding(
+                  key: _tickets.putIfAbsent(item.code, GlobalKey.new),
+                  padding: const EdgeInsets.only(bottom: 18),
+                  child: arriving(
+                    OfferTicket(
+                      offer: item,
+                      subtotal: subtotal,
+                      category: widget.category,
+                      onApply: () => _apply(item),
+                      stamp: _chosen?.code == item.code ? _stamp : null,
+                    ),
+                  ),
+                ),
+              const SizedBox(height: 10),
+              Text(
+                l10n.offersTerms,
+                style: const TextStyle(fontSize: 12, height: 1.6),
+              ),
             ],
-          ),
-        ),
+          );
+        },
       ),
-      if (!_opened)
-        TextButton(onPressed: _open, child: const Text('Reveal reward')),
-    ],
-  );
-}
-
-class _ScratchCover extends CustomPainter {
-  final List<List<Offset>> strokes;
-  _ScratchCover(this.strokes);
-  @override
-  void paint(Canvas canvas, Size size) {
-    canvas.saveLayer(Offset.zero & size, Paint());
-    canvas.drawRect(
-      Offset.zero & size,
-      Paint()
-        ..shader = const LinearGradient(
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-          colors: [Color(0xffd7ddbb), Color(0xffeef0d9), Color(0xffbbcba9)],
-        ).createShader(Offset.zero & size),
     );
-    final motif = Paint()
-      ..color = _green.withValues(alpha: .13)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1;
-    for (double x = -size.height; x < size.width; x += 22) {
-      canvas.drawLine(
-        Offset(x, 0),
-        Offset(x + size.height, size.height),
-        motif,
-      );
-    }
-    final text = TextPainter(
-      text: const TextSpan(
-        text: 'A little thank you\n\nScratch to reveal your reward',
-        style: TextStyle(
-          color: _green,
-          fontSize: 18,
-          fontWeight: FontWeight.w700,
-          height: 1.5,
-        ),
-      ),
-      textDirection: TextDirection.ltr,
-      textAlign: TextAlign.center,
-    )..layout(maxWidth: size.width - 48);
-    text.paint(
-      canvas,
-      Offset((size.width - text.width) / 2, (size.height - text.height) / 2),
-    );
-    final eraser = Paint()
-      ..blendMode = BlendMode.clear
-      ..strokeWidth = 44
-      ..strokeCap = StrokeCap.round
-      ..style = PaintingStyle.stroke;
-    for (final stroke in strokes) {
-      if (stroke.isEmpty) continue;
-      final path = Path()..moveTo(stroke.first.dx, stroke.first.dy);
-      for (final p in stroke.skip(1)) {
-        path.lineTo(p.dx, p.dy);
-      }
-      if (stroke.length == 1) {
-        canvas.drawCircle(
-          stroke.first,
-          22,
-          Paint()..blendMode = BlendMode.clear,
-        );
-      } else {
-        canvas.drawPath(path, eraser);
-      }
-    }
-    canvas.restore();
   }
-
-  @override
-  bool shouldRepaint(_ScratchCover oldDelegate) => true;
 }
 
 class _RewardMark extends StatelessWidget {

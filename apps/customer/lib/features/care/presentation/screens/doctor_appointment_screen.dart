@@ -53,7 +53,11 @@ class _DoctorAppointmentScreenState
   KayloOffer? _offer;
   double get _payable =>
       (_selectedDoctor?.consultationFee ?? 0) -
-      (_offer?.savings(_selectedDoctor?.consultationFee ?? 0) ?? 0);
+      (_offer?.savings(
+            _selectedDoctor?.consultationFee ?? 0,
+            category: 'care',
+          ) ??
+          0);
   String? _selectedSpecialty;
   Doctor? _selectedDoctor;
   DateTime _selectedDate = DateTime.now().add(const Duration(days: 1));
@@ -494,6 +498,7 @@ class _DoctorAppointmentScreenState
 
           OfferSelector(
             subtotal: _selectedDoctor!.consultationFee,
+            category: 'care',
             selected: _offer,
             enabled: !_paying && !_checkout.hasStartedPayment,
             onChanged: (offer) => setState(() => _offer = offer),
@@ -559,6 +564,7 @@ class _DoctorAppointmentScreenState
                         offerCode:
                             _offer?.appliesTo(
                                   _selectedDoctor!.consultationFee,
+                                  category: 'care',
                                 ) ==
                                 true
                             ? _offer!.code

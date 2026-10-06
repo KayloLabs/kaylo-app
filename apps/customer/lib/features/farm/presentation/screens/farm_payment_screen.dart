@@ -42,7 +42,8 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
   PaymentMethod _method = PaymentMethod.online;
   KayloOffer? _offer;
   double _payable(FarmBookingDraft draft) =>
-      draft.total - (_offer?.savings(draft.total) ?? 0);
+      draft.total -
+      (_offer?.savings(draft.total, category: draft.service.category) ?? 0);
 
   /// Where the invoice goes. Prefilled from the profile; people who
   /// signed up by phone have none, so they type one here.
@@ -89,7 +90,12 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           draft: draft,
           method: _method,
           email: emailOk ? email : null,
-          offerCode: _offer?.appliesTo(draft.total) == true
+          offerCode:
+              _offer?.appliesTo(
+                    draft.total,
+                    category: draft.service.category,
+                  ) ==
+                  true
               ? _offer!.code
               : null,
         );
@@ -210,7 +216,12 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                   isFarm ? l10n.farmAddress : l10n.serviceAddress,
                   draft.address,
                 ),
-                if ((_offer?.savings(draft.total) ?? 0) > 0) ...[
+                if ((_offer?.savings(
+                          draft.total,
+                          category: draft.service.category,
+                        ) ??
+                        0) >
+                    0) ...[
                   summaryRow('Subtotal', formatRupees(draft.total)),
                   summaryRow(
                     'Offer • ${_offer!.code}',
@@ -239,6 +250,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           const SizedBox(height: AppSpacing.xxl),
           OfferSelector(
             subtotal: draft.total,
+            category: draft.service.category,
             selected: _offer,
             enabled:
                 !isProcessing &&

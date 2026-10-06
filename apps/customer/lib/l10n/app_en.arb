@@ -893,5 +893,113 @@
   "serviceArea": "Service area",
   "verificationScope": "This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.",
   "selectOnMap": "Choose on map",
-  "chooseAddress": "Choose an address"
+  "chooseAddress": "Choose an address",
+  "offerFirst100Title": "Your first one is special",
+  "offerFirst100Body": "₹100 off your first booking of ₹499 or more.",
+  "offerKaylo150Title": "A little help with bigger jobs",
+  "offerKaylo150Body": "₹150 off a booking of ₹1,499 or more. Once per account.",
+  "offerWeekend100Title": "A weekend well spent",
+  "offerWeekend100Body": "₹100 off ₹999 or more on Saturdays and Sundays. Once per account.",
+  "offerWeekday50Title": "A midweek lift",
+  "offerWeekday50Body": "₹50 off ₹599 or more, Monday to Friday. Once per account.",
+  "offerHome80Title": "Home, sorted",
+  "offerHome80Body": "₹80 off a home service of ₹499 or more. Once per account.",
+  "offerFarm125Title": "For the land that feeds us",
+  "offerFarm125Body": "₹125 off a farm service of ₹999 or more. Once per account.",
+  "offerCare60Title": "Care, made a little lighter",
+  "offerCare60Body": "₹60 off a Care booking of ₹399 or more. Once per account.",
+  "offerKaylo300Title": "For the really big days",
+  "offerKaylo300Body": "₹300 off a booking of ₹2,999 or more. Once per account.",
+  "offerNext75Title": "Something for next time",
+  "offerNext75Body": "₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.",
+  "offerThanks120Title": "Three bookings in. Thank you.",
+  "offerThanks120Body": "₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.",
+  "offerReasonFirstOnly": "For your first booking only",
+  "offerReasonUsed": "Already used",
+  "offerReasonRewardUsed": "Reward used",
+  "offerReasonWeekend": "Available on weekends",
+  "offerReasonWeekday": "Available Monday to Friday",
+  "offerReasonNeedsConfirmed": "Unlocks after your first confirmed booking",
+  "offerReasonNeedsThree": "Unlocks after three confirmed bookings",
+  "offerReasonHomeOnly": "For home services only",
+  "offerReasonFarmOnly": "For farm services only",
+  "offerReasonCareOnly": "For Care bookings only",
+  "offerReasonAddMore": "Add {amount} more to use this offer",
+  "@offerReasonAddMore": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerNotAvailable": "Offer not available",
+  "offersTitle": "A little more Kaylo",
+  "offersHeadline": "Everyday help.\nA little extra happiness.",
+  "offersIntro": "Thoughtful savings for the jobs that matter. One offer per booking.",
+  "offersLoadFailed": "Your offers couldn’t load. Please try again.",
+  "tryAgain": "Try again",
+  "enterCouponCode": "Enter coupon code",
+  "couponNotFound": "That code isn’t available",
+  "offersTerms": "Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.",
+  "offerAmountOff": "{amount} off",
+  "@offerAmountOff": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "applyOffer": "Apply",
+  "removeOffer": "Remove",
+  "offerYouSave": "You save {amount}",
+  "@offerYouSave": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offersAndRewards": "Offers & rewards",
+  "offerCodeApplied": "{code} applied",
+  "@offerCodeApplied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "offerStampApplied": "APPLIED",
+  "offersReadyCount": "{count, plural, =1{1 offer ready to use} other{{count} offers ready to use}}",
+  "@offersReadyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yourRewards": "Your rewards",
+  "allOffers": "All offers",
+  "offerLabel": "Offer • {code}",
+  "@offerLabel": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "scratchCoverTitle": "A little thank you",
+  "scratchCoverHint": "Scratch to reveal your reward",
+  "revealReward": "Reveal reward",
+  "scratchSemantics": "Scratch reward. Reveal {amount} off a booking.",
+  "@scratchSemantics": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "bannerWelcomeTitle": "A warm welcome. ₹100 on us.",
+  "bannerWelcomeBody": "Your first-booking offer is unlocked",
+  "bannerRewardsTitle": "Good work. A little extra joy.",
+  "bannerRewardsBody": "Explore your offers & scratch rewards"
 }

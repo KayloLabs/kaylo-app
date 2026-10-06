@@ -1,4 +1,6 @@
 -- Demo offers approved for Kaylo. Payment orders already read estimated_cost.
+-- 0016 replaces both offer functions: if this file is ever run again,
+-- run 0016 after it, or the shorter offer list comes back.
 begin;
 alter table bookings add column if not exists subtotal_amount numeric(10,2);
 alter table bookings add column if not exists discount_amount numeric(10,2) not null default 0;

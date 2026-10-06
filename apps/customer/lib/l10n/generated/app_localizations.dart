@@ -3791,6 +3791,360 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Choose an address'**
   String get chooseAddress;
+
+  /// No description provided for @offerFirst100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first one is special'**
+  String get offerFirst100Title;
+
+  /// No description provided for @offerFirst100Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹100 off your first booking of ₹499 or more.'**
+  String get offerFirst100Body;
+
+  /// No description provided for @offerKaylo150Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A little help with bigger jobs'**
+  String get offerKaylo150Title;
+
+  /// No description provided for @offerKaylo150Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹150 off a booking of ₹1,499 or more. Once per account.'**
+  String get offerKaylo150Body;
+
+  /// No description provided for @offerWeekend100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A weekend well spent'**
+  String get offerWeekend100Title;
+
+  /// No description provided for @offerWeekend100Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹100 off ₹999 or more on Saturdays and Sundays. Once per account.'**
+  String get offerWeekend100Body;
+
+  /// No description provided for @offerWeekday50Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A midweek lift'**
+  String get offerWeekday50Title;
+
+  /// No description provided for @offerWeekday50Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹50 off ₹599 or more, Monday to Friday. Once per account.'**
+  String get offerWeekday50Body;
+
+  /// No description provided for @offerHome80Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Home, sorted'**
+  String get offerHome80Title;
+
+  /// No description provided for @offerHome80Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹80 off a home service of ₹499 or more. Once per account.'**
+  String get offerHome80Body;
+
+  /// No description provided for @offerFarm125Title.
+  ///
+  /// In en, this message translates to:
+  /// **'For the land that feeds us'**
+  String get offerFarm125Title;
+
+  /// No description provided for @offerFarm125Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹125 off a farm service of ₹999 or more. Once per account.'**
+  String get offerFarm125Body;
+
+  /// No description provided for @offerCare60Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Care, made a little lighter'**
+  String get offerCare60Title;
+
+  /// No description provided for @offerCare60Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹60 off a Care booking of ₹399 or more. Once per account.'**
+  String get offerCare60Body;
+
+  /// No description provided for @offerKaylo300Title.
+  ///
+  /// In en, this message translates to:
+  /// **'For the really big days'**
+  String get offerKaylo300Title;
+
+  /// No description provided for @offerKaylo300Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹300 off a booking of ₹2,999 or more. Once per account.'**
+  String get offerKaylo300Body;
+
+  /// No description provided for @offerNext75Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Something for next time'**
+  String get offerNext75Title;
+
+  /// No description provided for @offerNext75Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.'**
+  String get offerNext75Body;
+
+  /// No description provided for @offerThanks120Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Three bookings in. Thank you.'**
+  String get offerThanks120Title;
+
+  /// No description provided for @offerThanks120Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.'**
+  String get offerThanks120Body;
+
+  /// No description provided for @offerReasonFirstOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For your first booking only'**
+  String get offerReasonFirstOnly;
+
+  /// No description provided for @offerReasonUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Already used'**
+  String get offerReasonUsed;
+
+  /// No description provided for @offerReasonRewardUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward used'**
+  String get offerReasonRewardUsed;
+
+  /// No description provided for @offerReasonWeekend.
+  ///
+  /// In en, this message translates to:
+  /// **'Available on weekends'**
+  String get offerReasonWeekend;
+
+  /// No description provided for @offerReasonWeekday.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Monday to Friday'**
+  String get offerReasonWeekday;
+
+  /// No description provided for @offerReasonNeedsConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks after your first confirmed booking'**
+  String get offerReasonNeedsConfirmed;
+
+  /// No description provided for @offerReasonNeedsThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks after three confirmed bookings'**
+  String get offerReasonNeedsThree;
+
+  /// No description provided for @offerReasonHomeOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For home services only'**
+  String get offerReasonHomeOnly;
+
+  /// No description provided for @offerReasonFarmOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For farm services only'**
+  String get offerReasonFarmOnly;
+
+  /// No description provided for @offerReasonCareOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For Care bookings only'**
+  String get offerReasonCareOnly;
+
+  /// No description provided for @offerReasonAddMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {amount} more to use this offer'**
+  String offerReasonAddMore(String amount);
+
+  /// No description provided for @offerNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer not available'**
+  String get offerNotAvailable;
+
+  /// No description provided for @offersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A little more Kaylo'**
+  String get offersTitle;
+
+  /// No description provided for @offersHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyday help.\nA little extra happiness.'**
+  String get offersHeadline;
+
+  /// No description provided for @offersIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Thoughtful savings for the jobs that matter. One offer per booking.'**
+  String get offersIntro;
+
+  /// No description provided for @offersLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your offers couldn’t load. Please try again.'**
+  String get offersLoadFailed;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @enterCouponCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coupon code'**
+  String get enterCouponCode;
+
+  /// No description provided for @couponNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That code isn’t available'**
+  String get couponNotFound;
+
+  /// No description provided for @offersTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.'**
+  String get offersTerms;
+
+  /// No description provided for @offerAmountOff.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} off'**
+  String offerAmountOff(String amount);
+
+  /// No description provided for @applyOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyOffer;
+
+  /// No description provided for @removeOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeOffer;
+
+  /// No description provided for @offerYouSave.
+  ///
+  /// In en, this message translates to:
+  /// **'You save {amount}'**
+  String offerYouSave(String amount);
+
+  /// No description provided for @offersAndRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers & rewards'**
+  String get offersAndRewards;
+
+  /// No description provided for @offerCodeApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied'**
+  String offerCodeApplied(String code);
+
+  /// No description provided for @offerStampApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLIED'**
+  String get offerStampApplied;
+
+  /// No description provided for @offersReadyCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 offer ready to use} other{{count} offers ready to use}}'**
+  String offersReadyCount(int count);
+
+  /// No description provided for @yourRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rewards'**
+  String get yourRewards;
+
+  /// No description provided for @allOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'All offers'**
+  String get allOffers;
+
+  /// No description provided for @offerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer • {code}'**
+  String offerLabel(String code);
+
+  /// No description provided for @scratchCoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A little thank you'**
+  String get scratchCoverTitle;
+
+  /// No description provided for @scratchCoverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scratch to reveal your reward'**
+  String get scratchCoverHint;
+
+  /// No description provided for @revealReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reveal reward'**
+  String get revealReward;
+
+  /// No description provided for @scratchSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Scratch reward. Reveal {amount} off a booking.'**
+  String scratchSemantics(String amount);
+
+  /// No description provided for @bannerWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A warm welcome. ₹100 on us.'**
+  String get bannerWelcomeTitle;
+
+  /// No description provided for @bannerWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first-booking offer is unlocked'**
+  String get bannerWelcomeBody;
+
+  /// No description provided for @bannerRewardsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Good work. A little extra joy.'**
+  String get bannerRewardsTitle;
+
+  /// No description provided for @bannerRewardsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore your offers & scratch rewards'**
+  String get bannerRewardsBody;
 }
 
 class _AppLocalizationsDelegate

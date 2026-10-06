@@ -1,11 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kaylo_core/config/app_env.dart';
 import 'package:kaylo_core/network/app_failure.dart';
 import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_core/network/supabase_providers.dart';
 import '../../auth/application/current_user_provider.dart';
 import '../../booking/application/bookings_providers.dart';
 import '../../booking/data/mock_bookings_repository.dart';
+import '../../home/application/home_providers.dart';
 import '../domain/kaylo_offer.dart';
 
 final bookingOfferApplierProvider = Provider(
@@ -51,9 +51,18 @@ Future<Booking> applyBookingOffer(
       history.where((b) => b.id != booking.id).toList(),
       DateTime.now(),
     ).where((o) => o.code == code).firstOrNull;
-    if (offer == null || !offer.appliesTo(booking.totalAmount)) {
+    // The database reads the booking's service; the sample build asks the
+    // sample catalogue the same question.
+    final category =
+        (await ref
+                .read(homeRepositoryProvider)
+                .getServiceById(booking.serviceId))
+            ?.category;
+    if (offer == null ||
+        !offer.appliesTo(booking.totalAmount, category: category)) {
       throw ServerFailure(
-        offer?.reasonFor(booking.totalAmount) ?? 'This offer is not available',
+        offer?.reasonFor(booking.totalAmount, category: category) ??
+            'This offer is not available',
       );
     }
     final discounted = booking.copyWith(

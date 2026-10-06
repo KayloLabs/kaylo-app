@@ -1,5 +1,7 @@
 -- Care checkout through verified payment, and account deletion.
 -- Safe to run more than once.
+-- 0015 replaces create_care_checkout: if this file is ever run again,
+-- run 0015 and 0016 after it, or the older version comes back.
 begin;
 insert into services(service_id,category_id,service_name,description,base_price,estimated_duration_minutes)
 select '20000000-0000-4000-8000-000000000099',category_id,'Doctor Appointment','Book a doctor consultation',500,30

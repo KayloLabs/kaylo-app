@@ -2090,4 +2090,214 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get chooseAddress => 'पता चुनें';
+
+  @override
+  String get offerFirst100Title => 'आपकी पहली बुकिंग खास है';
+
+  @override
+  String get offerFirst100Body =>
+      '₹499 या उससे अधिक की पहली बुकिंग पर ₹100 की छूट।';
+
+  @override
+  String get offerKaylo150Title => 'बड़े कामों में थोड़ी मदद';
+
+  @override
+  String get offerKaylo150Body =>
+      '₹1,499 या उससे अधिक की बुकिंग पर ₹150 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerWeekend100Title => 'सप्ताहांत का सही इस्तेमाल';
+
+  @override
+  String get offerWeekend100Body =>
+      'शनिवार और रविवार को ₹999 या उससे अधिक पर ₹100 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerWeekday50Title => 'हफ्ते के बीच थोड़ी राहत';
+
+  @override
+  String get offerWeekday50Body =>
+      'सोमवार से शुक्रवार, ₹599 या उससे अधिक पर ₹50 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerHome80Title => 'घर के काम, आसान';
+
+  @override
+  String get offerHome80Body =>
+      '₹499 या उससे अधिक की होम सेवा पर ₹80 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerFarm125Title => 'उस ज़मीन के लिए जो हमें खिलाती है';
+
+  @override
+  String get offerFarm125Body =>
+      '₹999 या उससे अधिक की फ़ार्म सेवा पर ₹125 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerCare60Title => 'देखभाल, थोड़ी और आसान';
+
+  @override
+  String get offerCare60Body =>
+      '₹399 या उससे अधिक की केयर बुकिंग पर ₹60 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerKaylo300Title => 'सचमुच बड़े दिनों के लिए';
+
+  @override
+  String get offerKaylo300Body =>
+      '₹2,999 या उससे अधिक की बुकिंग पर ₹300 की छूट। प्रति खाता एक बार।';
+
+  @override
+  String get offerNext75Title => 'अगली बार के लिए कुछ खास';
+
+  @override
+  String get offerNext75Body =>
+      '₹799 या उससे अधिक की अगली बुकिंग पर ₹75 की छूट। एक बुकिंग की पुष्टि के बाद मिलता है।';
+
+  @override
+  String get offerThanks120Title => 'तीन बुकिंग पूरी। धन्यवाद।';
+
+  @override
+  String get offerThanks120Body =>
+      '₹999 या उससे अधिक की बुकिंग पर ₹120 की छूट। तीन बुकिंग की पुष्टि के बाद मिलता है।';
+
+  @override
+  String get offerReasonFirstOnly => 'केवल आपकी पहली बुकिंग के लिए';
+
+  @override
+  String get offerReasonUsed => 'पहले ही इस्तेमाल हो चुका';
+
+  @override
+  String get offerReasonRewardUsed => 'रिवॉर्ड इस्तेमाल हो चुका';
+
+  @override
+  String get offerReasonWeekend => 'सप्ताहांत में उपलब्ध';
+
+  @override
+  String get offerReasonWeekday => 'सोमवार से शुक्रवार उपलब्ध';
+
+  @override
+  String get offerReasonNeedsConfirmed => 'पहली बुकिंग की पुष्टि के बाद मिलेगा';
+
+  @override
+  String get offerReasonNeedsThree => 'तीन बुकिंग की पुष्टि के बाद मिलेगा';
+
+  @override
+  String get offerReasonHomeOnly => 'केवल होम सेवाओं के लिए';
+
+  @override
+  String get offerReasonFarmOnly => 'केवल फ़ार्म सेवाओं के लिए';
+
+  @override
+  String get offerReasonCareOnly => 'केवल केयर बुकिंग के लिए';
+
+  @override
+  String offerReasonAddMore(String amount) {
+    return 'यह ऑफ़र इस्तेमाल करने के लिए $amount और जोड़ें';
+  }
+
+  @override
+  String get offerNotAvailable => 'ऑफ़र उपलब्ध नहीं';
+
+  @override
+  String get offersTitle => 'थोड़ा और कायलो';
+
+  @override
+  String get offersHeadline => 'रोज़ की मदद।\nथोड़ी और खुशी।';
+
+  @override
+  String get offersIntro =>
+      'ज़रूरी कामों के लिए सोच-समझकर दी गई बचत। एक बुकिंग पर एक ऑफ़र।';
+
+  @override
+  String get offersLoadFailed =>
+      'आपके ऑफ़र लोड नहीं हो सके। कृपया फिर से कोशिश करें।';
+
+  @override
+  String get tryAgain => 'फिर से कोशिश करें';
+
+  @override
+  String get enterCouponCode => 'कूपन कोड डालें';
+
+  @override
+  String get couponNotFound => 'वह कोड उपलब्ध नहीं है';
+
+  @override
+  String get offersTerms =>
+      'छूट आपकी बुकिंग की कुल राशि घटाती है। इन्हें नकद में नहीं बदला जा सकता और न ही जोड़ा जा सकता है। रद्द की गई बुकिंग का ऑफ़र फिर से मिल जाता है। चेकआउट पर पात्रता दोबारा जांची जाती है।';
+
+  @override
+  String offerAmountOff(String amount) {
+    return '$amount की छूट';
+  }
+
+  @override
+  String get applyOffer => 'लागू करें';
+
+  @override
+  String get removeOffer => 'हटाएं';
+
+  @override
+  String offerYouSave(String amount) {
+    return 'आप $amount बचाते हैं';
+  }
+
+  @override
+  String get offersAndRewards => 'ऑफ़र और रिवॉर्ड';
+
+  @override
+  String offerCodeApplied(String code) {
+    return '$code लागू हुआ';
+  }
+
+  @override
+  String get offerStampApplied => 'लागू';
+
+  @override
+  String offersReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count ऑफ़र इस्तेमाल के लिए तैयार',
+      one: '1 ऑफ़र इस्तेमाल के लिए तैयार',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourRewards => 'आपके रिवॉर्ड';
+
+  @override
+  String get allOffers => 'सभी ऑफ़र';
+
+  @override
+  String offerLabel(String code) {
+    return 'ऑफ़र • $code';
+  }
+
+  @override
+  String get scratchCoverTitle => 'एक छोटा सा धन्यवाद';
+
+  @override
+  String get scratchCoverHint => 'अपना रिवॉर्ड देखने के लिए खुरचें';
+
+  @override
+  String get revealReward => 'रिवॉर्ड दिखाएं';
+
+  @override
+  String scratchSemantics(String amount) {
+    return 'स्क्रैच रिवॉर्ड। एक बुकिंग पर $amount की छूट देखें।';
+  }
+
+  @override
+  String get bannerWelcomeTitle => 'दिल से स्वागत। ₹100 हमारी ओर से।';
+
+  @override
+  String get bannerWelcomeBody => 'आपका पहली बुकिंग का ऑफ़र तैयार है';
+
+  @override
+  String get bannerRewardsTitle => 'बहुत बढ़िया। थोड़ी और खुशी।';
+
+  @override
+  String get bannerRewardsBody => 'अपने ऑफ़र और स्क्रैच रिवॉर्ड देखें';
 }

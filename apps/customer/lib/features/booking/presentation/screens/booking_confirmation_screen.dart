@@ -143,7 +143,7 @@ class _BookingConfirmationScreenState
                         ),
                       ),
                       row(
-                        'Offer • ${booking.offerCode}',
+                        l10n.offerLabel(booking.offerCode ?? ''),
                         text('−${formatRupees(booking.discountAmount)}'),
                       ),
                     ],

@@ -40,7 +40,8 @@ class _CaregiverBookingScreenState
     extends ConsumerState<CaregiverBookingScreen> {
   final _checkout = CareCheckout();
   KayloOffer? _offer;
-  double get _discount => _offer?.savings(_calculateTotal()) ?? 0;
+  double get _discount =>
+      _offer?.savings(_calculateTotal(), category: 'care') ?? 0;
   double get _payable => _calculateTotal() - _discount;
   final _address = TextEditingController();
   UserLocation? _visitLocation;
@@ -406,6 +407,7 @@ class _CaregiverBookingScreenState
                     const SizedBox(height: AppSpacing.l),
                     OfferSelector(
                       subtotal: _calculateTotal(),
+                      category: 'care',
                       selected: _offer,
                       enabled: !_paying && !_checkout.hasStartedPayment,
                       onChanged: (offer) => setState(() => _offer = offer),
@@ -455,7 +457,12 @@ class _CaregiverBookingScreenState
                                   ref,
                                   kind: 'caregiver',
                                   mockAmount: total,
-                                  offerCode: _offer?.appliesTo(total) == true
+                                  offerCode:
+                                      _offer?.appliesTo(
+                                            total,
+                                            category: 'care',
+                                          ) ==
+                                          true
                                       ? _offer!.code
                                       : null,
                                   details: {

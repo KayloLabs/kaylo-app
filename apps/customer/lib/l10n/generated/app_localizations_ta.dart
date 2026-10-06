@@ -2122,4 +2122,218 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get chooseAddress => 'முகவரியைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get offerFirst100Title => 'உங்கள் முதல் முன்பதிவு சிறப்பானது';
+
+  @override
+  String get offerFirst100Body =>
+      '₹499 அல்லது அதற்கு மேற்பட்ட முதல் முன்பதிவுக்கு ₹100 தள்ளுபடி.';
+
+  @override
+  String get offerKaylo150Title => 'பெரிய வேலைகளுக்கு ஒரு சிறிய உதவி';
+
+  @override
+  String get offerKaylo150Body =>
+      '₹1,499 அல்லது அதற்கு மேற்பட்ட முன்பதிவுக்கு ₹150 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerWeekend100Title => 'பயனுள்ள ஒரு வார இறுதி';
+
+  @override
+  String get offerWeekend100Body =>
+      'சனி, ஞாயிறு நாட்களில் ₹999 அல்லது அதற்கு மேல் ₹100 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerWeekday50Title => 'வார நடுவில் ஒரு சிறிய ஊக்கம்';
+
+  @override
+  String get offerWeekday50Body =>
+      'திங்கள் முதல் வெள்ளி வரை ₹599 அல்லது அதற்கு மேல் ₹50 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerHome80Title => 'வீட்டு வேலைகள், எளிதாக';
+
+  @override
+  String get offerHome80Body =>
+      '₹499 அல்லது அதற்கு மேற்பட்ட வீட்டுச் சேவைக்கு ₹80 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerFarm125Title => 'நமக்கு உணவளிக்கும் நிலத்திற்காக';
+
+  @override
+  String get offerFarm125Body =>
+      '₹999 அல்லது அதற்கு மேற்பட்ட பண்ணைச் சேவைக்கு ₹125 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerCare60Title => 'பராமரிப்பு, இன்னும் கொஞ்சம் எளிதாக';
+
+  @override
+  String get offerCare60Body =>
+      '₹399 அல்லது அதற்கு மேற்பட்ட கேர் முன்பதிவுக்கு ₹60 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerKaylo300Title => 'உண்மையிலேயே பெரிய நாட்களுக்காக';
+
+  @override
+  String get offerKaylo300Body =>
+      '₹2,999 அல்லது அதற்கு மேற்பட்ட முன்பதிவுக்கு ₹300 தள்ளுபடி. ஒரு கணக்கிற்கு ஒரு முறை.';
+
+  @override
+  String get offerNext75Title => 'அடுத்த முறைக்கு ஒரு சிறிய பரிசு';
+
+  @override
+  String get offerNext75Body =>
+      '₹799 அல்லது அதற்கு மேற்பட்ட அடுத்த முன்பதிவுக்கு ₹75 தள்ளுபடி. ஒரு முன்பதிவு உறுதியான பின் கிடைக்கும்.';
+
+  @override
+  String get offerThanks120Title => 'மூன்று முன்பதிவுகள் முடிந்தன. நன்றி.';
+
+  @override
+  String get offerThanks120Body =>
+      '₹999 அல்லது அதற்கு மேற்பட்ட முன்பதிவுக்கு ₹120 தள்ளுபடி. மூன்று முன்பதிவுகள் உறுதியான பின் கிடைக்கும்.';
+
+  @override
+  String get offerReasonFirstOnly => 'உங்கள் முதல் முன்பதிவுக்கு மட்டும்';
+
+  @override
+  String get offerReasonUsed => 'ஏற்கனவே பயன்படுத்தப்பட்டது';
+
+  @override
+  String get offerReasonRewardUsed => 'வெகுமதி பயன்படுத்தப்பட்டது';
+
+  @override
+  String get offerReasonWeekend => 'வார இறுதிகளில் கிடைக்கும்';
+
+  @override
+  String get offerReasonWeekday => 'திங்கள் முதல் வெள்ளி வரை கிடைக்கும்';
+
+  @override
+  String get offerReasonNeedsConfirmed =>
+      'முதல் முன்பதிவு உறுதியான பின் கிடைக்கும்';
+
+  @override
+  String get offerReasonNeedsThree =>
+      'மூன்று முன்பதிவுகள் உறுதியான பின் கிடைக்கும்';
+
+  @override
+  String get offerReasonHomeOnly => 'வீட்டுச் சேவைகளுக்கு மட்டும்';
+
+  @override
+  String get offerReasonFarmOnly => 'பண்ணைச் சேவைகளுக்கு மட்டும்';
+
+  @override
+  String get offerReasonCareOnly => 'கேர் முன்பதிவுகளுக்கு மட்டும்';
+
+  @override
+  String offerReasonAddMore(String amount) {
+    return 'இந்தச் சலுகையைப் பயன்படுத்த இன்னும் $amount சேர்க்கவும்';
+  }
+
+  @override
+  String get offerNotAvailable => 'சலுகை கிடைக்கவில்லை';
+
+  @override
+  String get offersTitle => 'இன்னும் கொஞ்சம் கெய்லோ';
+
+  @override
+  String get offersHeadline => 'அன்றாட உதவி.\nஇன்னும் கொஞ்சம் மகிழ்ச்சி.';
+
+  @override
+  String get offersIntro =>
+      'முக்கியமான வேலைகளுக்கு அக்கறையுடன் கூடிய சேமிப்பு. ஒரு முன்பதிவுக்கு ஒரு சலுகை.';
+
+  @override
+  String get offersLoadFailed =>
+      'உங்கள் சலுகைகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get tryAgain => 'மீண்டும் முயற்சி';
+
+  @override
+  String get enterCouponCode => 'கூப்பன் குறியீட்டை உள்ளிடவும்';
+
+  @override
+  String get couponNotFound => 'அந்தக் குறியீடு கிடைக்கவில்லை';
+
+  @override
+  String get offersTerms =>
+      'தள்ளுபடிகள் உங்கள் முன்பதிவுத் தொகையைக் குறைக்கும். அவற்றைப் பணமாக மாற்றவோ ஒன்றாகச் சேர்க்கவோ முடியாது. ரத்து செய்த முன்பதிவின் சலுகை மீண்டும் கிடைக்கும். செக்அவுட்டில் தகுதி மீண்டும் சரிபார்க்கப்படும்.';
+
+  @override
+  String offerAmountOff(String amount) {
+    return '$amount தள்ளுபடி';
+  }
+
+  @override
+  String get applyOffer => 'பயன்படுத்து';
+
+  @override
+  String get removeOffer => 'நீக்கு';
+
+  @override
+  String offerYouSave(String amount) {
+    return 'நீங்கள் $amount சேமிக்கிறீர்கள்';
+  }
+
+  @override
+  String get offersAndRewards => 'சலுகைகளும் வெகுமதிகளும்';
+
+  @override
+  String offerCodeApplied(String code) {
+    return '$code பயன்படுத்தப்பட்டது';
+  }
+
+  @override
+  String get offerStampApplied => 'பயன்பட்டது';
+
+  @override
+  String offersReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count சலுகைகள் பயன்படுத்தத் தயார்',
+      one: '1 சலுகை பயன்படுத்தத் தயார்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourRewards => 'உங்கள் வெகுமதிகள்';
+
+  @override
+  String get allOffers => 'அனைத்துச் சலுகைகளும்';
+
+  @override
+  String offerLabel(String code) {
+    return 'சலுகை • $code';
+  }
+
+  @override
+  String get scratchCoverTitle => 'ஒரு சிறிய நன்றி';
+
+  @override
+  String get scratchCoverHint => 'வெகுமதியைக் காண சுரண்டவும்';
+
+  @override
+  String get revealReward => 'வெகுமதியைக் காட்டு';
+
+  @override
+  String scratchSemantics(String amount) {
+    return 'ஸ்க்ராட்ச் வெகுமதி. ஒரு முன்பதிவுக்கு $amount தள்ளுபடியைக் காணுங்கள்.';
+  }
+
+  @override
+  String get bannerWelcomeTitle => 'அன்பான வரவேற்பு. ₹100 எங்கள் பரிசு.';
+
+  @override
+  String get bannerWelcomeBody =>
+      'உங்கள் முதல் முன்பதிவுச் சலுகை தயாராக உள்ளது';
+
+  @override
+  String get bannerRewardsTitle => 'அருமை. இன்னும் கொஞ்சம் மகிழ்ச்சி.';
+
+  @override
+  String get bannerRewardsBody =>
+      'உங்கள் சலுகைகளையும் ஸ்க்ராட்ச் வெகுமதிகளையும் பாருங்கள்';
 }

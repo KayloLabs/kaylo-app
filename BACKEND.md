@@ -337,7 +337,26 @@ SOS offers Kaylo calls and Android SIM calls. The SIM flow supports manual conta
 
 Apply `supabase/migrations/0015_booking_offers.sql` once in the Kaylo project SQL editor before testing live offers. It adds booking subtotal and coupon fields, validates each coupon for the current customer, and saves the discounted amount before Razorpay creates its order. It also preserves Care visit notes and saved location IDs in the primary booking. Existing non-discounted bookings remain compatible.
 
-Approved demo offers: FIRST100 saves ₹100 on the first booking of ₹499 or more; KAYLO150 saves ₹150 on ₹1,499 or more; WEEKEND100 saves ₹100 on ₹999 or more on Saturday/Sunday in India; NEXT75 saves ₹75 on ₹799 or more after a confirmed booking. Each code is once per account, one code per booking. Cancelled bookings release their coupon. Scratch reveal is a local animation; eligibility and redemption are checked by the database.
+Apply `supabase/migrations/0016_more_offers.sql` after it. 0016 replaces both offer functions, so the list below is what the live app shows once it has run. If an older migration is ever run again, run the later ones after it in order: 0015 redefines `create_care_checkout` from 0012, and 0016 redefines the offer functions from 0015. All of them are safe to repeat, and `setup_all.sql` holds the whole sequence for a fresh project.
+
+Demo offers, all fixed amounts in rupees:
+
+| Code | Saves | On | Who can use it |
+| --- | --- | --- | --- |
+| FIRST100 | 100 | 499 or more | First booking only |
+| KAYLO150 | 150 | 1,499 or more | Once per account |
+| KAYLO300 | 300 | 2,999 or more | Once per account |
+| WEEKEND100 | 100 | 999 or more | Saturday and Sunday in India, once per account |
+| WEEKDAY50 | 50 | 599 or more | Monday to Friday in India, once per account |
+| HOME80 | 80 | 499 or more | Home services only, once per account |
+| FARM125 | 125 | 999 or more | Farm services only, once per account |
+| CARE60 | 60 | 399 or more | Care bookings only, once per account |
+| NEXT75 | 75 | 799 or more | Scratch reward, after one confirmed booking |
+| THANKS120 | 120 | 999 or more | Scratch reward, after three confirmed bookings |
+
+One code per booking. Cancelled bookings release their coupon. An online checkout that was opened and never paid (a Razorpay order exists, no payment succeeded) does not use up an offer either: it no longer counts as a booking for FIRST100, and if the same code is applied to a newer booking the unpaid one gives it up and goes back to full price, which is what a later payment for it will charge. A pay-after-service booking has no payment row and counts as a real booking. One gap remains: a checkout sheet still open on another device when the code moves can be paid at the old discounted order amount.
+
+Offer wording is translated in the app by code (`offer_copy.dart`), with the database's English as the fallback for a code the installed build does not know; `reason_code` in the response says why an offer is closed. Scratch reveal is a local animation; eligibility and redemption are checked by the database. `supabase/tests/offer_rules.sql` covers the rules above with synthetic accounts and rolls back.
 
 The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are synthesised by `apps/customer/tool/make_sounds.py` into `apps/customer/assets/`; nothing is a recording.
 

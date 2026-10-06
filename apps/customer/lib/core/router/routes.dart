@@ -54,6 +54,7 @@ class Routes {
 
   // Profile flows, nested under the Profile tab.
   static const String addresses = '/profile/addresses';
+  static const String paymentMethods = '/profile/payment-methods';
   static const String help = '/profile/help';
 
   // Feature screens

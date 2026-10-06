@@ -24,6 +24,7 @@ import '../../features/profile/presentation/screens/help_support_screen.dart';
 import '../../features/profile/presentation/screens/profile_screen.dart';
 import '../../features/profile/presentation/screens/saved_addresses_screen.dart';
 import '../../features/profile/presentation/screens/settings_screen.dart';
+import '../../features/payments/presentation/screens/payment_methods_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
 import '../../features/auth/presentation/screens/otp_verify_screen.dart';
 import '../../features/auth/presentation/screens/location_setup_screen.dart';
@@ -359,6 +360,13 @@ final goRouterProvider = Provider<GoRouter>((ref) {
                     pageBuilder: (context, state) => kayloPage(
                       state: state,
                       child: const SavedAddressesScreen(),
+                    ),
+                  ),
+                  GoRoute(
+                    path: 'payment-methods', // Routes.paymentMethods
+                    pageBuilder: (context, state) => kayloPage(
+                      state: state,
+                      child: const PaymentMethodsScreen(),
                     ),
                   ),
                   GoRoute(

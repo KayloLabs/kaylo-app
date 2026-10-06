@@ -11,19 +11,16 @@ CustomTransitionPage<T> kayloPage<T>({
   return CustomTransitionPage<T>(
     key: state.pageKey,
     child: child,
-    transitionDuration: const Duration(milliseconds: 260),
-    reverseTransitionDuration: const Duration(milliseconds: 200),
+    transitionDuration: const Duration(milliseconds: 360),
+    reverseTransitionDuration: const Duration(milliseconds: 280),
     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-      final curved = CurvedAnimation(
-        parent: animation,
-        curve: Curves.easeOutCubic,
-        reverseCurve: Curves.easeInCubic,
-      );
+      if (MediaQuery.disableAnimationsOf(context)) return child;
+      final curved = animation.drive(CurveTween(curve: Curves.easeOutCubic));
       return FadeTransition(
         opacity: curved,
         child: SlideTransition(
           position: Tween<Offset>(
-            begin: const Offset(0, 0.03),
+            begin: const Offset(0.055, 0),
             end: Offset.zero,
           ).animate(curved),
           child: child,

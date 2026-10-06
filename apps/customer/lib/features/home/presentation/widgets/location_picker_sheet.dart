@@ -14,25 +14,44 @@ import '../../../../core/widgets/use_my_location_button.dart'
     show locationErrorMessage;
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/user_location_provider.dart';
+import 'saved_location_chooser.dart';
 
 /// Lets the customer set their active location: drop the pin on the
 /// map, jump to GPS, or search a town. Resolves true when a location
 /// was saved.
 Future<bool> showLocationPickerSheet(BuildContext context) async {
-  final saved = await showModalBottomSheet<bool>(
-    context: context,
-    // Over the whole app so the floating bottom nav stays underneath.
-    useRootNavigator: true,
-    isScrollControlled: true,
-    useSafeArea: true,
-    clipBehavior: Clip.antiAlias,
-    shape: const RoundedRectangleBorder(
-      borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
-    ),
-    builder: (context) => const LocationPickerSheet(),
-  );
-  return saved ?? false;
+  final selected = await showSavedLocationChooser(context);
+  if (selected == null || !context.mounted) return false;
+  final ref = ProviderScope.containerOf(context);
+  await ref.read(userLocationProvider.notifier).set(selected);
+  if (context.mounted) {
+    KayloFeedback.press();
+    KayloSnackbar.showSuccess(
+      context,
+      AppLocalizations.of(context)!.locationUpdated(selected.label),
+    );
+  }
+  return true;
 }
+
+/// Returns a place for a booking or a saved address without changing the
+/// customer's active location. The pin can be positioned without GPS access.
+Future<UserLocation?> showMapLocationPickerSheet(
+  BuildContext context, {
+  UserLocation? initialLocation,
+}) => showModalBottomSheet<UserLocation>(
+  context: context,
+  useRootNavigator: true,
+  isScrollControlled: true,
+  // Let vertical map drags move the pin instead of dismissing the sheet.
+  enableDrag: false,
+  useSafeArea: true,
+  clipBehavior: Clip.antiAlias,
+  shape: const RoundedRectangleBorder(
+    borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
+  ),
+  builder: (_) => LocationPickerSheet(initialLocation: initialLocation),
+);
 
 /// Map-first picker in the style of delivery apps: the map moves under a
 /// fixed pin, the address beneath it refreshes once the map settles, a
@@ -40,7 +59,9 @@ Future<bool> showLocationPickerSheet(BuildContext context) async {
 /// cannot pan to. The map is OpenStreetMap or Google depending on the
 /// build (see mapBackendProvider); the other two paths work regardless.
 class LocationPickerSheet extends ConsumerStatefulWidget {
-  const LocationPickerSheet({super.key});
+  final UserLocation? initialLocation;
+
+  const LocationPickerSheet({super.key, this.initialLocation});
 
   @override
   ConsumerState<LocationPickerSheet> createState() =>
@@ -75,11 +96,13 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
   @override
   void initState() {
     super.initState();
-    final current = ref.read(userLocationProvider);
-    _selected = current;
+    final UserLocation current =
+        widget.initialLocation ?? ref.read(userLocationProvider);
+    _selected = current.hasCoordinates ? current : null;
     final lat = current.latitude;
     final lng = current.longitude;
     if (lat != null && lng != null) _target = LatLng(lat, lng);
+    _target ??= kannurCenter;
   }
 
   @override
@@ -94,9 +117,11 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
 
   void _onCameraMoveStarted() {
     _debounce?.cancel();
+    _lookup++; // A result for an earlier pin must not replace this position.
     if (!_moving || !_moved) {
       setState(() {
         _moving = true;
+        _resolving = true;
         _moved = true;
       });
     }
@@ -108,7 +133,12 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
     if (_moving) setState(() => _moving = false);
     if (_skipNextIdle) {
       _skipNextIdle = false;
-      return;
+      // Resolve the visible initial pin too, rather than confirming a
+      // fallback town whose coordinates were never selected.
+      if (_selected?.hasCoordinates == true) {
+        setState(() => _resolving = false);
+        return;
+      }
     }
     _debounce?.cancel();
     _debounce = Timer(const Duration(milliseconds: 450), _resolveTarget);
@@ -175,24 +205,17 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
     final found = await _service.search(town);
     if (!mounted || id != _lookup) return;
     if (found == null) {
-      // Not on the map, but the typed name is still a usable label.
-      setState(() {
-        _resolving = false;
-        _selected = UserLocation(label: town);
-      });
+      setState(() => _resolving = false);
+      KayloSnackbar.showError(context, l10n.noResultsFound);
       return;
     }
     setState(() => _resolving = false);
     await _moveTo(found, zoom: 14);
   }
 
-  Future<void> _finish(UserLocation location) async {
-    final l10n = AppLocalizations.of(context)!;
-    await ref.read(userLocationProvider.notifier).set(location);
-    if (!mounted) return;
+  void _finish(UserLocation location) {
     KayloFeedback.press();
-    Navigator.of(context).pop(true);
-    KayloSnackbar.showSuccess(context, l10n.locationUpdated(location.label));
+    Navigator.of(context).pop(location);
   }
 
   @override
@@ -249,7 +272,7 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
                           context,
                         ).closeButtonTooltip,
                         icon: const Icon(Icons.close_rounded),
-                        onPressed: () => Navigator.of(context).pop(false),
+                        onPressed: () => Navigator.of(context).pop(),
                       ),
                     ],
                   ),
@@ -334,7 +357,11 @@ class _LocationPickerSheetState extends ConsumerState<LocationPickerSheet> {
                         text: l10n.confirmLocation,
                         icon: Icons.check_rounded,
                         isLoading: _resolving,
-                        onPressed: selected == null
+                        onPressed:
+                            selected == null ||
+                                _moving ||
+                                _resolving ||
+                                _locating
                             ? null
                             : () => _finish(selected),
                       ),
@@ -478,7 +505,9 @@ class _MapPin extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    const duration = Duration(milliseconds: 160);
+    final duration = MediaQuery.disableAnimationsOf(context)
+        ? Duration.zero
+        : const Duration(milliseconds: 160);
     // The box is centred on the map; the pin tip lands on its centre.
     return SizedBox(
       width: 56,

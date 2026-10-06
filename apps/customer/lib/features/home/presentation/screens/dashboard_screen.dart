@@ -10,6 +10,7 @@ import '../widgets/hero_banner.dart';
 import '../widgets/mode_switcher_section.dart';
 import '../widgets/popular_services_horizontal.dart';
 import '../widgets/bottom_promo_banner.dart';
+import '../../../offers/presentation/offers_screen.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 
@@ -66,6 +67,8 @@ class DashboardScreen extends ConsumerWidget {
                         const HeroBanner(),
                         const SizedBox(height: AppSpacing.xl),
                         const ModeSwitcherSection(),
+                        const SizedBox(height: AppSpacing.xl),
+                        const OffersBanner(),
                         const SizedBox(height: AppSpacing.xl),
                         // Personalized ranking when booking history
                         // exists; otherwise the plain popular list.

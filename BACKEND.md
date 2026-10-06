@@ -293,3 +293,93 @@ supabase secrets set FIREBASE_SERVICE_ACCOUNT_B64="$(base64 -i ~/Downloads/<key>
 ```
 
 The demo build (`USE_MOCK=true`) still accepts 1234 and sends nothing.
+
+
+## Faculty demo: Android SOS and OTP email
+
+The optional SIM fallback uses Android phone calls. The live app defaults to the new in-app call flow described below. Hold for three uninterrupted seconds. Kaylo asks for call and phone-state permissions, then calls the primary contact first. When the current call ends, return to Kaylo; the next call starts after three seconds on screen. Stop remaining calls cancels the queue, without ending a call already in progress. Leaving the SOS screen stops remaining calls. A saved number that cannot be dialled is skipped and counted on screen, so one mistyped contact never blocks the rest; short codes such as 112 are accepted (Android opens the dialler for emergency numbers instead of calling them directly). Duplicate phone numbers are called once. A call that never starts, for example with no SIM or in flight mode, is passed over a few seconds after returning to Kaylo. Normal SIM charges apply. The app shows attempts, which do not confirm the recipient answered, and does not claim SMS or location delivery. New SIM calls are not inserted into the legacy SOS alert history.
+
+Sample builds start with no emergency contacts, so fictional sample numbers are never dialled. Add your demo contacts first.
+
+Use a real Android phone with an active SIM, select a default voice SIM on dual-SIM devices, and test the permission prompts and call sequence with your demo contacts before the review. Calls do not continue automatically while Kaylo remains in the background. An OS process termination can stop the remaining queue.
+
+No Kaylo email (sign-in code, invoice, booking received) carries a location line; the footer is just the name and the support address. The six digits of a sign-in code can be selected, or touched and held, to copy. Redeploy only `email-otp` to update outgoing mail:
+
+```sh
+supabase functions deploy email-otp --no-verify-jwt
+```
+
+For the optional browser Copy OTP button, host `apps/customer/web/copy-code.html` at a public HTTPS URL and set the `OTP_COPY_PAGE_URL` Supabase secret to that page URL. It is also included in Flutter web build output. No database migration is needed. Without the URL, the email keeps the selectable code without copy instructions. The page carries the code in the URL fragment, removes it from the address bar, and disables copying after expiry; server-side OTP verification remains authoritative. The page makes no network requests.
+
+
+## Care demo update, 2 October 2026
+
+Migrations 0012, 0013 and 0014 were applied to project `jeiwfvnkxubykrzjzktm` through the Management API. This project did not have a Supabase migration-history table. All three are safe to run again: tables, triggers and policies are only created when missing, so a rerun keeps the roles 0014 widened. `setup_all.sql` includes them for a fresh project.
+
+Doctor and caregiver checkout now create a pending shared booking and linked care record. The server reads the provider fee. A verified successful payment confirms the linked record; cancellation/completion follows the booking. Payment methods opens secure Razorpay card checkout for pending bookings. Saved-card availability depends on Razorpay tokenisation configuration. Physical NFC card enrolment is not implemented by this gateway integration.
+
+Prescriptions on Android use Google's document scanner for cropping, cleanup, multipage PDF output and gallery import. Bundled on-device Latin OCR produces editable text; handwriting and unsupported scripts can fail. Typed records use Android PDF rendering. Documents are private per signed-in person on the device, can be shared explicitly, and are removed through the prescription screen or account deletion. Kaylo does not sync these documents between devices; device-level backups follow Android settings. First scanner use can require a Google Play services download.
+
+`delete-account` uses the caller's verified database identity, requires a sign-in within 30 minutes, blocks unresolved active bookings, removes account data, then deletes the Firebase identity. Its private retry record is removed after identity deletion succeeds. An identity-removal failure returns a retry instruction; it never reports a completed deletion.
+
+In-app calls use trusted-contact invite codes and audio-only WebRTC. A user can invite up to five contacts who accept inside Kaylo. `care-call` verifies Firebase's RS256 signature, project and expiration before the database checks the caller and selects their contacts. FCM sends simultaneous invitations; these are not proof of delivery or acceptance. Recipients see a banner in the app and join the same call. Keep Kaylo open during calls. Database polling retrieves authenticated call membership and signaling; no voice is recorded.
+
+Deployment status: `email-otp`, `verify-payment`, `delete-account`, and `care-call` deployed. The user explicitly approved the Firebase verification configuration for `care-call`. Missing and forged tokens return HTTP 401; the database also enforces contact and call-membership access.
+
+For reliable calls across mobile networks, configure `CARE_ICE_SERVERS_JSON` with an approved TURN service's ICE servers. It is currently unset; default STUN alone cannot guarantee connectivity. Do not put relay secrets in the APK. Full-screen incoming-call UI and background audio service are not implemented. A real multi-phone call test remains necessary; no live calls or payments were made during verification.
+
+Migration 0014 fixes empty Care connection lists for existing Firebase sessions without a `role` claim. Supabase verifies their Firebase JWT but routes database requests as `anon`. Care policies now use the same verified-subject/person and call-membership checks for both `anon` and `authenticated`. RLS remains enabled. Rolled-back tests in `supabase/tests/care_firebase_access.sql` check contact visibility and signaling for both session roles, and reject unrelated or unsigned access. No Firebase token claims or accounts were changed. See https://supabase.com/docs/guides/auth/third-party/firebase-auth for the role-claim behavior.
+
+SOS offers Kaylo calls and Android SIM calls. The SIM flow supports manual contact entry and Android's phone-number picker, which reads only the selected contact URI without broad address-book permission. Selected details are reviewed before saving to the existing emergency-contact list. Calls proceed one at a time, primary contact first; return to Kaylo after each call to continue the queue. Chrome does not support the native contact picker or SIM calls. Native contact selection and carrier behavior still require an Android device check; no APK was rebuilt for this change.
+
+
+## Booking offers and saved locations
+
+Apply `supabase/migrations/0015_booking_offers.sql` once in the Kaylo project SQL editor before testing live offers. It adds booking subtotal and coupon fields, validates each coupon for the current customer, and saves the discounted amount before Razorpay creates its order. It also preserves Care visit notes and saved location IDs in the primary booking. Existing non-discounted bookings remain compatible.
+
+Apply `supabase/migrations/0016_more_offers.sql` after it. 0016 replaces both offer functions, so the list below is what the live app shows once it has run. If an older migration is ever run again, run the later ones after it in order: 0015 redefines `create_care_checkout` from 0012, and 0016 redefines the offer functions from 0015. All of them are safe to repeat, and `setup_all.sql` holds the whole sequence for a fresh project.
+
+Demo offers, all fixed amounts in rupees:
+
+| Code | Saves | On | Who can use it |
+| --- | --- | --- | --- |
+| FIRST100 | 100 | 499 or more | First booking only |
+| KAYLO150 | 150 | 1,499 or more | Once per account |
+| KAYLO300 | 300 | 2,999 or more | Once per account |
+| WEEKEND100 | 100 | 999 or more | Saturday and Sunday in India, once per account |
+| WEEKDAY50 | 50 | 599 or more | Monday to Friday in India, once per account |
+| HOME80 | 80 | 499 or more | Home services only, once per account |
+| FARM125 | 125 | 999 or more | Farm services only, once per account |
+| CARE60 | 60 | 399 or more | Care bookings only, once per account |
+| NEXT75 | 75 | 799 or more | Scratch reward, after one confirmed booking |
+| THANKS120 | 120 | 999 or more | Scratch reward, after three confirmed bookings |
+
+One code per booking. Cancelled bookings release their coupon. An online checkout that was opened and never paid (a Razorpay order exists, no payment succeeded) does not use up an offer either: it no longer counts as a booking for FIRST100, and if the same code is applied to a newer booking the unpaid one gives it up and goes back to full price, which is what a later payment for it will charge. A pay-after-service booking has no payment row and counts as a real booking. One gap remains: a checkout sheet still open on another device when the code moves can be paid at the old discounted order amount.
+
+Offer wording is translated in the app by code (`offer_copy.dart`), with the database's English as the fallback for a code the installed build does not know; `reason_code` in the response says why an offer is closed. Scratch reveal is a local animation; eligibility and redemption are checked by the database. `supabase/tests/offer_rules.sql` covers the rules above with synthetic accounts and rolls back.
+
+`supabase/migrations/0017_realistic_prices.sql` resets the catalogue to everyday Kerala rates; run it after 0016. These are working estimates, not quoted rates, so adjust them freely. Farm work is priced per unit and the booking screen multiplies it out (ten trees, two hours or one visit to start with):
+
+| Service | Price | Per |
+| --- | --- | --- |
+| Coconut Plucking | 50 | tree |
+| Arecanut Harvesting | 30 | tree |
+| Tree Pruning | 300 | tree |
+| Plot Clearing | 300 | hour |
+| Gardening | 180 | hour |
+| Electrical | 250 | visit |
+| Plumbing, Appliance Repair | 300 | visit |
+| Carpentry | 350 | visit |
+| AC Service | 550 | visit |
+| House Cleaning, Painting | 600 | visit |
+| Medicine Delivery | 40 | delivery |
+| Doctor consultation | 250 to 600 | by speciality |
+| Caregiver | 130 to 150 | hour |
+
+The sample build's catalogue (`mock_home_repository.dart`, `mock_care_repository.dart`) carries the same figures.
+
+The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are synthesised by `apps/customer/tool/make_sounds.py` into `apps/customer/assets/`; nothing is a recording.
+
+`supabase/tests/booking_offers.sql` contains rollback-only SQL checks using synthetic accounts. Run it after the migration; it does not keep test bookings. Customer tests cover eligible amounts, failed-payment retry totals, search relevance, saved-address switching, and booking coordinate handoff.
+
+The worker verification screen displays the existing Kaylo verification status. There are no uploaded qualification documents, verification dates, or independent check records in the current schema; the UI does not invent them.

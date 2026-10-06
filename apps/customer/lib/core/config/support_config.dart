@@ -5,6 +5,6 @@
 class SupportContacts {
   SupportContacts._();
 
-  static const String email = 'support@kaylo.app';
+  static const String email = 'kayloapp@gmail.com';
   static const String repository = 'https://github.com/KayloLabs/kaylo-app';
 }

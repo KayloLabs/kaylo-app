@@ -9,7 +9,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'farm',
       description: 'Professional coconut climbers',
       iconPath: 'assets_kaylo/3d_transparent/icon_coconut.png',
-      basePrice: 1000,
+      basePrice: 50,
       isPopular: true,
     ),
     ServiceItem(
@@ -18,7 +18,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'farm',
       description: 'Expert harvesting',
       iconPath: 'assets_kaylo/3d_transparent/icon_arecanut.png',
-      basePrice: 1200,
+      basePrice: 30,
       isPopular: true,
     ),
     ServiceItem(
@@ -27,7 +27,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Lawn and garden maintenance',
       iconPath: 'assets_kaylo/3d_transparent/icon_garden.png',
-      basePrice: 800,
+      basePrice: 180,
       isPopular: true,
     ),
     ServiceItem(
@@ -36,7 +36,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Expert plumbing services at your doorstep',
       iconPath: 'assets_kaylo/3d_transparent/icon_plumb.png',
-      basePrice: 500,
+      basePrice: 300,
       isPopular: true,
     ),
     ServiceItem(
@@ -45,7 +45,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Electrical repairs, wiring, and installations',
       iconPath: 'assets_kaylo/3d_transparent/icon_electric.png',
-      basePrice: 400,
+      basePrice: 250,
       isPopular: true,
     ),
     ServiceItem(
@@ -72,7 +72,15 @@ class MockHomeRepository implements HomeRepository {
       category: 'care',
       description: 'Trained caregivers for seniors',
       iconPath: 'assets_kaylo/3d_transparent/mode_care.png',
-      basePrice: 700,
+      basePrice: 300,
+    ),
+    ServiceItem(
+      id: 'care-doctor',
+      name: 'Doctor Appointment',
+      category: 'care',
+      description: 'Book a doctor consultation',
+      iconPath: 'assets_kaylo/3d_transparent/mode_care.png',
+      basePrice: 300,
     ),
     ServiceItem(
       id: '9',
@@ -80,7 +88,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'care',
       description: 'Medicines at your doorstep',
       iconPath: 'assets_kaylo/3d_transparent/mode_care.png',
-      basePrice: 100,
+      basePrice: 40,
     ),
     ServiceItem(
       id: '10',
@@ -89,7 +97,7 @@ class MockHomeRepository implements HomeRepository {
       description:
           'Overhanging branches trimmed safely near roofs and power lines',
       iconPath: 'assets_kaylo/3d_transparent/icon_garden.png',
-      basePrice: 600,
+      basePrice: 300,
       estimatedDurationMinutes: 90,
     ),
     ServiceItem(
@@ -98,7 +106,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'farm',
       description: 'Grass and bush cleared with brush cutters',
       iconPath: 'assets_kaylo/3d_transparent/mode_farm.png',
-      basePrice: 350,
+      basePrice: 300,
       estimatedDurationMinutes: 60,
     ),
     ServiceItem(
@@ -107,7 +115,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Furniture repair, assembly, and woodwork',
       iconPath: 'assets_kaylo/3d_transparent/icon_carpentry.png',
-      basePrice: 450,
+      basePrice: 350,
     ),
     ServiceItem(
       id: '13',
@@ -115,7 +123,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Interior and exterior home painting',
       iconPath: 'assets_kaylo/3d_transparent/icon_painting.png',
-      basePrice: 800,
+      basePrice: 600,
     ),
     ServiceItem(
       id: '14',
@@ -123,7 +131,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'AC maintenance, repair, and gas refilling',
       iconPath: 'assets_kaylo/3d_transparent/icon_ac.png',
-      basePrice: 650,
+      basePrice: 550,
     ),
     ServiceItem(
       id: '15',
@@ -131,7 +139,7 @@ class MockHomeRepository implements HomeRepository {
       category: 'home',
       description: 'Washing machine, fridge, and TV repair',
       iconPath: 'assets_kaylo/3d_transparent/icon_appliance.png',
-      basePrice: 500,
+      basePrice: 300,
     ),
   ];
 

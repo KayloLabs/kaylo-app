@@ -8,6 +8,7 @@ import 'package:kaylo/core/router/routes.dart';
 import 'package:kaylo/features/auth/application/session_controller.dart';
 import 'package:kaylo/features/auth/data/mock_auth_repository.dart';
 import 'package:kaylo/features/auth/domain/auth_repository.dart';
+import 'package:kaylo/features/booking/presentation/screens/bookings_screen.dart';
 import 'package:kaylo/features/profile/presentation/screens/profile_screen.dart';
 import 'package:kaylo/features/profile/presentation/screens/settings_screen.dart';
 import 'package:kaylo_core/services/storage_service.dart';
@@ -39,7 +40,13 @@ Future<Widget> _signedInApp(
           ),
         ],
       ),
-      stubRoute(Routes.bookings, 'bookings-stub'),
+      GoRoute(
+        path: Routes.bookings,
+        builder: (_, state) => BookingsScreen(
+          completedOnly: state.uri.queryParameters['status'] == 'completed',
+        ),
+      ),
+      stubRoute(Routes.addresses, 'saved-addresses-screen'),
     ],
     overrides: [
       authRepositoryProvider.overrideWith(
@@ -89,11 +96,54 @@ void main() {
     expect(find.text('Nimal User'), findsNothing);
   });
 
-  testWidgets('settings shows the account and opens the editor',
-      (tester) async {
+  testWidgets('Bookings statistic opens all bookings', (tester) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(await _signedInApp(Routes.profile));
+    await settle(tester);
+
+    await tester.tap(find.text('Bookings'));
+    await settle(tester);
+    expect(find.text('b1'), findsOneWidget);
+    expect(find.text('b2'), findsOneWidget);
+    expect(find.text('b3'), findsOneWidget);
+  });
+
+  testWidgets('Completed statistic excludes upcoming and other statuses', (
+    tester,
+  ) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(await _signedInApp(Routes.profile));
+    await settle(tester);
+
+    await tester.tap(find.text('Completed'));
+    await settle(tester);
+    expect(find.text('b1'), findsOneWidget);
+    expect(find.text('b2'), findsOneWidget);
+    expect(find.text('b3'), findsNothing);
+    expect(find.text('Upcoming'), findsNothing);
+
+    await tester.tap(find.text('All bookings'));
+    await settle(tester);
+    expect(find.text('b3'), findsOneWidget);
+  });
+
+  testWidgets('Saved statistic opens the addresses it counts', (tester) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(await _signedInApp(Routes.profile));
+    await settle(tester);
+
+    await tester.tap(find.text('Saved'));
+    await settle(tester);
+    expect(find.text('saved-addresses-screen'), findsOneWidget);
+  });
+
+  testWidgets('settings shows the account and opens the editor', (
+    tester,
+  ) async {
     useTallPhone(tester);
     await tester.pumpWidget(
-        await _signedInApp('${Routes.profile}/${Routes.settings}'));
+      await _signedInApp('${Routes.profile}/${Routes.settings}'),
+    );
     await settle(tester);
 
     expect(find.text('Nimal User'), findsOneWidget);
@@ -105,16 +155,20 @@ void main() {
   testWidgets('a rename is what the next launch shows', (tester) async {
     useTallPhone(tester);
     late ProviderContainer container;
-    await tester.pumpWidget(await _signedInApp(
-      Routes.profile,
-      onBuild: (context) => container = ProviderScope.containerOf(context),
-    ));
+    await tester.pumpWidget(
+      await _signedInApp(
+        Routes.profile,
+        onBuild: (context) => container = ProviderScope.containerOf(context),
+      ),
+    );
     await settle(tester);
 
     // The mock answers after a delay, so pump instead of awaiting.
-    unawaited(container
-        .read(sessionControllerProvider.notifier)
-        .updateProfile(firstName: 'Reloaded', lastName: 'Name'));
+    unawaited(
+      container
+          .read(sessionControllerProvider.notifier)
+          .updateProfile(firstName: 'Reloaded', lastName: 'Name'),
+    );
     await settle(tester);
     expect(find.text('Reloaded Name'), findsOneWidget);
 
@@ -122,7 +176,8 @@ void main() {
     final prefs = await SharedPreferences.getInstance();
     final again = MockAuthRepository(SharedPreferencesStorageService(prefs));
     await tester.runAsync(
-        () => Future<void>.delayed(const Duration(milliseconds: 50)));
+      () => Future<void>.delayed(const Duration(milliseconds: 50)),
+    );
     expect(again.currentUser?.fullName, 'Reloaded Name');
   });
 }

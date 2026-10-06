@@ -1154,3 +1154,553 @@ alter table email_otps enable row level security;
 -- No policies on purpose: the app never reads or writes codes. The
 -- functions use the service role, which bypasses row-level security.
 revoke all on email_otps from public, anon, authenticated;
+
+-- ============================================================
+-- 0012_care_checkout_and_account_deletion.sql
+-- ============================================================
+-- Care checkout through verified payment, and account deletion.
+-- Safe to run more than once.
+insert into services(service_id,category_id,service_name,description,base_price,estimated_duration_minutes)
+select '20000000-0000-4000-8000-000000000099',category_id,'Doctor Appointment','Book a doctor consultation',500,30
+from service_categories where slug='care'
+on conflict(service_id) do nothing;
+alter table doctor_appointments add column if not exists booking_id uuid unique references bookings(booking_id) on delete cascade;
+alter table caregiver_bookings add column if not exists booking_id uuid unique references bookings(booking_id) on delete cascade;
+alter table doctor_appointments drop constraint if exists doctor_appointments_status_check;
+alter table doctor_appointments add constraint doctor_appointments_status_check check (status in ('pending','confirmed','completed','cancelled'));
+alter table caregiver_bookings drop constraint if exists caregiver_bookings_status_check;
+alter table caregiver_bookings add constraint caregiver_bookings_status_check check (status in ('pending','confirmed','completed','cancelled'));
+
+create or replace function create_care_checkout(p_request_id uuid, p_kind text, p_details jsonb)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id(); bid uuid; sid uuid; fee numeric;
+  d doctors%rowtype; c caregivers%rowtype; scheduled date; slot time; hours int;
+begin
+  if cid is null then raise exception 'Sign in first'; end if;
+  select booking_id into bid from bookings where booking_id=p_request_id and customer_id=cid;
+  if bid is not null then return bid; end if;
+  scheduled := (p_details->>'date')::date;
+  if scheduled < current_date then raise exception 'Choose a future appointment date'; end if;
+  slot := (p_details->>'time')::time;
+  if p_kind='doctor' then
+    select * into strict d from doctors where id=p_details->>'provider_id' and is_active;
+    fee := d.consultation_fee;
+    select service_id into sid from services where lower(service_name) like '%doctor%' limit 1;
+  elsif p_kind='caregiver' then
+    select * into strict c from caregivers where id=p_details->>'provider_id' and is_active;
+    hours := (p_details->>'hours')::int;
+    if hours not between 1 and 24 then raise exception 'Choose valid hours'; end if;
+    fee := c.hourly_rate*hours;
+    select service_id into sid from services where lower(service_name) like '%caregiver%' limit 1;
+  else raise exception 'Unknown care service'; end if;
+  if sid is null then raise exception 'This care service is not available for booking'; end if;
+  if fee is null or fee < 1 then raise exception 'This provider has no payable fee'; end if;
+  insert into bookings(booking_id,customer_id,service_id,booking_date,booking_time,status,estimated_cost,notes)
+    values(p_request_id,cid,sid,scheduled,slot,'pending',fee,case when p_kind='doctor' then d.name else c.name end)
+    returning booking_id into bid;
+  if p_kind='doctor' then
+    insert into doctor_appointments(id,booking_id,customer_id,doctor_id,doctor_name,specialty,hospital,appointment_date,time_slot,consultation_type,status,patient_name,notes)
+    values(bid::text,bid,cid,d.id,d.name,d.specialty,d.hospital,((scheduled+slot) at time zone 'Asia/Kolkata'),p_details->>'time_slot',p_details->>'consultation_type','pending',p_details->>'patient_name',p_details->>'notes');
+  else
+    insert into caregiver_bookings(id,booking_id,customer_id,caregiver_id,caregiver_name,visit_date,start_time,hours,hourly_rate,total_amount,care_type,notes,status)
+    values(bid::text,bid,cid,c.id,c.name,scheduled,p_details->>'time_slot',hours,c.hourly_rate,fee,p_details->>'care_type',p_details->>'notes','pending');
+  end if;
+  return bid;
+end $$;
+revoke all on function create_care_checkout(uuid,text,jsonb) from public;
+grant execute on function create_care_checkout(uuid,text,jsonb) to authenticated;
+
+-- Confirmation follows the same verified payment, including retried callbacks.
+create or replace function confirm_paid_care_booking()
+returns trigger language plpgsql security definer set search_path=public as $$
+begin
+  if new.payment_status='success' then
+    update bookings set status='confirmed' where booking_id=new.booking_id and status='pending';
+    update doctor_appointments set status='confirmed' where booking_id=new.booking_id and status='pending';
+    update caregiver_bookings set status='confirmed' where booking_id=new.booking_id and status='pending';
+  end if;
+  return new;
+end $$;
+drop trigger if exists confirm_paid_care_booking on payments;
+create trigger confirm_paid_care_booking after insert or update of payment_status on payments for each row execute function confirm_paid_care_booking();
+create or replace function sync_care_booking_status()
+returns trigger language plpgsql security definer set search_path=public as $$
+begin
+  if new.status in ('cancelled','completed') then
+    update doctor_appointments set status=new.status::text where booking_id=new.booking_id;
+    update caregiver_bookings set status=new.status::text where booking_id=new.booking_id;
+  end if;
+  return new;
+end $$;
+drop trigger if exists sync_care_booking_status on bookings;
+create trigger sync_care_booking_status after update of status on bookings for each row execute function sync_care_booking_status();
+
+-- Private retry journal. No customer can inspect another deletion request.
+create table if not exists account_deletion_requests (
+  auth_subject text primary key, requested_at timestamptz not null default now(),
+  auth_deleted_at timestamptz
+);
+alter table account_deletion_requests enable row level security;
+create or replace function delete_current_kaylo_account()
+returns text language plpgsql security definer set search_path=public as $$
+declare uid text:=current_auth_subject(); pid uuid:=current_person_id();
+begin
+  if uid is null then raise exception 'Sign in first'; end if;
+  if coalesce((auth.jwt()->>'auth_time')::bigint,0) < extract(epoch from now()-interval '30 minutes') then
+    raise exception 'Please sign out and sign in again before deleting your account';
+  end if;
+  if exists(select 1 from bookings b where (b.customer_id=current_customer_id() or b.worker_id=current_worker_id()) and (b.status in ('confirmed','in_progress') or (b.status='pending' and exists(select 1 from payments p where p.booking_id=b.booking_id and p.payment_status='success')))) then
+    raise exception 'Complete or cancel active bookings before deleting your account. Contact kayloapp@gmail.com for unresolved payments.';
+  end if;
+  insert into account_deletion_requests(auth_subject) values(uid) on conflict do nothing;
+  delete from email_otps where email in (select email from persons where person_id=pid);
+  delete from persons where person_id=pid;
+  return uid;
+end $$;
+revoke all on function delete_current_kaylo_account() from public;
+grant execute on function delete_current_kaylo_account() to authenticated;
+
+-- ============================================================
+-- 0013_care_group_calls.sql
+-- ============================================================
+-- Trusted contacts and in-app SOS group calls.
+-- Safe to run more than once.
+create table if not exists care_invite_codes (
+  owner_id uuid primary key references persons(person_id) on delete cascade,
+  code text not null unique default replace(gen_random_uuid()::text,'-',''),
+  expires_at timestamptz not null default now()+interval '7 days'
+);
+create table if not exists care_connections (
+  id uuid primary key default gen_random_uuid(),
+  owner_id uuid not null references persons(person_id) on delete cascade,
+  contact_id uuid not null references persons(person_id) on delete cascade,
+  owner_name text not null, contact_name text not null,
+  unique(owner_id,contact_id), check(owner_id<>contact_id)
+);
+create table if not exists care_calls (
+  id uuid primary key default gen_random_uuid(), owner_id uuid not null references persons(person_id) on delete cascade,
+  created_at timestamptz not null default now(), expires_at timestamptz not null default now()+interval '30 minutes', ended_at timestamptz
+);
+create table if not exists care_call_members (
+  call_id uuid not null references care_calls(id) on delete cascade,
+  person_id uuid not null references persons(person_id) on delete cascade,
+  name text not null, status text not null default 'invited' check(status in ('invited','joined','declined','left')),
+  primary key(call_id,person_id)
+);
+create table if not exists care_call_signals (
+  id bigint generated always as identity primary key,
+  call_id uuid not null references care_calls(id) on delete cascade,
+  sender_id uuid not null references persons(person_id) on delete cascade,
+  target_id uuid not null references persons(person_id) on delete cascade,
+  payload jsonb not null check(octet_length(payload::text)<65536),
+  created_at timestamptz not null default now()
+);
+create index if not exists care_call_signals_recipient on care_call_signals(call_id,target_id,id);
+create or replace function is_care_call_member(cid uuid) returns boolean language sql stable security definer set search_path=public as $$
+ select exists(select 1 from care_call_members where call_id=cid and person_id=current_person_id());
+$$;
+create or replace function active_care_call_member(cid uuid,pid uuid) returns boolean language sql stable security definer set search_path=public as $$
+ select exists(select 1 from care_call_members m join care_calls c on c.id=m.call_id where m.call_id=cid and m.person_id=pid and m.status='joined' and c.ended_at is null and c.expires_at>now());
+$$;
+alter table care_invite_codes enable row level security;
+alter table care_connections enable row level security;
+alter table care_calls enable row level security;
+alter table care_call_members enable row level security;
+alter table care_call_signals enable row level security;
+-- Created only when missing, so a second run keeps the roles 0014 widened.
+do $$ begin
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_invite_codes' and policyname='own_invite') then
+    create policy own_invite on care_invite_codes for select to authenticated using(owner_id=current_person_id());
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_connections' and policyname='own_connection') then
+    create policy own_connection on care_connections for select to authenticated using(owner_id=current_person_id() or contact_id=current_person_id());
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_connections' and policyname='remove_connection') then
+    create policy remove_connection on care_connections for delete to authenticated using(owner_id=current_person_id() or contact_id=current_person_id());
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_calls' and policyname='member_calls') then
+    create policy member_calls on care_calls for select to authenticated using(is_care_call_member(id));
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_call_members' and policyname='member_list') then
+    create policy member_list on care_call_members for select to authenticated using(is_care_call_member(call_id));
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_call_signals' and policyname='read_call_signal') then
+    create policy read_call_signal on care_call_signals for select to authenticated using(target_id=current_person_id() and is_care_call_member(call_id));
+  end if;
+  if not exists (select 1 from pg_policies where schemaname='public' and tablename='care_call_signals' and policyname='send_call_signal') then
+    create policy send_call_signal on care_call_signals for insert to authenticated with check(sender_id=current_person_id() and active_care_call_member(call_id,sender_id) and active_care_call_member(call_id,target_id));
+  end if;
+end $$;
+
+create or replace function care_invite_code() returns text language plpgsql security definer set search_path=public as $$
+declare pid uuid:=current_person_id(); result text;
+begin
+ if pid is null then raise exception 'Sign in first'; end if;
+ insert into care_invite_codes(owner_id) values(pid) on conflict(owner_id) do update set code=case when care_invite_codes.expires_at<now() then replace(gen_random_uuid()::text,'-','') else care_invite_codes.code end, expires_at=now()+interval '7 days' returning code into result;
+ return result;
+end $$;
+create or replace function accept_care_invite(p_code text) returns void language plpgsql security definer set search_path=public as $$
+declare pid uuid:=current_person_id(); owner uuid;
+begin
+ if pid is null then raise exception 'Sign in first'; end if;
+ select owner_id into owner from care_invite_codes where code=lower(trim(p_code)) and expires_at>now();
+ if owner is null or owner=pid then raise exception 'This invite is invalid or belongs to you'; end if;
+ perform 1 from persons where person_id=owner for update;
+ if (select count(*) from care_connections where owner_id=owner)>=5 then raise exception 'This person already has five trusted contacts'; end if;
+ insert into care_connections(owner_id,contact_id,owner_name,contact_name)
+ select owner,pid,(select full_name from persons where person_id=owner),(select full_name from persons where person_id=pid)
+ on conflict(owner_id,contact_id) do nothing;
+end $$;
+create or replace function start_care_call() returns uuid language plpgsql security definer set search_path=public as $$
+declare pid uuid:=current_person_id(); cid uuid;
+begin
+ if pid is null then raise exception 'Sign in first'; end if;
+ perform 1 from persons where person_id=pid for update;
+ if not exists(select 1 from care_connections where owner_id=pid) then raise exception 'Add trusted contacts in Kaylo Care first'; end if;
+ select id into cid from care_calls where owner_id=pid and ended_at is null and expires_at>now() order by created_at desc limit 1;
+ if cid is not null then return cid; end if;
+ insert into care_calls(owner_id) values(pid) returning id into cid;
+ insert into care_call_members(call_id,person_id,name,status) select cid,pid,full_name,'joined' from persons where person_id=pid;
+ insert into care_call_members(call_id,person_id,name) select cid,contact_id,contact_name from care_connections where owner_id=pid;
+ delete from care_call_signals where created_at<now()-interval '1 day';
+ return cid;
+end $$;
+create or replace function respond_care_call(p_call_id uuid,p_action text) returns void language plpgsql security definer set search_path=public as $$
+declare pid uuid:=current_person_id(); owner uuid;
+begin
+ select owner_id into owner from care_calls where id=p_call_id and ended_at is null and expires_at>now();
+ if owner is null or not is_care_call_member(p_call_id) then raise exception 'This call has ended'; end if;
+ if p_action='end' and pid=owner then
+   update care_calls set ended_at=now() where id=p_call_id;
+   update care_call_members set status='left' where call_id=p_call_id and status in ('invited','joined');
+ elsif p_action in ('joined','declined','left') then
+   update care_call_members set status=p_action where call_id=p_call_id and person_id=pid;
+ else raise exception 'Invalid call response'; end if;
+end $$;
+revoke all on function care_invite_code(),accept_care_invite(text),start_care_call(),respond_care_call(uuid,text) from public;
+grant execute on function care_invite_code(),accept_care_invite(text),start_care_call(),respond_care_call(uuid,text) to authenticated;
+
+-- ============================================================
+-- 0014_care_firebase_session_access.sql
+-- ============================================================
+-- Existing Firebase sessions have a verified subject but no Postgres role
+-- claim, so Supabase routes them as anon. Match the person-scoped policies
+-- used by Kaylo's other tables; the subject is still verified by the gateway.
+-- An unsigned/public request has no person id and cannot match these rules.
+alter policy own_invite on care_invite_codes to anon, authenticated;
+alter policy own_connection on care_connections to anon, authenticated;
+alter policy remove_connection on care_connections to anon, authenticated;
+alter policy member_calls on care_calls to anon, authenticated;
+alter policy member_list on care_call_members to anon, authenticated;
+alter policy read_call_signal on care_call_signals to anon, authenticated;
+alter policy send_call_signal on care_call_signals to anon, authenticated;
+
+-- ============================================================
+-- 0015_booking_offers.sql
+-- ============================================================
+-- Demo offers approved for Kaylo. Payment orders already read estimated_cost.
+alter table bookings add column if not exists subtotal_amount numeric(10,2);
+alter table bookings add column if not exists discount_amount numeric(10,2) not null default 0;
+alter table bookings add column if not exists offer_code text;
+
+create or replace function kaylo_available_offers(p_exclude_booking uuid default null)
+returns jsonb language plpgsql stable security definer set search_path=public as $$
+declare
+  cid uuid := current_customer_id(); first_ok boolean; reward_ok boolean;
+  big_used boolean; weekend_used boolean; reward_used boolean; weekend boolean;
+begin
+  if cid is null then raise exception 'Sign in to see your offers'; end if;
+  select not exists(select 1 from bookings where customer_id=cid and status<>'cancelled'
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking)) into first_ok;
+  select exists(select 1 from bookings where customer_id=cid and status in ('confirmed','in_progress','completed')
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking)) into reward_ok;
+  select coalesce(bool_or(offer_code='KAYLO150'),false),
+         coalesce(bool_or(offer_code='WEEKEND100'),false), coalesce(bool_or(offer_code='NEXT75'),false)
+    into big_used,weekend_used,reward_used
+    from bookings where customer_id=cid and status<>'cancelled'
+    and (p_exclude_booking is null or booking_id<>p_exclude_booking);
+  weekend := extract(isodow from now() at time zone 'Asia/Kolkata') in (6,7);
+  return jsonb_build_array(
+    jsonb_build_object('code','FIRST100','title','Your first one is special',
+      'description','₹100 off your first booking of ₹499 or more.',
+      'discount',100,'minimum',499,'eligible',first_ok,'scratch',false,
+      'reason',case when not first_ok then 'For your first booking only' end),
+    jsonb_build_object('code','KAYLO150','title','A little help with bigger jobs',
+      'description','₹150 off a booking of ₹1,499 or more. Once per account.',
+      'discount',150,'minimum',1499,'eligible',not big_used,'scratch',false,
+      'reason',case when big_used then 'Already used' end),
+    jsonb_build_object('code','WEEKEND100','title','A weekend well spent',
+      'description','₹100 off ₹999 or more on Saturdays and Sundays. Once per account.',
+      'discount',100,'minimum',999,'eligible',weekend and not weekend_used,'scratch',false,
+      'reason',case when weekend_used then 'Already used' when not weekend then 'Available on weekends' end),
+    jsonb_build_object('code','NEXT75','title','Something for next time',
+      'description','₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.',
+      'discount',75,'minimum',799,'eligible',reward_ok and not reward_used,'scratch',true,
+      'reason',case when reward_used then 'Reward used' when not reward_ok then 'Unlocks after your first confirmed booking' end)
+  );
+end $$;
+
+create or replace function kaylo_apply_booking_offer(p_booking_id uuid,p_code text)
+returns jsonb language plpgsql security definer set search_path=public as $$
+declare cid uuid:=current_customer_id(); b bookings%rowtype; offer jsonb; base numeric; amount numeric;
+begin
+  if cid is null then raise exception 'Sign in to apply an offer'; end if;
+  -- One customer cannot redeem the same offer on simultaneous checkouts.
+  perform 1 from customers where customer_id=cid for update;
+  select * into b from bookings where booking_id=p_booking_id and customer_id=cid for update;
+  if not found then raise exception 'Booking not found'; end if;
+  p_code:=upper(trim(p_code));
+  if b.status='cancelled' then raise exception 'This booking was cancelled'; end if;
+  if b.offer_code=p_code and b.discount_amount>0 then return to_jsonb(b); end if;
+  if b.status<>'pending' or exists(select 1 from payments where booking_id=b.booking_id and payment_status in ('pending','success')) then
+    raise exception 'This checkout has already started. Keep its current offer or start a new booking.';
+  end if;
+  select value into offer from jsonb_array_elements(kaylo_available_offers(b.booking_id)) where value->>'code'=p_code;
+  if offer is null then raise exception 'That coupon code is not available'; end if;
+  if not (offer->>'eligible')::boolean then raise exception '%',offer->>'reason'; end if;
+  base:=coalesce(b.subtotal_amount,b.estimated_cost);
+  amount:=(offer->>'discount')::numeric;
+  if base is null or base<(offer->>'minimum')::numeric or base<=amount then raise exception 'The booking does not meet this offer’s minimum amount'; end if;
+  update bookings set subtotal_amount=base,discount_amount=amount,offer_code=p_code,estimated_cost=base-amount
+    where booking_id=b.booking_id returning * into b;
+  update caregiver_bookings set total_amount=b.estimated_cost where booking_id=b.booking_id;
+  return to_jsonb(b);
+end $$;
+
+revoke all on function kaylo_available_offers(uuid) from public;
+revoke all on function kaylo_apply_booking_offer(uuid,text) from public;
+-- Firebase sessions may use anon; functions still require a verified customer's ID.
+grant execute on function kaylo_available_offers(uuid) to anon,authenticated;
+grant execute on function kaylo_apply_booking_offer(uuid,text) to anon,authenticated;
+-- Preserve chosen addresses and map pins in the primary Care booking too.
+create or replace function create_care_checkout(p_request_id uuid, p_kind text, p_details jsonb)
+returns uuid language plpgsql security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id(); bid uuid; sid uuid; fee numeric;
+  d doctors%rowtype; c caregivers%rowtype; scheduled date; slot time; hours int; chosen_location uuid;
+begin
+  if cid is null then raise exception 'Sign in first'; end if;
+  select booking_id into bid from bookings where booking_id=p_request_id and customer_id=cid;
+  if bid is not null then return bid; end if;
+  chosen_location := nullif(p_details->>'location_id','')::uuid;
+  if chosen_location is not null and not exists(select 1 from locations where location_id=chosen_location and person_id=current_person_id()) then
+    raise exception 'Choose an address saved to your account';
+  end if;
+  scheduled := (p_details->>'date')::date;
+  if scheduled < current_date then raise exception 'Choose a future appointment date'; end if;
+  slot := (p_details->>'time')::time;
+  if p_kind='doctor' then
+    select * into strict d from doctors where id=p_details->>'provider_id' and is_active;
+    fee := d.consultation_fee;
+    select service_id into sid from services where lower(service_name) like '%doctor%' limit 1;
+  elsif p_kind='caregiver' then
+    select * into strict c from caregivers where id=p_details->>'provider_id' and is_active;
+    hours := (p_details->>'hours')::int;
+    if hours not between 1 and 24 then raise exception 'Choose valid hours'; end if;
+    fee := c.hourly_rate*hours;
+    select service_id into sid from services where lower(service_name) like '%caregiver%' limit 1;
+  else raise exception 'Unknown care service'; end if;
+  if sid is null then raise exception 'This care service is not available for booking'; end if;
+  if fee is null or fee < 1 then raise exception 'This provider has no payable fee'; end if;
+  insert into bookings(booking_id,customer_id,service_id,booking_date,booking_time,status,estimated_cost,notes,location_id)
+    values(p_request_id,cid,sid,scheduled,slot,'pending',fee,concat_ws(E'\n',case when p_kind='doctor' then d.name else c.name end,nullif(p_details->>'notes','')),chosen_location)
+    returning booking_id into bid;
+  if p_kind='doctor' then
+    insert into doctor_appointments(id,booking_id,customer_id,doctor_id,doctor_name,specialty,hospital,appointment_date,time_slot,consultation_type,status,patient_name,notes)
+    values(bid::text,bid,cid,d.id,d.name,d.specialty,d.hospital,((scheduled+slot) at time zone 'Asia/Kolkata'),p_details->>'time_slot',p_details->>'consultation_type','pending',p_details->>'patient_name',p_details->>'notes');
+  else
+    insert into caregiver_bookings(id,booking_id,customer_id,caregiver_id,caregiver_name,visit_date,start_time,hours,hourly_rate,total_amount,care_type,notes,status)
+    values(bid::text,bid,cid,c.id,c.name,scheduled,p_details->>'time_slot',hours,c.hourly_rate,fee,p_details->>'care_type',p_details->>'notes','pending');
+  end if;
+  return bid;
+end $$;
+
+revoke all on function create_care_checkout(uuid,text,jsonb) from public;
+grant execute on function create_care_checkout(uuid,text,jsonb) to anon,authenticated;
+notify pgrst,'reload schema';
+
+-- ============================================================
+-- 0016_more_offers.sql
+-- ============================================================
+-- More offers, offers tied to one kind of service, and online checkouts
+-- that were opened but never paid no longer using up an offer.
+-- Replaces the two offer functions from 0015. Safe to run more than once;
+-- when re-applying older files, run this one after them.
+
+-- An online checkout that was opened and never paid: a Razorpay order
+-- exists for the booking, no payment succeeded. A pay-after-service
+-- booking has no payment row at all, so it still counts as a booking.
+create or replace function kaylo_unpaid_checkout(p_booking_id uuid, p_status booking_status)
+returns boolean language sql stable security definer set search_path = public as $$
+  select p_status = 'pending'
+    and exists(select 1 from payments where booking_id = p_booking_id and payment_method like 'razorpay%')
+    and not exists(select 1 from payments where booking_id = p_booking_id and payment_status = 'success');
+$$;
+-- Internal: only the offer functions below call it.
+revoke all on function kaylo_unpaid_checkout(uuid, booking_status) from public, anon, authenticated;
+
+-- Every offer with whether this customer can use it. `reason_code` lets the
+-- app explain in the customer's language; `reason` is the English fallback.
+-- `category` is a service_categories slug, or null for any booking.
+create or replace function kaylo_available_offers(p_exclude_booking uuid default null)
+returns jsonb language plpgsql stable security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id();
+  rs text := chr(8377); -- the rupee sign, kept out of the source text
+  booked int; settled int; used text[]; dow int;
+begin
+  if cid is null then raise exception 'Sign in to see your offers'; end if;
+  select count(*),
+         count(*) filter (where b.status in ('confirmed', 'in_progress', 'completed')),
+         coalesce(array_agg(b.offer_code) filter (where b.offer_code is not null), '{}')
+    into booked, settled, used
+    from bookings b
+   where b.customer_id = cid and b.status <> 'cancelled'
+     and (p_exclude_booking is null or b.booking_id <> p_exclude_booking)
+     and not kaylo_unpaid_checkout(b.booking_id, b.status);
+  dow := extract(isodow from now() at time zone 'Asia/Kolkata');
+  return (
+    select jsonb_agg(jsonb_build_object(
+        'code', o.code, 'title', o.title, 'description', o.description,
+        'discount', o.discount, 'minimum', o.minimum, 'category', o.category,
+        'scratch', o.scratch, 'eligible', o.why is null, 'reason_code', o.why,
+        'reason', case o.why
+          when 'first_only' then 'For your first booking only'
+          when 'used' then 'Already used'
+          when 'reward_used' then 'Reward used'
+          when 'weekend_only' then 'Available on weekends'
+          when 'weekday_only' then 'Available Monday to Friday'
+          when 'needs_confirmed' then 'Unlocks after your first confirmed booking'
+          when 'needs_three' then 'Unlocks after three confirmed bookings'
+        end) order by o.pos)
+    from (values
+      (1, 'FIRST100', 'Your first one is special',
+        rs || '100 off your first booking of ' || rs || '499 or more.',
+        100, 499, null::text, false,
+        case when booked > 0 then 'first_only' end),
+      (2, 'KAYLO150', 'A little help with bigger jobs',
+        rs || '150 off a booking of ' || rs || '1,499 or more. Once per account.',
+        150, 1499, null, false,
+        case when 'KAYLO150' = any(used) then 'used' end),
+      (3, 'WEEKEND100', 'A weekend well spent',
+        rs || '100 off ' || rs || '999 or more on Saturdays and Sundays. Once per account.',
+        100, 999, null, false,
+        case when 'WEEKEND100' = any(used) then 'used' when dow not in (6, 7) then 'weekend_only' end),
+      (4, 'WEEKDAY50', 'A midweek lift',
+        rs || '50 off ' || rs || '599 or more, Monday to Friday. Once per account.',
+        50, 599, null, false,
+        case when 'WEEKDAY50' = any(used) then 'used' when dow in (6, 7) then 'weekday_only' end),
+      (5, 'HOME80', 'Home, sorted',
+        rs || '80 off a home service of ' || rs || '499 or more. Once per account.',
+        80, 499, 'home', false,
+        case when 'HOME80' = any(used) then 'used' end),
+      (6, 'FARM125', 'For the land that feeds us',
+        rs || '125 off a farm service of ' || rs || '999 or more. Once per account.',
+        125, 999, 'farm', false,
+        case when 'FARM125' = any(used) then 'used' end),
+      (7, 'CARE60', 'Care, made a little lighter',
+        rs || '60 off a Care booking of ' || rs || '399 or more. Once per account.',
+        60, 399, 'care', false,
+        case when 'CARE60' = any(used) then 'used' end),
+      (8, 'KAYLO300', 'For the really big days',
+        rs || '300 off a booking of ' || rs || '2,999 or more. Once per account.',
+        300, 2999, null, false,
+        case when 'KAYLO300' = any(used) then 'used' end),
+      (9, 'NEXT75', 'Something for next time',
+        rs || '75 off your next booking of ' || rs || '799 or more. Unlocks after a confirmed booking.',
+        75, 799, null, true,
+        case when 'NEXT75' = any(used) then 'reward_used' when settled < 1 then 'needs_confirmed' end),
+      (10, 'THANKS120', 'Three bookings in. Thank you.',
+        rs || '120 off a booking of ' || rs || '999 or more. Unlocks after three confirmed bookings.',
+        120, 999, null, true,
+        case when 'THANKS120' = any(used) then 'reward_used' when settled < 3 then 'needs_three' end)
+    ) as o(pos, code, title, description, discount, minimum, category, scratch, why)
+  );
+end $$;
+
+create or replace function kaylo_apply_booking_offer(p_booking_id uuid, p_code text)
+returns jsonb language plpgsql security definer set search_path = public as $$
+declare
+  cid uuid := current_customer_id(); b bookings%rowtype; offer jsonb;
+  base numeric; amount numeric; kind text;
+begin
+  if cid is null then raise exception 'Sign in to apply an offer'; end if;
+  -- One customer cannot redeem the same offer on simultaneous checkouts.
+  perform 1 from customers where customer_id = cid for update;
+  select * into b from bookings where booking_id = p_booking_id and customer_id = cid for update;
+  if not found then raise exception 'Booking not found'; end if;
+  p_code := upper(trim(p_code));
+  if b.status = 'cancelled' then raise exception 'This booking was cancelled'; end if;
+  if b.offer_code = p_code and b.discount_amount > 0 then return to_jsonb(b); end if;
+  if b.status <> 'pending' or exists(select 1 from payments where booking_id = b.booking_id and payment_status in ('pending', 'success')) then
+    raise exception 'This checkout has already started. Keep its current offer or start a new booking.';
+  end if;
+  select value into offer from jsonb_array_elements(kaylo_available_offers(b.booking_id)) where value->>'code' = p_code;
+  if offer is null then raise exception 'That coupon code is not available'; end if;
+  if not (offer->>'eligible')::boolean then raise exception '%', offer->>'reason'; end if;
+  if offer->>'category' is not null then
+    select c.slug into kind from services s join service_categories c on c.category_id = s.category_id
+     where s.service_id = b.service_id;
+    if kind is distinct from offer->>'category' then
+      raise exception 'This offer is for % bookings only', offer->>'category';
+    end if;
+  end if;
+  base := coalesce(b.subtotal_amount, b.estimated_cost);
+  amount := (offer->>'discount')::numeric;
+  if base is null or base < (offer->>'minimum')::numeric or base <= amount then
+    raise exception 'The booking does not meet the minimum amount for this offer';
+  end if;
+  -- The same code may still sit on a checkout this customer opened and never
+  -- paid. That booking gives it up here, so it cannot be paid later at the
+  -- discount: a new payment order always reads the current total.
+  with released as (
+    update bookings o
+       set estimated_cost = coalesce(o.subtotal_amount, o.estimated_cost), discount_amount = 0, offer_code = null
+     where o.customer_id = cid and o.booking_id <> b.booking_id and o.offer_code = p_code
+       and kaylo_unpaid_checkout(o.booking_id, o.status)
+    returning o.booking_id, o.estimated_cost)
+  update caregiver_bookings c set total_amount = r.estimated_cost from released r where c.booking_id = r.booking_id;
+  update bookings set subtotal_amount = base, discount_amount = amount, offer_code = p_code, estimated_cost = base - amount
+    where booking_id = b.booking_id returning * into b;
+  update caregiver_bookings set total_amount = b.estimated_cost where booking_id = b.booking_id;
+  return to_jsonb(b);
+end $$;
+
+revoke all on function kaylo_available_offers(uuid) from public;
+revoke all on function kaylo_apply_booking_offer(uuid, text) from public;
+-- Firebase sessions may use anon; both functions still require a verified customer.
+grant execute on function kaylo_available_offers(uuid) to anon, authenticated;
+grant execute on function kaylo_apply_booking_offer(uuid, text) to anon, authenticated;
+notify pgrst, 'reload schema';
+
+-- ============================================================
+-- 0017_realistic_prices.sql
+-- ============================================================
+-- Prices a customer in Kerala would recognise. Farm work is booked per
+-- tree or per hour, so the earlier figures (1,000 for one coconut tree)
+-- made an ordinary booking cost many times what it should. Existing
+-- bookings keep the amount they were made at. Safe to run more than once.
+
+-- Per tree: coconut, arecanut, pruning. Per hour: plot clearing, gardening.
+-- Everything else is one visit.
+update services s set base_price = v.price
+  from (values
+    ('Coconut Plucking', 50), ('Arecanut Harvesting', 30), ('Tree Pruning', 300),
+    ('Plot Clearing', 300), ('Gardening', 180),
+    ('Electrical', 250), ('Plumbing', 300), ('Appliance Repair', 300), ('Carpentry', 350),
+    ('AC Service', 550), ('House Cleaning', 600), ('Painting', 600),
+    ('Medicine Delivery', 40), ('Doctor Appointment', 300), ('Caregiver Visit', 300)
+  ) as v(name, price)
+ where s.service_name = v.name;
+
+-- A consultation, by speciality.
+update doctors d set consultation_fee = v.fee
+  from (values ('doc1', 300), ('doc2', 600), ('doc3', 500), ('doc4', 400), ('doc5', 250)) as v(id, fee)
+ where d.id = v.id;
+
+-- A caregiver, per hour.
+update caregivers c set hourly_rate = v.rate
+  from (values ('cg1', 150), ('cg2', 150), ('cg3', 130)) as v(id, rate)
+ where c.id = v.id;
+

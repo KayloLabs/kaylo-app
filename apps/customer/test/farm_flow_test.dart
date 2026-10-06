@@ -80,15 +80,15 @@ void main() {
     );
     await settle(tester);
 
-    // 10 trees x 1000 to start with.
-    expect(find.text('₹10,000'), findsWidgets);
-    expect(find.text('₹1,000 × 10 trees'), findsOneWidget);
+    // 10 trees x 50 to start with.
+    expect(find.text('₹500'), findsWidgets);
+    expect(find.text('₹50 × 10 trees'), findsOneWidget);
 
     await tester.tap(find.byIcon(Icons.add_rounded));
     await tester.pump();
 
-    expect(find.text('₹11,000'), findsWidgets);
-    expect(find.text('₹1,000 × 11 trees'), findsOneWidget);
+    expect(find.text('₹550'), findsWidgets);
+    expect(find.text('₹50 × 11 trees'), findsOneWidget);
   });
 
   testWidgets('address is required before payment', (tester) async {
@@ -134,7 +134,7 @@ void main() {
     expect(find.text('Order summary'), findsOneWidget);
     expect(find.text('Thekkedath House'), findsOneWidget);
 
-    await tester.tap(find.text('Confirm and pay ₹10,000'));
+    await tester.tap(find.text('Confirm and pay ₹500'));
     await settle(tester);
 
     expect(find.text('Booking confirmed'), findsOneWidget);

@@ -1,3 +1,6 @@
+import 'dart:async';
+import 'features/booking/application/bookings_providers.dart';
+import 'features/notifications/application/notifications_providers.dart';
 import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -14,8 +17,12 @@ import 'core/providers/care_mode_provider.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/providers/theme_mode_provider.dart';
 import 'features/notifications/application/push_registration.dart';
+import 'features/notifications/application/booking_reminders.dart';
+import 'features/auth/application/current_user_provider.dart';
+import 'core/router/routes.dart';
 import 'firebase_options.dart';
 import 'package:kaylo_core/services/storage_service.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_theme.dart';
 
 void main() async {
@@ -49,6 +56,8 @@ void main() async {
   }
 
   final prefs = await SharedPreferences.getInstance();
+  KayloFeedback.hapticsEnabled = prefs.getBool('haptics_enabled') ?? true;
+  KayloFeedback.soundsEnabled = prefs.getBool('sounds_enabled') ?? true;
 
   runApp(
     ProviderScope(
@@ -64,13 +73,66 @@ void main() async {
   );
 }
 
-class KayloApp extends ConsumerWidget {
+class KayloApp extends ConsumerStatefulWidget {
   const KayloApp({super.key});
+  @override
+  ConsumerState<KayloApp> createState() => _KayloAppState();
+}
+
+class _KayloAppState extends ConsumerState<KayloApp>
+    with WidgetsBindingObserver {
+  Timer? _refresh;
+  (String, String)? _pendingNotification;
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+    _refresh = Timer.periodic(const Duration(minutes: 1), (_) {
+      if (WidgetsBinding.instance.lifecycleState == AppLifecycleState.resumed) {
+        _refreshBookings();
+      }
+    });
+  }
+
+  void _refreshBookings() {
+    if (ref.read(currentUserIdProvider) == null) return;
+    ref.invalidate(userBookingsProvider);
+    ref.invalidate(notificationsProvider);
+  }
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) _refreshBookings();
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    _refresh?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final router = ref.watch(goRouterProvider);
     ref.watch(pushRegistrationProvider);
+    ref.read(bookingRemindersProvider).onOpen = (userId, bookingId) {
+      _pendingNotification = (userId, bookingId);
+      if (ref.read(currentUserIdProvider) == userId) {
+        _pendingNotification = null;
+        router.go(Routes.bookingDetails(bookingId));
+      }
+    };
+    ref.listen(currentUserIdProvider, (_, userId) {
+      final pending = _pendingNotification;
+      if (pending != null && pending.$1 == userId) {
+        _pendingNotification = null;
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (mounted) router.go(Routes.bookingDetails(pending.$2));
+        });
+      }
+    });
+    ref.watch(bookingReminderSyncProvider);
     // Care Mode overrides the whole app with the senior-friendly shell:
     // careTheme is deliberately always-light for maximum legibility.
     final careMode = ref.watch(careModeProvider);

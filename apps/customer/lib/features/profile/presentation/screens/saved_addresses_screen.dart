@@ -17,6 +17,17 @@ import '../../../../core/widgets/use_my_location_button.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/addresses_providers.dart';
 import '../../domain/saved_address.dart';
+import '../../../home/application/user_location_provider.dart';
+import '../../../home/presentation/widgets/location_picker_sheet.dart';
+
+Future<SavedAddress?> showAddAddressSheet(BuildContext context) =>
+    showModalBottomSheet<SavedAddress>(
+      context: context,
+      useRootNavigator: true,
+      isScrollControlled: true,
+      useSafeArea: true,
+      builder: (_) => const _AddAddressSheet(),
+    );
 
 class SavedAddressesScreen extends ConsumerWidget {
   const SavedAddressesScreen({super.key});
@@ -67,13 +78,7 @@ class SavedAddressesScreen extends ConsumerWidget {
           icon: Icons.add_location_alt_rounded,
           onPressed: () {
             KayloFeedback.tap();
-            showModalBottomSheet<void>(
-              context: context,
-              useRootNavigator: true,
-              isScrollControlled: true,
-              useSafeArea: true,
-              builder: (_) => const _AddAddressSheet(),
-            );
+            showAddAddressSheet(context);
           },
         ),
       ),
@@ -243,12 +248,12 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
     }
     setState(() => _saving = true);
     try {
-      await ref
+      final saved = await ref
           .read(addressesControllerProvider)
           .add(label: label, line: line, latitude: _lat, longitude: _lng);
       if (!mounted) return;
       KayloFeedback.press();
-      Navigator.of(context).pop();
+      Navigator.of(context).pop(saved);
       KayloSnackbar.showSuccess(context, l10n.addressSaved);
     } catch (_) {
       if (mounted) {
@@ -318,12 +323,39 @@ class _AddAddressSheetState extends ConsumerState<_AddAddressSheet> {
               label: l10n.addressLine,
               hintText: l10n.farmAddressHint,
               controller: _line,
+              onChanged: (_) => setState(() {
+                _lat = null;
+                _lng = null;
+              }),
               prefixIcon: const Icon(Icons.pin_drop_rounded),
             ),
             const SizedBox(height: AppSpacing.s),
-            Align(
-              alignment: Alignment.centerLeft,
-              child: UseMyLocationButton(onResolved: _applyLocation),
+            Wrap(
+              spacing: AppSpacing.s,
+              children: [
+                UseMyLocationButton(onResolved: _applyLocation),
+                ActionChip(
+                  avatar: const Icon(Icons.map_outlined, size: 18),
+                  label: Text(l10n.selectOnMap),
+                  onPressed: () async {
+                    final selected = await showMapLocationPickerSheet(
+                      context,
+                      initialLocation: UserLocation(
+                        label: _label,
+                        addressLine: _line.text,
+                        latitude: _lat,
+                        longitude: _lng,
+                      ),
+                    );
+                    if (selected == null || !mounted) return;
+                    setState(() {
+                      _line.text = selected.fullAddress;
+                      _lat = selected.latitude;
+                      _lng = selected.longitude;
+                    });
+                  },
+                ),
+              ],
             ),
             const SizedBox(height: AppSpacing.xl),
             KayloButton(text: l10n.save, isLoading: _saving, onPressed: _save),

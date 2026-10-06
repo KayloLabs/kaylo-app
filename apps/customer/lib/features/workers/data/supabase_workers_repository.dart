@@ -47,7 +47,12 @@ class SupabaseWorkersRepository implements WorkersRepository {
 
   @override
   Future<List<Worker>> searchWorkers(String query) async {
-    final term = query.trim();
+    final term = query
+        .toLowerCase()
+        .trim()
+        .replaceAll(RegExp(r'[^\p{L}\p{M}\p{N} ]', unicode: true), ' ')
+        .replaceAll(RegExp(r'\s+'), ' ')
+        .trim();
     if (term.isEmpty) return [];
     try {
       final rows = await _client

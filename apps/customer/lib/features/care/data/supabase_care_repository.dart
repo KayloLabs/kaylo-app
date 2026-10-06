@@ -368,6 +368,7 @@ class SupabaseCareRepository implements CareRepository {
     final rows = await _client
         .from('doctor_appointments')
         .select()
+        .neq('status', 'pending')
         .order('created_at', ascending: false);
     return rows
         .map(
@@ -455,6 +456,7 @@ class SupabaseCareRepository implements CareRepository {
     final rows = await _client
         .from('caregiver_bookings')
         .select()
+        .neq('status', 'pending')
         .order('created_at', ascending: false);
     return rows
         .map(

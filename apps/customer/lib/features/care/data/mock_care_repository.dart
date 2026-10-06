@@ -15,7 +15,7 @@ class MockCareRepository implements CareRepository {
       experienceYears: 14,
       rating: 4.9,
       reviewsCount: 142,
-      consultationFee: 500,
+      consultationFee: 300,
       availableDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'],
       timeSlots: ['09:00 AM', '10:30 AM', '02:00 PM', '04:30 PM'],
       imageUrl: '',
@@ -30,7 +30,7 @@ class MockCareRepository implements CareRepository {
       experienceYears: 18,
       rating: 4.9,
       reviewsCount: 210,
-      consultationFee: 700,
+      consultationFee: 600,
       availableDays: ['Mon', 'Wed', 'Fri'],
       timeSlots: ['10:00 AM', '11:30 AM', '03:00 PM', '05:00 PM'],
       imageUrl: '',
@@ -45,7 +45,7 @@ class MockCareRepository implements CareRepository {
       experienceYears: 12,
       rating: 4.8,
       reviewsCount: 98,
-      consultationFee: 600,
+      consultationFee: 500,
       availableDays: ['Tue', 'Thu', 'Sat'],
       timeSlots: ['09:30 AM', '11:00 AM', '02:30 PM', '04:00 PM'],
       imageUrl: '',
@@ -60,7 +60,7 @@ class MockCareRepository implements CareRepository {
       experienceYears: 16,
       rating: 4.95,
       reviewsCount: 180,
-      consultationFee: 550,
+      consultationFee: 400,
       availableDays: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri'],
       timeSlots: ['09:00 AM', '11:00 AM', '03:00 PM'],
       imageUrl: '',
@@ -75,7 +75,7 @@ class MockCareRepository implements CareRepository {
       experienceYears: 15,
       rating: 4.75,
       reviewsCount: 88,
-      consultationFee: 400,
+      consultationFee: 250,
       availableDays: ['Mon', 'Tue', 'Thu', 'Fri', 'Sat'],
       timeSlots: ['10:00 AM', '02:00 PM', '04:00 PM'],
       imageUrl: '',
@@ -90,7 +90,7 @@ class MockCareRepository implements CareRepository {
       name: 'Mary Varghese',
       rating: 4.9,
       reviewsCount: 64,
-      hourlyRate: 250,
+      hourlyRate: 150,
       experienceYears: 7,
       isVerified: true,
       imageUrl: '',
@@ -103,7 +103,7 @@ class MockCareRepository implements CareRepository {
       name: 'Suma Prabhakaran',
       rating: 4.8,
       reviewsCount: 52,
-      hourlyRate: 250,
+      hourlyRate: 150,
       experienceYears: 5,
       isVerified: true,
       imageUrl: '',
@@ -120,7 +120,7 @@ class MockCareRepository implements CareRepository {
       name: 'Jaya Chandran',
       rating: 4.7,
       reviewsCount: 38,
-      hourlyRate: 220,
+      hourlyRate: 130,
       experienceYears: 4,
       isVerified: true,
       imageUrl: '',
@@ -175,44 +175,15 @@ class MockCareRepository implements CareRepository {
     ),
   ];
 
-  final List<EmergencyContact> _contacts = [
-    const EmergencyContact(
-      id: 'c1',
-      name: 'Arjun Nair',
-      relation: 'Son',
-      phone: '+91 98470 12345',
-      isPrimary: true,
-    ),
-    const EmergencyContact(
-      id: 'c2',
-      name: 'Dr. Priya Mathew',
-      relation: 'Family physician',
-      phone: '+91 94471 88990',
-    ),
-    const EmergencyContact(
-      id: 'c3',
-      name: 'Sneha Nair',
-      relation: 'Daughter',
-      phone: '+91 98472 54321',
-    ),
-    const EmergencyContact(
-      id: 'c4',
-      name: 'Emergency helpline',
-      relation: 'Ambulance and police',
-      phone: '112',
-    ),
-  ];
+  // Real SIM calling must never use fictional contacts from sample data.
+  final List<EmergencyContact> _contacts;
+  final List<SosAlert> _alerts;
 
-  final List<SosAlert> _alerts = [
-    SosAlert(
-      id: 'sos-1',
-      triggeredAt: DateTime.now().subtract(const Duration(days: 3, hours: 2)),
-      status: SosStatus.resolved,
-      notifiedContacts: 4,
-      primaryContactName: 'Arjun Nair',
-      location: 'Kannur, Kerala',
-    ),
-  ];
+  MockCareRepository({
+    List<EmergencyContact> emergencyContacts = const [],
+    List<SosAlert> sosHistory = const [],
+  }) : _contacts = [...emergencyContacts],
+       _alerts = [...sosHistory];
 
   static const _latency = Duration(milliseconds: 300);
 

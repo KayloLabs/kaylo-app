@@ -102,6 +102,48 @@ abstract class AppLocalizations {
     Locale('ta'),
   ];
 
+  /// No description provided for @sosCallWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Next: {name}. The call starts after 3 seconds in Kaylo.'**
+  String sosCallWaiting(String name);
+
+  /// No description provided for @sosCallProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{attempted} of {total} calls attempted'**
+  String sosCallProgress(int attempted, int total);
+
+  /// No description provided for @sosCallsFinished.
+  ///
+  /// In en, this message translates to:
+  /// **'Call sequence finished. An attempted call does not confirm someone answered.'**
+  String get sosCallsFinished;
+
+  /// No description provided for @sosCallsStopped.
+  ///
+  /// In en, this message translates to:
+  /// **'Remaining calls stopped. An ongoing call can be ended in your phone app.'**
+  String get sosCallsStopped;
+
+  /// No description provided for @sosStopCalls.
+  ///
+  /// In en, this message translates to:
+  /// **'Stop remaining calls'**
+  String get sosStopCalls;
+
+  /// No description provided for @sosAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'SIM calling is available on Android phones.'**
+  String get sosAndroidOnly;
+
+  /// No description provided for @careDosesTaken.
+  ///
+  /// In en, this message translates to:
+  /// **'{taken} of {total} doses taken'**
+  String careDosesTaken(int taken, int total);
+
   /// No description provided for @hello.
   ///
   /// In en, this message translates to:
@@ -1701,13 +1743,13 @@ abstract class AppLocalizations {
   /// No description provided for @sosHoldHint.
   ///
   /// In en, this message translates to:
-  /// **'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.'**
+  /// **'Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.'**
   String get sosHoldHint;
 
   /// No description provided for @sosReleasedEarly.
   ///
   /// In en, this message translates to:
-  /// **'Keep holding for 3 seconds to send an alert'**
+  /// **'Keep holding for 3 seconds to start calling'**
   String get sosReleasedEarly;
 
   /// No description provided for @sosSentTitle.
@@ -2904,89 +2946,1217 @@ abstract class AppLocalizations {
   /// **'Cards, netbanking or UPI, secured by Razorpay'**
   String get payNowSubtitle;
 
-  /// No description provided for @addPaymentMethod.
+  /// No description provided for @prescriptions.
   ///
   /// In en, this message translates to:
-  /// **'Add payment method'**
-  String get addPaymentMethod;
+  /// **'Prescriptions'**
+  String get prescriptions;
 
-  /// No description provided for @upiId.
+  /// No description provided for @prescriptionsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'UPI ID'**
-  String get upiId;
+  /// **'Scan, read and keep your health records'**
+  String get prescriptionsSubtitle;
 
-  /// No description provided for @cardNumber.
+  /// No description provided for @trustedContacts.
   ///
   /// In en, this message translates to:
-  /// **'Card number'**
-  String get cardNumber;
+  /// **'Trusted contacts'**
+  String get trustedContacts;
 
-  /// No description provided for @setDefault.
+  /// No description provided for @trustedContactsSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Set as default'**
-  String get setDefault;
+  /// **'Connect family and doctors for SOS calls'**
+  String get trustedContactsSubtitle;
 
-  /// No description provided for @removeMethod.
+  /// No description provided for @sosStartFailedContacts.
   ///
   /// In en, this message translates to:
-  /// **'Remove method'**
-  String get removeMethod;
+  /// **'Could not start SOS. Check your connection and trusted contacts.'**
+  String get sosStartFailedContacts;
 
-  /// No description provided for @defaultTag.
+  /// No description provided for @sosStartFailed.
   ///
   /// In en, this message translates to:
-  /// **'Default'**
-  String get defaultTag;
+  /// **'Could not start SOS. Please try again.'**
+  String get sosStartFailed;
 
-  /// No description provided for @noPaymentMethods.
+  /// No description provided for @sosModeKaylo.
   ///
   /// In en, this message translates to:
-  /// **'No saved payment methods yet'**
-  String get noPaymentMethods;
+  /// **'Kaylo call'**
+  String get sosModeKaylo;
 
-  /// No description provided for @noPaymentMethodsSubtitle.
+  /// No description provided for @sosModeSim.
   ///
   /// In en, this message translates to:
-  /// **'Add a UPI ID or card for faster checkouts'**
-  String get noPaymentMethodsSubtitle;
+  /// **'SIM call'**
+  String get sosModeSim;
 
-  /// No description provided for @cardHolderName.
+  /// No description provided for @manageTrustedContacts.
   ///
   /// In en, this message translates to:
-  /// **'Cardholder name'**
-  String get cardHolderName;
+  /// **'Manage trusted contacts'**
+  String get manageTrustedContacts;
 
-  /// No description provided for @cardExpiry.
+  /// No description provided for @sosKayloHoldHint.
   ///
   /// In en, this message translates to:
-  /// **'Expiry (MM/YY)'**
-  String get cardExpiry;
+  /// **'Hold for 3 seconds to invite your trusted Kaylo contacts. They can join the call together. An invitation does not mean someone has answered.'**
+  String get sosKayloHoldHint;
 
-  /// No description provided for @deletePaymentMethodConfirm.
+  /// No description provided for @contactsOpenFailed.
   ///
   /// In en, this message translates to:
-  /// **'Remove this payment method?'**
-  String get deletePaymentMethodConfirm;
+  /// **'Could not open phone contacts.'**
+  String get contactsOpenFailed;
 
-  /// No description provided for @paymentMethodAdded.
+  /// No description provided for @chooseFromPhoneContacts.
   ///
   /// In en, this message translates to:
-  /// **'Payment method added'**
-  String get paymentMethodAdded;
+  /// **'Choose from phone contacts'**
+  String get chooseFromPhoneContacts;
 
-  /// No description provided for @paymentMethodRemoved.
+  /// No description provided for @sosContactsSkipped.
   ///
   /// In en, this message translates to:
-  /// **'Payment method removed'**
-  String get paymentMethodRemoved;
+  /// **'{count, plural, =1{1 contact was skipped: its number cannot be dialled.} other{{count} contacts were skipped: their numbers cannot be dialled.}}'**
+  String sosContactsSkipped(int count);
 
-  /// No description provided for @savePaymentMethod.
+  /// No description provided for @incomingSosTitle.
   ///
   /// In en, this message translates to:
-  /// **'Save method'**
-  String get savePaymentMethod;
+  /// **'Incoming Kaylo SOS'**
+  String get incomingSosTitle;
+
+  /// No description provided for @incomingSosSubtitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A trusted contact needs help'**
+  String get incomingSosSubtitle;
+
+  /// No description provided for @decline.
+  ///
+  /// In en, this message translates to:
+  /// **'Decline'**
+  String get decline;
+
+  /// No description provided for @joinCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Join call'**
+  String get joinCall;
+
+  /// No description provided for @signInLiveForContacts.
+  ///
+  /// In en, this message translates to:
+  /// **'Sign into the live app to connect trusted contacts.'**
+  String get signInLiveForContacts;
+
+  /// No description provided for @couldNotConnectRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect. Please try again.'**
+  String get couldNotConnectRetry;
+
+  /// No description provided for @refreshConnections.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh connections'**
+  String get refreshConnections;
+
+  /// No description provided for @trustedCircleTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Bring your circle into Kaylo'**
+  String get trustedCircleTitle;
+
+  /// No description provided for @trustedCircleBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite up to five family members or doctors who use Kaylo. When they accept your code, they can receive your SOS alerts and join the same voice call.'**
+  String get trustedCircleBody;
+
+  /// No description provided for @getInviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Get my invite code'**
+  String get getInviteCode;
+
+  /// No description provided for @inviteCodeCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code copied'**
+  String get inviteCodeCopied;
+
+  /// No description provided for @copyCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy code'**
+  String get copyCode;
+
+  /// No description provided for @inviteCodeValidity.
+  ///
+  /// In en, this message translates to:
+  /// **'Valid for seven days. Share only with people you trust.'**
+  String get inviteCodeValidity;
+
+  /// No description provided for @acceptInviteTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept someone’s invitation'**
+  String get acceptInviteTitle;
+
+  /// No description provided for @inviteCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Invite code'**
+  String get inviteCode;
+
+  /// No description provided for @acceptInvitation.
+  ///
+  /// In en, this message translates to:
+  /// **'Accept invitation'**
+  String get acceptInvitation;
+
+  /// No description provided for @invitationAccepted.
+  ///
+  /// In en, this message translates to:
+  /// **'Invitation accepted. You are now connected and can receive their SOS alerts.'**
+  String get invitationAccepted;
+
+  /// No description provided for @yourConnections.
+  ///
+  /// In en, this message translates to:
+  /// **'Your connections'**
+  String get yourConnections;
+
+  /// No description provided for @noConnectionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No connections yet'**
+  String get noConnectionsYet;
+
+  /// No description provided for @receivesYourSos.
+  ///
+  /// In en, this message translates to:
+  /// **'Receives your SOS alerts'**
+  String get receivesYourSos;
+
+  /// No description provided for @youReceiveTheirSos.
+  ///
+  /// In en, this message translates to:
+  /// **'You receive their SOS alerts'**
+  String get youReceiveTheirSos;
+
+  /// No description provided for @removeConnection.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove connection'**
+  String get removeConnection;
+
+  /// No description provided for @removeConnectionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove connection?'**
+  String get removeConnectionTitle;
+
+  /// No description provided for @removeConnectionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This connection will no longer receive SOS call invitations.'**
+  String get removeConnectionBody;
+
+  /// No description provided for @contactsLoadFailedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load contacts. Retry'**
+  String get contactsLoadFailedRetry;
+
+  /// No description provided for @callTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo SOS call'**
+  String get callTitle;
+
+  /// No description provided for @callEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Call ended'**
+  String get callEnded;
+
+  /// No description provided for @callYourCircle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trusted circle'**
+  String get callYourCircle;
+
+  /// No description provided for @callCouldNotConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect'**
+  String get callCouldNotConnect;
+
+  /// No description provided for @callConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get callConnecting;
+
+  /// No description provided for @callKeepOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Kaylo open during the call.'**
+  String get callKeepOpen;
+
+  /// No description provided for @retryCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry call'**
+  String get retryCall;
+
+  /// No description provided for @callErrorRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'This call is unavailable or has ended. Return to SOS to start a new call.'**
+  String get callErrorRoom;
+
+  /// No description provided for @callErrorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load call settings. Check your connection and retry.'**
+  String get callErrorSettings;
+
+  /// No description provided for @callErrorMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not access the microphone. Check microphone access for Kaylo and retry.'**
+  String get callErrorMicrophone;
+
+  /// No description provided for @callErrorJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not join this call. Retry, or ask the caller to start a new SOS call.'**
+  String get callErrorJoin;
+
+  /// No description provided for @callInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection interrupted. Retrying…'**
+  String get callInterrupted;
+
+  /// No description provided for @callPeerConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get callPeerConnected;
+
+  /// No description provided for @callPeerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get callPeerFailed;
+
+  /// No description provided for @callPeerReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get callPeerReconnecting;
+
+  /// No description provided for @callPeerConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get callPeerConnecting;
+
+  /// No description provided for @callYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get callYou;
+
+  /// No description provided for @callYouMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'You • Muted'**
+  String get callYouMuted;
+
+  /// No description provided for @callInvitedWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited • Waiting to answer'**
+  String get callInvitedWaiting;
+
+  /// No description provided for @callDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get callDeclined;
+
+  /// No description provided for @callLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left the call'**
+  String get callLeft;
+
+  /// No description provided for @mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @speaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker'**
+  String get speaker;
+
+  /// No description provided for @callAudioOutputFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change audio output. The call is still active.'**
+  String get callAudioOutputFailed;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @callEndForEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'End call for everyone'**
+  String get callEndForEveryone;
+
+  /// No description provided for @callLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave call'**
+  String get callLeave;
+
+  /// No description provided for @prescriptionsLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load prescriptions. Please try again.'**
+  String get prescriptionsLoadFailed;
+
+  /// No description provided for @actionFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete that action.'**
+  String get actionFailed;
+
+  /// No description provided for @prescriptionSaveFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not save the prescription. Please try again.'**
+  String get prescriptionSaveFailed;
+
+  /// No description provided for @prescriptionsHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Your health records, together'**
+  String get prescriptionsHeadline;
+
+  /// No description provided for @prescriptionsIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan a prescription or type a previous record. PDFs are saved privately on this device.'**
+  String get prescriptionsIntro;
+
+  /// No description provided for @prescriptionsAndroidOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription scanning and PDFs are currently available in the Android app.'**
+  String get prescriptionsAndroidOnly;
+
+  /// No description provided for @scanOrPhotos.
+  ///
+  /// In en, this message translates to:
+  /// **'Scan / photos'**
+  String get scanOrPhotos;
+
+  /// No description provided for @typeRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Type record'**
+  String get typeRecord;
+
+  /// No description provided for @searchPrescriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'Search prescriptions'**
+  String get searchPrescriptions;
+
+  /// No description provided for @noPrescriptionsYet.
+  ///
+  /// In en, this message translates to:
+  /// **'No prescriptions yet'**
+  String get noPrescriptionsYet;
+
+  /// No description provided for @noMatchingPrescriptions.
+  ///
+  /// In en, this message translates to:
+  /// **'No matching prescriptions'**
+  String get noMatchingPrescriptions;
+
+  /// No description provided for @prescriptionNeedsTitleText.
+  ///
+  /// In en, this message translates to:
+  /// **'Add a title and prescription text.'**
+  String get prescriptionNeedsTitleText;
+
+  /// No description provided for @prescriptionRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription record'**
+  String get prescriptionRecord;
+
+  /// No description provided for @reviewPrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Review prescription'**
+  String get reviewPrescription;
+
+  /// No description provided for @deletePrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete prescription'**
+  String get deletePrescription;
+
+  /// No description provided for @deletePrescriptionTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete prescription?'**
+  String get deletePrescriptionTitle;
+
+  /// No description provided for @deletePrescriptionBody.
+  ///
+  /// In en, this message translates to:
+  /// **'The PDF and text will be removed from this device.'**
+  String get deletePrescriptionBody;
+
+  /// No description provided for @delete.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete'**
+  String get delete;
+
+  /// No description provided for @prescriptionReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Review the extracted text against the original. Handwriting may be incomplete or incorrect; confirm medicine names and doses with your doctor.'**
+  String get prescriptionReviewHint;
+
+  /// No description provided for @viewOriginalPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'View original PDF'**
+  String get viewOriginalPdf;
+
+  /// No description provided for @titleLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Title'**
+  String get titleLabel;
+
+  /// No description provided for @extractedTextNotes.
+  ///
+  /// In en, this message translates to:
+  /// **'Extracted text / notes'**
+  String get extractedTextNotes;
+
+  /// No description provided for @prescriptionDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Prescription details'**
+  String get prescriptionDetails;
+
+  /// No description provided for @prescriptionEditHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Editing this text keeps the original scanned PDF unchanged.'**
+  String get prescriptionEditHint;
+
+  /// No description provided for @saving.
+  ///
+  /// In en, this message translates to:
+  /// **'Saving…'**
+  String get saving;
+
+  /// No description provided for @savePrescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Save prescription'**
+  String get savePrescription;
+
+  /// No description provided for @openSavedPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Open saved PDF'**
+  String get openSavedPdf;
+
+  /// No description provided for @shareSavedPdf.
+  ///
+  /// In en, this message translates to:
+  /// **'Share saved PDF'**
+  String get shareSavedPdf;
+
+  /// No description provided for @deleteAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete account'**
+  String get deleteAccount;
+
+  /// No description provided for @deleteRequiresLive.
+  ///
+  /// In en, this message translates to:
+  /// **'Account deletion requires a signed-in live account.'**
+  String get deleteRequiresLive;
+
+  /// No description provided for @deleteNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Deletion was not confirmed. Please retry.'**
+  String get deleteNotConfirmed;
+
+  /// No description provided for @deleteFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not delete the account. Please try again.'**
+  String get deleteFailed;
+
+  /// No description provided for @deleteAccountHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Permanently delete your Kaylo account?'**
+  String get deleteAccountHeadline;
+
+  /// No description provided for @deleteAccountBody.
+  ///
+  /// In en, this message translates to:
+  /// **'This removes your sign-in, profile, bookings, messages, care records and prescriptions stored on this device. It cannot be undone. Complete or cancel active bookings first. For unresolved payments, contact kayloapp@gmail.com.'**
+  String get deleteAccountBody;
+
+  /// No description provided for @deleteAccountNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment processors may retain transaction records. Documents you previously shared are not removed from other people’s devices.'**
+  String get deleteAccountNote;
+
+  /// No description provided for @typeDeleteToConfirm.
+  ///
+  /// In en, this message translates to:
+  /// **'Type DELETE to confirm'**
+  String get typeDeleteToConfirm;
+
+  /// No description provided for @deleting.
+  ///
+  /// In en, this message translates to:
+  /// **'Deleting…'**
+  String get deleting;
+
+  /// No description provided for @deleteMyAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Delete my account'**
+  String get deleteMyAccount;
+
+  /// No description provided for @paymentVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment verified. Your booking is confirmed.'**
+  String get paymentVerified;
+
+  /// No description provided for @paymentNotCompleted.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was not completed.'**
+  String get paymentNotCompleted;
+
+  /// No description provided for @checkoutOpenFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not open secure checkout. Please try again.'**
+  String get checkoutOpenFailed;
+
+  /// No description provided for @cardsAndUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'Cards and UPI'**
+  String get cardsAndUpi;
+
+  /// No description provided for @paymentMethodsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a card manually or choose UPI in secure Razorpay checkout. Where supported, choose Razorpay’s save-card option to use that card again. Saved cards are managed inside checkout.'**
+  String get paymentMethodsBody;
+
+  /// No description provided for @paymentMethodsNote.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo does not store your full card number, CVV or PIN. NFC card enrolment is not supported by the current payment integration.'**
+  String get paymentMethodsNote;
+
+  /// No description provided for @completePendingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Complete a pending payment'**
+  String get completePendingPayment;
+
+  /// No description provided for @noPendingPayments.
+  ///
+  /// In en, this message translates to:
+  /// **'Your next booking will open checkout, where you can add or select a card.'**
+  String get noPendingPayments;
+
+  /// No description provided for @pendingBookingLine.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking {id} • {date}'**
+  String pendingBookingLine(String id, String date);
+
+  /// No description provided for @bookingsLoadFailedRetry.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load bookings. Retry'**
+  String get bookingsLoadFailedRetry;
+
+  /// No description provided for @openingPayment.
+  ///
+  /// In en, this message translates to:
+  /// **'Opening payment…'**
+  String get openingPayment;
+
+  /// No description provided for @payAndBook.
+  ///
+  /// In en, this message translates to:
+  /// **'Pay & book'**
+  String get payAndBook;
+
+  /// No description provided for @appointmentPaymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete payment. Your appointment is not confirmed. Please try again.'**
+  String get appointmentPaymentFailed;
+
+  /// No description provided for @visitPaymentFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not complete payment. Your visit is not confirmed. Please try again.'**
+  String get visitPaymentFailed;
+
+  /// No description provided for @careServiceUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'This care service is unavailable.'**
+  String get careServiceUnavailable;
+
+  /// No description provided for @appointmentNotConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Payment was not completed. Your appointment is not confirmed.'**
+  String get appointmentNotConfirmed;
+
+  /// No description provided for @hapticFeedback.
+  ///
+  /// In en, this message translates to:
+  /// **'Haptic feedback'**
+  String get hapticFeedback;
+
+  /// No description provided for @soundEffects.
+  ///
+  /// In en, this message translates to:
+  /// **'Sound effects'**
+  String get soundEffects;
+
+  /// No description provided for @voiceStarting.
+  ///
+  /// In en, this message translates to:
+  /// **'Starting microphone…'**
+  String get voiceStarting;
+
+  /// No description provided for @ocrNeedsReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Some text could not be read. Check the original scan and correct the notes before using them.'**
+  String get ocrNeedsReview;
+
+  /// No description provided for @allBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'All bookings'**
+  String get allBookings;
+
+  /// No description provided for @noCompletedBookings.
+  ///
+  /// In en, this message translates to:
+  /// **'No completed bookings yet'**
+  String get noCompletedBookings;
+
+  /// No description provided for @noCompletedBookingsDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Your completed jobs will appear here once the work is done.'**
+  String get noCompletedBookingsDescription;
+
+  /// No description provided for @verificationRecord.
+  ///
+  /// In en, this message translates to:
+  /// **'Verification record'**
+  String get verificationRecord;
+
+  /// No description provided for @refreshVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'Refresh verification status'**
+  String get refreshVerification;
+
+  /// No description provided for @verificationLoadError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load the current verification status. Please try again.'**
+  String get verificationLoadError;
+
+  /// No description provided for @kayloVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Verified on Kaylo'**
+  String get kayloVerified;
+
+  /// No description provided for @notYetVerified.
+  ///
+  /// In en, this message translates to:
+  /// **'Not yet verified'**
+  String get notYetVerified;
+
+  /// No description provided for @viewVerification.
+  ///
+  /// In en, this message translates to:
+  /// **'View verification record'**
+  String get viewVerification;
+
+  /// No description provided for @verificationRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'This professional’s profile is marked as verified in Kaylo.'**
+  String get verificationRecorded;
+
+  /// No description provided for @verificationNotRecorded.
+  ///
+  /// In en, this message translates to:
+  /// **'No verified status is recorded for this profile.'**
+  String get verificationNotRecorded;
+
+  /// No description provided for @listedServices.
+  ///
+  /// In en, this message translates to:
+  /// **'Listed services'**
+  String get listedServices;
+
+  /// No description provided for @profileReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile reference'**
+  String get profileReference;
+
+  /// No description provided for @serviceArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Service area'**
+  String get serviceArea;
+
+  /// No description provided for @verificationScope.
+  ///
+  /// In en, this message translates to:
+  /// **'This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.'**
+  String get verificationScope;
+
+  /// No description provided for @selectOnMap.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose on map'**
+  String get selectOnMap;
+
+  /// No description provided for @chooseAddress.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose an address'**
+  String get chooseAddress;
+
+  /// No description provided for @offerFirst100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first one is special'**
+  String get offerFirst100Title;
+
+  /// No description provided for @offerFirst100Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹100 off your first booking of ₹499 or more.'**
+  String get offerFirst100Body;
+
+  /// No description provided for @offerKaylo150Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A little help with bigger jobs'**
+  String get offerKaylo150Title;
+
+  /// No description provided for @offerKaylo150Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹150 off a booking of ₹1,499 or more. Once per account.'**
+  String get offerKaylo150Body;
+
+  /// No description provided for @offerWeekend100Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A weekend well spent'**
+  String get offerWeekend100Title;
+
+  /// No description provided for @offerWeekend100Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹100 off ₹999 or more on Saturdays and Sundays. Once per account.'**
+  String get offerWeekend100Body;
+
+  /// No description provided for @offerWeekday50Title.
+  ///
+  /// In en, this message translates to:
+  /// **'A midweek lift'**
+  String get offerWeekday50Title;
+
+  /// No description provided for @offerWeekday50Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹50 off ₹599 or more, Monday to Friday. Once per account.'**
+  String get offerWeekday50Body;
+
+  /// No description provided for @offerHome80Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Home, sorted'**
+  String get offerHome80Title;
+
+  /// No description provided for @offerHome80Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹80 off a home service of ₹499 or more. Once per account.'**
+  String get offerHome80Body;
+
+  /// No description provided for @offerFarm125Title.
+  ///
+  /// In en, this message translates to:
+  /// **'For the land that feeds us'**
+  String get offerFarm125Title;
+
+  /// No description provided for @offerFarm125Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹125 off a farm service of ₹999 or more. Once per account.'**
+  String get offerFarm125Body;
+
+  /// No description provided for @offerCare60Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Care, made a little lighter'**
+  String get offerCare60Title;
+
+  /// No description provided for @offerCare60Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹60 off a Care booking of ₹399 or more. Once per account.'**
+  String get offerCare60Body;
+
+  /// No description provided for @offerKaylo300Title.
+  ///
+  /// In en, this message translates to:
+  /// **'For the really big days'**
+  String get offerKaylo300Title;
+
+  /// No description provided for @offerKaylo300Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹300 off a booking of ₹2,999 or more. Once per account.'**
+  String get offerKaylo300Body;
+
+  /// No description provided for @offerNext75Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Something for next time'**
+  String get offerNext75Title;
+
+  /// No description provided for @offerNext75Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.'**
+  String get offerNext75Body;
+
+  /// No description provided for @offerThanks120Title.
+  ///
+  /// In en, this message translates to:
+  /// **'Three bookings in. Thank you.'**
+  String get offerThanks120Title;
+
+  /// No description provided for @offerThanks120Body.
+  ///
+  /// In en, this message translates to:
+  /// **'₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.'**
+  String get offerThanks120Body;
+
+  /// No description provided for @offerReasonFirstOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For your first booking only'**
+  String get offerReasonFirstOnly;
+
+  /// No description provided for @offerReasonUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Already used'**
+  String get offerReasonUsed;
+
+  /// No description provided for @offerReasonRewardUsed.
+  ///
+  /// In en, this message translates to:
+  /// **'Reward used'**
+  String get offerReasonRewardUsed;
+
+  /// No description provided for @offerReasonWeekend.
+  ///
+  /// In en, this message translates to:
+  /// **'Available on weekends'**
+  String get offerReasonWeekend;
+
+  /// No description provided for @offerReasonWeekday.
+  ///
+  /// In en, this message translates to:
+  /// **'Available Monday to Friday'**
+  String get offerReasonWeekday;
+
+  /// No description provided for @offerReasonNeedsConfirmed.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks after your first confirmed booking'**
+  String get offerReasonNeedsConfirmed;
+
+  /// No description provided for @offerReasonNeedsThree.
+  ///
+  /// In en, this message translates to:
+  /// **'Unlocks after three confirmed bookings'**
+  String get offerReasonNeedsThree;
+
+  /// No description provided for @offerReasonHomeOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For home services only'**
+  String get offerReasonHomeOnly;
+
+  /// No description provided for @offerReasonFarmOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For farm services only'**
+  String get offerReasonFarmOnly;
+
+  /// No description provided for @offerReasonCareOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'For Care bookings only'**
+  String get offerReasonCareOnly;
+
+  /// No description provided for @offerReasonAddMore.
+  ///
+  /// In en, this message translates to:
+  /// **'Add {amount} more to use this offer'**
+  String offerReasonAddMore(String amount);
+
+  /// No description provided for @offerNotAvailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer not available'**
+  String get offerNotAvailable;
+
+  /// No description provided for @offersTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A little more Kaylo'**
+  String get offersTitle;
+
+  /// No description provided for @offersHeadline.
+  ///
+  /// In en, this message translates to:
+  /// **'Everyday help.\nA little extra happiness.'**
+  String get offersHeadline;
+
+  /// No description provided for @offersIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Thoughtful savings for the jobs that matter. One offer per booking.'**
+  String get offersIntro;
+
+  /// No description provided for @offersLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Your offers couldn’t load. Please try again.'**
+  String get offersLoadFailed;
+
+  /// No description provided for @tryAgain.
+  ///
+  /// In en, this message translates to:
+  /// **'Try again'**
+  String get tryAgain;
+
+  /// No description provided for @enterCouponCode.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter coupon code'**
+  String get enterCouponCode;
+
+  /// No description provided for @couponNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'That code isn’t available'**
+  String get couponNotFound;
+
+  /// No description provided for @offersTerms.
+  ///
+  /// In en, this message translates to:
+  /// **'Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.'**
+  String get offersTerms;
+
+  /// No description provided for @offerAmountOff.
+  ///
+  /// In en, this message translates to:
+  /// **'{amount} off'**
+  String offerAmountOff(String amount);
+
+  /// No description provided for @applyOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply'**
+  String get applyOffer;
+
+  /// No description provided for @removeOffer.
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeOffer;
+
+  /// No description provided for @offerYouSave.
+  ///
+  /// In en, this message translates to:
+  /// **'You save {amount}'**
+  String offerYouSave(String amount);
+
+  /// No description provided for @offersAndRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Offers & rewards'**
+  String get offersAndRewards;
+
+  /// No description provided for @offerCodeApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'{code} applied'**
+  String offerCodeApplied(String code);
+
+  /// No description provided for @offerStampApplied.
+  ///
+  /// In en, this message translates to:
+  /// **'APPLIED'**
+  String get offerStampApplied;
+
+  /// No description provided for @offersReadyCount.
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 offer ready to use} other{{count} offers ready to use}}'**
+  String offersReadyCount(int count);
+
+  /// No description provided for @yourRewards.
+  ///
+  /// In en, this message translates to:
+  /// **'Your rewards'**
+  String get yourRewards;
+
+  /// No description provided for @allOffers.
+  ///
+  /// In en, this message translates to:
+  /// **'All offers'**
+  String get allOffers;
+
+  /// No description provided for @offerLabel.
+  ///
+  /// In en, this message translates to:
+  /// **'Offer • {code}'**
+  String offerLabel(String code);
+
+  /// No description provided for @scratchCoverTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A little thank you'**
+  String get scratchCoverTitle;
+
+  /// No description provided for @scratchCoverHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scratch to reveal your reward'**
+  String get scratchCoverHint;
+
+  /// No description provided for @revealReward.
+  ///
+  /// In en, this message translates to:
+  /// **'Reveal reward'**
+  String get revealReward;
+
+  /// No description provided for @scratchSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Scratch reward. Reveal {amount} off a booking.'**
+  String scratchSemantics(String amount);
+
+  /// No description provided for @bannerWelcomeTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'A warm welcome. ₹100 on us.'**
+  String get bannerWelcomeTitle;
+
+  /// No description provided for @bannerWelcomeBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your first-booking offer is unlocked'**
+  String get bannerWelcomeBody;
+
+  /// No description provided for @bannerRewardsTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Good work. A little extra joy.'**
+  String get bannerRewardsTitle;
+
+  /// No description provided for @bannerRewardsBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Explore your offers & scratch rewards'**
+  String get bannerRewardsBody;
+
+  /// No description provided for @secretTagline.
+  ///
+  /// In en, this message translates to:
+  /// **'A little care goes a long way.'**
+  String get secretTagline;
+
+  /// No description provided for @secretSemantics.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo. Made with care.'**
+  String get secretSemantics;
 }
 
 class _AppLocalizationsDelegate

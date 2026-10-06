@@ -21,6 +21,10 @@ class Booking {
   /// null while the job is still open.
   final double? finalCost;
 
+  final double? subtotalAmount;
+  final double discountAmount;
+  final String? offerCode;
+
   Booking({
     required this.id,
     required this.userId,
@@ -32,6 +36,9 @@ class Booking {
     this.locationId,
     this.notes,
     this.finalCost,
+    this.subtotalAmount,
+    this.discountAmount = 0,
+    this.offerCode,
   });
 
   Booking copyWith({
@@ -45,6 +52,9 @@ class Booking {
     String? locationId,
     String? notes,
     double? finalCost,
+    double? subtotalAmount,
+    double? discountAmount,
+    String? offerCode,
   }) => Booking(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -56,5 +66,8 @@ class Booking {
     locationId: locationId ?? this.locationId,
     notes: notes ?? this.notes,
     finalCost: finalCost ?? this.finalCost,
+    subtotalAmount: subtotalAmount ?? this.subtotalAmount,
+    discountAmount: discountAmount ?? this.discountAmount,
+    offerCode: offerCode ?? this.offerCode,
   );
 }

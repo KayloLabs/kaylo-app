@@ -1,4 +1,38 @@
 {
+  "sosCallWaiting": "Next: {name}. The call starts after 3 seconds in Kaylo.",
+  "sosCallProgress": "{attempted} of {total} calls attempted",
+  "sosCallsFinished": "Call sequence finished. An attempted call does not confirm someone answered.",
+  "sosCallsStopped": "Remaining calls stopped. An ongoing call can be ended in your phone app.",
+  "sosStopCalls": "Stop remaining calls",
+  "sosAndroidOnly": "SIM calling is available on Android phones.",
+  "@sosCallWaiting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "@sosCallProgress": {
+    "placeholders": {
+      "attempted": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "careDosesTaken": "{taken} of {total} doses taken",
+  "@careDosesTaken": {
+    "placeholders": {
+      "taken": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
   "@@locale": "en",
   "hello": "Hello",
   "searchServices": "Search services…",
@@ -96,7 +130,7 @@
   "popularSubServices": "Popular Sub-services",
   "selectSubServices": "Select sub-services",
   "startingFrom": "Starts from",
-  "bookNow": "Book Now",
+  "bookNow": "Book now",
   "bookService": "Book Service",
   "workersAvailable": "workers available",
   "availableWorkers": "Available Workers",
@@ -135,8 +169,8 @@
   "selectSpecialty": "Select Specialty",
   "availableDoctors": "Available Doctors",
   "consultationFee": "Consultation Fee",
-  "selectDate": "Select Date",
-  "selectTimeSlot": "Select Time Slot",
+  "selectDate": "Date",
+  "selectTimeSlot": "Time slot",
   "morning": "Morning",
   "afternoon": "Afternoon",
   "evening": "Evening",
@@ -221,11 +255,8 @@
   },
   "noWorkersYet": "Workers for this service are being onboarded",
   "liveTotalNote": "Your total updates live as you set the quantity on the next step.",
-  "bookNow": "Book now",
   "scheduleTitle": "Schedule",
-  "selectDate": "Date",
   "change": "Change",
-  "selectTimeSlot": "Time slot",
   "quantity": "Quantity",
   "priceEach": "{price} each",
   "@priceEach": {
@@ -383,8 +414,8 @@
       }
     }
   },
-  "sosHoldHint": "Press and hold the button for 3 seconds. Your emergency contacts get your location right away.",
-  "sosReleasedEarly": "Keep holding for 3 seconds to send an alert",
+  "sosHoldHint": "Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.",
+  "sosReleasedEarly": "Keep holding for 3 seconds to start calling",
   "sosSentTitle": "Help is on the way",
   "sosSentContacts": "{count, plural, =1{1 contact alerted with your location} other{{count} contacts alerted with your location}}",
   "@sosSentContacts": {
@@ -705,18 +736,272 @@
   "confirmationEmail": "Email for the confirmation (optional)",
   "payNow": "Pay now",
   "payNowSubtitle": "Cards, netbanking or UPI, secured by Razorpay",
-  "addPaymentMethod": "Add payment method",
-  "upiId": "UPI ID",
-  "cardNumber": "Card number",
-  "setDefault": "Set as default",
-  "removeMethod": "Remove method",
-  "defaultTag": "Default",
-  "noPaymentMethods": "No saved payment methods yet",
-  "noPaymentMethodsSubtitle": "Add a UPI ID or card for faster checkouts",
-  "cardHolderName": "Cardholder name",
-  "cardExpiry": "Expiry (MM/YY)",
-  "deletePaymentMethodConfirm": "Remove this payment method?",
-  "paymentMethodAdded": "Payment method added",
-  "paymentMethodRemoved": "Payment method removed",
-  "savePaymentMethod": "Save method"
+  "prescriptions": "Prescriptions",
+  "prescriptionsSubtitle": "Scan, read and keep your health records",
+  "trustedContacts": "Trusted contacts",
+  "trustedContactsSubtitle": "Connect family and doctors for SOS calls",
+  "sosStartFailedContacts": "Could not start SOS. Check your connection and trusted contacts.",
+  "sosStartFailed": "Could not start SOS. Please try again.",
+  "sosModeKaylo": "Kaylo call",
+  "sosModeSim": "SIM call",
+  "manageTrustedContacts": "Manage trusted contacts",
+  "sosKayloHoldHint": "Hold for 3 seconds to invite your trusted Kaylo contacts. They can join the call together. An invitation does not mean someone has answered.",
+  "contactsOpenFailed": "Could not open phone contacts.",
+  "chooseFromPhoneContacts": "Choose from phone contacts",
+  "sosContactsSkipped": "{count, plural, =1{1 contact was skipped: its number cannot be dialled.} other{{count} contacts were skipped: their numbers cannot be dialled.}}",
+  "@sosContactsSkipped": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "incomingSosTitle": "Incoming Kaylo SOS",
+  "incomingSosSubtitle": "A trusted contact needs help",
+  "decline": "Decline",
+  "joinCall": "Join call",
+  "signInLiveForContacts": "Sign into the live app to connect trusted contacts.",
+  "couldNotConnectRetry": "Could not connect. Please try again.",
+  "refreshConnections": "Refresh connections",
+  "trustedCircleTitle": "Bring your circle into Kaylo",
+  "trustedCircleBody": "Invite up to five family members or doctors who use Kaylo. When they accept your code, they can receive your SOS alerts and join the same voice call.",
+  "getInviteCode": "Get my invite code",
+  "inviteCodeCopied": "Invite code copied",
+  "copyCode": "Copy code",
+  "inviteCodeValidity": "Valid for seven days. Share only with people you trust.",
+  "acceptInviteTitle": "Accept someone’s invitation",
+  "inviteCode": "Invite code",
+  "acceptInvitation": "Accept invitation",
+  "invitationAccepted": "Invitation accepted. You are now connected and can receive their SOS alerts.",
+  "yourConnections": "Your connections",
+  "noConnectionsYet": "No connections yet",
+  "receivesYourSos": "Receives your SOS alerts",
+  "youReceiveTheirSos": "You receive their SOS alerts",
+  "removeConnection": "Remove connection",
+  "removeConnectionTitle": "Remove connection?",
+  "removeConnectionBody": "This connection will no longer receive SOS call invitations.",
+  "contactsLoadFailedRetry": "Could not load contacts. Retry",
+  "callTitle": "Kaylo SOS call",
+  "callEnded": "Call ended",
+  "callYourCircle": "Your trusted circle",
+  "callCouldNotConnect": "Could not connect",
+  "callConnecting": "Connecting…",
+  "callKeepOpen": "Keep Kaylo open during the call.",
+  "retryCall": "Retry call",
+  "callErrorRoom": "This call is unavailable or has ended. Return to SOS to start a new call.",
+  "callErrorSettings": "Could not load call settings. Check your connection and retry.",
+  "callErrorMicrophone": "Could not access the microphone. Check microphone access for Kaylo and retry.",
+  "callErrorJoin": "Could not join this call. Retry, or ask the caller to start a new SOS call.",
+  "callInterrupted": "Connection interrupted. Retrying…",
+  "callPeerConnected": "Connected",
+  "callPeerFailed": "Connection failed",
+  "callPeerReconnecting": "Reconnecting",
+  "callPeerConnecting": "Connecting",
+  "callYou": "You",
+  "callYouMuted": "You • Muted",
+  "callInvitedWaiting": "Invited • Waiting to answer",
+  "callDeclined": "Declined",
+  "callLeft": "Left the call",
+  "mute": "Mute",
+  "unmute": "Unmute",
+  "speaker": "Speaker",
+  "callAudioOutputFailed": "Could not change audio output. The call is still active.",
+  "close": "Close",
+  "callEndForEveryone": "End call for everyone",
+  "callLeave": "Leave call",
+  "prescriptionsLoadFailed": "Could not load prescriptions. Please try again.",
+  "actionFailed": "Could not complete that action.",
+  "prescriptionSaveFailed": "Could not save the prescription. Please try again.",
+  "prescriptionsHeadline": "Your health records, together",
+  "prescriptionsIntro": "Scan a prescription or type a previous record. PDFs are saved privately on this device.",
+  "prescriptionsAndroidOnly": "Prescription scanning and PDFs are currently available in the Android app.",
+  "scanOrPhotos": "Scan / photos",
+  "typeRecord": "Type record",
+  "searchPrescriptions": "Search prescriptions",
+  "noPrescriptionsYet": "No prescriptions yet",
+  "noMatchingPrescriptions": "No matching prescriptions",
+  "prescriptionNeedsTitleText": "Add a title and prescription text.",
+  "prescriptionRecord": "Prescription record",
+  "reviewPrescription": "Review prescription",
+  "deletePrescription": "Delete prescription",
+  "deletePrescriptionTitle": "Delete prescription?",
+  "deletePrescriptionBody": "The PDF and text will be removed from this device.",
+  "delete": "Delete",
+  "prescriptionReviewHint": "Review the extracted text against the original. Handwriting may be incomplete or incorrect; confirm medicine names and doses with your doctor.",
+  "viewOriginalPdf": "View original PDF",
+  "titleLabel": "Title",
+  "extractedTextNotes": "Extracted text / notes",
+  "prescriptionDetails": "Prescription details",
+  "prescriptionEditHint": "Editing this text keeps the original scanned PDF unchanged.",
+  "saving": "Saving…",
+  "savePrescription": "Save prescription",
+  "openSavedPdf": "Open saved PDF",
+  "shareSavedPdf": "Share saved PDF",
+  "deleteAccount": "Delete account",
+  "deleteRequiresLive": "Account deletion requires a signed-in live account.",
+  "deleteNotConfirmed": "Deletion was not confirmed. Please retry.",
+  "deleteFailed": "Could not delete the account. Please try again.",
+  "deleteAccountHeadline": "Permanently delete your Kaylo account?",
+  "deleteAccountBody": "This removes your sign-in, profile, bookings, messages, care records and prescriptions stored on this device. It cannot be undone. Complete or cancel active bookings first. For unresolved payments, contact kayloapp@gmail.com.",
+  "deleteAccountNote": "Payment processors may retain transaction records. Documents you previously shared are not removed from other people’s devices.",
+  "typeDeleteToConfirm": "Type DELETE to confirm",
+  "deleting": "Deleting…",
+  "deleteMyAccount": "Delete my account",
+  "paymentVerified": "Payment verified. Your booking is confirmed.",
+  "paymentNotCompleted": "Payment was not completed.",
+  "checkoutOpenFailed": "Could not open secure checkout. Please try again.",
+  "cardsAndUpi": "Cards and UPI",
+  "paymentMethodsBody": "Enter a card manually or choose UPI in secure Razorpay checkout. Where supported, choose Razorpay’s save-card option to use that card again. Saved cards are managed inside checkout.",
+  "paymentMethodsNote": "Kaylo does not store your full card number, CVV or PIN. NFC card enrolment is not supported by the current payment integration.",
+  "completePendingPayment": "Complete a pending payment",
+  "noPendingPayments": "Your next booking will open checkout, where you can add or select a card.",
+  "pendingBookingLine": "Booking {id} • {date}",
+  "@pendingBookingLine": {
+    "placeholders": {
+      "id": {
+        "type": "String"
+      },
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "bookingsLoadFailedRetry": "Could not load bookings. Retry",
+  "openingPayment": "Opening payment…",
+  "payAndBook": "Pay & book",
+  "appointmentPaymentFailed": "Could not complete payment. Your appointment is not confirmed. Please try again.",
+  "visitPaymentFailed": "Could not complete payment. Your visit is not confirmed. Please try again.",
+  "careServiceUnavailable": "This care service is unavailable.",
+  "appointmentNotConfirmed": "Payment was not completed. Your appointment is not confirmed.",
+  "hapticFeedback": "Haptic feedback",
+  "soundEffects": "Sound effects",
+  "voiceStarting": "Starting microphone…",
+  "ocrNeedsReview": "Some text could not be read. Check the original scan and correct the notes before using them.",
+  "allBookings": "All bookings",
+  "noCompletedBookings": "No completed bookings yet",
+  "noCompletedBookingsDescription": "Your completed jobs will appear here once the work is done.",
+  "verificationRecord": "Verification record",
+  "refreshVerification": "Refresh verification status",
+  "verificationLoadError": "Could not load the current verification status. Please try again.",
+  "kayloVerified": "Verified on Kaylo",
+  "notYetVerified": "Not yet verified",
+  "viewVerification": "View verification record",
+  "verificationRecorded": "This professional’s profile is marked as verified in Kaylo.",
+  "verificationNotRecorded": "No verified status is recorded for this profile.",
+  "listedServices": "Listed services",
+  "profileReference": "Profile reference",
+  "serviceArea": "Service area",
+  "verificationScope": "This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.",
+  "selectOnMap": "Choose on map",
+  "chooseAddress": "Choose an address",
+  "offerFirst100Title": "Your first one is special",
+  "offerFirst100Body": "₹100 off your first booking of ₹499 or more.",
+  "offerKaylo150Title": "A little help with bigger jobs",
+  "offerKaylo150Body": "₹150 off a booking of ₹1,499 or more. Once per account.",
+  "offerWeekend100Title": "A weekend well spent",
+  "offerWeekend100Body": "₹100 off ₹999 or more on Saturdays and Sundays. Once per account.",
+  "offerWeekday50Title": "A midweek lift",
+  "offerWeekday50Body": "₹50 off ₹599 or more, Monday to Friday. Once per account.",
+  "offerHome80Title": "Home, sorted",
+  "offerHome80Body": "₹80 off a home service of ₹499 or more. Once per account.",
+  "offerFarm125Title": "For the land that feeds us",
+  "offerFarm125Body": "₹125 off a farm service of ₹999 or more. Once per account.",
+  "offerCare60Title": "Care, made a little lighter",
+  "offerCare60Body": "₹60 off a Care booking of ₹399 or more. Once per account.",
+  "offerKaylo300Title": "For the really big days",
+  "offerKaylo300Body": "₹300 off a booking of ₹2,999 or more. Once per account.",
+  "offerNext75Title": "Something for next time",
+  "offerNext75Body": "₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.",
+  "offerThanks120Title": "Three bookings in. Thank you.",
+  "offerThanks120Body": "₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.",
+  "offerReasonFirstOnly": "For your first booking only",
+  "offerReasonUsed": "Already used",
+  "offerReasonRewardUsed": "Reward used",
+  "offerReasonWeekend": "Available on weekends",
+  "offerReasonWeekday": "Available Monday to Friday",
+  "offerReasonNeedsConfirmed": "Unlocks after your first confirmed booking",
+  "offerReasonNeedsThree": "Unlocks after three confirmed bookings",
+  "offerReasonHomeOnly": "For home services only",
+  "offerReasonFarmOnly": "For farm services only",
+  "offerReasonCareOnly": "For Care bookings only",
+  "offerReasonAddMore": "Add {amount} more to use this offer",
+  "@offerReasonAddMore": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offerNotAvailable": "Offer not available",
+  "offersTitle": "A little more Kaylo",
+  "offersHeadline": "Everyday help.\nA little extra happiness.",
+  "offersIntro": "Thoughtful savings for the jobs that matter. One offer per booking.",
+  "offersLoadFailed": "Your offers couldn’t load. Please try again.",
+  "tryAgain": "Try again",
+  "enterCouponCode": "Enter coupon code",
+  "couponNotFound": "That code isn’t available",
+  "offersTerms": "Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.",
+  "offerAmountOff": "{amount} off",
+  "@offerAmountOff": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "applyOffer": "Apply",
+  "removeOffer": "Remove",
+  "offerYouSave": "You save {amount}",
+  "@offerYouSave": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "offersAndRewards": "Offers & rewards",
+  "offerCodeApplied": "{code} applied",
+  "@offerCodeApplied": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "offerStampApplied": "APPLIED",
+  "offersReadyCount": "{count, plural, =1{1 offer ready to use} other{{count} offers ready to use}}",
+  "@offersReadyCount": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "yourRewards": "Your rewards",
+  "allOffers": "All offers",
+  "offerLabel": "Offer • {code}",
+  "@offerLabel": {
+    "placeholders": {
+      "code": {
+        "type": "String"
+      }
+    }
+  },
+  "scratchCoverTitle": "A little thank you",
+  "scratchCoverHint": "Scratch to reveal your reward",
+  "revealReward": "Reveal reward",
+  "scratchSemantics": "Scratch reward. Reveal {amount} off a booking.",
+  "@scratchSemantics": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "bannerWelcomeTitle": "A warm welcome. ₹100 on us.",
+  "bannerWelcomeBody": "Your first-booking offer is unlocked",
+  "bannerRewardsTitle": "Good work. A little extra joy.",
+  "bannerRewardsBody": "Explore your offers & scratch rewards",
+  "secretTagline": "A little care goes a long way.",
+  "secretSemantics": "Kaylo. Made with care."
 }

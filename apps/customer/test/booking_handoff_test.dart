@@ -100,7 +100,7 @@ void main() {
     expect(find.text('Raju K.'), findsOneWidget);
     expect(find.text('Service address'), findsOneWidget);
 
-    await tester.tap(find.text('Confirm and pay ₹500'));
+    await tester.tap(find.text('Confirm and pay ₹300'));
     await settle(tester);
 
     expect(find.text('Booking confirmed'), findsOneWidget);
@@ -130,7 +130,7 @@ void main() {
 
     expect(find.text('Worker'), findsNothing);
 
-    await tester.tap(find.text('Confirm and pay ₹500'));
+    await tester.tap(find.text('Confirm and pay ₹300'));
     await settle(tester);
 
     final created = (await tester.runAsync(

@@ -9,6 +9,35 @@ class AppLocalizationsEn extends AppLocalizations {
   AppLocalizationsEn([String locale = 'en']) : super(locale);
 
   @override
+  String sosCallWaiting(String name) {
+    return 'Next: $name. The call starts after 3 seconds in Kaylo.';
+  }
+
+  @override
+  String sosCallProgress(int attempted, int total) {
+    return '$attempted of $total calls attempted';
+  }
+
+  @override
+  String get sosCallsFinished =>
+      'Call sequence finished. An attempted call does not confirm someone answered.';
+
+  @override
+  String get sosCallsStopped =>
+      'Remaining calls stopped. An ongoing call can be ended in your phone app.';
+
+  @override
+  String get sosStopCalls => 'Stop remaining calls';
+
+  @override
+  String get sosAndroidOnly => 'SIM calling is available on Android phones.';
+
+  @override
+  String careDosesTaken(int taken, int total) {
+    return '$taken of $total doses taken';
+  }
+
+  @override
   String get hello => 'Hello';
 
   @override
@@ -884,10 +913,10 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get sosHoldHint =>
-      'Press and hold the button for 3 seconds. Your emergency contacts get your location right away.';
+      'Hold for 3 seconds to call your contacts through your SIM, primary contact first. After each call ends, return to Kaylo to continue. Normal SIM charges apply.';
 
   @override
-  String get sosReleasedEarly => 'Keep holding for 3 seconds to send an alert';
+  String get sosReleasedEarly => 'Keep holding for 3 seconds to start calling';
 
   @override
   String get sosSentTitle => 'Help is on the way';
@@ -1589,45 +1618,687 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payNowSubtitle => 'Cards, netbanking or UPI, secured by Razorpay';
 
   @override
-  String get addPaymentMethod => 'Add payment method';
+  String get prescriptions => 'Prescriptions';
 
   @override
-  String get upiId => 'UPI ID';
+  String get prescriptionsSubtitle => 'Scan, read and keep your health records';
 
   @override
-  String get cardNumber => 'Card number';
+  String get trustedContacts => 'Trusted contacts';
 
   @override
-  String get setDefault => 'Set as default';
+  String get trustedContactsSubtitle =>
+      'Connect family and doctors for SOS calls';
 
   @override
-  String get removeMethod => 'Remove method';
+  String get sosStartFailedContacts =>
+      'Could not start SOS. Check your connection and trusted contacts.';
 
   @override
-  String get defaultTag => 'Default';
+  String get sosStartFailed => 'Could not start SOS. Please try again.';
 
   @override
-  String get noPaymentMethods => 'No saved payment methods yet';
+  String get sosModeKaylo => 'Kaylo call';
 
   @override
-  String get noPaymentMethodsSubtitle =>
-      'Add a UPI ID or card for faster checkouts';
+  String get sosModeSim => 'SIM call';
 
   @override
-  String get cardHolderName => 'Cardholder name';
+  String get manageTrustedContacts => 'Manage trusted contacts';
 
   @override
-  String get cardExpiry => 'Expiry (MM/YY)';
+  String get sosKayloHoldHint =>
+      'Hold for 3 seconds to invite your trusted Kaylo contacts. They can join the call together. An invitation does not mean someone has answered.';
 
   @override
-  String get deletePaymentMethodConfirm => 'Remove this payment method?';
+  String get contactsOpenFailed => 'Could not open phone contacts.';
 
   @override
-  String get paymentMethodAdded => 'Payment method added';
+  String get chooseFromPhoneContacts => 'Choose from phone contacts';
 
   @override
-  String get paymentMethodRemoved => 'Payment method removed';
+  String sosContactsSkipped(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count contacts were skipped: their numbers cannot be dialled.',
+      one: '1 contact was skipped: its number cannot be dialled.',
+    );
+    return '$_temp0';
+  }
 
   @override
-  String get savePaymentMethod => 'Save method';
+  String get incomingSosTitle => 'Incoming Kaylo SOS';
+
+  @override
+  String get incomingSosSubtitle => 'A trusted contact needs help';
+
+  @override
+  String get decline => 'Decline';
+
+  @override
+  String get joinCall => 'Join call';
+
+  @override
+  String get signInLiveForContacts =>
+      'Sign into the live app to connect trusted contacts.';
+
+  @override
+  String get couldNotConnectRetry => 'Could not connect. Please try again.';
+
+  @override
+  String get refreshConnections => 'Refresh connections';
+
+  @override
+  String get trustedCircleTitle => 'Bring your circle into Kaylo';
+
+  @override
+  String get trustedCircleBody =>
+      'Invite up to five family members or doctors who use Kaylo. When they accept your code, they can receive your SOS alerts and join the same voice call.';
+
+  @override
+  String get getInviteCode => 'Get my invite code';
+
+  @override
+  String get inviteCodeCopied => 'Invite code copied';
+
+  @override
+  String get copyCode => 'Copy code';
+
+  @override
+  String get inviteCodeValidity =>
+      'Valid for seven days. Share only with people you trust.';
+
+  @override
+  String get acceptInviteTitle => 'Accept someone’s invitation';
+
+  @override
+  String get inviteCode => 'Invite code';
+
+  @override
+  String get acceptInvitation => 'Accept invitation';
+
+  @override
+  String get invitationAccepted =>
+      'Invitation accepted. You are now connected and can receive their SOS alerts.';
+
+  @override
+  String get yourConnections => 'Your connections';
+
+  @override
+  String get noConnectionsYet => 'No connections yet';
+
+  @override
+  String get receivesYourSos => 'Receives your SOS alerts';
+
+  @override
+  String get youReceiveTheirSos => 'You receive their SOS alerts';
+
+  @override
+  String get removeConnection => 'Remove connection';
+
+  @override
+  String get removeConnectionTitle => 'Remove connection?';
+
+  @override
+  String get removeConnectionBody =>
+      'This connection will no longer receive SOS call invitations.';
+
+  @override
+  String get contactsLoadFailedRetry => 'Could not load contacts. Retry';
+
+  @override
+  String get callTitle => 'Kaylo SOS call';
+
+  @override
+  String get callEnded => 'Call ended';
+
+  @override
+  String get callYourCircle => 'Your trusted circle';
+
+  @override
+  String get callCouldNotConnect => 'Could not connect';
+
+  @override
+  String get callConnecting => 'Connecting…';
+
+  @override
+  String get callKeepOpen => 'Keep Kaylo open during the call.';
+
+  @override
+  String get retryCall => 'Retry call';
+
+  @override
+  String get callErrorRoom =>
+      'This call is unavailable or has ended. Return to SOS to start a new call.';
+
+  @override
+  String get callErrorSettings =>
+      'Could not load call settings. Check your connection and retry.';
+
+  @override
+  String get callErrorMicrophone =>
+      'Could not access the microphone. Check microphone access for Kaylo and retry.';
+
+  @override
+  String get callErrorJoin =>
+      'Could not join this call. Retry, or ask the caller to start a new SOS call.';
+
+  @override
+  String get callInterrupted => 'Connection interrupted. Retrying…';
+
+  @override
+  String get callPeerConnected => 'Connected';
+
+  @override
+  String get callPeerFailed => 'Connection failed';
+
+  @override
+  String get callPeerReconnecting => 'Reconnecting';
+
+  @override
+  String get callPeerConnecting => 'Connecting';
+
+  @override
+  String get callYou => 'You';
+
+  @override
+  String get callYouMuted => 'You • Muted';
+
+  @override
+  String get callInvitedWaiting => 'Invited • Waiting to answer';
+
+  @override
+  String get callDeclined => 'Declined';
+
+  @override
+  String get callLeft => 'Left the call';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get speaker => 'Speaker';
+
+  @override
+  String get callAudioOutputFailed =>
+      'Could not change audio output. The call is still active.';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get callEndForEveryone => 'End call for everyone';
+
+  @override
+  String get callLeave => 'Leave call';
+
+  @override
+  String get prescriptionsLoadFailed =>
+      'Could not load prescriptions. Please try again.';
+
+  @override
+  String get actionFailed => 'Could not complete that action.';
+
+  @override
+  String get prescriptionSaveFailed =>
+      'Could not save the prescription. Please try again.';
+
+  @override
+  String get prescriptionsHeadline => 'Your health records, together';
+
+  @override
+  String get prescriptionsIntro =>
+      'Scan a prescription or type a previous record. PDFs are saved privately on this device.';
+
+  @override
+  String get prescriptionsAndroidOnly =>
+      'Prescription scanning and PDFs are currently available in the Android app.';
+
+  @override
+  String get scanOrPhotos => 'Scan / photos';
+
+  @override
+  String get typeRecord => 'Type record';
+
+  @override
+  String get searchPrescriptions => 'Search prescriptions';
+
+  @override
+  String get noPrescriptionsYet => 'No prescriptions yet';
+
+  @override
+  String get noMatchingPrescriptions => 'No matching prescriptions';
+
+  @override
+  String get prescriptionNeedsTitleText => 'Add a title and prescription text.';
+
+  @override
+  String get prescriptionRecord => 'Prescription record';
+
+  @override
+  String get reviewPrescription => 'Review prescription';
+
+  @override
+  String get deletePrescription => 'Delete prescription';
+
+  @override
+  String get deletePrescriptionTitle => 'Delete prescription?';
+
+  @override
+  String get deletePrescriptionBody =>
+      'The PDF and text will be removed from this device.';
+
+  @override
+  String get delete => 'Delete';
+
+  @override
+  String get prescriptionReviewHint =>
+      'Review the extracted text against the original. Handwriting may be incomplete or incorrect; confirm medicine names and doses with your doctor.';
+
+  @override
+  String get viewOriginalPdf => 'View original PDF';
+
+  @override
+  String get titleLabel => 'Title';
+
+  @override
+  String get extractedTextNotes => 'Extracted text / notes';
+
+  @override
+  String get prescriptionDetails => 'Prescription details';
+
+  @override
+  String get prescriptionEditHint =>
+      'Editing this text keeps the original scanned PDF unchanged.';
+
+  @override
+  String get saving => 'Saving…';
+
+  @override
+  String get savePrescription => 'Save prescription';
+
+  @override
+  String get openSavedPdf => 'Open saved PDF';
+
+  @override
+  String get shareSavedPdf => 'Share saved PDF';
+
+  @override
+  String get deleteAccount => 'Delete account';
+
+  @override
+  String get deleteRequiresLive =>
+      'Account deletion requires a signed-in live account.';
+
+  @override
+  String get deleteNotConfirmed => 'Deletion was not confirmed. Please retry.';
+
+  @override
+  String get deleteFailed => 'Could not delete the account. Please try again.';
+
+  @override
+  String get deleteAccountHeadline => 'Permanently delete your Kaylo account?';
+
+  @override
+  String get deleteAccountBody =>
+      'This removes your sign-in, profile, bookings, messages, care records and prescriptions stored on this device. It cannot be undone. Complete or cancel active bookings first. For unresolved payments, contact kayloapp@gmail.com.';
+
+  @override
+  String get deleteAccountNote =>
+      'Payment processors may retain transaction records. Documents you previously shared are not removed from other people’s devices.';
+
+  @override
+  String get typeDeleteToConfirm => 'Type DELETE to confirm';
+
+  @override
+  String get deleting => 'Deleting…';
+
+  @override
+  String get deleteMyAccount => 'Delete my account';
+
+  @override
+  String get paymentVerified => 'Payment verified. Your booking is confirmed.';
+
+  @override
+  String get paymentNotCompleted => 'Payment was not completed.';
+
+  @override
+  String get checkoutOpenFailed =>
+      'Could not open secure checkout. Please try again.';
+
+  @override
+  String get cardsAndUpi => 'Cards and UPI';
+
+  @override
+  String get paymentMethodsBody =>
+      'Enter a card manually or choose UPI in secure Razorpay checkout. Where supported, choose Razorpay’s save-card option to use that card again. Saved cards are managed inside checkout.';
+
+  @override
+  String get paymentMethodsNote =>
+      'Kaylo does not store your full card number, CVV or PIN. NFC card enrolment is not supported by the current payment integration.';
+
+  @override
+  String get completePendingPayment => 'Complete a pending payment';
+
+  @override
+  String get noPendingPayments =>
+      'Your next booking will open checkout, where you can add or select a card.';
+
+  @override
+  String pendingBookingLine(String id, String date) {
+    return 'Booking $id • $date';
+  }
+
+  @override
+  String get bookingsLoadFailedRetry => 'Could not load bookings. Retry';
+
+  @override
+  String get openingPayment => 'Opening payment…';
+
+  @override
+  String get payAndBook => 'Pay & book';
+
+  @override
+  String get appointmentPaymentFailed =>
+      'Could not complete payment. Your appointment is not confirmed. Please try again.';
+
+  @override
+  String get visitPaymentFailed =>
+      'Could not complete payment. Your visit is not confirmed. Please try again.';
+
+  @override
+  String get careServiceUnavailable => 'This care service is unavailable.';
+
+  @override
+  String get appointmentNotConfirmed =>
+      'Payment was not completed. Your appointment is not confirmed.';
+
+  @override
+  String get hapticFeedback => 'Haptic feedback';
+
+  @override
+  String get soundEffects => 'Sound effects';
+
+  @override
+  String get voiceStarting => 'Starting microphone…';
+
+  @override
+  String get ocrNeedsReview =>
+      'Some text could not be read. Check the original scan and correct the notes before using them.';
+
+  @override
+  String get allBookings => 'All bookings';
+
+  @override
+  String get noCompletedBookings => 'No completed bookings yet';
+
+  @override
+  String get noCompletedBookingsDescription =>
+      'Your completed jobs will appear here once the work is done.';
+
+  @override
+  String get verificationRecord => 'Verification record';
+
+  @override
+  String get refreshVerification => 'Refresh verification status';
+
+  @override
+  String get verificationLoadError =>
+      'Could not load the current verification status. Please try again.';
+
+  @override
+  String get kayloVerified => 'Verified on Kaylo';
+
+  @override
+  String get notYetVerified => 'Not yet verified';
+
+  @override
+  String get viewVerification => 'View verification record';
+
+  @override
+  String get verificationRecorded =>
+      'This professional’s profile is marked as verified in Kaylo.';
+
+  @override
+  String get verificationNotRecorded =>
+      'No verified status is recorded for this profile.';
+
+  @override
+  String get listedServices => 'Listed services';
+
+  @override
+  String get profileReference => 'Profile reference';
+
+  @override
+  String get serviceArea => 'Service area';
+
+  @override
+  String get verificationScope =>
+      'This record reflects the profile’s current status. Supporting documents and check details are not available. It is not a government licence or a professional qualification.';
+
+  @override
+  String get selectOnMap => 'Choose on map';
+
+  @override
+  String get chooseAddress => 'Choose an address';
+
+  @override
+  String get offerFirst100Title => 'Your first one is special';
+
+  @override
+  String get offerFirst100Body =>
+      '₹100 off your first booking of ₹499 or more.';
+
+  @override
+  String get offerKaylo150Title => 'A little help with bigger jobs';
+
+  @override
+  String get offerKaylo150Body =>
+      '₹150 off a booking of ₹1,499 or more. Once per account.';
+
+  @override
+  String get offerWeekend100Title => 'A weekend well spent';
+
+  @override
+  String get offerWeekend100Body =>
+      '₹100 off ₹999 or more on Saturdays and Sundays. Once per account.';
+
+  @override
+  String get offerWeekday50Title => 'A midweek lift';
+
+  @override
+  String get offerWeekday50Body =>
+      '₹50 off ₹599 or more, Monday to Friday. Once per account.';
+
+  @override
+  String get offerHome80Title => 'Home, sorted';
+
+  @override
+  String get offerHome80Body =>
+      '₹80 off a home service of ₹499 or more. Once per account.';
+
+  @override
+  String get offerFarm125Title => 'For the land that feeds us';
+
+  @override
+  String get offerFarm125Body =>
+      '₹125 off a farm service of ₹999 or more. Once per account.';
+
+  @override
+  String get offerCare60Title => 'Care, made a little lighter';
+
+  @override
+  String get offerCare60Body =>
+      '₹60 off a Care booking of ₹399 or more. Once per account.';
+
+  @override
+  String get offerKaylo300Title => 'For the really big days';
+
+  @override
+  String get offerKaylo300Body =>
+      '₹300 off a booking of ₹2,999 or more. Once per account.';
+
+  @override
+  String get offerNext75Title => 'Something for next time';
+
+  @override
+  String get offerNext75Body =>
+      '₹75 off your next booking of ₹799 or more. Unlocks after a confirmed booking.';
+
+  @override
+  String get offerThanks120Title => 'Three bookings in. Thank you.';
+
+  @override
+  String get offerThanks120Body =>
+      '₹120 off a booking of ₹999 or more. Unlocks after three confirmed bookings.';
+
+  @override
+  String get offerReasonFirstOnly => 'For your first booking only';
+
+  @override
+  String get offerReasonUsed => 'Already used';
+
+  @override
+  String get offerReasonRewardUsed => 'Reward used';
+
+  @override
+  String get offerReasonWeekend => 'Available on weekends';
+
+  @override
+  String get offerReasonWeekday => 'Available Monday to Friday';
+
+  @override
+  String get offerReasonNeedsConfirmed =>
+      'Unlocks after your first confirmed booking';
+
+  @override
+  String get offerReasonNeedsThree => 'Unlocks after three confirmed bookings';
+
+  @override
+  String get offerReasonHomeOnly => 'For home services only';
+
+  @override
+  String get offerReasonFarmOnly => 'For farm services only';
+
+  @override
+  String get offerReasonCareOnly => 'For Care bookings only';
+
+  @override
+  String offerReasonAddMore(String amount) {
+    return 'Add $amount more to use this offer';
+  }
+
+  @override
+  String get offerNotAvailable => 'Offer not available';
+
+  @override
+  String get offersTitle => 'A little more Kaylo';
+
+  @override
+  String get offersHeadline => 'Everyday help.\nA little extra happiness.';
+
+  @override
+  String get offersIntro =>
+      'Thoughtful savings for the jobs that matter. One offer per booking.';
+
+  @override
+  String get offersLoadFailed => 'Your offers couldn’t load. Please try again.';
+
+  @override
+  String get tryAgain => 'Try again';
+
+  @override
+  String get enterCouponCode => 'Enter coupon code';
+
+  @override
+  String get couponNotFound => 'That code isn’t available';
+
+  @override
+  String get offersTerms =>
+      'Discounts reduce your booking total. They cannot be exchanged for cash or combined. Cancelled bookings release their offer. Eligibility is checked again at checkout.';
+
+  @override
+  String offerAmountOff(String amount) {
+    return '$amount off';
+  }
+
+  @override
+  String get applyOffer => 'Apply';
+
+  @override
+  String get removeOffer => 'Remove';
+
+  @override
+  String offerYouSave(String amount) {
+    return 'You save $amount';
+  }
+
+  @override
+  String get offersAndRewards => 'Offers & rewards';
+
+  @override
+  String offerCodeApplied(String code) {
+    return '$code applied';
+  }
+
+  @override
+  String get offerStampApplied => 'APPLIED';
+
+  @override
+  String offersReadyCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count offers ready to use',
+      one: '1 offer ready to use',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get yourRewards => 'Your rewards';
+
+  @override
+  String get allOffers => 'All offers';
+
+  @override
+  String offerLabel(String code) {
+    return 'Offer • $code';
+  }
+
+  @override
+  String get scratchCoverTitle => 'A little thank you';
+
+  @override
+  String get scratchCoverHint => 'Scratch to reveal your reward';
+
+  @override
+  String get revealReward => 'Reveal reward';
+
+  @override
+  String scratchSemantics(String amount) {
+    return 'Scratch reward. Reveal $amount off a booking.';
+  }
+
+  @override
+  String get bannerWelcomeTitle => 'A warm welcome. ₹100 on us.';
+
+  @override
+  String get bannerWelcomeBody => 'Your first-booking offer is unlocked';
+
+  @override
+  String get bannerRewardsTitle => 'Good work. A little extra joy.';
+
+  @override
+  String get bannerRewardsBody => 'Explore your offers & scratch rewards';
+
+  @override
+  String get secretTagline => 'A little care goes a long way.';
+
+  @override
+  String get secretSemantics => 'Kaylo. Made with care.';
 }

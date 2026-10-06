@@ -1,3 +1,7 @@
+import 'delete_account_screen.dart';
+import '../widgets/kaylo_secret.dart';
+import '../../../notifications/application/booking_reminders.dart';
+import 'legal_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -9,6 +13,7 @@ import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
 import 'package:kaylo_ui/widgets/kaylo_list_tile.dart';
 import '../../../../core/widgets/language_selector_sheet.dart';
 import 'package:kaylo_ui/widgets/avatar_circle.dart';
@@ -17,26 +22,39 @@ import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../widgets/edit_profile_sheet.dart';
 
-const _notificationsKey = 'notifications_enabled';
-
-final _notificationsEnabledProvider =
-    NotifierProvider<_NotificationsNotifier, bool>(_NotificationsNotifier.new);
-
-class _NotificationsNotifier extends Notifier<bool> {
+class SettingsScreen extends ConsumerStatefulWidget {
+  const SettingsScreen({super.key});
   @override
-  bool build() =>
-      ref.read(sharedPreferencesProvider).getBool(_notificationsKey) ?? true;
-
-  Future<void> setEnabled(bool enabled) async {
-    state = enabled;
-    await ref
-        .read(sharedPreferencesProvider)
-        .setBool(_notificationsKey, enabled);
-  }
+  ConsumerState<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class SettingsScreen extends ConsumerWidget {
-  const SettingsScreen({super.key});
+class _SettingsScreenState extends ConsumerState<SettingsScreen> {
+  int _versionTaps = 0;
+  DateTime? _lastVersionTap;
+  void _tapVersion() {
+    final now = DateTime.now();
+    if (_lastVersionTap == null ||
+        now.difference(_lastVersionTap!) > const Duration(seconds: 2)) {
+      _versionTaps = 0;
+    }
+    _lastVersionTap = now;
+    KayloFeedback.selection();
+    _versionTaps++;
+    // Each tap climbs one note of the scale; the fifth opens the page,
+    // where the bell answers.
+    if (_versionTaps < 5) {
+      ref.read(soundServiceProvider).play(KayloSound.notes[_versionTaps - 1]);
+    }
+    if (_versionTaps == 5) {
+      _versionTaps = 0;
+      KayloFeedback.success();
+      showDialog<void>(
+        context: context,
+        useRootNavigator: true,
+        builder: (_) => const KayloSecret(),
+      );
+    }
+  }
 
   static const _languageNames = {
     'en': 'English',
@@ -46,11 +64,11 @@ class SettingsScreen extends ConsumerWidget {
   };
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final themeMode = ref.watch(themeModeProvider);
     final locale = ref.watch(localeProvider);
     final careMode = ref.watch(careModeProvider);
-    final notifications = ref.watch(_notificationsEnabledProvider);
+    final notifications = ref.watch(notificationsEnabledProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final l10n = AppLocalizations.of(context)!;
 
@@ -167,6 +185,38 @@ class SettingsScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xxl),
 
+          KayloCard(
+            padding: EdgeInsets.zero,
+            child: Column(
+              children: [
+                SwitchListTile.adaptive(
+                  title: Text(l10n.hapticFeedback),
+                  secondary: const Icon(Icons.vibration_rounded),
+                  value: KayloFeedback.hapticsEnabled,
+                  onChanged: (value) {
+                    setState(() => KayloFeedback.hapticsEnabled = value);
+                    ref
+                        .read(sharedPreferencesProvider)
+                        .setBool('haptics_enabled', value);
+                    KayloFeedback.selection();
+                  },
+                ),
+                SwitchListTile.adaptive(
+                  title: Text(l10n.soundEffects),
+                  secondary: const Icon(Icons.volume_up_rounded),
+                  value: KayloFeedback.soundsEnabled,
+                  onChanged: (value) {
+                    setState(() => KayloFeedback.soundsEnabled = value);
+                    ref
+                        .read(sharedPreferencesProvider)
+                        .setBool('sounds_enabled', value);
+                    KayloFeedback.press();
+                  },
+                ),
+              ],
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xxl),
           SectionHeader(title: l10n.notifications),
           const SizedBox(height: AppSpacing.m),
           KayloCard(
@@ -183,8 +233,14 @@ class SettingsScreen extends ConsumerWidget {
                 onChanged: (value) {
                   KayloFeedback.tap();
                   ref
-                      .read(_notificationsEnabledProvider.notifier)
+                      .read(notificationsEnabledProvider.notifier)
                       .setEnabled(value);
+                  if (value) {
+                    ref
+                        .read(bookingRemindersProvider)
+                        .requestPermission()
+                        .catchError((Object _) {});
+                  }
                 },
               ),
             ),
@@ -204,6 +260,7 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: Text(l10n.version),
                   trailing: const Text('1.0.0'),
+                  onTap: _tapVersion,
                 ),
                 Divider(
                   height: 1,
@@ -216,19 +273,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: const Text('Terms of Service'),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Terms of Service'),
-                      content: const Text(
-                        'These are the terms of service. By using this app, you agree to our terms.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
-                        ),
-                      ],
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LegalScreen(privacy: false),
                     ),
                   ),
                 ),
@@ -243,19 +290,9 @@ class SettingsScreen extends ConsumerWidget {
                   ),
                   title: const Text('Privacy Policy'),
                   trailing: const Icon(Icons.chevron_right_rounded),
-                  onTap: () => showDialog(
-                    context: context,
-                    builder: (context) => AlertDialog(
-                      title: const Text('Privacy Policy'),
-                      content: const Text(
-                        'Your privacy is important to us. We do not share your personal information with third parties without your consent.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('Close'),
-                        ),
-                      ],
+                  onTap: () => Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (_) => const LegalScreen(privacy: true),
                     ),
                   ),
                 ),
@@ -263,6 +300,21 @@ class SettingsScreen extends ConsumerWidget {
             ),
           ),
           const SizedBox(height: AppSpacing.xxl),
+          KayloListTile(
+            leading: const Icon(
+              Icons.person_remove_outlined,
+              color: Colors.red,
+            ),
+            title: Text(
+              l10n.deleteAccount,
+              style: const TextStyle(color: Colors.red),
+            ),
+            trailing: const Icon(Icons.chevron_right),
+            onTap: () => Navigator.of(context).push(
+              MaterialPageRoute(builder: (_) => const DeleteAccountScreen()),
+            ),
+          ),
+          const SizedBox(height: AppSpacing.xl),
           Center(
             child: Text(
               l10n.madeInKerala,

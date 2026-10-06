@@ -14,6 +14,11 @@
 #                                                     (optional, Google sign-in on Android)
 #   GOOGLE_MAPS_API_KEY=AIza...                       (optional, else OpenStreetMap)
 # build.gradle.kts decodes the Maps define into the Android manifest too.
+#
+# On a Mac with 8 GB of memory the Gradle heap in android/gradle.properties
+# (8 GB) drives the system into swap, which can fill a nearly full disk.
+# A smaller heap for one build:
+#   GRADLE_OPTS='"-Dorg.gradle.jvmargs=-Xmx2200m -XX:MaxMetaspaceSize=768m" -Dorg.gradle.workers.max=2'
 set -euo pipefail
 cd "$(dirname "$0")/.."
 
@@ -61,6 +66,10 @@ else
   echo "note: no GOOGLE_MAPS_API_KEY, the map will use OpenStreetMap"
 fi
 
-flutter build apk --release --target-platform android-arm64 "${defines[@]}" "$@"
+# --split-per-abi keeps other processors' copies of the plugin libraries
+# (calls, scanner) out of the file: about 78 MB instead of 118 MB. It also
+# makes Flutter number the build 2000 + versionCode, so keep building this
+# way: a phone refuses to install a lower number over a higher one.
+flutter build apk --release --target-platform android-arm64 --split-per-abi "${defines[@]}" "$@"
 echo
-echo "APK ($($live && echo live || echo demo)): $(pwd)/build/app/outputs/flutter-apk/app-release.apk"
+echo "APK ($($live && echo live || echo demo)): $(pwd)/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk"

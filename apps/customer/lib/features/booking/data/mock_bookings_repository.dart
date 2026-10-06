@@ -11,7 +11,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w1',
       scheduledAt: DateTime(2026, 7, 14, 9),
       status: BookingStatus.completed,
-      totalAmount: 1000,
+      totalAmount: 500,
       notes: 'Thekkedath House, Kaloor',
     ),
     Booking(
@@ -21,7 +21,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w2',
       scheduledAt: DateTime(2026, 8, 2, 10),
       status: BookingStatus.completed,
-      totalAmount: 1000,
+      totalAmount: 500,
       notes: 'Thekkedath House, Kaloor',
     ),
     // Always a few days ahead, so the demo (and the details screen's
@@ -33,7 +33,7 @@ class MockBookingsRepository implements BookingsRepository {
       workerId: 'w2',
       scheduledAt: _daysFromNow(3, hour: 15),
       status: BookingStatus.confirmed,
-      totalAmount: 500,
+      totalAmount: 300,
       notes: 'Thekkedath House, Kaloor',
     ),
   ];
@@ -65,6 +65,9 @@ class MockBookingsRepository implements BookingsRepository {
       totalAmount: booking.totalAmount,
       locationId: booking.locationId,
       notes: booking.notes,
+      subtotalAmount: booking.subtotalAmount,
+      discountAmount: booking.discountAmount,
+      offerCode: booking.offerCode,
     );
     _mockBookings.add(newBooking);
     return newBooking;
@@ -90,6 +93,8 @@ class MockBookingsRepository implements BookingsRepository {
     if (index != -1) _mockBookings[index] = update(_mockBookings[index]);
   }
 
+  void applyOffer(Booking booking) => _replace(booking.id, (_) => booking);
+
   Booking _copy(Booking old, {BookingStatus? status, DateTime? scheduledAt}) {
     return Booking(
       id: old.id,
@@ -102,6 +107,9 @@ class MockBookingsRepository implements BookingsRepository {
       locationId: old.locationId,
       notes: old.notes,
       finalCost: old.finalCost,
+      subtotalAmount: old.subtotalAmount,
+      discountAmount: old.discountAmount,
+      offerCode: old.offerCode,
     );
   }
 }

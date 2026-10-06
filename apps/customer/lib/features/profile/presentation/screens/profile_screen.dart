@@ -1,3 +1,4 @@
+import 'payment_methods_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -13,6 +14,7 @@ import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 
 import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
 
 import '../../../auth/application/session_controller.dart';
 import '../../../booking/application/bookings_providers.dart';
@@ -37,10 +39,12 @@ class ProfileScreen extends ConsumerWidget {
     }
 
     // Real counts; a dash while a list is still loading.
-    final bookings =
-        ref.watch(userBookingsProvider).whenOrNull(data: (list) => list);
-    final addresses =
-        ref.watch(savedAddressesProvider).whenOrNull(data: (list) => list);
+    final bookings = ref
+        .watch(userBookingsProvider)
+        .whenOrNull(data: (list) => list);
+    final addresses = ref
+        .watch(savedAddressesProvider)
+        .whenOrNull(data: (list) => list);
     final completed = bookings
         ?.where((b) => b.status == BookingStatus.completed)
         .length;
@@ -48,8 +52,15 @@ class ProfileScreen extends ConsumerWidget {
 
     return Scaffold(
       body: SafeArea(
+        bottom: false,
         child: ListView(
-          padding: const EdgeInsets.all(AppSpacing.l),
+          // Let the content scroll behind the floating navigation pill.
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.l,
+            AppSpacing.l,
+            AppSpacing.l,
+            120,
+          ),
           children: [
             Padding(
               padding: const EdgeInsets.symmetric(vertical: AppSpacing.m),
@@ -127,6 +138,7 @@ class ProfileScreen extends ConsumerWidget {
                     value: count(bookings?.length),
                     label: l10n.statBookings,
                     icon: Icons.event_available_rounded,
+                    onTap: () => context.go(Routes.bookings),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.m),
@@ -135,6 +147,8 @@ class ProfileScreen extends ConsumerWidget {
                     value: count(completed),
                     label: l10n.statCompleted,
                     icon: Icons.task_alt_rounded,
+                    onTap: () =>
+                        context.go('${Routes.bookings}?status=completed'),
                   ),
                 ),
                 const SizedBox(width: AppSpacing.m),
@@ -143,6 +157,8 @@ class ProfileScreen extends ConsumerWidget {
                     value: count(addresses?.length),
                     label: l10n.statSaved,
                     icon: Icons.bookmark_rounded,
+                    semanticLabel: l10n.savedAddresses,
+                    onTap: () => context.push(Routes.addresses),
                   ),
                 ),
               ],
@@ -174,7 +190,11 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.account_balance_wallet_rounded,
                     color: AppColors.careAccent,
                     title: l10n.paymentMethods,
-                    onTap: () => context.push(Routes.paymentMethods),
+                    onTap: () => Navigator.of(context).push(
+                      MaterialPageRoute(
+                        builder: (_) => const PaymentMethodsScreen(),
+                      ),
+                    ),
                   ),
                 ],
               ),
@@ -275,28 +295,47 @@ class _StatTile extends StatelessWidget {
   final String value;
   final String label;
   final IconData icon;
+  final VoidCallback onTap;
+  final String? semanticLabel;
 
   const _StatTile({
     required this.value,
     required this.label,
     required this.icon,
+    required this.onTap,
+    this.semanticLabel,
   });
 
   @override
   Widget build(BuildContext context) {
-    return KayloCard(
-      padding: const EdgeInsets.symmetric(
-        vertical: AppSpacing.l,
-        horizontal: AppSpacing.s,
-      ),
-      child: Column(
-        children: [
-          Icon(icon, color: AppColors.brandPrimary, size: 20),
-          const SizedBox(height: AppSpacing.s),
-          Text(value, style: Theme.of(context).textTheme.titleLarge),
-          const SizedBox(height: 2),
-          Text(label, style: Theme.of(context).textTheme.bodySmall),
-        ],
+    return Semantics(
+      button: true,
+      label: semanticLabel ?? label,
+      value: value,
+      excludeSemantics: true,
+      onTap: onTap,
+      child: KayloCard(
+        onTap: () {
+          KayloFeedback.press();
+          onTap();
+        },
+        padding: const EdgeInsets.symmetric(
+          vertical: AppSpacing.l,
+          horizontal: AppSpacing.s,
+        ),
+        child: Column(
+          children: [
+            Icon(icon, color: AppColors.brandPrimary, size: 20),
+            const SizedBox(height: AppSpacing.s),
+            Text(value, style: Theme.of(context).textTheme.titleLarge),
+            const SizedBox(height: 2),
+            Text(
+              label,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+          ],
+        ),
       ),
     );
   }

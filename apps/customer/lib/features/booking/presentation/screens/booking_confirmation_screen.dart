@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:kaylo_core/models/booking.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -13,6 +14,7 @@ import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/booking_receipt.dart';
 import '../widgets/booking_labels.dart';
+import '../../../offers/presentation/offers_screen.dart';
 
 /// Final step of every booking flow. Back navigation is deliberately
 /// disabled: the payment is done, so "back" means the dashboard.
@@ -130,6 +132,21 @@ class _BookingConfirmationScreenState
                     row(l10n.service, text(receipt.service.name)),
                     for (final line in receipt.extras)
                       row(line.label, text(line.value)),
+                    if (booking.discountAmount > 0) ...[
+                      row(
+                        'Subtotal',
+                        text(
+                          formatRupees(
+                            booking.subtotalAmount ??
+                                booking.totalAmount + booking.discountAmount,
+                          ),
+                        ),
+                      ),
+                      row(
+                        l10n.offerLabel(booking.offerCode ?? ''),
+                        text('−${formatRupees(booking.discountAmount)}'),
+                      ),
+                    ],
                     row(
                       l10n.total,
                       text(formatRupees(booking.totalAmount), bold: true),
@@ -143,6 +160,10 @@ class _BookingConfirmationScreenState
                 ),
               ),
               const SizedBox(height: AppSpacing.xxxl),
+              if (booking.status != BookingStatus.pending) ...[
+                const OffersBanner(),
+                const SizedBox(height: AppSpacing.l),
+              ],
               KayloButton(
                 text: l10n.viewMyBookings,
                 icon: Icons.event_available_rounded,

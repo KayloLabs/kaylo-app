@@ -119,15 +119,29 @@ async function send(
 
   const code = String(crypto.getRandomValues(new Uint32Array(1))[0] % 1_000_000)
     .padStart(6, "0");
+  const expiresAt = Date.now() + CODE_TTL_MINUTES * 60_000;
   const { error } = await db.from("email_otps").upsert({
     email,
     code_hash: await hash(email, code),
-    expires_at: new Date(Date.now() + CODE_TTL_MINUTES * 60_000).toISOString(),
+    expires_at: new Date(expiresAt).toISOString(),
     attempts: 0,
     sent_at: new Date().toISOString(),
   });
   if (error) return fail(500, "db", error.message);
 
+  const copyPageUrl = Deno.env.get("OTP_COPY_PAGE_URL");
+  let copyLink = "";
+  if (copyPageUrl) {
+    const url = new URL(copyPageUrl);
+    if (url.protocol !== "https:") {
+      throw new Error("OTP_COPY_PAGE_URL must use HTTPS");
+    }
+    url.hash = new URLSearchParams({
+      code,
+      expires: String(expiresAt),
+    }).toString();
+    copyLink = url.toString();
+  }
   const greeting = name ? `Hi ${escapeHtml(name)}, ` : "";
   const what = purpose === "signup"
     ? "finish creating your Kaylo account"
@@ -139,13 +153,21 @@ async function send(
     } code`,
     text:
       `Your Kaylo code is ${code}. It expires in ${CODE_TTL_MINUTES} minutes. ` +
+      (copyLink ? `Copy code in your browser: ${copyLink}\n` : "") +
       "If you did not ask for it, ignore this email.",
     html: emailShell(
       purpose === "signup" ? "Welcome to Kaylo" : "Your sign-in code",
       `<tr><td style="padding:10px 32px 0;font-size:15px;color:${brand.muted};line-height:1.6;">${greeting}enter this code in the app to ${what}.</td></tr>
        <tr><td align="center" style="padding:22px 32px;">
-         <div style="display:inline-block;font-size:36px;letter-spacing:12px;font-weight:700;color:${brand.ink};background:${brand.tint};border-radius:16px;padding:16px 18px 16px 30px;">${code}</div>
+         <div style="display:inline-block;font-size:36px;letter-spacing:4px;font-weight:700;color:${brand.ink};background:${brand.tint};border-radius:16px;padding:16px 24px;user-select:all;-webkit-user-select:all;">${code}</div>
        </td></tr>
+       <tr><td align="center" style="padding:0 32px 20px;font-size:13px;color:${brand.muted};line-height:1.6;">${
+        copyLink
+          ? `<div style="margin-top:16px;"><a href="${
+            escapeHtml(copyLink)
+          }" style="display:inline-block;background:${brand.green};color:#FFFFFF;text-decoration:none;padding:12px 24px;border-radius:12px;font-size:15px;font-weight:700;">Copy OTP in browser</a></div>`
+          : ""
+      }</td></tr>
        <tr><td style="padding:0 32px 30px;font-size:13px;color:${brand.muted};line-height:1.6;">
          The code expires in ${CODE_TTL_MINUTES} minutes. If you did not ask for it, you can ignore this email; nothing happens without the code.
        </td></tr>`,

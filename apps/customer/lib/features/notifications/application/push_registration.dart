@@ -5,6 +5,7 @@ import 'package:kaylo_core/network/supabase_providers.dart';
 import 'package:kaylo_core/services/device_tokens.dart';
 import 'package:kaylo_core/services/notification_service.dart';
 
+import 'booking_reminders.dart';
 import '../../auth/application/current_user_provider.dart';
 
 /// Keeps this device's push token registered for whoever is signed in,
@@ -12,14 +13,21 @@ import '../../auth/application/current_user_provider.dart';
 /// root; it does nothing in mock mode or without Firebase.
 final pushRegistrationProvider = Provider<void>((ref) {
   final user = ref.watch(currentUserProvider);
-  if (user == null || useMockData || !FirebaseBootstrap.isReady) return;
+  final enabled = ref.watch(notificationsEnabledProvider);
+  if (user == null || useMockData || !FirebaseBootstrap.isReady) {
+    return;
+  }
 
   final service = ref.watch(notificationServiceProvider);
   final registrar = DeviceTokenRegistrar(ref.watch(supabaseClientProvider));
 
   Future<void> register(String? token) async {
-    if (token == null) return;
+    if (token == null || !ref.mounted) return;
     try {
+      if (!ref.read(notificationsEnabledProvider)) {
+        await registrar.unregister(token);
+        return;
+      }
       await registrar.register(
         personId: user.id,
         token: token,
@@ -31,7 +39,10 @@ final pushRegistrationProvider = Provider<void>((ref) {
     }
   }
 
-  service.initialize().then((_) => service.getToken()).then(register);
+  (enabled ? service.initialize() : Future<void>.value())
+      .then((_) => service.getToken())
+      .then(register)
+      .catchError((Object _) {});
   final subscription = service.onTokenRefresh.listen(register);
   ref.onDispose(subscription.cancel);
 });

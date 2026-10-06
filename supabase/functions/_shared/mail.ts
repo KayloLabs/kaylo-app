@@ -139,7 +139,7 @@ export function emailShell(
     </table>
   </td></tr>
   <tr><td align="center" style="background:${brand.tint};padding:18px 32px;font-size:12px;color:${brand.muted};line-height:1.6;">
-    Kaylo · Kannur, Kerala · <a href="mailto:${
+    Kaylo · <a href="mailto:${
     escapeHtml(gmailUser)
   }" style="color:${brand.green};text-decoration:none;">${
     escapeHtml(gmailUser)

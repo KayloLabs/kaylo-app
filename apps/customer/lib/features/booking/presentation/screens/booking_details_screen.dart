@@ -1,3 +1,4 @@
+import '../../../../core/config/service_artwork.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -175,7 +176,14 @@ class _Details extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(16),
                   ),
                   child: service != null
-                      ? Image.asset(service!.iconPath, fit: BoxFit.contain)
+                      ? Image.asset(
+                          ServiceArtwork.resolve(
+                            name: service!.name,
+                            category: service!.category,
+                            fallback: service!.iconPath,
+                          ),
+                          fit: BoxFit.contain,
+                        )
                       : Icon(Icons.handyman_rounded, color: accent),
                 ),
                 const SizedBox(width: AppSpacing.m),

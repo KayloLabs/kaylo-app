@@ -1,3 +1,4 @@
+import '../../../../core/config/service_artwork.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -24,7 +25,9 @@ import '../widgets/booking_labels.dart';
 /// still ahead and what is done. M4 extends this with tracking and
 /// reviews; the list itself is shared by every booking flow.
 class BookingsScreen extends ConsumerWidget {
-  const BookingsScreen({super.key});
+  final bool completedOnly;
+
+  const BookingsScreen({super.key, this.completedOnly = false});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -69,8 +72,57 @@ class BookingsScreen extends ConsumerWidget {
                   ],
                 ),
               ),
+              Wrap(
+                spacing: AppSpacing.s,
+                runSpacing: AppSpacing.xs,
+                children: [
+                  ChoiceChip(
+                    label: Text(l10n.allBookings),
+                    selected: !completedOnly,
+                    onSelected: (_) {
+                      KayloFeedback.selection();
+                      context.go(Routes.bookings);
+                    },
+                  ),
+                  ChoiceChip(
+                    label: Text(l10n.statCompleted),
+                    selected: completedOnly,
+                    onSelected: (_) {
+                      KayloFeedback.selection();
+                      context.go('${Routes.bookings}?status=completed');
+                    },
+                  ),
+                ],
+              ),
+              const SizedBox(height: AppSpacing.l),
               ...bookings.when(
                 data: (list) {
+                  final completed =
+                      list
+                          .where((b) => b.status == BookingStatus.completed)
+                          .toList()
+                        ..sort(
+                          (a, b) => b.scheduledAt.compareTo(a.scheduledAt),
+                        );
+                  if (completedOnly) {
+                    if (completed.isEmpty) {
+                      return [
+                        EmptyState(
+                          title: l10n.noCompletedBookings,
+                          description: l10n.noCompletedBookingsDescription,
+                          icon: Icons.task_alt_rounded,
+                          actionText: l10n.allBookings,
+                          onActionPressed: () => context.go(Routes.bookings),
+                        ),
+                      ];
+                    }
+                    return [
+                      for (final b in completed) ...[
+                        _BookingCard(booking: b, service: byId[b.serviceId]),
+                        const SizedBox(height: AppSpacing.m),
+                      ],
+                    ];
+                  }
                   if (list.isEmpty) {
                     return [
                       EmptyState(
@@ -90,7 +142,8 @@ class BookingsScreen extends ConsumerWidget {
                       !b.scheduledAt.isBefore(now);
                   final upcoming = list.where(isUpcoming).toList()
                     ..sort((a, b) => a.scheduledAt.compareTo(b.scheduledAt));
-                  final past = list.where((b) => !isUpcoming(b)).toList();
+                  final past = list.where((b) => !isUpcoming(b)).toList()
+                    ..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
 
                   return [
                     if (upcoming.isNotEmpty) ...[
@@ -197,7 +250,14 @@ class _BookingCard extends StatelessWidget {
                   borderRadius: BorderRadius.circular(14),
                 ),
                 child: service != null
-                    ? Image.asset(service!.iconPath, fit: BoxFit.contain)
+                    ? Image.asset(
+                        ServiceArtwork.resolve(
+                          name: service!.name,
+                          category: service!.category,
+                          fallback: service!.iconPath,
+                        ),
+                        fit: BoxFit.contain,
+                      )
                     : Icon(Icons.handyman_rounded, color: accent),
               ),
               const SizedBox(width: AppSpacing.m),
@@ -213,6 +273,8 @@ class _BookingCard extends StatelessWidget {
                     ),
                     Text(
                       booking.id,
+                      maxLines: 1,
+                      overflow: TextOverflow.ellipsis,
                       style: Theme.of(
                         context,
                       ).textTheme.bodySmall?.copyWith(color: secondary),
@@ -220,7 +282,6 @@ class _BookingCard extends StatelessWidget {
                   ],
                 ),
               ),
-              BookingStatusChip(status: booking.status),
             ],
           ),
           const SizedBox(height: AppSpacing.m),
@@ -230,6 +291,8 @@ class _BookingCard extends StatelessWidget {
             '${loc.formatTimeOfDay(TimeOfDay.fromDateTime(booking.scheduledAt))}',
           ),
           detail(Icons.payments_rounded, formatRupees(booking.totalAmount)),
+          const SizedBox(height: AppSpacing.s),
+          BookingStatusChip(status: booking.status),
           if (booking.notes != null && booking.notes!.isNotEmpty)
             detail(Icons.pin_drop_rounded, booking.notes!),
         ],

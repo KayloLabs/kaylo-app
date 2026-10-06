@@ -22,8 +22,13 @@ bool filtersActive(SearchFilters filters) =>
 class SearchResults {
   final List<ServiceItem> services;
   final List<Worker> workers;
+  final Map<String, String> workerServiceIds;
 
-  const SearchResults({this.services = const [], this.workers = const []});
+  const SearchResults({
+    this.services = const [],
+    this.workers = const [],
+    this.workerServiceIds = const {},
+  });
 
   bool get isEmpty => services.isEmpty && workers.isEmpty;
   bool get isNotEmpty => !isEmpty;
@@ -35,6 +40,7 @@ class SearchState {
   final SearchResults results;
   final List<String> recentSearches;
   final bool isLoading;
+  final bool hasError;
 
   const SearchState({
     this.query = '',
@@ -42,11 +48,12 @@ class SearchState {
     this.results = const SearchResults(),
     this.recentSearches = const [],
     this.isLoading = false,
+    this.hasError = false,
   });
 
   /// Whether there is something to show results for: typed text, or a
   /// category picked from the filters, which browses that category.
-  bool get hasQuery => query.trim().isNotEmpty || filters.category != null;
+  bool get hasQuery => query.trim().isNotEmpty || filtersActive(filters);
 
   SearchState copyWith({
     String? query,
@@ -54,6 +61,7 @@ class SearchState {
     SearchResults? results,
     List<String>? recentSearches,
     bool? isLoading,
+    bool? hasError,
   }) {
     return SearchState(
       query: query ?? this.query,
@@ -61,6 +69,7 @@ class SearchState {
       results: results ?? this.results,
       recentSearches: recentSearches ?? this.recentSearches,
       isLoading: isLoading ?? this.isLoading,
+      hasError: hasError ?? this.hasError,
     );
   }
 }
@@ -75,7 +84,10 @@ class SearchNotifier extends Notifier<SearchState> {
 
   @override
   SearchState build() {
-    ref.onDispose(() => _debounceTimer?.cancel());
+    ref.onDispose(() {
+      _debounceTimer?.cancel();
+      _generation++;
+    });
     _loadRecentSearches();
     return const SearchState();
   }
@@ -97,25 +109,28 @@ class SearchNotifier extends Notifier<SearchState> {
 
   void onQueryChanged(String newQuery) {
     _debounceTimer?.cancel();
+    _generation++;
 
-    if (newQuery.trim().isEmpty && state.filters.category == null) {
+    if (newQuery.trim().isEmpty && !filtersActive(state.filters)) {
       _generation++;
       state = state.copyWith(
         query: '',
         results: const SearchResults(),
         isLoading: false,
+        hasError: false,
       );
       return;
     }
 
-    state = state.copyWith(query: newQuery, isLoading: true);
+    state = state.copyWith(query: newQuery, isLoading: true, hasError: false);
 
     _debounceTimer = Timer(const Duration(milliseconds: 300), _performSearch);
   }
 
   void setFilters(SearchFilters filters) {
     _debounceTimer?.cancel();
-    state = state.copyWith(filters: filters);
+    _generation++;
+    state = state.copyWith(filters: filters, hasError: false);
     if (!state.hasQuery) {
       _generation++;
       state = state.copyWith(results: const SearchResults(), isLoading: false);
@@ -127,81 +142,83 @@ class SearchNotifier extends Notifier<SearchState> {
 
   void clearFilters() => setFilters(noFilters);
 
+  void retry() {
+    if (!state.hasQuery) return;
+    ref.invalidate(fullCatalogProvider);
+    ref.invalidate(workerListProvider);
+    state = state.copyWith(isLoading: true, hasError: false);
+    _performSearch();
+  }
+
   Future<void> _performSearch() async {
     final generation = ++_generation;
     final query = state.query.trim();
     final filters = state.filters;
-    final homeRepo = ref.read(homeRepositoryProvider);
     final workersRepo = ref.read(workersRepositoryProvider);
+    var workerError = false;
+    Future<List<Worker>> readWorkers(Future<List<Worker>> future) async {
+      try {
+        return await future;
+      } catch (_) {
+        workerError = true;
+        return const [];
+      }
+    }
+
+    // The catalog is already cached; avoid an extra database substring
+    // query that disagrees with voice matching and depends on network speed.
+    final namedWorkers = query.isEmpty
+        ? Future.value(const <Worker>[])
+        : readWorkers(workersRepo.searchWorkers(query));
     try {
-      final catalogFuture = ref.read(fullCatalogProvider.future);
-      final directFuture = query.isEmpty
-          ? Future.value(const <ServiceItem>[])
-          : homeRepo.searchServices(query);
-      final workersFuture = query.isEmpty
-          ? Future.value(const <Worker>[])
-          : workersRepo.searchWorkers(query);
-
-      final catalog = await catalogFuture;
-      final direct = await directFuture;
-      final workers = await workersFuture;
+      final catalog = await ref.read(fullCatalogProvider.future);
       if (generation != _generation) return;
-
+      final services = rankSearchServices(query, filters, catalog);
+      final bySkill = query.isEmpty
+          ? const <List<Worker>>[]
+          : await Future.wait([
+              for (final service in services)
+                readWorkers(ref.read(workerListProvider(service.id).future)),
+            ]);
+      final directWorkers = await namedWorkers;
+      if (generation != _generation) return;
+      final workers = rankSearchWorkers(
+        [...directWorkers, for (final list in bySkill) ...list],
+        filters,
+        catalog,
+      );
+      final skillChoices = [
+        ...services.map((service) => service.id),
+        ...catalog
+            .where(
+              (service) =>
+                  filters.category == null ||
+                  service.category == filters.category,
+            )
+            .map((service) => service.id),
+      ];
       state = state.copyWith(
         results: SearchResults(
-          services: _rankServices(query, filters, direct, catalog),
+          services: services,
           workers: workers,
+          workerServiceIds: {
+            for (final worker in workers)
+              if (skillChoices.any(worker.skillIds.contains))
+                worker.id: skillChoices.firstWhere(worker.skillIds.contains),
+          },
         ),
         isLoading: false,
+        hasError: workerError,
       );
     } catch (_) {
       if (generation == _generation) {
-        state = state.copyWith(isLoading: false);
+        state = state.copyWith(
+          results: const SearchResults(),
+          isLoading: false,
+          hasError: true,
+        );
       }
     }
-  }
-
-  /// Direct name/description matches first, then the voice-search
-  /// intent engine's natural-language hits ("tap is leaking" finds
-  /// Plumbing) in any of the four languages; an empty query browses the
-  /// chosen category.
-  List<ServiceItem> _rankServices(
-    String query,
-    SearchFilters filters,
-    List<ServiceItem> direct,
-    List<ServiceItem> catalog,
-  ) {
-    // "More" is a dashboard affordance, not a bookable service.
-    var pool = catalog.where((s) => s.basePrice > 0).toList();
-    if (filters.category != null) {
-      pool = pool.where((s) => s.category == filters.category).toList();
-    }
-    final allowed = {for (final s in pool) s.id};
-
-    List<ServiceItem> results;
-    if (query.isEmpty) {
-      results = pool;
-    } else {
-      final seen = <String>{};
-      results = [
-        for (final s in direct)
-          if (allowed.contains(s.id) && seen.add(s.id)) s,
-        for (final s in matchServicesToTranscript(query, pool))
-          if (seen.add(s.id)) s,
-      ];
-    }
-
-    switch (filters.sort) {
-      case SearchSort.priceLowHigh:
-        results = [...results]
-          ..sort((a, b) => a.basePrice.compareTo(b.basePrice));
-      case SearchSort.priceHighLow:
-        results = [...results]
-          ..sort((a, b) => b.basePrice.compareTo(a.basePrice));
-      case SearchSort.relevance:
-        break;
-    }
-    return results;
   }
 
   Future<void> addRecentSearch(String term) async {
@@ -230,6 +247,75 @@ class SearchNotifier extends Notifier<SearchState> {
     state = state.copyWith(recentSearches: const []);
     await _saveRecentSearches(const []);
   }
+}
+
+/// One relevance engine for text, voice, and popular-search chips. Price
+/// order applies after relevance/category narrowing and has stable ties.
+List<ServiceItem> rankSearchServices(
+  String query,
+  SearchFilters filters,
+  List<ServiceItem> catalog,
+) {
+  final pool = catalog
+      .where(
+        (service) =>
+            service.name.toLowerCase() != 'more' &&
+            (filters.category == null || service.category == filters.category),
+      )
+      .toList();
+  final results = query.trim().isEmpty
+      ? pool
+      : matchServicesToTranscript(query, pool);
+  if (filters.sort != SearchSort.relevance) {
+    results.sort((a, b) {
+      final price = filters.sort == SearchSort.priceLowHigh
+          ? a.basePrice.compareTo(b.basePrice)
+          : b.basePrice.compareTo(a.basePrice);
+      return price != 0 ? price : a.name.compareTo(b.name);
+    });
+  }
+  return results;
+}
+
+List<Worker> rankSearchWorkers(
+  List<Worker> workers,
+  SearchFilters filters,
+  List<ServiceItem> catalog,
+) {
+  final allowedSkills = {
+    for (final service in catalog)
+      if (filters.category == null || service.category == filters.category)
+        service.id,
+  };
+  final seen = <String>{};
+  final results = workers
+      .where(
+        (worker) =>
+            worker.isAvailable &&
+            seen.add(worker.id) &&
+            (filters.category == null ||
+                worker.skillIds.any(allowedSkills.contains)),
+      )
+      .toList();
+  results.sort((a, b) {
+    if (filters.sort != SearchSort.relevance) {
+      // Unknown prices are never presented as free or sorted ahead of
+      // known rates, in either direction.
+      if (a.hourlyRate == null && b.hourlyRate != null) return 1;
+      if (a.hourlyRate != null && b.hourlyRate == null) return -1;
+      if (a.hourlyRate != null && b.hourlyRate != null) {
+        final price = filters.sort == SearchSort.priceLowHigh
+            ? a.hourlyRate!.compareTo(b.hourlyRate!)
+            : b.hourlyRate!.compareTo(a.hourlyRate!);
+        if (price != 0) return price;
+      }
+    }
+    final rating = b.rating.compareTo(a.rating);
+    if (rating != 0) return rating;
+    final name = a.name.compareTo(b.name);
+    return name != 0 ? name : a.id.compareTo(b.id);
+  });
+  return results;
 }
 
 /// Lives as long as the search screen, so each visit starts blank

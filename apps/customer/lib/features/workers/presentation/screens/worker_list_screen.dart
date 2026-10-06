@@ -327,7 +327,7 @@ class WorkerListScreen extends ConsumerWidget {
       case WorkerSort.priceHighToLow:
         return '${l10n.sortBy}: ${l10n.priceHighToLow}';
       case WorkerSort.experience:
-        return '${l10n.sortBy}: ${l10n.experience}';
+        return '${l10n.sortBy}: ${l10n.completedJobs}';
       case WorkerSort.distance:
         return '${l10n.sortBy}: ${l10n.nearbyFirst}';
     }
@@ -387,7 +387,7 @@ class WorkerListScreen extends ConsumerWidget {
                       value: WorkerSort.priceHighToLow,
                     ),
                     RadioListTile<WorkerSort>(
-                      title: Text(l10n.experience),
+                      title: Text(l10n.completedJobs),
                       value: WorkerSort.experience,
                     ),
                   ],
@@ -459,10 +459,13 @@ class WorkerListScreen extends ConsumerWidget {
                       style: const TextStyle(fontWeight: FontWeight.w600),
                     ),
                     const SizedBox(height: AppSpacing.s),
-                    Row(
+                    Wrap(
+                      spacing: AppSpacing.s,
+                      runSpacing: AppSpacing.s,
                       children: [
                         ChoiceChip(
                           label: const Text('★ 4.0+'),
+                          showCheckmark: false,
                           selected: tempMinRating == 4.0,
                           onSelected: (selected) {
                             setModalState(() {
@@ -470,9 +473,9 @@ class WorkerListScreen extends ConsumerWidget {
                             });
                           },
                         ),
-                        const SizedBox(width: AppSpacing.s),
                         ChoiceChip(
                           label: const Text('★ 4.5+'),
+                          showCheckmark: false,
                           selected: tempMinRating == 4.5,
                           onSelected: (selected) {
                             setModalState(() {
@@ -480,9 +483,9 @@ class WorkerListScreen extends ConsumerWidget {
                             });
                           },
                         ),
-                        const SizedBox(width: AppSpacing.s),
                         ChoiceChip(
                           label: const Text('★ 4.8+'),
+                          showCheckmark: false,
                           selected: tempMinRating == 4.8,
                           onSelected: (selected) {
                             setModalState(() {
@@ -641,7 +644,9 @@ class _WorkerCardRow extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Text(
-                    '₹${(worker.hourlyRate ?? 300).toInt()}/hr',
+                    worker.hourlyRate == null
+                        ? l10n.priceOnVisit
+                        : '₹${worker.hourlyRate!.toInt()}/hr',
                     style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,

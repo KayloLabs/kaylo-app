@@ -1,0 +1,169 @@
+import 'package:kaylo_core/services/feedback_service.dart';
+import 'package:kaylo_core/services/sound_service.dart';
+import '../../notifications/application/booking_reminders.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:kaylo_core/models/booking.dart';
+import 'package:kaylo_core/network/supabase_providers.dart';
+import 'package:uuid/uuid.dart';
+import '../../auth/application/current_user_provider.dart';
+import '../../booking/application/bookings_providers.dart';
+import '../../home/application/home_providers.dart';
+import 'care_providers.dart';
+import '../../../l10n/generated/app_localizations.dart';
+import '../../offers/application/offers_providers.dart';
+
+/// Kept for the lifetime of a checkout screen, so retries reuse its pending booking.
+class CareCheckout {
+  String? _requestId;
+  String? _fingerprint;
+  Booking? _mockBooking;
+  bool _hasStartedPayment = false;
+  bool get hasStartedPayment => _hasStartedPayment;
+  Future<bool> pay(
+    WidgetRef ref, {
+    required String kind,
+    required Map<String, dynamic> details,
+    required double mockAmount,
+    String? offerCode,
+  }) async {
+    final l10n = AppLocalizations.of(ref.context)!;
+    final fingerprint = '$kind:$details';
+    if (_fingerprint != fingerprint || _requestId == null) {
+      _requestId = const Uuid().v4();
+      _fingerprint = fingerprint;
+      _mockBooking = null;
+      _hasStartedPayment = false;
+    }
+    if (_mockBooking?.status == BookingStatus.confirmed) return true;
+    final String bookingId;
+    if (useMockData) {
+      final services = await ref
+          .read(homeRepositoryProvider)
+          .getServicesByCategory('care');
+      final service = services
+          .where((s) => s.name.toLowerCase().contains(kind))
+          .firstOrNull;
+      if (service == null) {
+        throw StateError(l10n.careServiceUnavailable);
+      }
+      final booking =
+          _mockBooking ??
+          await ref
+              .read(bookingsRepositoryProvider)
+              .createBooking(
+                Booking(
+                  id: _requestId!,
+                  userId: ref.read(currentUserIdProvider)!,
+                  serviceId: service.id,
+                  scheduledAt: DateTime.parse(details['date'] as String),
+                  status: BookingStatus.pending,
+                  totalAmount: mockAmount,
+                  notes: details['notes'] as String?,
+                  locationId: details['location_id'] as String?,
+                ),
+              );
+      _mockBooking = booking;
+      bookingId = booking.id;
+    } else {
+      try {
+        bookingId =
+            await ref
+                    .read(supabaseClientProvider)
+                    .rpc(
+                      'create_care_checkout',
+                      params: {
+                        'p_request_id': _requestId,
+                        'p_kind': kind,
+                        'p_details': details,
+                      },
+                    )
+                as String;
+        final row = await ref
+            .read(supabaseClientProvider)
+            .from('bookings')
+            .select('status')
+            .eq('booking_id', bookingId)
+            .single();
+        if (row['status'] == 'confirmed') {
+          _refresh(ref);
+          return true;
+        }
+      } catch (error) {
+        // The booking could not be made, so payment never opens. Pass on
+        // what the server said (not signed in, an address that is not on
+        // this account, no connection) instead of a general "could not pay".
+        throw mapSupabaseError(error);
+      }
+    }
+    if (offerCode != null) {
+      try {
+        final discounted = await ref.read(bookingOfferApplierProvider)(
+          _mockBooking ??
+              Booking(
+                id: bookingId,
+                userId: ref.read(currentUserIdProvider)!,
+                serviceId: kind,
+                scheduledAt: DateTime.parse(details['date'] as String),
+                status: BookingStatus.pending,
+                totalAmount: mockAmount,
+              ),
+          offerCode,
+        );
+        if (useMockData) _mockBooking = discounted;
+      } catch (_) {
+        if (!_hasStartedPayment) {
+          try {
+            await ref
+                .read(bookingsRepositoryProvider)
+                .updateBookingStatus(bookingId, BookingStatus.cancelled);
+            _requestId = null;
+            _mockBooking = null;
+            _refresh(ref);
+          } catch (_) {}
+        }
+        rethrow;
+      }
+    }
+    _hasStartedPayment = true;
+    final outcome = await ref
+        .read(paymentGatewayProvider)
+        .pay(bookingId: bookingId, email: ref.read(currentUserProvider)?.email);
+    if (!outcome.paid) {
+      throw StateError(outcome.message ?? l10n.appointmentNotConfirmed);
+    }
+    if (useMockData) {
+      await ref
+          .read(bookingsRepositoryProvider)
+          .updateBookingStatus(bookingId, BookingStatus.confirmed);
+      _mockBooking = _mockBooking?.copyWith(status: BookingStatus.confirmed);
+    }
+    // Payment already succeeded. A notification or refresh failure must not
+    // present the checkout as unpaid or encourage a second payment.
+    try {
+      final bookings = await ref
+          .read(bookingsRepositoryProvider)
+          .getUserBookings(ref.read(currentUserIdProvider)!);
+      final confirmed = bookings.where((b) => b.id == bookingId).firstOrNull;
+      if (confirmed != null) {
+        await ref
+            .read(bookingRemindersProvider)
+            .received(
+              confirmed,
+              kind == 'doctor' ? l10n.doctorAppointment : l10n.caregiverBooking,
+            );
+      }
+      KayloFeedback.success();
+      ref.read(soundServiceProvider).playSuccess();
+    } catch (_) {}
+    _refresh(ref);
+    return true;
+  }
+
+  void _refresh(WidgetRef ref) {
+    if (!ref.context.mounted) return;
+    ref.invalidate(userBookingsProvider);
+    ref.invalidate(offersProvider);
+    ref.invalidate(doctorAppointmentsProvider);
+    ref.invalidate(caregiverBookingsProvider);
+  }
+}

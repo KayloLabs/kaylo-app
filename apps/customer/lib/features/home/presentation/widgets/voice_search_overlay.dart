@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math' as math;
 import 'dart:ui';
 
@@ -12,7 +13,6 @@ import 'package:kaylo_core/services/speech_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_radius.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
-import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/home_providers.dart';
 import '../../application/voice_search.dart';
@@ -22,17 +22,8 @@ import '../../application/voice_search.dart';
 /// live transcript in the middle. Shows the localized unavailable
 /// notice instead when the device has no usable recogniser.
 Future<void> showVoiceSearchOverlay(BuildContext context, WidgetRef ref) async {
-  final l10n = AppLocalizations.of(context)!;
   final speech = ref.read(speechServiceProvider);
-
   KayloFeedback.press();
-  final available = await speech.init();
-  if (!context.mounted) return;
-  if (!available) {
-    KayloSnackbar.showInfo(context, l10n.voiceUnavailable);
-    return;
-  }
-
   await Navigator.of(context, rootNavigator: true).push(
     PageRouteBuilder<void>(
       opaque: false,
@@ -48,7 +39,7 @@ Future<void> showVoiceSearchOverlay(BuildContext context, WidgetRef ref) async {
   await speech.cancel();
 }
 
-enum _VoicePhase { listening, matching, results, noMatch, micDenied }
+enum _VoicePhase { preparing, listening, matching, results, noMatch, micDenied }
 
 class VoiceSearchOverlay extends ConsumerStatefulWidget {
   const VoiceSearchOverlay({super.key});
@@ -60,7 +51,10 @@ class VoiceSearchOverlay extends ConsumerStatefulWidget {
 class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
     with SingleTickerProviderStateMixin {
   late final AnimationController _wave;
-  _VoicePhase _phase = _VoicePhase.listening;
+  _VoicePhase _phase = _VoicePhase.preparing;
+  Timer? _finishTimer;
+  int _session = 0;
+  late final Future<List<ServiceItem>> _catalog;
   String _transcript = '';
   List<ServiceItem> _matches = const [];
   bool _finished = false;
@@ -74,12 +68,25 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
   @override
   void initState() {
     super.initState();
+    _catalog = ref
+        .read(fullCatalogProvider.future)
+        .catchError((Object _) => <ServiceItem>[]);
     _wave = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 6),
-    )..repeat();
+    );
     _wave.addListener(_tick);
     WidgetsBinding.instance.addPostFrameCallback((_) => _startListening());
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (MediaQuery.disableAnimationsOf(context)) {
+      _wave.stop();
+    } else if (!_wave.isAnimating) {
+      _wave.repeat();
+    }
   }
 
   void _tick() {
@@ -94,14 +101,20 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
 
   @override
   void dispose() {
+    _session++;
+    _finishTimer?.cancel();
     _wave.dispose();
     super.dispose();
   }
 
   Future<void> _startListening() async {
     final speech = ref.read(speechServiceProvider);
+    final session = ++_session;
+    _finishTimer?.cancel();
+    await speech.cancel();
+    if (!mounted || session != _session) return;
     setState(() {
-      _phase = _VoicePhase.listening;
+      _phase = _VoicePhase.preparing;
       _transcript = '';
       _matches = const [];
       _finished = false;
@@ -109,8 +122,14 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
       _energyTarget = 0.4;
     });
 
+    final available = await speech.init();
+    if (!mounted || session != _session) return;
+    if (!available) {
+      setState(() => _phase = _VoicePhase.micDenied);
+      return;
+    }
     speech.onError = (error, permanent) {
-      if (!mounted || _finished) return;
+      if (!mounted || session != _session || _finished) return;
       if (SpeechService.isPermissionError(error)) {
         setState(() => _phase = _VoicePhase.micDenied);
         _finished = true;
@@ -124,34 +143,46 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
       }
     };
     speech.onStatus = (status) {
-      if (!mounted || _finished) return;
+      if (!mounted || session != _session || _finished) return;
       if ((status == 'notListening' || status == 'done') &&
           _phase == _VoicePhase.listening) {
-        if (_transcript.isNotEmpty) {
-          _finish(_transcript);
-        } else if (status == 'done') {
-          setState(() => _phase = _VoicePhase.noMatch);
-          _finished = true;
-          _energyTarget = 0.15;
-        }
+        // Some engines emit "done" just before their final transcript.
+        _finishTimer?.cancel();
+        _finishTimer = Timer(const Duration(milliseconds: 300), () {
+          if (!mounted || session != _session || _finished) return;
+          if (_transcript.isNotEmpty) {
+            _finish(_transcript);
+          } else {
+            setState(() => _phase = _VoicePhase.noMatch);
+            _finished = true;
+          }
+        });
       }
     };
 
     final languageCode = Localizations.localeOf(context).languageCode;
     final localeId = await speech.localeFor(languageCode);
-    await speech.listen(
-      localeId: localeId,
-      onSoundLevel: (level) {
-        // Android reports roughly -2..10 dB; normalise into 0..1.
-        _hasLevels = true;
-        _energyTarget = ((level + 2) / 12).clamp(0.15, 1.0);
-      },
-      onResult: (words, isFinal) {
-        if (!mounted || _finished) return;
-        setState(() => _transcript = words);
-        if (isFinal && words.isNotEmpty) _finish(words);
-      },
-    );
+    if (!mounted || session != _session) return;
+    setState(() => _phase = _VoicePhase.listening);
+    try {
+      await speech.listen(
+        localeId: localeId,
+        onSoundLevel: (level) {
+          // Android reports roughly -2..10 dB; normalise into 0..1.
+          _hasLevels = true;
+          _energyTarget = ((level + 2) / 12).clamp(0.15, 1.0);
+        },
+        onResult: (words, isFinal) {
+          if (!mounted || session != _session || _finished) return;
+          setState(() => _transcript = words);
+          if (isFinal && words.isNotEmpty) _finish(words);
+        },
+      );
+    } catch (_) {
+      if (mounted && session == _session) {
+        setState(() => _phase = _VoicePhase.noMatch);
+      }
+    }
   }
 
   Future<void> _stopEarly() async {
@@ -170,11 +201,12 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
   Future<void> _finish(String words) async {
     if (_finished) return;
     _finished = true;
+    _finishTimer?.cancel();
     setState(() => _phase = _VoicePhase.matching);
     _energyTarget = 0.3;
-    await ref.read(speechServiceProvider).stop();
+    unawaited(ref.read(speechServiceProvider).stop());
     try {
-      final pool = await ref.read(fullCatalogProvider.future);
+      final pool = await _catalog;
       if (!mounted) return;
       final matches = matchServicesToTranscript(words, pool);
       setState(() {
@@ -236,6 +268,16 @@ class _VoiceSearchOverlayState extends ConsumerState<VoiceSearchOverlay>
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 250),
                     child: switch (_phase) {
+                      _VoicePhase.preparing => Column(
+                        children: [
+                          const CircularProgressIndicator(color: Colors.white),
+                          const SizedBox(height: 20),
+                          Text(
+                            l10n.voiceStarting,
+                            style: const TextStyle(color: Colors.white),
+                          ),
+                        ],
+                      ),
                       _VoicePhase.listening => _ListeningContent(
                         transcript: _transcript,
                         l10n: l10n,

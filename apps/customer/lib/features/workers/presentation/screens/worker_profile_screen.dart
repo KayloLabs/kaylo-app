@@ -16,6 +16,7 @@ import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/workers_providers.dart';
+import '../widgets/worker_verification_record.dart';
 
 class WorkerProfileScreen extends ConsumerWidget {
   final String workerId;
@@ -82,17 +83,25 @@ class WorkerProfileScreen extends ConsumerWidget {
                         Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            Text(
-                              w.name,
-                              style: Theme.of(context).textTheme.headlineSmall
-                                  ?.copyWith(fontWeight: FontWeight.bold),
+                            Flexible(
+                              child: Text(
+                                w.name,
+                                textAlign: TextAlign.center,
+                                style: Theme.of(context).textTheme.headlineSmall
+                                    ?.copyWith(fontWeight: FontWeight.bold),
+                              ),
                             ),
                             if (w.isVerified) ...[
                               const SizedBox(width: 6),
-                              const Icon(
-                                Icons.verified_rounded,
-                                color: AppColors.brandPrimary,
-                                size: 22,
+                              IconButton(
+                                tooltip: l10n.viewVerification,
+                                onPressed: () =>
+                                    showWorkerVerificationRecord(context, w.id),
+                                icon: const Icon(
+                                  Icons.verified_rounded,
+                                  color: AppColors.brandPrimary,
+                                  size: 22,
+                                ),
                               ),
                             ],
                           ],
@@ -196,68 +205,63 @@ class WorkerProfileScreen extends ConsumerWidget {
                   ),
                   const SizedBox(height: AppSpacing.l),
 
-                  // Certifications Section
                   Text(
-                    l10n.certifications,
+                    l10n.verificationRecord,
                     style: Theme.of(context).textTheme.titleMedium?.copyWith(
                       fontWeight: FontWeight.bold,
                     ),
                   ),
                   const SizedBox(height: AppSpacing.s),
                   KayloCard(
+                    onTap: w.isVerified
+                        ? () => showWorkerVerificationRecord(context, w.id)
+                        : null,
                     padding: const EdgeInsets.all(AppSpacing.m),
-                    child: w.isVerified
-                        ? Column(
+                    child: Row(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(10),
+                          decoration: BoxDecoration(
+                            color: AppColors.brandPrimary.withValues(alpha: .1),
+                            borderRadius: BorderRadius.circular(12),
+                          ),
+                          child: Icon(
+                            w.isVerified
+                                ? Icons.verified_outlined
+                                : Icons.pending_outlined,
+                            color: AppColors.brandPrimary,
+                          ),
+                        ),
+                        const SizedBox(width: AppSpacing.m),
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              _buildCertRow(
-                                icon: Icons.badge_outlined,
-                                title: l10n.certGovtId,
-                                subtitle: l10n.certGovtIdSub,
+                              Text(
+                                w.isVerified
+                                    ? l10n.kayloVerified
+                                    : l10n.notYetVerified,
+                                style: Theme.of(context).textTheme.titleSmall,
                               ),
-                              const Divider(height: AppSpacing.l),
-                              _buildCertRow(
-                                icon: Icons.verified_user_outlined,
-                                title: l10n.certPolice,
-                                subtitle: l10n.certPoliceSub,
-                              ),
-                              const Divider(height: AppSpacing.l),
-                              _buildCertRow(
-                                icon: Icons.star_outline_rounded,
-                                title: l10n.certSkill,
-                                subtitle: l10n.certSkillSub,
+                              const SizedBox(height: 4),
+                              Text(
+                                w.isVerified
+                                    ? l10n.viewVerification
+                                    : l10n.verificationNotRecorded,
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(
+                                      color: isDark
+                                          ? AppColors.textSecondaryDark
+                                          : AppColors.textSecondary,
+                                    ),
                               ),
                             ],
-                          )
-                        : Padding(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: AppSpacing.s,
-                              horizontal: AppSpacing.xs,
-                            ),
-                            child: Row(
-                              children: [
-                                const Icon(
-                                  Icons.pending_outlined,
-                                  color: AppColors.textSecondary,
-                                  size: 20,
-                                ),
-                                const SizedBox(width: AppSpacing.m),
-                                Expanded(
-                                  child: Text(
-                                    l10n.verificationPending,
-                                    style: Theme.of(context)
-                                        .textTheme
-                                        .bodyMedium
-                                        ?.copyWith(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondary,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                  ),
-                                ),
-                              ],
-                            ),
                           ),
+                        ),
+                        if (w.isVerified)
+                          const Icon(Icons.chevron_right_rounded),
+                      ],
+                    ),
                   ),
                   const SizedBox(height: AppSpacing.l),
 
@@ -396,48 +400,6 @@ class WorkerProfileScreen extends ConsumerWidget {
           onRetry: () => ref.invalidate(workerDetailProvider(workerId)),
         ),
       ),
-    );
-  }
-
-  Widget _buildCertRow({
-    required IconData icon,
-    required String title,
-    required String subtitle,
-  }) {
-    return Row(
-      children: [
-        Container(
-          padding: const EdgeInsets.all(8),
-          decoration: BoxDecoration(
-            color: AppColors.brandPrimary.withValues(alpha: 0.1),
-            borderRadius: BorderRadius.circular(8),
-          ),
-          child: Icon(icon, color: AppColors.brandPrimary, size: 20),
-        ),
-        const SizedBox(width: AppSpacing.m),
-        Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: const TextStyle(
-                  fontWeight: FontWeight.w600,
-                  fontSize: 13,
-                ),
-              ),
-              Text(
-                subtitle,
-                style: const TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 11,
-                ),
-              ),
-            ],
-          ),
-        ),
-        const Icon(Icons.check_circle_rounded, color: AppColors.success, size: 18),
-      ],
     );
   }
 

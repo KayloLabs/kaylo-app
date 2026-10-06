@@ -11,13 +11,21 @@ import 'package:speech_to_text/speech_to_text.dart';
 class SpeechService {
   final SpeechToText _speech = SpeechToText();
   bool _ready = false;
+  Future<bool>? _initializing;
+  List<LocaleName>? _locales;
 
   /// Session handlers, replaced by whichever UI is currently listening.
   void Function(String error, bool permanent)? onError;
   void Function(String status)? onStatus;
 
-  Future<bool> init() async {
-    if (_ready) return true;
+  Future<bool> init() {
+    if (_ready) return Future.value(true);
+    return _initializing ??= _initialize().whenComplete(
+      () => _initializing = null,
+    );
+  }
+
+  Future<bool> _initialize() async {
     try {
       _ready = await _speech.initialize(
         onError: (e) => onError?.call(e.errorMsg, e.permanent),
@@ -34,7 +42,7 @@ class SpeechService {
   /// (device default).
   Future<String?> localeFor(String languageCode) async {
     try {
-      final locales = await _speech.locales();
+      final locales = _locales ??= await _speech.locales();
       final want = languageCode.toLowerCase();
       String? fallback;
       for (final locale in locales) {
@@ -59,7 +67,10 @@ class SpeechService {
       listenOptions: SpeechListenOptions(
         localeId: localeId,
         listenFor: const Duration(seconds: 15),
-        pauseFor: const Duration(seconds: 4),
+        pauseFor: const Duration(seconds: 2),
+        listenMode: ListenMode.search,
+        cancelOnError: false,
+        enableHapticFeedback: false,
         partialResults: true,
       ),
       onResult: (result) =>

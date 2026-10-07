@@ -2342,4 +2342,48 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get secretSemantics => 'கெய்லோ. அக்கறையுடன் உருவாக்கப்பட்டது.';
+
+  @override
+  String get addPaymentMethod => 'பணம் செலுத்தும் முறையைச் சேர்';
+
+  @override
+  String get cardExpiry => 'காலாவதி (MM/YY)';
+
+  @override
+  String get cardHolderName => 'கார்டில் உள்ள பெயர்';
+
+  @override
+  String get cardNumber => 'கார்டு எண்';
+
+  @override
+  String get defaultTag => 'இயல்புநிலை';
+
+  @override
+  String get deletePaymentMethodConfirm =>
+      'இந்த பணம் செலுத்தும் முறையை நீக்கவா? எப்போது வேண்டுமானாலும் மீண்டும் சேர்க்கலாம்.';
+
+  @override
+  String get noPaymentMethods => 'சேமித்த பணம் செலுத்தும் முறைகள் இல்லை';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'அடுத்த முறை விரைவாகச் செலுத்த UPI ID அல்லது கார்டைச் சேமிக்கவும்.';
+
+  @override
+  String get paymentMethodAdded => 'பணம் செலுத்தும் முறை சேமிக்கப்பட்டது';
+
+  @override
+  String get paymentMethodRemoved => 'பணம் செலுத்தும் முறை நீக்கப்பட்டது';
+
+  @override
+  String get removeMethod => 'நீக்கு';
+
+  @override
+  String get savePaymentMethod => 'பணம் செலுத்தும் முறையைச் சேமி';
+
+  @override
+  String get setDefault => 'இயல்புநிலையாக அமை';
+
+  @override
+  String get upiId => 'UPI ID';
 }

@@ -2306,4 +2306,48 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get secretSemantics => 'कायलो। परवाह से बनाया गया।';
+
+  @override
+  String get addPaymentMethod => 'भुगतान का तरीका जोड़ें';
+
+  @override
+  String get cardExpiry => 'समाप्ति (MM/YY)';
+
+  @override
+  String get cardHolderName => 'कार्ड पर नाम';
+
+  @override
+  String get cardNumber => 'कार्ड नंबर';
+
+  @override
+  String get defaultTag => 'डिफ़ॉल्ट';
+
+  @override
+  String get deletePaymentMethodConfirm =>
+      'यह भुगतान तरीका हटाएँ? आप इसे कभी भी फिर से जोड़ सकते हैं।';
+
+  @override
+  String get noPaymentMethods => 'कोई सहेजा हुआ भुगतान तरीका नहीं';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'अगली बार तेज़ी से भुगतान के लिए UPI ID या कार्ड सहेजें।';
+
+  @override
+  String get paymentMethodAdded => 'भुगतान तरीका सहेजा गया';
+
+  @override
+  String get paymentMethodRemoved => 'भुगतान तरीका हटाया गया';
+
+  @override
+  String get removeMethod => 'हटाएँ';
+
+  @override
+  String get savePaymentMethod => 'भुगतान तरीका सहेजें';
+
+  @override
+  String get setDefault => 'डिफ़ॉल्ट बनाएँ';
+
+  @override
+  String get upiId => 'UPI ID';
 }

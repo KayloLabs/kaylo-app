@@ -741,5 +741,61 @@
   "bannerRewardsTitle": "அருமை. இன்னும் கொஞ்சம் மகிழ்ச்சி.",
   "bannerRewardsBody": "உங்கள் சலுகைகளையும் ஸ்க்ராட்ச் வெகுமதிகளையும் பாருங்கள்",
   "secretTagline": "ஒரு சிறிய அக்கறை நீண்ட தூரம் கொண்டு செல்லும்.",
-  "secretSemantics": "கெய்லோ. அக்கறையுடன் உருவாக்கப்பட்டது."
+  "secretSemantics": "கெய்லோ. அக்கறையுடன் உருவாக்கப்பட்டது.",
+  "addPaymentMethod": "பணம் செலுத்தும் முறையைச் சேர்",
+  "@addPaymentMethod": {
+    "description": "Button that opens the add-card / add-UPI sheet"
+  },
+  "cardExpiry": "காலாவதி (MM/YY)",
+  "@cardExpiry": {
+    "description": "Label of the card expiry field"
+  },
+  "cardHolderName": "கார்டில் உள்ள பெயர்",
+  "@cardHolderName": {
+    "description": "Label of the name-on-card field"
+  },
+  "cardNumber": "கார்டு எண்",
+  "@cardNumber": {
+    "description": "Label of the card number field"
+  },
+  "defaultTag": "இயல்புநிலை",
+  "@defaultTag": {
+    "description": "Small chip on the payment method used by default"
+  },
+  "deletePaymentMethodConfirm": "இந்த பணம் செலுத்தும் முறையை நீக்கவா? எப்போது வேண்டுமானாலும் மீண்டும் சேர்க்கலாம்.",
+  "@deletePaymentMethodConfirm": {
+    "description": "Body of the confirm dialog before removing a saved method"
+  },
+  "noPaymentMethods": "சேமித்த பணம் செலுத்தும் முறைகள் இல்லை",
+  "@noPaymentMethods": {
+    "description": "Empty state title when nothing is saved"
+  },
+  "noPaymentMethodsSubtitle": "அடுத்த முறை விரைவாகச் செலுத்த UPI ID அல்லது கார்டைச் சேமிக்கவும்.",
+  "@noPaymentMethodsSubtitle": {
+    "description": "Empty state body when nothing is saved"
+  },
+  "paymentMethodAdded": "பணம் செலுத்தும் முறை சேமிக்கப்பட்டது",
+  "@paymentMethodAdded": {
+    "description": "Snackbar after saving a method"
+  },
+  "paymentMethodRemoved": "பணம் செலுத்தும் முறை நீக்கப்பட்டது",
+  "@paymentMethodRemoved": {
+    "description": "Snackbar after removing a method"
+  },
+  "removeMethod": "நீக்கு",
+  "@removeMethod": {
+    "description": "Remove action on a saved method, and the confirm dialog title"
+  },
+  "savePaymentMethod": "பணம் செலுத்தும் முறையைச் சேமி",
+  "@savePaymentMethod": {
+    "description": "Submit button of the add-method sheet"
+  },
+  "setDefault": "இயல்புநிலையாக அமை",
+  "@setDefault": {
+    "description": "Action that makes a saved method the default"
+  },
+  "upiId": "UPI ID",
+  "@upiId": {
+    "description": "Label of the UPI ID field"
+  }
 }

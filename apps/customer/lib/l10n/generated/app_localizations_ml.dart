@@ -2328,4 +2328,48 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get secretSemantics => 'കെയ്‌ലോ. കരുതലോടെ നിർമ്മിച്ചത്.';
+
+  @override
+  String get addPaymentMethod => 'പേയ്‌മെന്റ് രീതി ചേർക്കുക';
+
+  @override
+  String get cardExpiry => 'കാലാവധി (MM/YY)';
+
+  @override
+  String get cardHolderName => 'കാർഡിലെ പേര്';
+
+  @override
+  String get cardNumber => 'കാർഡ് നമ്പർ';
+
+  @override
+  String get defaultTag => 'ഡിഫോൾട്ട്';
+
+  @override
+  String get deletePaymentMethodConfirm =>
+      'ഈ പേയ്‌മെന്റ് രീതി നീക്കം ചെയ്യണോ? എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ചേർക്കാം.';
+
+  @override
+  String get noPaymentMethods => 'സേവ് ചെയ്ത പേയ്‌മെന്റ് രീതികളില്ല';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'അടുത്ത തവണ വേഗത്തിൽ അടയ്ക്കാൻ UPI ID അല്ലെങ്കിൽ കാർഡ് സേവ് ചെയ്യുക.';
+
+  @override
+  String get paymentMethodAdded => 'പേയ്‌മെന്റ് രീതി സേവ് ചെയ്തു';
+
+  @override
+  String get paymentMethodRemoved => 'പേയ്‌മെന്റ് രീതി നീക്കം ചെയ്തു';
+
+  @override
+  String get removeMethod => 'നീക്കം ചെയ്യുക';
+
+  @override
+  String get savePaymentMethod => 'പേയ്‌മെന്റ് രീതി സേവ് ചെയ്യുക';
+
+  @override
+  String get setDefault => 'ഡിഫോൾട്ട് ആക്കുക';
+
+  @override
+  String get upiId => 'UPI ID';
 }

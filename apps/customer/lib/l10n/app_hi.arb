@@ -741,5 +741,61 @@
   "bannerRewardsTitle": "बहुत बढ़िया। थोड़ी और खुशी।",
   "bannerRewardsBody": "अपने ऑफ़र और स्क्रैच रिवॉर्ड देखें",
   "secretTagline": "थोड़ी सी परवाह बहुत दूर तक जाती है।",
-  "secretSemantics": "कायलो। परवाह से बनाया गया।"
+  "secretSemantics": "कायलो। परवाह से बनाया गया।",
+  "addPaymentMethod": "भुगतान का तरीका जोड़ें",
+  "@addPaymentMethod": {
+    "description": "Button that opens the add-card / add-UPI sheet"
+  },
+  "cardExpiry": "समाप्ति (MM/YY)",
+  "@cardExpiry": {
+    "description": "Label of the card expiry field"
+  },
+  "cardHolderName": "कार्ड पर नाम",
+  "@cardHolderName": {
+    "description": "Label of the name-on-card field"
+  },
+  "cardNumber": "कार्ड नंबर",
+  "@cardNumber": {
+    "description": "Label of the card number field"
+  },
+  "defaultTag": "डिफ़ॉल्ट",
+  "@defaultTag": {
+    "description": "Small chip on the payment method used by default"
+  },
+  "deletePaymentMethodConfirm": "यह भुगतान तरीका हटाएँ? आप इसे कभी भी फिर से जोड़ सकते हैं।",
+  "@deletePaymentMethodConfirm": {
+    "description": "Body of the confirm dialog before removing a saved method"
+  },
+  "noPaymentMethods": "कोई सहेजा हुआ भुगतान तरीका नहीं",
+  "@noPaymentMethods": {
+    "description": "Empty state title when nothing is saved"
+  },
+  "noPaymentMethodsSubtitle": "अगली बार तेज़ी से भुगतान के लिए UPI ID या कार्ड सहेजें।",
+  "@noPaymentMethodsSubtitle": {
+    "description": "Empty state body when nothing is saved"
+  },
+  "paymentMethodAdded": "भुगतान तरीका सहेजा गया",
+  "@paymentMethodAdded": {
+    "description": "Snackbar after saving a method"
+  },
+  "paymentMethodRemoved": "भुगतान तरीका हटाया गया",
+  "@paymentMethodRemoved": {
+    "description": "Snackbar after removing a method"
+  },
+  "removeMethod": "हटाएँ",
+  "@removeMethod": {
+    "description": "Remove action on a saved method, and the confirm dialog title"
+  },
+  "savePaymentMethod": "भुगतान तरीका सहेजें",
+  "@savePaymentMethod": {
+    "description": "Submit button of the add-method sheet"
+  },
+  "setDefault": "डिफ़ॉल्ट बनाएँ",
+  "@setDefault": {
+    "description": "Action that makes a saved method the default"
+  },
+  "upiId": "UPI ID",
+  "@upiId": {
+    "description": "Label of the UPI ID field"
+  }
 }

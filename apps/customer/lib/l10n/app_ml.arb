@@ -741,5 +741,61 @@
   "bannerRewardsTitle": "നന്നായി. അൽപ്പം കൂടി സന്തോഷം.",
   "bannerRewardsBody": "നിങ്ങളുടെ ഓഫറുകളും സ്ക്രാച്ച് റിവാർഡുകളും കാണുക",
   "secretTagline": "ഒരു ചെറിയ കരുതൽ ഏറെ ദൂരം കൊണ്ടുപോകും.",
-  "secretSemantics": "കെയ്‌ലോ. കരുതലോടെ നിർമ്മിച്ചത്."
+  "secretSemantics": "കെയ്‌ലോ. കരുതലോടെ നിർമ്മിച്ചത്.",
+  "addPaymentMethod": "പേയ്‌മെന്റ് രീതി ചേർക്കുക",
+  "@addPaymentMethod": {
+    "description": "Button that opens the add-card / add-UPI sheet"
+  },
+  "cardExpiry": "കാലാവധി (MM/YY)",
+  "@cardExpiry": {
+    "description": "Label of the card expiry field"
+  },
+  "cardHolderName": "കാർഡിലെ പേര്",
+  "@cardHolderName": {
+    "description": "Label of the name-on-card field"
+  },
+  "cardNumber": "കാർഡ് നമ്പർ",
+  "@cardNumber": {
+    "description": "Label of the card number field"
+  },
+  "defaultTag": "ഡിഫോൾട്ട്",
+  "@defaultTag": {
+    "description": "Small chip on the payment method used by default"
+  },
+  "deletePaymentMethodConfirm": "ഈ പേയ്‌മെന്റ് രീതി നീക്കം ചെയ്യണോ? എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ചേർക്കാം.",
+  "@deletePaymentMethodConfirm": {
+    "description": "Body of the confirm dialog before removing a saved method"
+  },
+  "noPaymentMethods": "സേവ് ചെയ്ത പേയ്‌മെന്റ് രീതികളില്ല",
+  "@noPaymentMethods": {
+    "description": "Empty state title when nothing is saved"
+  },
+  "noPaymentMethodsSubtitle": "അടുത്ത തവണ വേഗത്തിൽ അടയ്ക്കാൻ UPI ID അല്ലെങ്കിൽ കാർഡ് സേവ് ചെയ്യുക.",
+  "@noPaymentMethodsSubtitle": {
+    "description": "Empty state body when nothing is saved"
+  },
+  "paymentMethodAdded": "പേയ്‌മെന്റ് രീതി സേവ് ചെയ്തു",
+  "@paymentMethodAdded": {
+    "description": "Snackbar after saving a method"
+  },
+  "paymentMethodRemoved": "പേയ്‌മെന്റ് രീതി നീക്കം ചെയ്തു",
+  "@paymentMethodRemoved": {
+    "description": "Snackbar after removing a method"
+  },
+  "removeMethod": "നീക്കം ചെയ്യുക",
+  "@removeMethod": {
+    "description": "Remove action on a saved method, and the confirm dialog title"
+  },
+  "savePaymentMethod": "പേയ്‌മെന്റ് രീതി സേവ് ചെയ്യുക",
+  "@savePaymentMethod": {
+    "description": "Submit button of the add-method sheet"
+  },
+  "setDefault": "ഡിഫോൾട്ട് ആക്കുക",
+  "@setDefault": {
+    "description": "Action that makes a saved method the default"
+  },
+  "upiId": "UPI ID",
+  "@upiId": {
+    "description": "Label of the UPI ID field"
+  }
 }

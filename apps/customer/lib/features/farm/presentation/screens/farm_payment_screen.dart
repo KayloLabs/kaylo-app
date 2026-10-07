@@ -26,6 +26,7 @@ import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
 import '../../../offers/domain/kaylo_offer.dart';
 import '../../../offers/presentation/offers_screen.dart';
+import '../../../payments/application/payment_methods_providers.dart';
 
 class FarmPaymentScreen extends ConsumerStatefulWidget {
   /// Null when the route was reached without a draft (deep link, reload);

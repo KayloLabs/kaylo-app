@@ -2301,4 +2301,48 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get secretSemantics => 'Kaylo. Made with care.';
+
+  @override
+  String get addPaymentMethod => 'Add payment method';
+
+  @override
+  String get cardExpiry => 'Expiry (MM/YY)';
+
+  @override
+  String get cardHolderName => 'Name on card';
+
+  @override
+  String get cardNumber => 'Card number';
+
+  @override
+  String get defaultTag => 'Default';
+
+  @override
+  String get deletePaymentMethodConfirm =>
+      'Remove this payment method? You can add it again any time.';
+
+  @override
+  String get noPaymentMethods => 'No saved payment methods';
+
+  @override
+  String get noPaymentMethodsSubtitle =>
+      'Save a UPI ID or card to pay faster next time.';
+
+  @override
+  String get paymentMethodAdded => 'Payment method saved';
+
+  @override
+  String get paymentMethodRemoved => 'Payment method removed';
+
+  @override
+  String get removeMethod => 'Remove';
+
+  @override
+  String get savePaymentMethod => 'Save payment method';
+
+  @override
+  String get setDefault => 'Set as default';
+
+  @override
+  String get upiId => 'UPI ID';
 }

@@ -1003,5 +1003,61 @@
   "bannerRewardsTitle": "Good work. A little extra joy.",
   "bannerRewardsBody": "Explore your offers & scratch rewards",
   "secretTagline": "A little care goes a long way.",
-  "secretSemantics": "Kaylo. Made with care."
+  "secretSemantics": "Kaylo. Made with care.",
+  "addPaymentMethod": "Add payment method",
+  "@addPaymentMethod": {
+    "description": "Button that opens the add-card / add-UPI sheet"
+  },
+  "cardExpiry": "Expiry (MM/YY)",
+  "@cardExpiry": {
+    "description": "Label of the card expiry field"
+  },
+  "cardHolderName": "Name on card",
+  "@cardHolderName": {
+    "description": "Label of the name-on-card field"
+  },
+  "cardNumber": "Card number",
+  "@cardNumber": {
+    "description": "Label of the card number field"
+  },
+  "defaultTag": "Default",
+  "@defaultTag": {
+    "description": "Small chip on the payment method used by default"
+  },
+  "deletePaymentMethodConfirm": "Remove this payment method? You can add it again any time.",
+  "@deletePaymentMethodConfirm": {
+    "description": "Body of the confirm dialog before removing a saved method"
+  },
+  "noPaymentMethods": "No saved payment methods",
+  "@noPaymentMethods": {
+    "description": "Empty state title when nothing is saved"
+  },
+  "noPaymentMethodsSubtitle": "Save a UPI ID or card to pay faster next time.",
+  "@noPaymentMethodsSubtitle": {
+    "description": "Empty state body when nothing is saved"
+  },
+  "paymentMethodAdded": "Payment method saved",
+  "@paymentMethodAdded": {
+    "description": "Snackbar after saving a method"
+  },
+  "paymentMethodRemoved": "Payment method removed",
+  "@paymentMethodRemoved": {
+    "description": "Snackbar after removing a method"
+  },
+  "removeMethod": "Remove",
+  "@removeMethod": {
+    "description": "Remove action on a saved method, and the confirm dialog title"
+  },
+  "savePaymentMethod": "Save payment method",
+  "@savePaymentMethod": {
+    "description": "Submit button of the add-method sheet"
+  },
+  "setDefault": "Set as default",
+  "@setDefault": {
+    "description": "Action that makes a saved method the default"
+  },
+  "upiId": "UPI ID",
+  "@upiId": {
+    "description": "Label of the UPI ID field"
+  }
 }

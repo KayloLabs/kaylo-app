@@ -4157,6 +4157,90 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kaylo. Made with care.'**
   String get secretSemantics;
+
+  /// Button that opens the add-card / add-UPI sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Add payment method'**
+  String get addPaymentMethod;
+
+  /// Label of the card expiry field
+  ///
+  /// In en, this message translates to:
+  /// **'Expiry (MM/YY)'**
+  String get cardExpiry;
+
+  /// Label of the name-on-card field
+  ///
+  /// In en, this message translates to:
+  /// **'Name on card'**
+  String get cardHolderName;
+
+  /// Label of the card number field
+  ///
+  /// In en, this message translates to:
+  /// **'Card number'**
+  String get cardNumber;
+
+  /// Small chip on the payment method used by default
+  ///
+  /// In en, this message translates to:
+  /// **'Default'**
+  String get defaultTag;
+
+  /// Body of the confirm dialog before removing a saved method
+  ///
+  /// In en, this message translates to:
+  /// **'Remove this payment method? You can add it again any time.'**
+  String get deletePaymentMethodConfirm;
+
+  /// Empty state title when nothing is saved
+  ///
+  /// In en, this message translates to:
+  /// **'No saved payment methods'**
+  String get noPaymentMethods;
+
+  /// Empty state body when nothing is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Save a UPI ID or card to pay faster next time.'**
+  String get noPaymentMethodsSubtitle;
+
+  /// Snackbar after saving a method
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method saved'**
+  String get paymentMethodAdded;
+
+  /// Snackbar after removing a method
+  ///
+  /// In en, this message translates to:
+  /// **'Payment method removed'**
+  String get paymentMethodRemoved;
+
+  /// Remove action on a saved method, and the confirm dialog title
+  ///
+  /// In en, this message translates to:
+  /// **'Remove'**
+  String get removeMethod;
+
+  /// Submit button of the add-method sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Save payment method'**
+  String get savePaymentMethod;
+
+  /// Action that makes a saved method the default
+  ///
+  /// In en, this message translates to:
+  /// **'Set as default'**
+  String get setDefault;
+
+  /// Label of the UPI ID field
+  ///
+  /// In en, this message translates to:
+  /// **'UPI ID'**
+  String get upiId;
 }
 
 class _AppLocalizationsDelegate

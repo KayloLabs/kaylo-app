@@ -1,5 +1,31 @@
 enum BookingStatus { pending, confirmed, inProgress, completed, cancelled }
 
+/// How the customer settles the booking (`bookings.payment_mode`): through
+/// Razorpay, or cash handed to the worker once the job is done.
+enum PaymentMode { online, cash }
+
+/// Where the worker is in the job (`bookings.worker_stage`). The status
+/// above is the customer's coarse view of the same thing.
+enum WorkerStage {
+  requested,
+  accepted,
+  onTheWay,
+  arrived,
+  inProgress,
+  completed,
+  cancelled;
+
+  static WorkerStage fromDb(String? value) => switch (value) {
+    'accepted' => accepted,
+    'on_the_way' => onTheWay,
+    'arrived' => arrived,
+    'in_progress' => inProgress,
+    'completed' => completed,
+    'cancelled' => cancelled,
+    _ => requested,
+  };
+}
+
 class Booking {
   final String id;
   final String userId;
@@ -24,6 +50,8 @@ class Booking {
   final double? subtotalAmount;
   final double discountAmount;
   final String? offerCode;
+  final PaymentMode paymentMode;
+  final WorkerStage workerStage;
 
   Booking({
     required this.id,
@@ -39,6 +67,8 @@ class Booking {
     this.subtotalAmount,
     this.discountAmount = 0,
     this.offerCode,
+    this.paymentMode = PaymentMode.online,
+    this.workerStage = WorkerStage.requested,
   });
 
   Booking copyWith({
@@ -55,6 +85,8 @@ class Booking {
     double? subtotalAmount,
     double? discountAmount,
     String? offerCode,
+    PaymentMode? paymentMode,
+    WorkerStage? workerStage,
   }) => Booking(
     id: id ?? this.id,
     userId: userId ?? this.userId,
@@ -69,5 +101,7 @@ class Booking {
     subtotalAmount: subtotalAmount ?? this.subtotalAmount,
     discountAmount: discountAmount ?? this.discountAmount,
     offerCode: offerCode ?? this.offerCode,
+    paymentMode: paymentMode ?? this.paymentMode,
+    workerStage: workerStage ?? this.workerStage,
   );
 }

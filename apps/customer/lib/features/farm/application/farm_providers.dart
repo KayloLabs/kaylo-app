@@ -109,6 +109,9 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         totalAmount: draft.total,
         locationId: draft.locationId,
         notes: draft.bookingNotes,
+        paymentMode: method == PaymentChoice.payAfterService
+            ? PaymentMode.cash
+            : PaymentMode.online,
       );
 
       Future<Booking> applyOffer(Booking created) async {

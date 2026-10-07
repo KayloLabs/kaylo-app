@@ -27,6 +27,8 @@ import '../../../farm/domain/farm_service_info.dart';
 import '../../../farm/presentation/widgets/farm_labels.dart';
 import '../../application/bookings_providers.dart';
 import '../widgets/booking_labels.dart';
+import 'package:kaylo_core/utils/money.dart';
+import '../../../reviews/presentation/widgets/rate_worker_card.dart';
 
 class BookingDetailsScreen extends ConsumerWidget {
   final String bookingId;
@@ -233,8 +235,14 @@ class _Details extends ConsumerWidget {
                 ],
               ),
             )
-          else
+          else ...[
+            if (booking.workerStage == WorkerStage.onTheWay ||
+                booking.workerStage == WorkerStage.arrived) ...[
+              _WorkerStageNote(stage: booking.workerStage),
+              const SizedBox(height: AppSpacing.m),
+            ],
             KayloCard(child: _StatusTimeline(status: booking.status)),
+          ],
           const SizedBox(height: AppSpacing.xxl),
 
           SectionHeader(title: l10n.orderSummary),
@@ -268,6 +276,21 @@ class _Details extends ConsumerWidget {
                   child: Divider(height: 1),
                 ),
                 row(l10n.total, PriceTag(amount: booking.totalAmount)),
+                if (booking.paymentMode == PaymentMode.cash)
+                  row(
+                    l10n.payment,
+                    text(
+                      booking.status == BookingStatus.completed
+                          ? l10n.paidCashAmount(
+                              formatRupees(
+                                booking.finalCost ?? booking.totalAmount,
+                              ),
+                            )
+                          : l10n.payCashAmount(
+                              formatRupees(booking.totalAmount),
+                            ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -303,6 +326,11 @@ class _Details extends ConsumerWidget {
                   ),
                   error: (_, _) => const SizedBox.shrink(),
                 ),
+          if (booking.status == BookingStatus.completed &&
+              booking.workerId != null) ...[
+            const SizedBox(height: AppSpacing.xxl),
+            RateWorkerCard(booking: booking),
+          ],
         ],
       ),
       bottomNavigationBar: _isActive
@@ -340,6 +368,38 @@ class _Details extends ConsumerWidget {
               ),
             )
           : null,
+    );
+  }
+}
+
+/// "On the way" and "arrived" sit between confirmed and in progress on the
+/// customer's strip, so they get their own line while they last.
+class _WorkerStageNote extends StatelessWidget {
+  final WorkerStage stage;
+  const _WorkerStageNote({required this.stage});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final arrived = stage == WorkerStage.arrived;
+    return KayloCard(
+      child: Row(
+        children: [
+          Icon(
+            arrived ? Icons.where_to_vote_rounded : Icons.two_wheeler_rounded,
+            color: AppColors.brandPrimary,
+          ),
+          const SizedBox(width: AppSpacing.m),
+          Expanded(
+            child: Text(
+              arrived ? l10n.workerArrived : l10n.workerOnTheWay,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

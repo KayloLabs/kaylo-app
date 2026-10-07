@@ -45,6 +45,7 @@ class SupabaseBookingsRepository implements BookingsRepository {
             'estimated_cost': booking.totalAmount,
             'location_id': booking.locationId,
             'notes': booking.notes,
+            'payment_mode': booking.paymentMode.name,
           })
           .select()
           .single();
@@ -101,6 +102,10 @@ class SupabaseBookingsRepository implements BookingsRepository {
       subtotalAmount: (row['subtotal_amount'] as num?)?.toDouble(),
       discountAmount: (row['discount_amount'] as num?)?.toDouble() ?? 0,
       offerCode: row['offer_code'] as String?,
+      paymentMode: row['payment_mode'] == 'cash'
+          ? PaymentMode.cash
+          : PaymentMode.online,
+      workerStage: WorkerStage.fromDb(row['worker_stage'] as String?),
     );
   }
 

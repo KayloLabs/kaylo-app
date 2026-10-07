@@ -66,6 +66,8 @@ class MockBookingsRepository implements BookingsRepository {
       locationId: booking.locationId,
       notes: booking.notes,
       subtotalAmount: booking.subtotalAmount,
+      paymentMode: booking.paymentMode,
+      workerStage: booking.workerStage,
       discountAmount: booking.discountAmount,
       offerCode: booking.offerCode,
     );

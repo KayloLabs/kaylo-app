@@ -13,6 +13,7 @@ import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../domain/booking_receipt.dart';
+import '../../domain/payment_choice.dart';
 import '../widgets/booking_labels.dart';
 import '../../../offers/presentation/offers_screen.dart';
 
@@ -156,6 +157,13 @@ class _BookingConfirmationScreenState
                       text(paymentMethodLabel(l10n, receipt.paymentMethod)),
                     ),
                     row(l10n.status, BookingStatusChip(status: booking.status)),
+                    if (receipt.paymentMethod == PaymentChoice.payAfterService)
+                      row(
+                        '',
+                        text(
+                          l10n.payCashAmount(formatRupees(booking.totalAmount)),
+                        ),
+                      ),
                   ],
                 ),
               ),

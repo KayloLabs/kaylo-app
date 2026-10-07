@@ -5,6 +5,7 @@ import 'package:kaylo_core/services/storage_service.dart';
 import 'package:kaylo_partner/core/router/app_router.dart';
 import 'package:kaylo_partner/features/jobs/application/jobs_providers.dart';
 import 'package:kaylo_partner/features/earnings/presentation/screens/earnings_screen.dart';
+import 'package:kaylo_partner/l10n/generated/app_localizations.dart';
 import 'package:kaylo_ui/theme/app_theme.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -22,6 +23,8 @@ Future<(ProviderContainer, Widget)> createHarness() async {
       child: MaterialApp.router(
         theme: AppTheme.lightTheme,
         routerConfig: router,
+        localizationsDelegates: AppLocalizations.localizationsDelegates,
+        supportedLocales: AppLocalizations.supportedLocales,
       ),
     ),
   );

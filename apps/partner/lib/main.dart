@@ -4,8 +4,10 @@ import 'package:kaylo_core/kaylo_core.dart';
 import 'package:kaylo_ui/kaylo_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
+import 'l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -39,6 +41,9 @@ class KayloPartnerApp extends ConsumerWidget {
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
       routerConfig: router,
+      locale: ref.watch(partnerLocaleProvider),
+      localizationsDelegates: AppLocalizations.localizationsDelegates,
+      supportedLocales: AppLocalizations.supportedLocales,
     );
   }
 }

@@ -17,25 +17,6 @@ enum JobStage {
   bool get isCompleted => this == JobStage.completed;
   bool get isCancelled => this == JobStage.cancelled;
 
-  String get displayName {
-    switch (this) {
-      case JobStage.requested:
-        return 'Requested';
-      case JobStage.accepted:
-        return 'Accepted';
-      case JobStage.onTheWay:
-        return 'On the way';
-      case JobStage.arrived:
-        return 'Arrived';
-      case JobStage.inProgress:
-        return 'In progress';
-      case JobStage.completed:
-        return 'Completed';
-      case JobStage.cancelled:
-        return 'Cancelled';
-    }
-  }
-
   JobStage? get next {
     switch (this) {
       case JobStage.requested:
@@ -51,25 +32,6 @@ enum JobStage {
       case JobStage.completed:
       case JobStage.cancelled:
         return null;
-    }
-  }
-
-  String get primaryActionText {
-    switch (this) {
-      case JobStage.requested:
-        return 'Accept';
-      case JobStage.accepted:
-        return 'Start travel';
-      case JobStage.onTheWay:
-        return 'I have arrived';
-      case JobStage.arrived:
-        return 'Start job';
-      case JobStage.inProgress:
-        return 'Complete job';
-      case JobStage.completed:
-        return 'Completed';
-      case JobStage.cancelled:
-        return 'Cancelled';
     }
   }
 }

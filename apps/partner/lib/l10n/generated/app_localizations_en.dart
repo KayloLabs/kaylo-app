@@ -112,4 +112,13 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get actionCompleteJob => 'Complete job';
+
+  @override
+  String get languageSettings => 'Language Settings';
+
+  @override
+  String get profileLanguageTile => 'Language';
+
+  @override
+  String get appSettingsHeader => 'App Settings';
 }

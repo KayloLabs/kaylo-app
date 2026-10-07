@@ -18,7 +18,7 @@ import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../booking/domain/booking_receipt.dart';
 import '../../../auth/application/current_user_provider.dart';
-import '../../../booking/domain/payment_method.dart';
+import '../../../booking/domain/payment_choice.dart';
 import '../../../workers/application/workers_providers.dart';
 import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
@@ -40,7 +40,7 @@ class FarmPaymentScreen extends ConsumerStatefulWidget {
 }
 
 class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
-  PaymentMethod _method = PaymentMethod.online;
+  PaymentChoice _method = PaymentChoice.online;
   KayloOffer? _offer;
   double _payable(FarmBookingDraft draft) =>
       draft.total -
@@ -77,7 +77,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
     final isFarm = draft.service.category == 'farm';
     final workerName = _workerName(draft);
 
-    final online = _method != PaymentMethod.payAfterService;
+    final online = _method != PaymentChoice.payAfterService;
     final email = _email.text.trim().toLowerCase();
     final emailOk = _emailPattern.hasMatch(email);
     if (online && !emailOk) {
@@ -91,6 +91,8 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           draft: draft,
           method: _method,
           email: emailOk ? email : null,
+          // The saved default opens Razorpay on its tab (UPI or card).
+          preferredMethod: ref.read(defaultPaymentMethodProvider)?.type.name,
           offerCode:
               _offer?.appliesTo(
                     draft.total,
@@ -265,14 +267,14 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           SectionHeader(title: l10n.paymentMethod),
           const SizedBox(height: AppSpacing.m),
           _PaymentOption(
-            method: PaymentMethod.online,
+            method: PaymentChoice.online,
             selected: _method,
             icon: Icons.lock_rounded,
             title: l10n.payNow,
             subtitle: l10n.payNowSubtitle,
             onSelect: (m) => setState(() => _method = m),
           ),
-          if (_method == PaymentMethod.online && savedMethod != null) ...[
+          if (_method == PaymentChoice.online && savedMethod != null) ...[
             const SizedBox(height: AppSpacing.xs),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
@@ -290,9 +292,9 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                     child: Text(
                       '${savedMethod.label} (${savedMethod.detail})',
                       style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                            color: secondary,
-                            fontWeight: FontWeight.w500,
-                          ),
+                        color: secondary,
+                        fontWeight: FontWeight.w500,
+                      ),
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -312,7 +314,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           ],
           const SizedBox(height: AppSpacing.s),
           _PaymentOption(
-            method: PaymentMethod.payAfterService,
+            method: PaymentChoice.payAfterService,
             selected: _method,
             icon: Icons.payments_rounded,
             title: l10n.payAfter,
@@ -321,7 +323,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           ),
           const SizedBox(height: AppSpacing.xl),
           KayloTextField(
-            label: _method == PaymentMethod.payAfterService
+            label: _method == PaymentChoice.payAfterService
                 ? l10n.confirmationEmail
                 : l10n.invoiceEmail,
             hintText: 'you@example.com',
@@ -341,7 +343,7 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
           AppSpacing.l,
         ),
         child: KayloButton(
-          text: _method == PaymentMethod.payAfterService
+          text: _method == PaymentChoice.payAfterService
               ? l10n.confirmBooking
               : l10n.confirmAndPay(formatRupees(_payable(draft))),
           icon: Icons.lock_rounded,
@@ -354,12 +356,12 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
 }
 
 class _PaymentOption extends StatelessWidget {
-  final PaymentMethod method;
-  final PaymentMethod selected;
+  final PaymentChoice method;
+  final PaymentChoice selected;
   final IconData icon;
   final String title;
   final String subtitle;
-  final ValueChanged<PaymentMethod> onSelect;
+  final ValueChanged<PaymentChoice> onSelect;
 
   const _PaymentOption({
     required this.method,

@@ -9,7 +9,7 @@ import '../../auth/application/current_user_provider.dart';
 import 'package:kaylo_core/network/supabase_providers.dart';
 import '../../booking/application/bookings_providers.dart';
 import '../../booking/data/booking_emails.dart';
-import '../../booking/domain/payment_method.dart';
+import '../../booking/domain/payment_choice.dart';
 import '../../home/application/home_providers.dart';
 import '../../workers/application/workers_providers.dart';
 import '../domain/farm_booking_draft.dart';
@@ -82,9 +82,10 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
 
   Future<Booking?> confirm({
     required FarmBookingDraft draft,
-    required PaymentMethod method,
+    required PaymentChoice method,
     String? email,
     String? offerCode,
+    String? preferredMethod,
   }) async {
     final userId = ref.read(currentUserIdProvider);
     if (userId == null) {
@@ -134,7 +135,7 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
         }
       }
 
-      if (method == PaymentMethod.payAfterService) {
+      if (method == PaymentChoice.payAfterService) {
         final created = _unpaid ?? await repo.createBooking(create());
         _unpaid = created;
         final booking = await applyOffer(created);
@@ -158,7 +159,11 @@ class FarmCheckoutController extends AsyncNotifier<Booking?> {
       _hasStartedPayment = true;
       final outcome = await ref
           .read(paymentGatewayProvider)
-          .pay(bookingId: booking.id, email: email);
+          .pay(
+            bookingId: booking.id,
+            email: email,
+            preferredMethod: preferredMethod,
+          );
       if (!outcome.paid) {
         throw ServerFailure(
           outcome.message ?? 'Payment was not completed',

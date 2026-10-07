@@ -4,7 +4,7 @@ import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/features/booking/application/bookings_providers.dart';
 import 'package:kaylo/features/booking/data/mock_bookings_repository.dart';
 import 'package:kaylo/features/booking/domain/payment_gateway.dart';
-import 'package:kaylo/features/booking/domain/payment_method.dart';
+import 'package:kaylo/features/booking/domain/payment_choice.dart';
 import 'package:kaylo/features/farm/application/farm_providers.dart';
 import 'package:kaylo/features/farm/domain/farm_booking_draft.dart';
 import 'package:kaylo_core/models/booking.dart';
@@ -90,14 +90,14 @@ void main() {
       expect(
         await checkout.confirm(
           draft: draft,
-          method: PaymentMethod.online,
+          method: PaymentChoice.online,
           offerCode: 'FIRST100',
         ),
         isNull,
       );
       final confirmed = await checkout.confirm(
         draft: draft,
-        method: PaymentMethod.online,
+        method: PaymentChoice.online,
         offerCode: 'FIRST100',
       );
       expect(repo.rows, hasLength(1));
@@ -130,7 +130,7 @@ void main() {
           .read(farmCheckoutControllerProvider.notifier)
           .confirm(
             draft: draft,
-            method: PaymentMethod.payAfterService,
+            method: PaymentChoice.payAfterService,
             offerCode: 'FIRST100',
           );
       expect(booking!.totalAmount, 400);

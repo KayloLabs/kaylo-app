@@ -1,4 +1,3 @@
-import 'payment_methods_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -190,11 +189,7 @@ class ProfileScreen extends ConsumerWidget {
                     icon: Icons.account_balance_wallet_rounded,
                     color: AppColors.careAccent,
                     title: l10n.paymentMethods,
-                    onTap: () => Navigator.of(context).push(
-                      MaterialPageRoute(
-                        builder: (_) => const PaymentMethodsScreen(),
-                      ),
-                    ),
+                    onTap: () => context.push(Routes.paymentMethods),
                   ),
                 ],
               ),

@@ -11,6 +11,7 @@ import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/payment_methods_providers.dart';
 import '../../domain/payment_method.dart';
+import '../../domain/saved_card.dart';
 
 class AddPaymentSheet extends ConsumerStatefulWidget {
   const AddPaymentSheet({super.key});
@@ -73,7 +74,9 @@ class _AddPaymentSheetState extends ConsumerState<AddPaymentSheet> {
           label = 'Paytm UPI';
         }
 
-        await ref.read(paymentMethodsRepositoryProvider).addPaymentMethod(
+        await ref
+            .read(paymentMethodsRepositoryProvider)
+            .addPaymentMethod(
               type: PaymentMethodType.upi,
               label: label,
               detail: upi,
@@ -88,40 +91,24 @@ class _AddPaymentSheetState extends ConsumerState<AddPaymentSheet> {
         if (mounted) setState(() => _isSubmitting = false);
       }
     } else {
-      final cardRaw = _cardNumberController.text.replaceAll(RegExp(r'\s+'), '');
-      if (cardRaw.length < 15 || cardRaw.length > 19) {
-        KayloSnackbar.showError(
-          context,
-          'Please enter a valid card number',
-        );
+      final card = SavedCard(
+        number: _cardNumberController.text,
+        holder: _cardHolderController.text,
+        expiry: _expiryController.text,
+      );
+      if (!card.hasValidLength) {
+        KayloSnackbar.showError(context, 'Please enter a valid card number');
         return;
       }
-      final holder = _cardHolderController.text.trim();
-      final expiry = _expiryController.text.trim();
-
-      String label = 'Debit / Credit Card';
-      if (cardRaw.startsWith('4')) {
-        label = 'Visa Card';
-      } else if (cardRaw.startsWith('5')) {
-        label = 'Mastercard';
-      } else if (cardRaw.startsWith('6')) {
-        label = 'RuPay Card';
-      }
-      if (holder.isNotEmpty) {
-        label = '$label • $holder';
-      }
-
-      final last4 = cardRaw.length >= 4
-          ? cardRaw.substring(cardRaw.length - 4)
-          : cardRaw;
-      final detail = '•••• $last4${expiry.isNotEmpty ? '  ($expiry)' : ''}';
 
       setState(() => _isSubmitting = true);
       try {
-        await ref.read(paymentMethodsRepositoryProvider).addPaymentMethod(
+        await ref
+            .read(paymentMethodsRepositoryProvider)
+            .addPaymentMethod(
               type: PaymentMethodType.card,
-              label: label,
-              detail: detail,
+              label: card.label,
+              detail: card.detail,
               isDefault: _isDefault,
             );
 
@@ -175,9 +162,9 @@ class _AddPaymentSheetState extends ConsumerState<AddPaymentSheet> {
               children: [
                 Text(
                   l10n.addPaymentMethod,
-                  style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                        fontWeight: FontWeight.w700,
-                      ),
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleLarge?.copyWith(fontWeight: FontWeight.w700),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close_rounded),
@@ -241,7 +228,7 @@ class _AddPaymentSheetState extends ConsumerState<AddPaymentSheet> {
                     '@okhdfcbank',
                     '@okaxis',
                     '@ybl',
-                    '@paytm'
+                    '@paytm',
                   ])
                     ActionChip(
                       label: Text(suffix),
@@ -302,9 +289,9 @@ class _AddPaymentSheetState extends ConsumerState<AddPaymentSheet> {
               onChanged: (val) => setState(() => _isDefault = val),
               title: Text(
                 l10n.setDefault,
-                style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                      fontWeight: FontWeight.w600,
-                    ),
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
               ),
               activeTrackColor: AppColors.brandPrimary,
             ),
@@ -367,8 +354,8 @@ class _TabButton extends StatelessWidget {
               color: isSelected
                   ? AppColors.brandPrimary
                   : (isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondary),
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary),
             ),
             const SizedBox(width: AppSpacing.s),
             Text(
@@ -376,10 +363,12 @@ class _TabButton extends StatelessWidget {
               style: TextStyle(
                 fontWeight: isSelected ? FontWeight.w700 : FontWeight.w500,
                 color: isSelected
-                    ? (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary)
+                    ? (isDark
+                          ? AppColors.textPrimaryDark
+                          : AppColors.textPrimary)
                     : (isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary),
+                          ? AppColors.textSecondaryDark
+                          : AppColors.textSecondary),
               ),
             ),
           ],

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_ui/widgets/kaylo_chip.dart';
 import '../../../../l10n/generated/app_localizations.dart';
-import '../../domain/payment_method.dart';
+import '../../domain/payment_choice.dart';
 
 String bookingStatusLabel(AppLocalizations l10n, BookingStatus status) =>
     switch (status) {
@@ -14,10 +14,10 @@ String bookingStatusLabel(AppLocalizations l10n, BookingStatus status) =>
       BookingStatus.cancelled => l10n.statusCancelled,
     };
 
-String paymentMethodLabel(AppLocalizations l10n, PaymentMethod method) =>
+String paymentMethodLabel(AppLocalizations l10n, PaymentChoice method) =>
     switch (method) {
-      PaymentMethod.online => l10n.payNow,
-      PaymentMethod.payAfterService => l10n.payAfter,
+      PaymentChoice.online => l10n.payNow,
+      PaymentChoice.payAfterService => l10n.payAfter,
     };
 
 class BookingStatusChip extends StatelessWidget {

@@ -6,7 +6,7 @@ import 'package:kaylo/features/auth/application/current_user_provider.dart';
 import 'package:kaylo/features/booking/application/bookings_providers.dart';
 import 'package:kaylo/features/booking/data/mock_bookings_repository.dart';
 import 'package:kaylo/features/booking/domain/payment_gateway.dart';
-import 'package:kaylo/features/booking/domain/payment_method.dart';
+import 'package:kaylo/features/booking/domain/payment_choice.dart';
 import 'package:kaylo/features/care/application/care_checkout.dart';
 import 'package:kaylo/features/farm/application/farm_providers.dart';
 import 'package:kaylo/features/farm/domain/farm_booking_draft.dart';
@@ -93,7 +93,7 @@ void main() {
       final checkout = container.read(farmCheckoutControllerProvider.notifier);
       await checkout.confirm(
         draft: _draft,
-        method: PaymentMethod.online,
+        method: PaymentChoice.online,
         offerCode: 'INVALID',
       );
       expect(repo.rows.single.status, BookingStatus.cancelled);
@@ -102,7 +102,7 @@ void main() {
 
       await checkout.confirm(
         draft: _draft,
-        method: PaymentMethod.online,
+        method: PaymentChoice.online,
         offerCode: 'FIRST100',
       );
       expect(repo.rows, hasLength(2));
@@ -140,9 +140,9 @@ void main() {
       addTearDown(keepAlive.close);
       await container.read(farmCheckoutControllerProvider.future);
       final checkout = container.read(farmCheckoutControllerProvider.notifier);
-      await checkout.confirm(draft: _draft, method: PaymentMethod.online);
+      await checkout.confirm(draft: _draft, method: PaymentChoice.online);
       reject = true;
-      await checkout.confirm(draft: _draft, method: PaymentMethod.online);
+      await checkout.confirm(draft: _draft, method: PaymentChoice.online);
       expect(repo.rows, hasLength(1));
       expect(repo.rows.single.status, BookingStatus.pending);
       expect(checkout.hasStartedPayment, isTrue);

@@ -2,4 +2,4 @@
 /// whatever the account offers (cards, netbanking, UPI where enabled);
 /// paying after the service skips it and leaves the booking pending
 /// until the worker confirms.
-enum PaymentMethod { online, payAfterService }
+enum PaymentChoice { online, payAfterService }

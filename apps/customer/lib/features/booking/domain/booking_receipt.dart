@@ -1,6 +1,6 @@
 import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_core/models/service_item.dart';
-import 'payment_method.dart';
+import 'payment_choice.dart';
 
 /// One label/value row on the confirmation screen. The flow that created
 /// the booking localizes both strings before navigating, so the screen
@@ -16,7 +16,7 @@ class ReceiptLine {
 class BookingReceipt {
   final Booking booking;
   final ServiceItem service;
-  final PaymentMethod paymentMethod;
+  final PaymentChoice paymentMethod;
   final List<ReceiptLine> extras;
 
   const BookingReceipt({

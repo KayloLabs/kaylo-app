@@ -362,6 +362,23 @@ Offer wording is translated in the app by code (`offer_copy.dart`), with the dat
 
 `supabase/migrations/0018_worker_payout_accounts.sql` moves `bank_account` and `upi_id` out of the public `workers` row into `worker_payout_accounts`, which only the worker it belongs to can read or write (the service role sees all). Run it after 0017; `supabase/tests/worker_payout_privacy.sql` checks it. The partner app's payout screens read and write that table, never `workers`.
 
+`0019_cash_and_worker_stages.sql` and `0020_worker_registration.sql` are the backend for the partner app's second round. Run them after 0018, in order; `supabase/tests/cash_flow.sql` and `supabase/tests/worker_registration.sql` check them. What the apps call:
+
+| Call | Who | Does |
+| --- | --- | --- |
+| `bookings.payment_mode` (`online` or `cash`) | customer app sets it when booking | a cash booking gets a pending `payments` row (`payment_method = 'cash'`) by trigger |
+| `bookings.worker_stage` | read by both apps | `requested`, `accepted`, `on_the_way`, `arrived`, `in_progress`, `completed`, `cancelled`; kept in step with `status` by trigger |
+| `worker_advance_booking(booking_id, stage)` | worker | moves a job one step; refuses cash jobs when `commission_due` is at the limit, and completion of a cash job before the cash is confirmed |
+| `confirm_cash_collected(booking_id, amount?)` | worker | marks the cash payment paid, completes the job, adds the amount to `worker_payout_accounts.cash_in_hand` and 15% to `commission_due` |
+| `settle_cash_due(reference?)` | worker | writes a `settlements` row and clears the due |
+| `kaylo_commission_rate()`, `kaylo_cash_due_limit()` | both apps | 0.15 and 2,000 |
+| `submit_review(booking_id, rating, text?)` | customer | one review per completed booking, editable; the worker's average refreshes by trigger |
+| `register_worker(details jsonb)` | worker | profile, services, service area, payout account in one call; sets `verification_status = under_review` |
+| `worker_documents` + bucket `worker-documents` | worker | files under `<worker_id>/…`, own rows and files only |
+| `review_worker(...)`, `review_worker_document(...)` | service role only | the Trust Team's verdicts; `workers.is_verified` follows `verification_status` |
+
+Notifications: workers get `New job request`, `Booking cancelled`, `Job completed`; customers additionally get `Your worker is on the way` and `Your worker has arrived`.
+
 | Service | Price | Per |
 | --- | --- | --- |
 | Coconut Plucking | 50 | tree |

@@ -220,8 +220,8 @@
   "payUpiSubtitle": "Google Pay, PhonePe, Paytm",
   "payCard": "ക്രെഡിറ്റ് അല്ലെങ്കിൽ ഡെബിറ്റ് കാർഡ്",
   "payCardSubtitle": "Visa, Mastercard, RuPay",
-  "payAfter": "സേവനത്തിന് ശേഷം അടയ്ക്കാം",
-  "payAfterSubtitle": "ജോലി കഴിഞ്ഞ് തൊഴിലാളിക്ക് നേരിട്ട് നൽകാം",
+  "payAfter": "സേവനത്തിന് ശേഷം പണമായി അടയ്ക്കാം",
+  "payAfterSubtitle": "ജോലി കഴിഞ്ഞ് തൊഴിലാളിക്ക് പണം നേരിട്ട് നൽകുക",
   "confirmAndPay": "{amount} അടച്ച് ഉറപ്പിക്കുക",
   "confirmBooking": "ബുക്കിംഗ് ഉറപ്പിക്കുക",
   "paymentFailed": "പേയ്‌മെന്റ് പൂർത്തിയായില്ല. വീണ്ടും ശ്രമിക്കുക.",
@@ -797,5 +797,72 @@
   "upiId": "UPI ID",
   "@upiId": {
     "description": "Label of the UPI ID field"
+  },
+  "payCashAmount": "ജോലി കഴിഞ്ഞ് തൊഴിലാളിക്ക് {amount} പണമായി നൽകുക",
+  "@payCashAmount": {
+      "description": "Cash line on confirmation and details while the job is open",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "paidCashAmount": "{amount} പണമായി നൽകി",
+  "@paidCashAmount": {
+      "description": "Cash line on details once the job is completed",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "workerOnTheWay": "നിങ്ങളുടെ തൊഴിലാളി വഴിയിലാണ്",
+  "@workerOnTheWay": {
+      "description": "Banner on booking details while the worker travels"
+  },
+  "workerArrived": "നിങ്ങളുടെ തൊഴിലാളി എത്തി",
+  "@workerArrived": {
+      "description": "Banner on booking details when the worker has arrived"
+  },
+  "rateYourWorker": "തൊഴിലാളിയെ റേറ്റ് ചെയ്യുക",
+  "@rateYourWorker": {
+      "description": "Title and button of the review card after a completed booking"
+  },
+  "rateWorkerHint": "എങ്ങനെയുണ്ടായിരുന്നു? ഒന്നോ രണ്ടോ വരി മറ്റ് ഉപഭോക്താക്കൾക്ക് സഹായകമാകും.",
+  "@rateWorkerHint": {
+      "description": "Helper line under the review card title"
+  },
+  "reviewTextHint": "ജോലിയെക്കുറിച്ച് അൽപ്പം എഴുതുക (നിർബന്ധമില്ല)",
+  "@reviewTextHint": {
+      "description": "Hint of the optional review text field"
+  },
+  "submitReview": "റിവ്യൂ അയയ്ക്കുക",
+  "@submitReview": {
+      "description": "Submit button of the review sheet"
+  },
+  "reviewSubmitted": "നന്ദി, നിങ്ങളുടെ റിവ്യൂ ലഭിച്ചു",
+  "@reviewSubmitted": {
+      "description": "Snackbar after a review is saved"
+  },
+  "yourReview": "നിങ്ങളുടെ റിവ്യൂ",
+  "@yourReview": {
+      "description": "Title of the review card once a review exists"
+  },
+  "editReview": "മാറ്റുക",
+  "@editReview": {
+      "description": "Action to change an existing review"
+  },
+  "ratingRequired": "ആദ്യം സ്റ്റാർ റേറ്റിംഗ് തിരഞ്ഞെടുക്കുക",
+  "@ratingRequired": {
+      "description": "Error when submitting without picking stars"
+  },
+  "starLabel": "5-ൽ {count} സ്റ്റാർ",
+  "@starLabel": {
+      "description": "Accessibility label of each star in the review sheet",
+      "placeholders": {
+          "count": {
+              "type": "int"
+          }
+      }
   }
 }

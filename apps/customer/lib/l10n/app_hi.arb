@@ -220,8 +220,8 @@
   "payUpiSubtitle": "Google Pay, PhonePe, Paytm",
   "payCard": "क्रेडिट या डेबिट कार्ड",
   "payCardSubtitle": "Visa, Mastercard, RuPay",
-  "payAfter": "सेवा के बाद भुगतान",
-  "payAfterSubtitle": "काम पूरा होने पर कामगार को दें",
+  "payAfter": "सेवा के बाद नकद भुगतान",
+  "payAfterSubtitle": "काम पूरा होने पर कामगार को नकद दें",
   "confirmAndPay": "{amount} चुकाएँ और पक्का करें",
   "confirmBooking": "बुकिंग पक्की करें",
   "paymentFailed": "भुगतान पूरा नहीं हुआ। फिर से कोशिश करें।",
@@ -797,5 +797,72 @@
   "upiId": "UPI ID",
   "@upiId": {
     "description": "Label of the UPI ID field"
+  },
+  "payCashAmount": "काम पूरा होने पर कामगार को {amount} नकद दें",
+  "@payCashAmount": {
+      "description": "Cash line on confirmation and details while the job is open",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "paidCashAmount": "{amount} नकद में भुगतान किया",
+  "@paidCashAmount": {
+      "description": "Cash line on details once the job is completed",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "workerOnTheWay": "आपका कामगार रास्ते में है",
+  "@workerOnTheWay": {
+      "description": "Banner on booking details while the worker travels"
+  },
+  "workerArrived": "आपका कामगार पहुँच गया है",
+  "@workerArrived": {
+      "description": "Banner on booking details when the worker has arrived"
+  },
+  "rateYourWorker": "अपने कामगार को रेट करें",
+  "@rateYourWorker": {
+      "description": "Title and button of the review card after a completed booking"
+  },
+  "rateWorkerHint": "कैसा रहा? एक-दो पंक्तियाँ दूसरे ग्राहकों की मदद करती हैं।",
+  "@rateWorkerHint": {
+      "description": "Helper line under the review card title"
+  },
+  "reviewTextHint": "काम के बारे में थोड़ा लिखें (वैकल्पिक)",
+  "@reviewTextHint": {
+      "description": "Hint of the optional review text field"
+  },
+  "submitReview": "समीक्षा भेजें",
+  "@submitReview": {
+      "description": "Submit button of the review sheet"
+  },
+  "reviewSubmitted": "धन्यवाद, आपकी समीक्षा मिल गई",
+  "@reviewSubmitted": {
+      "description": "Snackbar after a review is saved"
+  },
+  "yourReview": "आपकी समीक्षा",
+  "@yourReview": {
+      "description": "Title of the review card once a review exists"
+  },
+  "editReview": "बदलें",
+  "@editReview": {
+      "description": "Action to change an existing review"
+  },
+  "ratingRequired": "पहले स्टार रेटिंग चुनें",
+  "@ratingRequired": {
+      "description": "Error when submitting without picking stars"
+  },
+  "starLabel": "5 में से {count} स्टार",
+  "@starLabel": {
+      "description": "Accessibility label of each star in the review sheet",
+      "placeholders": {
+          "count": {
+              "type": "int"
+          }
+      }
   }
 }

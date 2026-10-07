@@ -1425,13 +1425,13 @@ abstract class AppLocalizations {
   /// No description provided for @payAfter.
   ///
   /// In en, this message translates to:
-  /// **'Pay after service'**
+  /// **'Pay cash after the service'**
   String get payAfter;
 
   /// No description provided for @payAfterSubtitle.
   ///
   /// In en, this message translates to:
-  /// **'Pay the worker once the job is done'**
+  /// **'Hand the cash to the worker once the job is done'**
   String get payAfterSubtitle;
 
   /// No description provided for @confirmAndPay.
@@ -4241,6 +4241,84 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'UPI ID'**
   String get upiId;
+
+  /// Cash line on confirmation and details while the job is open
+  ///
+  /// In en, this message translates to:
+  /// **'Pay the worker {amount} in cash when the job is done'**
+  String payCashAmount(String amount);
+
+  /// Cash line on details once the job is completed
+  ///
+  /// In en, this message translates to:
+  /// **'Paid {amount} in cash'**
+  String paidCashAmount(String amount);
+
+  /// Banner on booking details while the worker travels
+  ///
+  /// In en, this message translates to:
+  /// **'Your worker is on the way'**
+  String get workerOnTheWay;
+
+  /// Banner on booking details when the worker has arrived
+  ///
+  /// In en, this message translates to:
+  /// **'Your worker has arrived'**
+  String get workerArrived;
+
+  /// Title and button of the review card after a completed booking
+  ///
+  /// In en, this message translates to:
+  /// **'Rate your worker'**
+  String get rateYourWorker;
+
+  /// Helper line under the review card title
+  ///
+  /// In en, this message translates to:
+  /// **'How did it go? A line or two helps other customers.'**
+  String get rateWorkerHint;
+
+  /// Hint of the optional review text field
+  ///
+  /// In en, this message translates to:
+  /// **'Say a little about the work (optional)'**
+  String get reviewTextHint;
+
+  /// Submit button of the review sheet
+  ///
+  /// In en, this message translates to:
+  /// **'Submit review'**
+  String get submitReview;
+
+  /// Snackbar after a review is saved
+  ///
+  /// In en, this message translates to:
+  /// **'Thanks, your review is in'**
+  String get reviewSubmitted;
+
+  /// Title of the review card once a review exists
+  ///
+  /// In en, this message translates to:
+  /// **'Your review'**
+  String get yourReview;
+
+  /// Action to change an existing review
+  ///
+  /// In en, this message translates to:
+  /// **'Edit'**
+  String get editReview;
+
+  /// Error when submitting without picking stars
+  ///
+  /// In en, this message translates to:
+  /// **'Pick a star rating first'**
+  String get ratingRequired;
+
+  /// Accessibility label of each star in the review sheet
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of 5 stars'**
+  String starLabel(int count);
 }
 
 class _AppLocalizationsDelegate

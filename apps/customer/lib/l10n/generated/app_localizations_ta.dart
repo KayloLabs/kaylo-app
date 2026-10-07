@@ -735,10 +735,11 @@ class AppLocalizationsTa extends AppLocalizations {
   String get payCardSubtitle => 'Visa, Mastercard, RuPay';
 
   @override
-  String get payAfter => 'சேவைக்குப் பிறகு செலுத்து';
+  String get payAfter => 'சேவைக்குப் பிறகு பணமாகச் செலுத்து';
 
   @override
-  String get payAfterSubtitle => 'வேலை முடிந்ததும் பணியாளரிடம் கொடுக்கலாம்';
+  String get payAfterSubtitle =>
+      'வேலை முடிந்ததும் பணியாளரிடம் பணமாகக் கொடுங்கள்';
 
   @override
   String confirmAndPay(String amount) {
@@ -2386,4 +2387,52 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get upiId => 'UPI ID';
+
+  @override
+  String payCashAmount(String amount) {
+    return 'வேலை முடிந்ததும் பணியாளரிடம் $amount பணமாகக் கொடுங்கள்';
+  }
+
+  @override
+  String paidCashAmount(String amount) {
+    return '$amount பணமாகச் செலுத்தப்பட்டது';
+  }
+
+  @override
+  String get workerOnTheWay => 'உங்கள் பணியாளர் வழியில் உள்ளார்';
+
+  @override
+  String get workerArrived => 'உங்கள் பணியாளர் வந்துவிட்டார்';
+
+  @override
+  String get rateYourWorker => 'பணியாளரை மதிப்பிடுங்கள்';
+
+  @override
+  String get rateWorkerHint =>
+      'எப்படி இருந்தது? ஒன்றிரண்டு வரிகள் மற்ற வாடிக்கையாளர்களுக்கு உதவும்.';
+
+  @override
+  String get reviewTextHint =>
+      'வேலை பற்றி சிறிது எழுதுங்கள் (விருப்பத்திற்குரியது)';
+
+  @override
+  String get submitReview => 'மதிப்புரையை அனுப்பு';
+
+  @override
+  String get reviewSubmitted => 'நன்றி, உங்கள் மதிப்புரை கிடைத்தது';
+
+  @override
+  String get yourReview => 'உங்கள் மதிப்புரை';
+
+  @override
+  String get editReview => 'மாற்று';
+
+  @override
+  String get ratingRequired =>
+      'முதலில் நட்சத்திர மதிப்பீட்டைத் தேர்வு செய்யுங்கள்';
+
+  @override
+  String starLabel(int count) {
+    return '5-இல் $count நட்சத்திரம்';
+  }
 }

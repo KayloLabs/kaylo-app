@@ -220,8 +220,8 @@
   "payUpiSubtitle": "Google Pay, PhonePe, Paytm",
   "payCard": "கிரெடிட் அல்லது டெபிட் கார்டு",
   "payCardSubtitle": "Visa, Mastercard, RuPay",
-  "payAfter": "சேவைக்குப் பிறகு செலுத்து",
-  "payAfterSubtitle": "வேலை முடிந்ததும் பணியாளரிடம் கொடுக்கலாம்",
+  "payAfter": "சேவைக்குப் பிறகு பணமாகச் செலுத்து",
+  "payAfterSubtitle": "வேலை முடிந்ததும் பணியாளரிடம் பணமாகக் கொடுங்கள்",
   "confirmAndPay": "{amount} செலுத்தி உறுதி செய்",
   "confirmBooking": "புக்கிங்கை உறுதி செய்",
   "paymentFailed": "பணம் செலுத்துதல் முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
@@ -797,5 +797,72 @@
   "upiId": "UPI ID",
   "@upiId": {
     "description": "Label of the UPI ID field"
+  },
+  "payCashAmount": "வேலை முடிந்ததும் பணியாளரிடம் {amount} பணமாகக் கொடுங்கள்",
+  "@payCashAmount": {
+      "description": "Cash line on confirmation and details while the job is open",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "paidCashAmount": "{amount} பணமாகச் செலுத்தப்பட்டது",
+  "@paidCashAmount": {
+      "description": "Cash line on details once the job is completed",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "workerOnTheWay": "உங்கள் பணியாளர் வழியில் உள்ளார்",
+  "@workerOnTheWay": {
+      "description": "Banner on booking details while the worker travels"
+  },
+  "workerArrived": "உங்கள் பணியாளர் வந்துவிட்டார்",
+  "@workerArrived": {
+      "description": "Banner on booking details when the worker has arrived"
+  },
+  "rateYourWorker": "பணியாளரை மதிப்பிடுங்கள்",
+  "@rateYourWorker": {
+      "description": "Title and button of the review card after a completed booking"
+  },
+  "rateWorkerHint": "எப்படி இருந்தது? ஒன்றிரண்டு வரிகள் மற்ற வாடிக்கையாளர்களுக்கு உதவும்.",
+  "@rateWorkerHint": {
+      "description": "Helper line under the review card title"
+  },
+  "reviewTextHint": "வேலை பற்றி சிறிது எழுதுங்கள் (விருப்பத்திற்குரியது)",
+  "@reviewTextHint": {
+      "description": "Hint of the optional review text field"
+  },
+  "submitReview": "மதிப்புரையை அனுப்பு",
+  "@submitReview": {
+      "description": "Submit button of the review sheet"
+  },
+  "reviewSubmitted": "நன்றி, உங்கள் மதிப்புரை கிடைத்தது",
+  "@reviewSubmitted": {
+      "description": "Snackbar after a review is saved"
+  },
+  "yourReview": "உங்கள் மதிப்புரை",
+  "@yourReview": {
+      "description": "Title of the review card once a review exists"
+  },
+  "editReview": "மாற்று",
+  "@editReview": {
+      "description": "Action to change an existing review"
+  },
+  "ratingRequired": "முதலில் நட்சத்திர மதிப்பீட்டைத் தேர்வு செய்யுங்கள்",
+  "@ratingRequired": {
+      "description": "Error when submitting without picking stars"
+  },
+  "starLabel": "5-இல் {count} நட்சத்திரம்",
+  "@starLabel": {
+      "description": "Accessibility label of each star in the review sheet",
+      "placeholders": {
+          "count": {
+              "type": "int"
+          }
+      }
   }
 }

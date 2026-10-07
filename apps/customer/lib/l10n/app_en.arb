@@ -299,8 +299,8 @@
   "payUpiSubtitle": "Google Pay, PhonePe, Paytm",
   "payCard": "Credit or debit card",
   "payCardSubtitle": "Visa, Mastercard, RuPay",
-  "payAfter": "Pay after service",
-  "payAfterSubtitle": "Pay the worker once the job is done",
+  "payAfter": "Pay cash after the service",
+  "payAfterSubtitle": "Hand the cash to the worker once the job is done",
   "confirmAndPay": "Confirm and pay {amount}",
   "@confirmAndPay": {
     "placeholders": {
@@ -1059,5 +1059,72 @@
   "upiId": "UPI ID",
   "@upiId": {
     "description": "Label of the UPI ID field"
+  },
+  "payCashAmount": "Pay the worker {amount} in cash when the job is done",
+  "@payCashAmount": {
+      "description": "Cash line on confirmation and details while the job is open",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "paidCashAmount": "Paid {amount} in cash",
+  "@paidCashAmount": {
+      "description": "Cash line on details once the job is completed",
+      "placeholders": {
+          "amount": {
+              "type": "String"
+          }
+      }
+  },
+  "workerOnTheWay": "Your worker is on the way",
+  "@workerOnTheWay": {
+      "description": "Banner on booking details while the worker travels"
+  },
+  "workerArrived": "Your worker has arrived",
+  "@workerArrived": {
+      "description": "Banner on booking details when the worker has arrived"
+  },
+  "rateYourWorker": "Rate your worker",
+  "@rateYourWorker": {
+      "description": "Title and button of the review card after a completed booking"
+  },
+  "rateWorkerHint": "How did it go? A line or two helps other customers.",
+  "@rateWorkerHint": {
+      "description": "Helper line under the review card title"
+  },
+  "reviewTextHint": "Say a little about the work (optional)",
+  "@reviewTextHint": {
+      "description": "Hint of the optional review text field"
+  },
+  "submitReview": "Submit review",
+  "@submitReview": {
+      "description": "Submit button of the review sheet"
+  },
+  "reviewSubmitted": "Thanks, your review is in",
+  "@reviewSubmitted": {
+      "description": "Snackbar after a review is saved"
+  },
+  "yourReview": "Your review",
+  "@yourReview": {
+      "description": "Title of the review card once a review exists"
+  },
+  "editReview": "Edit",
+  "@editReview": {
+      "description": "Action to change an existing review"
+  },
+  "ratingRequired": "Pick a star rating first",
+  "@ratingRequired": {
+      "description": "Error when submitting without picking stars"
+  },
+  "starLabel": "{count} of 5 stars",
+  "@starLabel": {
+      "description": "Accessibility label of each star in the review sheet",
+      "placeholders": {
+          "count": {
+              "type": "int"
+          }
+      }
   }
 }

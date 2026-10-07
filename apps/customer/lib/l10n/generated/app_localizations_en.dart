@@ -725,10 +725,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String get payCardSubtitle => 'Visa, Mastercard, RuPay';
 
   @override
-  String get payAfter => 'Pay after service';
+  String get payAfter => 'Pay cash after the service';
 
   @override
-  String get payAfterSubtitle => 'Pay the worker once the job is done';
+  String get payAfterSubtitle =>
+      'Hand the cash to the worker once the job is done';
 
   @override
   String confirmAndPay(String amount) {
@@ -2345,4 +2346,50 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get upiId => 'UPI ID';
+
+  @override
+  String payCashAmount(String amount) {
+    return 'Pay the worker $amount in cash when the job is done';
+  }
+
+  @override
+  String paidCashAmount(String amount) {
+    return 'Paid $amount in cash';
+  }
+
+  @override
+  String get workerOnTheWay => 'Your worker is on the way';
+
+  @override
+  String get workerArrived => 'Your worker has arrived';
+
+  @override
+  String get rateYourWorker => 'Rate your worker';
+
+  @override
+  String get rateWorkerHint =>
+      'How did it go? A line or two helps other customers.';
+
+  @override
+  String get reviewTextHint => 'Say a little about the work (optional)';
+
+  @override
+  String get submitReview => 'Submit review';
+
+  @override
+  String get reviewSubmitted => 'Thanks, your review is in';
+
+  @override
+  String get yourReview => 'Your review';
+
+  @override
+  String get editReview => 'Edit';
+
+  @override
+  String get ratingRequired => 'Pick a star rating first';
+
+  @override
+  String starLabel(int count) {
+    return '$count of 5 stars';
+  }
 }

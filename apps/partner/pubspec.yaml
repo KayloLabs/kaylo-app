@@ -13,6 +13,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_localizations:
+    sdk: flutter
 
   # Shared with the customer app: models, Supabase, device services, theme
   # and widgets.
@@ -42,3 +44,4 @@ dev_dependencies:
 
 flutter:
   uses-material-design: true
+  generate: true

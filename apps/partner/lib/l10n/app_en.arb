@@ -1,0 +1,145 @@
+{
+  "@@locale": "en",
+  "appTitle": "Kaylo Partner",
+  "@appTitle": {
+    "description": "App bar title and application name"
+  },
+  "refreshJobsTooltip": "Refresh jobs",
+  "@refreshJobsTooltip": {
+    "description": "Tooltip for refreshing jobs list"
+  },
+  "tabJobs": "Jobs",
+  "@tabJobs": {
+    "description": "Bottom navigation tab label for jobs"
+  },
+  "tabEarnings": "Earnings",
+  "@tabEarnings": {
+    "description": "Bottom navigation tab label for earnings"
+  },
+  "tabProfile": "Profile",
+  "@tabProfile": {
+    "description": "Bottom navigation tab label for profile"
+  },
+  "dutyOnline": "You're Online",
+  "@dutyOnline": {
+    "description": "Status text when worker is online"
+  },
+  "dutyOffline": "You're Offline",
+  "@dutyOffline": {
+    "description": "Status text when worker is offline"
+  },
+  "dutyTakingOrders": "Taking orders in {district}",
+  "@dutyTakingOrders": {
+    "description": "Subtitle indicating worker is taking orders in district",
+    "placeholders": {
+      "district": {
+        "type": "String"
+      }
+    }
+  },
+  "dutyNotReceivingRequests": "Not receiving requests",
+  "@dutyNotReceivingRequests": {
+    "description": "Subtitle indicating worker is not receiving requests"
+  },
+  "todaysPay": "Today's Pay",
+  "@todaysPay": {
+    "description": "Summary label for earnings today"
+  },
+  "jobsToday": "Jobs Today",
+  "@jobsToday": {
+    "description": "Summary label for count of jobs today"
+  },
+  "rating": "Rating",
+  "@rating": {
+    "description": "Summary label for worker rating"
+  },
+  "activeJob": "Active Job",
+  "@activeJob": {
+    "description": "Section header for the active job in progress"
+  },
+  "offlineTitle": "You're Offline",
+  "@offlineTitle": {
+    "description": "Title for empty state when worker is offline"
+  },
+  "offlineDescription": "Switch your duty status to Online above to receive nearby job requests from customers.",
+  "@offlineDescription": {
+    "description": "Description for empty state when worker is offline"
+  },
+  "newRequests": "New Requests ({count})",
+  "@newRequests": {
+    "description": "Section header for incoming job requests",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "searchingForRequests": "Searching for requests...",
+  "@searchingForRequests": {
+    "description": "Empty state title when searching for job requests"
+  },
+  "searchingForRequestsSubtitle": "You will hear a ping when a nearby customer books.",
+  "@searchingForRequestsSubtitle": {
+    "description": "Empty state subtitle when searching for job requests"
+  },
+  "payout": "Payout",
+  "@payout": {
+    "description": "Payout label in job card"
+  },
+  "decline": "Decline",
+  "@decline": {
+    "description": "Button label to decline a requested job"
+  },
+  "acceptJob": "Accept Job",
+  "@acceptJob": {
+    "description": "Button label to accept a requested job"
+  },
+  "stageRequested": "Requested",
+  "@stageRequested": {
+    "description": "Job stage label: requested"
+  },
+  "stageAccepted": "Accepted",
+  "@stageAccepted": {
+    "description": "Job stage label: accepted"
+  },
+  "stageOnTheWay": "On the way",
+  "@stageOnTheWay": {
+    "description": "Job stage label: on the way"
+  },
+  "stageArrived": "Arrived",
+  "@stageArrived": {
+    "description": "Job stage label: arrived"
+  },
+  "stageInProgress": "In progress",
+  "@stageInProgress": {
+    "description": "Job stage label: in progress"
+  },
+  "stageCompleted": "Completed",
+  "@stageCompleted": {
+    "description": "Job stage label: completed"
+  },
+  "stageCancelled": "Cancelled",
+  "@stageCancelled": {
+    "description": "Job stage label: cancelled"
+  },
+  "actionAccept": "Accept",
+  "@actionAccept": {
+    "description": "Job action button: accept"
+  },
+  "actionStartTravel": "Start travel",
+  "@actionStartTravel": {
+    "description": "Job action button: start travel"
+  },
+  "actionArrived": "I have arrived",
+  "@actionArrived": {
+    "description": "Job action button: I have arrived"
+  },
+  "actionStartJob": "Start job",
+  "@actionStartJob": {
+    "description": "Job action button: start job"
+  },
+  "actionCompleteJob": "Complete job",
+  "@actionCompleteJob": {
+    "description": "Job action button: complete job"
+  }
+}

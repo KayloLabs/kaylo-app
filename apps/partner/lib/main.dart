@@ -1,3 +1,5 @@
+import 'package:device_preview/device_preview.dart';
+import 'package:flutter/foundation.dart' show kIsWeb;
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/kaylo_core.dart';
@@ -21,7 +23,13 @@ Future<void> main() async {
   runApp(
     ProviderScope(
       overrides: [sharedPreferencesProvider.overrideWithValue(prefs)],
-      child: const KayloPartnerApp(),
+      child: DevicePreview(
+        // Phone-frame emulator whenever we run in a desktop browser, the
+        // same as the customer app; real devices get the app full-screen.
+        // FRAMELESS=true drops the frame on web too, for screenshots.
+        enabled: kIsWeb && !const bool.fromEnvironment('FRAMELESS'),
+        builder: (context) => const KayloPartnerApp(),
+      ),
     ),
   );
 }
@@ -40,6 +48,7 @@ class KayloPartnerApp extends ConsumerWidget {
       title: 'Kaylo Partner',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,
+      builder: DevicePreview.appBuilder,
       routerConfig: router,
       locale: ref.watch(partnerLocaleProvider),
       localizationsDelegates: AppLocalizations.localizationsDelegates,

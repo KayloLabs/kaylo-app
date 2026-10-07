@@ -360,6 +360,8 @@ Offer wording is translated in the app by code (`offer_copy.dart`), with the dat
 
 `supabase/migrations/0017_realistic_prices.sql` resets the catalogue to everyday Kerala rates; run it after 0016. These are working estimates, not quoted rates, so adjust them freely. Farm work is priced per unit and the booking screen multiplies it out (ten trees, two hours or one visit to start with):
 
+`supabase/migrations/0018_worker_payout_accounts.sql` moves `bank_account` and `upi_id` out of the public `workers` row into `worker_payout_accounts`, which only the worker it belongs to can read or write (the service role sees all). Run it after 0017; `supabase/tests/worker_payout_privacy.sql` checks it. The partner app's payout screens read and write that table, never `workers`.
+
 | Service | Price | Per |
 | --- | --- | --- |
 | Coconut Plucking | 50 | tree |

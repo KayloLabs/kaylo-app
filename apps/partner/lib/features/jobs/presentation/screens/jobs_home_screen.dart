@@ -12,6 +12,7 @@ import 'package:kaylo_ui/widgets/section_header.dart';
 
 import '../../../auth/application/partner_session.dart';
 import '../../../earnings/application/earnings_providers.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
 import '../widgets/job_card.dart';
 
@@ -20,6 +21,7 @@ class JobsHomeScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final worker = ref.watch(partnerWorkerProfileProvider);
     final isOnline = ref.watch(dutyStatusProvider).asData?.value ?? true;
@@ -33,7 +35,7 @@ class JobsHomeScreen extends ConsumerWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Kaylo Partner',
+              l10n.appTitle,
               style: Theme.of(
                 context,
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
@@ -51,7 +53,7 @@ class JobsHomeScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.refresh_rounded),
-            tooltip: 'Refresh jobs',
+            tooltip: l10n.refreshJobsTooltip,
             onPressed: () {
               KayloFeedback.tap();
               ref.invalidate(jobsStreamProvider);
@@ -82,7 +84,7 @@ class JobsHomeScreen extends ConsumerWidget {
             children: [
               Expanded(
                 child: _SummaryBox(
-                  label: "Today's Pay",
+                  label: l10n.todaysPay,
                   value: formatRupees(earnings.todayTotal),
                   color: AppColors.brandPrimary,
                 ),
@@ -90,14 +92,14 @@ class JobsHomeScreen extends ConsumerWidget {
               const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: _SummaryBox(
-                  label: 'Jobs Today',
+                  label: l10n.jobsToday,
                   value: '${earnings.todayJobsCount}',
                 ),
               ),
               const SizedBox(width: AppSpacing.s),
               Expanded(
                 child: _SummaryBox(
-                  label: 'Rating',
+                  label: l10n.rating,
                   value: '${worker.rating} ★',
                   color: AppColors.secondaryAccent,
                 ),
@@ -113,7 +115,7 @@ class JobsHomeScreen extends ConsumerWidget {
               return Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const SectionHeader(title: 'Active Job'),
+                  SectionHeader(title: l10n.activeJob),
                   const SizedBox(height: AppSpacing.s),
                   JobCard(job: activeJob),
                   const SizedBox(height: AppSpacing.l),
@@ -127,10 +129,9 @@ class JobsHomeScreen extends ConsumerWidget {
           // Incoming Requests (Only when Online)
           if (!isOnline) ...[
             const SizedBox(height: AppSpacing.l),
-            const EmptyState(
-              title: "You're Offline",
-              description:
-                  'Switch your duty status to Online above to receive nearby job requests from customers.',
+            EmptyState(
+              title: l10n.offlineTitle,
+              description: l10n.offlineDescription,
               icon: Icons.power_settings_new_rounded,
             ),
           ] else ...[
@@ -139,7 +140,7 @@ class JobsHomeScreen extends ConsumerWidget {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SectionHeader(title: 'New Requests (${requests.length})'),
+                    SectionHeader(title: l10n.newRequests(requests.length)),
                     const SizedBox(height: AppSpacing.m),
                     if (requests.isEmpty)
                       KayloCard(
@@ -158,14 +159,14 @@ class JobsHomeScreen extends ConsumerWidget {
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    'Searching for requests...',
-                                    style: TextStyle(
+                                  Text(
+                                    l10n.searchingForRequests,
+                                    style: const TextStyle(
                                       fontWeight: FontWeight.w700,
                                     ),
                                   ),
                                   Text(
-                                    'You will hear a ping when a nearby customer books.',
+                                    l10n.searchingForRequestsSubtitle,
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: isDark
@@ -205,6 +206,7 @@ class _DutyTogglePill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final bgColor = isOnline
@@ -230,7 +232,9 @@ class _DutyTogglePill extends StatelessWidget {
             decoration: BoxDecoration(
               color: isOnline
                   ? AppColors.brandPrimaryBright
-                  : (isDark ? Colors.grey[600] : Colors.grey[400]),
+                  : (isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary),
               shape: BoxShape.circle,
             ),
           ),
@@ -240,7 +244,7 @@ class _DutyTogglePill extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  isOnline ? "You're Online" : "You're Offline",
+                  isOnline ? l10n.dutyOnline : l10n.dutyOffline,
                   style: Theme.of(context).textTheme.titleSmall?.copyWith(
                     fontWeight: FontWeight.w700,
                     color: isOnline
@@ -252,8 +256,8 @@ class _DutyTogglePill extends StatelessWidget {
                 ),
                 Text(
                   isOnline
-                      ? 'Taking orders in Kannur'
-                      : 'Not receiving requests',
+                      ? l10n.dutyTakingOrders('Kannur')
+                      : l10n.dutyNotReceivingRequests,
                   style: TextStyle(
                     fontSize: 11,
                     color: isDark

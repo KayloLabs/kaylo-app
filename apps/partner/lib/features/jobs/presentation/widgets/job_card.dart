@@ -11,8 +11,10 @@ import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_chip.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
 import '../../domain/job.dart';
+import '../job_stage_text.dart';
 
 class JobCard extends ConsumerWidget {
   final Job job;
@@ -22,6 +24,7 @@ class JobCard extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
     final IconData serviceIcon;
@@ -120,7 +123,7 @@ class JobCard extends ConsumerWidget {
                     ),
                   ),
                   Text(
-                    'Payout',
+                    l10n.payout,
                     style: TextStyle(
                       fontSize: 11,
                       color: isDark
@@ -188,7 +191,7 @@ class JobCard extends ConsumerWidget {
               children: [
                 Expanded(
                   child: KayloButton(
-                    text: 'Decline',
+                    text: l10n.decline,
                     variant: KayloButtonVariant.secondary,
                     onPressed: () {
                       KayloFeedback.tap();
@@ -200,7 +203,7 @@ class JobCard extends ConsumerWidget {
                 Expanded(
                   flex: 2,
                   child: KayloButton(
-                    text: 'Accept Job',
+                    text: l10n.acceptJob,
                     variant: KayloButtonVariant.primary,
                     onPressed: () {
                       KayloFeedback.press();
@@ -218,7 +221,7 @@ class JobCard extends ConsumerWidget {
             Row(
               children: [
                 KayloChip(
-                  label: job.stage.displayName,
+                  label: job.stage.text(l10n),
                   icon: Icons.sync_rounded,
                   variant: KayloChipVariant.brand,
                 ),
@@ -226,7 +229,7 @@ class JobCard extends ConsumerWidget {
                 SizedBox(
                   width: 140,
                   child: KayloButton(
-                    text: job.stage.primaryActionText,
+                    text: job.stage.actionText(l10n),
                     onPressed: () {
                       KayloFeedback.press();
                       ref.read(jobsRepositoryProvider).advanceJob(job.id);

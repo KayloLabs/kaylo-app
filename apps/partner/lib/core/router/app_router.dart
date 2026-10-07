@@ -10,6 +10,7 @@ import '../../../features/jobs/presentation/screens/job_detail_screen.dart';
 import '../../../features/jobs/presentation/screens/jobs_home_screen.dart';
 import '../../../features/jobs/presentation/screens/job_history_screen.dart';
 import '../../../features/profile/presentation/screens/partner_profile_screen.dart';
+import '../../l10n/generated/app_localizations.dart';
 import 'routes.dart';
 
 final partnerRouterProvider = Provider<GoRouter>((ref) {
@@ -94,36 +95,37 @@ class _PartnerShell extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: shell,
       bottomNavigationBar: NavigationBar(
         selectedIndex: shell.currentIndex,
         onDestinationSelected: (index) =>
             shell.goBranch(index, initialLocation: index == shell.currentIndex),
-        destinations: const [
+        destinations: [
           NavigationDestination(
-            icon: Icon(Icons.work_outline_rounded),
-            selectedIcon: Icon(
+            icon: const Icon(Icons.work_outline_rounded),
+            selectedIcon: const Icon(
               Icons.work_rounded,
               color: AppColors.brandPrimary,
             ),
-            label: 'Jobs',
+            label: l10n.tabJobs,
           ),
           NavigationDestination(
-            icon: Icon(Icons.bar_chart_outlined),
-            selectedIcon: Icon(
+            icon: const Icon(Icons.bar_chart_outlined),
+            selectedIcon: const Icon(
               Icons.bar_chart_rounded,
               color: AppColors.brandPrimary,
             ),
-            label: 'Earnings',
+            label: l10n.tabEarnings,
           ),
           NavigationDestination(
-            icon: Icon(Icons.person_outline_rounded),
-            selectedIcon: Icon(
+            icon: const Icon(Icons.person_outline_rounded),
+            selectedIcon: const Icon(
               Icons.person_rounded,
               color: AppColors.brandPrimary,
             ),
-            label: 'Profile',
+            label: l10n.tabProfile,
           ),
         ],
       ),

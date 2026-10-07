@@ -141,5 +141,17 @@
   "actionCompleteJob": "Complete job",
   "@actionCompleteJob": {
     "description": "Job action button: complete job"
+  },
+  "languageSettings": "Language Settings",
+  "@languageSettings": {
+    "description": "Title for the language selector sheet"
+  },
+  "profileLanguageTile": "Language",
+  "@profileLanguageTile": {
+    "description": "Title for the language tile in the profile screen"
+  },
+  "appSettingsHeader": "App Settings",
+  "@appSettingsHeader": {
+    "description": "Header for the App Settings section in the profile screen"
   }
 }

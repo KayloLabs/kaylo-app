@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_ui/theme/app_spacing.dart';
 
 import '../../../features/auth/application/partner_session.dart';
 import '../../../features/auth/presentation/screens/login_screen.dart';
@@ -12,6 +12,7 @@ import '../../../features/jobs/presentation/screens/jobs_home_screen.dart';
 import '../../../features/jobs/presentation/screens/job_history_screen.dart';
 import '../../../features/profile/presentation/screens/partner_profile_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
+import '../widgets/partner_tab_bar.dart';
 import 'routes.dart';
 
 final partnerRouterProvider = Provider<GoRouter>((ref) {
@@ -106,37 +107,41 @@ class _PartnerShell extends StatelessWidget {
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      extendBody: true,
       body: shell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: shell.currentIndex,
-        onDestinationSelected: (index) =>
-            shell.goBranch(index, initialLocation: index == shell.currentIndex),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.work_outline_rounded),
-            selectedIcon: const Icon(
-              Icons.work_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            label: l10n.tabJobs,
+      bottomNavigationBar: SafeArea(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.m,
+            0,
+            AppSpacing.m,
+            AppSpacing.s,
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.bar_chart_outlined),
-            selectedIcon: const Icon(
-              Icons.bar_chart_rounded,
-              color: AppColors.brandPrimary,
+          child: PartnerTabBar(
+            currentIndex: shell.currentIndex,
+            onSelected: (index) => shell.goBranch(
+              index,
+              initialLocation: index == shell.currentIndex,
             ),
-            label: l10n.tabEarnings,
+            items: [
+              PartnerTabItem(
+                icon: Icons.work_outline_rounded,
+                selectedIcon: Icons.work_rounded,
+                label: l10n.tabJobs,
+              ),
+              PartnerTabItem(
+                icon: Icons.bar_chart_outlined,
+                selectedIcon: Icons.bar_chart_rounded,
+                label: l10n.tabEarnings,
+              ),
+              PartnerTabItem(
+                icon: Icons.person_outline_rounded,
+                selectedIcon: Icons.person_rounded,
+                label: l10n.tabProfile,
+              ),
+            ],
           ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline_rounded),
-            selectedIcon: const Icon(
-              Icons.person_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            label: l10n.tabProfile,
-          ),
-        ],
+        ),
       ),
     );
   }

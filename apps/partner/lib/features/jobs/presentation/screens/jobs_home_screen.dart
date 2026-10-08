@@ -3,11 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
-import 'package:kaylo_ui/theme/app_radius.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/empty_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_chip.dart';
+import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 
@@ -35,45 +35,56 @@ class JobsHomeScreen extends ConsumerWidget {
     final activeFilters = ref.watch(jobServiceFilterProvider);
 
     return Scaffold(
-      appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.appTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+      body: CustomScrollView(
+        slivers: [
+          SliverAppBar(
+            pinned: true,
+            elevation: 0,
+            scrolledUnderElevation: 0,
+            backgroundColor: Colors.transparent,
+            title: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  l10n.appTitle,
+                  style: Theme.of(
+                    context,
+                  ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
+                ),
+                Text(
+                  '${worker.name} • Kannur',
+                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                    color: isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary,
+                  ),
+                ),
+              ],
             ),
-            Text(
-              '${worker.name} • Kannur',
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondary,
+            actions: [
+              IconButton(
+                icon: const Icon(Icons.refresh_rounded),
+                tooltip: l10n.refreshJobsTooltip,
+                onPressed: () {
+                  KayloFeedback.tap();
+                  ref.invalidate(jobsStreamProvider);
+                },
               ),
+            ],
+            flexibleSpace: const KayloLiquidGlass(
+              borderRadius: 0,
+              child: SizedBox.expand(),
             ),
-          ],
-        ),
-        actions: [
-          IconButton(
-            icon: const Icon(Icons.refresh_rounded),
-            tooltip: l10n.refreshJobsTooltip,
-            onPressed: () {
-              KayloFeedback.tap();
-              ref.invalidate(jobsStreamProvider);
-            },
           ),
-        ],
-      ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.l,
-          AppSpacing.m,
-          AppSpacing.l,
-          100,
-        ),
-        children: [
+          SliverPadding(
+            padding: const EdgeInsets.fromLTRB(
+              AppSpacing.l,
+              AppSpacing.m,
+              AppSpacing.l,
+              120,
+            ),
+            sliver: SliverList(
+              delegate: SliverChildListDelegate([
           // Duty Toggle Pill
           _DutyTogglePill(
             isOnline: isOnline,
@@ -215,8 +226,11 @@ class JobsHomeScreen extends ConsumerWidget {
               error: (err, _) => Text('Error: $err'),
             ),
           ],
-        ],
+        ]),
       ),
+    ),
+  ],
+),
     );
   }
 }
@@ -339,71 +353,80 @@ class _DutyTogglePill extends StatelessWidget {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
 
-    final bgColor = isOnline
-        ? AppColors.brandPrimary.withValues(alpha: isDark ? 0.2 : 0.1)
-        : (isDark ? AppColors.surfaceMutedDark : AppColors.surfaceAlt);
+    final overlayColor = isOnline
+        ? AppColors.brandPrimary.withValues(alpha: isDark ? 0.22 : 0.12)
+        : (isDark
+            ? Colors.white.withValues(alpha: 0.05)
+            : Colors.black.withValues(alpha: 0.03));
 
-    final borderColor = isOnline
-        ? AppColors.brandPrimary.withValues(alpha: 0.4)
-        : (isDark ? AppColors.borderDark : AppColors.border);
+    final titleColor = isOnline
+        ? (isDark ? AppColors.brandPrimaryBright : AppColors.brandPrimary)
+        : (isDark ? AppColors.textPrimaryDark : AppColors.textPrimary);
 
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    final subtitleColor = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
+
+    return DecoratedBox(
       decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(AppRadius.button),
-        border: Border.all(color: borderColor, width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: isOnline
-                  ? AppColors.brandPrimaryBright
-                  : (isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondary),
-              shape: BoxShape.circle,
-            ),
-          ),
-          const SizedBox(width: AppSpacing.m),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  isOnline ? l10n.dutyOnline : l10n.dutyOffline,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: isOnline
-                        ? AppColors.brandPrimary
-                        : (isDark
-                              ? AppColors.textPrimaryDark
-                              : AppColors.textPrimary),
-                  ),
-                ),
-                Text(
-                  isOnline
-                      ? l10n.dutyTakingOrders('Kannur')
-                      : l10n.dutyNotReceivingRequests,
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
-                  ),
-                ),
-              ],
-            ),
-          ),
-          Switch.adaptive(
-            value: isOnline,
-            onChanged: onChanged,
-            activeTrackColor: AppColors.brandPrimary,
+        borderRadius: BorderRadius.circular(28),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: isDark ? 0.25 : 0.05),
+            blurRadius: 12,
+            offset: const Offset(0, 4),
           ),
         ],
+      ),
+      child: KayloLiquidGlass(
+        borderRadius: 28,
+        colorOverlay: overlayColor,
+        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+        child: Row(
+          children: [
+            Container(
+              width: 12,
+              height: 12,
+              decoration: BoxDecoration(
+                color: isOnline
+                    ? AppColors.brandPrimaryBright
+                    : (isDark
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary),
+                shape: BoxShape.circle,
+              ),
+            ),
+            const SizedBox(width: AppSpacing.m),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    isOnline ? l10n.dutyOnline : l10n.dutyOffline,
+                    style: Theme.of(context).textTheme.titleSmall?.copyWith(
+                      fontWeight: FontWeight.w700,
+                      color: titleColor,
+                    ),
+                  ),
+                  Text(
+                    isOnline
+                        ? l10n.dutyTakingOrders('Kannur')
+                        : l10n.dutyNotReceivingRequests,
+                    style: TextStyle(
+                      fontSize: 11,
+                      color: subtitleColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Switch.adaptive(
+              value: isOnline,
+              onChanged: onChanged,
+              activeTrackColor: AppColors.brandPrimary,
+            ),
+          ],
+        ),
       ),
     );
   }

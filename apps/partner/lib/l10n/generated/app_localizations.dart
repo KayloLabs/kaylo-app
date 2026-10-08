@@ -6,6 +6,9 @@ import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:intl/intl.dart' as intl;
 
 import 'app_localizations_en.dart';
+import 'app_localizations_hi.dart';
+import 'app_localizations_ml.dart';
+import 'app_localizations_ta.dart';
 
 // ignore_for_file: type=lint
 
@@ -92,7 +95,12 @@ abstract class AppLocalizations {
       ];
 
   /// A list of this localizations delegate's supported locales.
-  static const List<Locale> supportedLocales = <Locale>[Locale('en')];
+  static const List<Locale> supportedLocales = <Locale>[
+    Locale('en'),
+    Locale('hi'),
+    Locale('ml'),
+    Locale('ta'),
+  ];
 
   /// App bar title and application name
   ///
@@ -291,6 +299,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Complete job'**
   String get actionCompleteJob;
+
+  /// Relative scheduled time: in X minutes
+  ///
+  /// In en, this message translates to:
+  /// **'in {minutes} min'**
+  String timeInMinutes(int minutes);
+
+  /// Relative scheduled time: in X hours
+  ///
+  /// In en, this message translates to:
+  /// **'in {hours} hr'**
+  String timeInHours(int hours);
+
+  /// Relative scheduled time: tomorrow at time
+  ///
+  /// In en, this message translates to:
+  /// **'tomorrow {time}'**
+  String timeTomorrow(String time);
+
+  /// Relative scheduled time: today at time
+  ///
+  /// In en, this message translates to:
+  /// **'today {time}'**
+  String timeToday(String time);
+
+  /// Relative scheduled time: X minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min ago'**
+  String timeMinutesAgo(int minutes);
+
+  /// Job sort option: nearest distance
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest'**
+  String get sortNearest;
+
+  /// Job sort option: highest payout
+  ///
+  /// In en, this message translates to:
+  /// **'Highest payout'**
+  String get sortHighestPayout;
+
+  /// Job sort option: soonest scheduled time
+  ///
+  /// In en, this message translates to:
+  /// **'Soonest'**
+  String get sortSoonest;
+
+  /// Empty state title when active filters return no jobs
+  ///
+  /// In en, this message translates to:
+  /// **'No jobs match your filter'**
+  String get filterEmptyTitle;
+
+  /// Empty state subtitle when active filters return no jobs
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filter options or clear them to see all jobs.'**
+  String get filterEmptySubtitle;
+
+  /// Action button to clear active filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
 }
 
 class _AppLocalizationsDelegate
@@ -304,7 +378,7 @@ class _AppLocalizationsDelegate
 
   @override
   bool isSupported(Locale locale) =>
-      <String>['en'].contains(locale.languageCode);
+      <String>['en', 'hi', 'ml', 'ta'].contains(locale.languageCode);
 
   @override
   bool shouldReload(_AppLocalizationsDelegate old) => false;
@@ -315,6 +389,12 @@ AppLocalizations lookupAppLocalizations(Locale locale) {
   switch (locale.languageCode) {
     case 'en':
       return AppLocalizationsEn();
+    case 'hi':
+      return AppLocalizationsHi();
+    case 'ml':
+      return AppLocalizationsMl();
+    case 'ta':
+      return AppLocalizationsTa();
   }
 
   throw FlutterError(

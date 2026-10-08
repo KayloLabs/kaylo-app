@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
@@ -14,6 +13,7 @@ import '../../../../core/router/routes.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
 import '../../domain/job.dart';
+import '../../domain/relative_time.dart';
 import '../job_stage_text.dart';
 
 class JobCard extends ConsumerWidget {
@@ -99,7 +99,7 @@ class JobCard extends ConsumerWidget {
                         ),
                         const SizedBox(width: 8),
                         Text(
-                          '• ${DateFormat.jm().format(job.scheduledAt)}',
+                          '• ${formatRelativeScheduled(job.scheduledAt, l10n)}',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: isDark

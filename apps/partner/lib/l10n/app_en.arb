@@ -141,5 +141,74 @@
   "actionCompleteJob": "Complete job",
   "@actionCompleteJob": {
     "description": "Job action button: complete job"
+  },
+  "timeInMinutes": "in {minutes} min",
+  "@timeInMinutes": {
+    "description": "Relative scheduled time: in X minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInHours": "in {hours} hr",
+  "@timeInHours": {
+    "description": "Relative scheduled time: in X hours",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeTomorrow": "tomorrow {time}",
+  "@timeTomorrow": {
+    "description": "Relative scheduled time: tomorrow at time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timeToday": "today {time}",
+  "@timeToday": {
+    "description": "Relative scheduled time: today at time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timeMinutesAgo": "{minutes} min ago",
+  "@timeMinutesAgo": {
+    "description": "Relative scheduled time: X minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sortNearest": "Nearest",
+  "@sortNearest": {
+    "description": "Job sort option: nearest distance"
+  },
+  "sortHighestPayout": "Highest payout",
+  "@sortHighestPayout": {
+    "description": "Job sort option: highest payout"
+  },
+  "sortSoonest": "Soonest",
+  "@sortSoonest": {
+    "description": "Job sort option: soonest scheduled time"
+  },
+  "filterEmptyTitle": "No jobs match your filter",
+  "@filterEmptyTitle": {
+    "description": "Empty state title when active filters return no jobs"
+  },
+  "filterEmptySubtitle": "Try adjusting your filter options or clear them to see all jobs.",
+  "@filterEmptySubtitle": {
+    "description": "Empty state subtitle when active filters return no jobs"
+  },
+  "clearFilters": "Clear filters",
+  "@clearFilters": {
+    "description": "Action button to clear active filters"
   }
 }

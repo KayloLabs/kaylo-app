@@ -156,4 +156,18 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get clearFilters => 'Clear filters';
+
+  @override
+  String get expand => 'Expand';
+
+  @override
+  String get openInGoogleMaps => 'Open in Google Maps';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'about $minutes min';
+  }
+
+  @override
+  String get jobLocationMap => 'Job Location Map';
 }

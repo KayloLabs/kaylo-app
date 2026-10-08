@@ -156,4 +156,18 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get clearFilters => 'வடிகட்டிகளை அழிக்கவும்';
+
+  @override
+  String get expand => 'பெரிதாக்கு';
+
+  @override
+  String get openInGoogleMaps => 'கூகிள் வரைபடத்தில் திற';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'சுமார் $minutes நிமிடம்';
+  }
+
+  @override
+  String get jobLocationMap => 'பணி இருப்பிட வரைபடம்';
 }

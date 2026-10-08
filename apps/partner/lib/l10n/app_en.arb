@@ -210,5 +210,26 @@
   "clearFilters": "Clear filters",
   "@clearFilters": {
     "description": "Action button to clear active filters"
+  },
+  "expand": "Expand",
+  "@expand": {
+    "description": "Button to expand map to full screen"
+  },
+  "openInGoogleMaps": "Open in Google Maps",
+  "@openInGoogleMaps": {
+    "description": "Button to open coordinates in external Google Maps application"
+  },
+  "aboutMinutes": "about {minutes} min",
+  "@aboutMinutes": {
+    "description": "Estimated travel duration in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobLocationMap": "Job Location Map",
+  "@jobLocationMap": {
+    "description": "Title for full screen map route"
   }
 }

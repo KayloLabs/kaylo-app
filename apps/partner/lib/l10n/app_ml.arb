@@ -43,5 +43,9 @@
   "sortSoonest": "ഉടൻ തന്നെ",
   "filterEmptyTitle": "ഫിൽട്ടറുമായി പൊരുത്തപ്പെടുന്ന ജോലികളില്ല",
   "filterEmptySubtitle": "മറ്റ് ഫിൽട്ടറുകൾ തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ ഫിൽട്ടറുകൾ നീക്കം ചെയ്യുക.",
-  "clearFilters": "ഫിൽട്ടറുകൾ നീക്കുക"
+  "clearFilters": "ഫിൽട്ടറുകൾ നീക്കുക",
+  "expand": "വലുതാക്കുക",
+  "openInGoogleMaps": "ഗൂഗിൾ മാപ്പിൽ തുറക്കുക",
+  "aboutMinutes": "ഏകദേശം {minutes} മിനിറ്റ്",
+  "jobLocationMap": "ജോലി സ്ഥലത്തിന്റെ മാപ്പ്"
 }

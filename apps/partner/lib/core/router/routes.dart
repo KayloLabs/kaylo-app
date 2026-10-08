@@ -13,5 +13,7 @@ class Routes {
   static const String history = '/history';
 
   // Job detail – pushed over the shell
+  static const String jobMapRoute = '/jobs/:id/map';
   static String jobDetail(String id) => '/jobs/$id';
+  static String jobMap(String id) => '/jobs/$id/map';
 }

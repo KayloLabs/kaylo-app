@@ -43,5 +43,9 @@
   "sortSoonest": "सबसे पहले",
   "filterEmptyTitle": "कोई काम इस फ़िल्टर से मेल नहीं खाता",
   "filterEmptySubtitle": "अपने फ़िल्टर बदलें या सभी काम देखने के लिए उन्हें साफ़ करें।",
-  "clearFilters": "फ़िल्टर हटाएं"
+  "clearFilters": "फ़िल्टर हटाएं",
+  "expand": "बड़ा करें",
+  "openInGoogleMaps": "Google Maps में खोलें",
+  "aboutMinutes": "लगभग {minutes} मिनट",
+  "jobLocationMap": "काम के स्थान का नक्शा"
 }

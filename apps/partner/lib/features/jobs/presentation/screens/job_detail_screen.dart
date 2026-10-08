@@ -17,8 +17,10 @@ import 'package:url_launcher/url_launcher.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
+import '../../domain/geo.dart';
 import '../../domain/job.dart';
 import '../job_stage_text.dart';
+import '../widgets/job_map.dart';
 
 class JobDetailScreen extends ConsumerWidget {
   final String jobId;
@@ -76,7 +78,11 @@ class JobDetailScreen extends ConsumerWidget {
               ),
             );
           }
-          return _JobDetailContent(job: job, isDark: isDark);
+          return _JobDetailContent(
+            job: job,
+            isDark: isDark,
+            onNavigate: _navigate,
+          );
         },
         loading: () => const Center(child: KayloLoader()),
         error: (err, _) => Center(child: Text(err.toString())),
@@ -87,7 +93,6 @@ class JobDetailScreen extends ConsumerWidget {
           return _ActionBar(
             job: job,
             onCall: _callCustomer,
-            onNavigate: _navigate,
           );
         },
       ),
@@ -100,8 +105,13 @@ class JobDetailScreen extends ConsumerWidget {
 class _JobDetailContent extends StatelessWidget {
   final Job job;
   final bool isDark;
+  final Future<void> Function(BuildContext, String) onNavigate;
 
-  const _JobDetailContent({required this.job, required this.isDark});
+  const _JobDetailContent({
+    required this.job,
+    required this.isDark,
+    required this.onNavigate,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -178,6 +188,7 @@ class _JobDetailContent extends StatelessWidget {
         // Customer & location
         KayloCard(
           child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               _DetailRow(
                 icon: Icons.person_outline_rounded,
@@ -191,17 +202,42 @@ class _JobDetailContent extends StatelessWidget {
                 value: job.customerPhone,
               ),
               _divider(isDark),
+              const SizedBox(height: AppSpacing.s),
+              JobMap(
+                job: job,
+                height: 180,
+                showExpandButton: true,
+                onOpenGoogleMaps: () => onNavigate(context, job.addressLine),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(
+                  top: AppSpacing.s,
+                  bottom: AppSpacing.xs,
+                ),
+                child: Row(
+                  children: [
+                    Icon(
+                      Icons.near_me_outlined,
+                      size: 16,
+                      color: AppColors.farmAccent,
+                    ),
+                    const SizedBox(width: AppSpacing.xs),
+                    Text(
+                      '${job.distanceKm} km · ${l10n.aboutMinutes(etaMinutes(job.distanceKm))}',
+                      style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                            fontWeight: FontWeight.w600,
+                            color: AppColors.farmAccent,
+                          ),
+                    ),
+                  ],
+                ),
+              ),
+              _divider(isDark),
               _DetailRow(
                 icon: Icons.location_on_outlined,
                 label: 'Address',
                 value: job.addressLine,
                 multiLine: true,
-              ),
-              _divider(isDark),
-              _DetailRow(
-                icon: Icons.near_me_outlined,
-                label: 'Distance',
-                value: '${job.distanceKm} km',
               ),
               _divider(isDark),
               _DetailRow(
@@ -432,12 +468,10 @@ class _StepDot extends StatelessWidget {
 class _ActionBar extends ConsumerWidget {
   final Job job;
   final Future<void> Function(BuildContext, String) onCall;
-  final Future<void> Function(BuildContext, String) onNavigate;
 
   const _ActionBar({
     required this.job,
     required this.onCall,
-    required this.onNavigate,
   });
 
   @override
@@ -508,7 +542,7 @@ class _ActionBar extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.s),
           ],
-          // Call customer button
+          // Call customer & chat buttons
           Row(
             children: [
               Expanded(
@@ -519,6 +553,7 @@ class _ActionBar extends ConsumerWidget {
                   onPressed: () => onCall(context, job.customerPhone),
                 ),
               ),
+              const SizedBox(width: AppSpacing.m),
               Expanded(
                 child: KayloButton(
                   text: 'Chat',
@@ -528,15 +563,6 @@ class _ActionBar extends ConsumerWidget {
                     context,
                     'Chat support will be available here soon',
                   ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                child: KayloButton(
-                  text: 'Navigate',
-                  icon: Icons.navigation_rounded,
-                  variant: KayloButtonVariant.secondary,
-                  onPressed: () => onNavigate(context, job.addressLine),
                 ),
               ),
             ],

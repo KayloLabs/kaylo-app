@@ -7,6 +7,7 @@ import '../../../features/auth/application/partner_session.dart';
 import '../../../features/auth/presentation/screens/login_screen.dart';
 import '../../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../../features/jobs/presentation/screens/job_detail_screen.dart';
+import '../../../features/jobs/presentation/screens/job_map_screen.dart';
 import '../../../features/jobs/presentation/screens/jobs_home_screen.dart';
 import '../../../features/jobs/presentation/screens/job_history_screen.dart';
 import '../../../features/profile/presentation/screens/partner_profile_screen.dart';
@@ -45,6 +46,14 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
         builder: (context, state) {
           final id = state.pathParameters['id']!;
           return JobDetailScreen(jobId: id);
+        },
+      ),
+      // Full-screen interactive job map
+      GoRoute(
+        path: Routes.jobMapRoute,
+        builder: (context, state) {
+          final id = state.pathParameters['id']!;
+          return JobMapScreen(jobId: id);
         },
       ),
       GoRoute(

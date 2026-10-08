@@ -365,6 +365,30 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Clear filters'**
   String get clearFilters;
+
+  /// Button to expand map to full screen
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// Button to open coordinates in external Google Maps application
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Google Maps'**
+  String get openInGoogleMaps;
+
+  /// Estimated travel duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'about {minutes} min'**
+  String aboutMinutes(int minutes);
+
+  /// Title for full screen map route
+  ///
+  /// In en, this message translates to:
+  /// **'Job Location Map'**
+  String get jobLocationMap;
 }
 
 class _AppLocalizationsDelegate

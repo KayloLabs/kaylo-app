@@ -43,5 +43,9 @@
   "sortSoonest": "விரைவில்",
   "filterEmptyTitle": "வடிகட்டலுக்கு பொருந்தும் பணிகள் இல்லை",
   "filterEmptySubtitle": "மற்ற வடிகட்டிகளைத் தேர்வு செய்யவும் அல்லது வடிகட்டிகளை அழிக்கவும்.",
-  "clearFilters": "வடிகட்டிகளை அழிக்கவும்"
+  "clearFilters": "வடிகட்டிகளை அழிக்கவும்",
+  "expand": "பெரிதாக்கு",
+  "openInGoogleMaps": "கூகிள் வரைபடத்தில் திற",
+  "aboutMinutes": "சுமார் {minutes} நிமிடம்",
+  "jobLocationMap": "பணி இருப்பிட வரைபடம்"
 }

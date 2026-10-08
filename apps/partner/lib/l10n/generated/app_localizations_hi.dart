@@ -156,4 +156,18 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get clearFilters => 'फ़िल्टर हटाएं';
+
+  @override
+  String get expand => 'बड़ा करें';
+
+  @override
+  String get openInGoogleMaps => 'Google Maps में खोलें';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'लगभग $minutes मिनट';
+  }
+
+  @override
+  String get jobLocationMap => 'काम के स्थान का नक्शा';
 }

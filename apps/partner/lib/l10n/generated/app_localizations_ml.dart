@@ -156,4 +156,18 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get clearFilters => 'ഫിൽട്ടറുകൾ നീക്കുക';
+
+  @override
+  String get expand => 'വലുതാക്കുക';
+
+  @override
+  String get openInGoogleMaps => 'ഗൂഗിൾ മാപ്പിൽ തുറക്കുക';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'ഏകദേശം $minutes മിനിറ്റ്';
+  }
+
+  @override
+  String get jobLocationMap => 'ജോലി സ്ഥലത്തിന്റെ മാപ്പ്';
 }

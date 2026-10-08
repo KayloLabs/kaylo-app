@@ -98,14 +98,18 @@ class JobCard extends ConsumerWidget {
                               ),
                         ),
                         const SizedBox(width: 8),
-                        Text(
-                          '• ${formatRelativeScheduled(job.scheduledAt, l10n)}',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                color: isDark
-                                    ? AppColors.textSecondaryDark
-                                    : AppColors.textSecondary,
-                              ),
+                        Flexible(
+                          child: Text(
+                            '• ${formatRelativeScheduled(job.scheduledAt, l10n)}',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  color: isDark
+                                      ? AppColors.textSecondaryDark
+                                      : AppColors.textSecondary,
+                                ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
+                          ),
                         ),
                       ],
                     ),

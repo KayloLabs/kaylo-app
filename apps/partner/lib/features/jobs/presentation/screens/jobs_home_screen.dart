@@ -7,6 +7,7 @@ import 'package:kaylo_ui/theme/app_radius.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/empty_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/kaylo_chip.dart';
 import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 
@@ -14,6 +15,7 @@ import '../../../auth/application/partner_session.dart';
 import '../../../earnings/application/earnings_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
+import '../../application/jobs_sort.dart';
 import '../widgets/job_card.dart';
 
 class JobsHomeScreen extends ConsumerWidget {
@@ -27,7 +29,10 @@ class JobsHomeScreen extends ConsumerWidget {
     final isOnline = ref.watch(dutyStatusProvider).asData?.value ?? true;
     final earnings = ref.watch(earningsSummaryProvider);
     final activeJobAsync = ref.watch(activeJobProvider);
-    final requestsAsync = ref.watch(incomingRequestsProvider);
+    final rawRequestsAsync = ref.watch(incomingRequestsProvider);
+    final requestsAsync = ref.watch(sortedIncomingRequestsProvider);
+    final activeSort = ref.watch(jobSortProvider);
+    final activeFilters = ref.watch(jobServiceFilterProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -137,50 +142,68 @@ class JobsHomeScreen extends ConsumerWidget {
           ] else ...[
             requestsAsync.when(
               data: (requests) {
+                final rawRequests = rawRequestsAsync.asData?.value ?? [];
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     SectionHeader(title: l10n.newRequests(requests.length)),
+                    const SizedBox(height: AppSpacing.s),
+                    _SortAndFilterChipsRow(
+                      activeSort: activeSort,
+                      activeFilters: activeFilters,
+                    ),
                     const SizedBox(height: AppSpacing.m),
-                    if (requests.isEmpty)
-                      KayloCard(
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: AppColors.brandPrimary,
+                    if (requests.isEmpty) ...[
+                      if (rawRequests.isNotEmpty && activeFilters.isNotEmpty)
+                        EmptyState(
+                          title: l10n.filterEmptyTitle,
+                          description: l10n.filterEmptySubtitle,
+                          icon: Icons.filter_alt_off_rounded,
+                          actionText: l10n.clearFilters,
+                          onActionPressed: () {
+                            KayloFeedback.tap();
+                            ref.read(jobServiceFilterProvider.notifier).clear();
+                          },
+                        )
+                      else
+                        KayloCard(
+                          child: Row(
+                            children: [
+                              const SizedBox(
+                                width: 24,
+                                height: 24,
+                                child: CircularProgressIndicator(
+                                  strokeWidth: 2.5,
+                                  color: AppColors.brandPrimary,
+                                ),
                               ),
-                            ),
-                            const SizedBox(width: AppSpacing.m),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.searchingForRequests,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
+                              const SizedBox(width: AppSpacing.m),
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                      l10n.searchingForRequests,
+                                      style: const TextStyle(
+                                        fontWeight: FontWeight.w700,
+                                      ),
                                     ),
-                                  ),
-                                  Text(
-                                    l10n.searchingForRequestsSubtitle,
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondary,
-                                        ),
-                                  ),
-                                ],
+                                    Text(
+                                      l10n.searchingForRequestsSubtitle,
+                                      style: Theme.of(context).textTheme.bodySmall
+                                          ?.copyWith(
+                                            color: isDark
+                                                ? AppColors.textSecondaryDark
+                                                : AppColors.textSecondary,
+                                          ),
+                                    ),
+                                  ],
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
-                      )
-                    else
+                    ] else
                       for (final job in requests) ...[
                         JobCard(job: job),
                         const SizedBox(height: AppSpacing.m),
@@ -193,6 +216,113 @@ class JobsHomeScreen extends ConsumerWidget {
             ),
           ],
         ],
+      ),
+    );
+  }
+}
+
+class _SortAndFilterChipsRow extends ConsumerWidget {
+  final JobSort activeSort;
+  final Set<String> activeFilters;
+
+  const _SortAndFilterChipsRow({
+    required this.activeSort,
+    required this.activeFilters,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
+    const serviceOptions = [
+      'Plumbing',
+      'Electrical',
+      'Appliances',
+      'Carpentry',
+    ];
+
+    return SingleChildScrollView(
+      scrollDirection: Axis.horizontal,
+      child: Row(
+        children: [
+          // Sort chips
+          _SelectableKayloChip(
+            label: l10n.sortNearest,
+            icon: Icons.near_me_rounded,
+            isSelected: activeSort == JobSort.nearest,
+            onTap: () {
+              ref.read(jobSortProvider.notifier).setSort(JobSort.nearest);
+            },
+          ),
+          const SizedBox(width: AppSpacing.s),
+          _SelectableKayloChip(
+            label: l10n.sortHighestPayout,
+            icon: Icons.currency_rupee_rounded,
+            isSelected: activeSort == JobSort.highestPayout,
+            onTap: () {
+              ref.read(jobSortProvider.notifier).setSort(JobSort.highestPayout);
+            },
+          ),
+          const SizedBox(width: AppSpacing.s),
+          _SelectableKayloChip(
+            label: l10n.sortSoonest,
+            icon: Icons.schedule_rounded,
+            isSelected: activeSort == JobSort.soonest,
+            onTap: () {
+              ref.read(jobSortProvider.notifier).setSort(JobSort.soonest);
+            },
+          ),
+
+          // Divider between sorts and filters
+          Container(
+            height: 20,
+            width: 1,
+            margin: const EdgeInsets.symmetric(horizontal: AppSpacing.s),
+            color: isDark ? AppColors.borderDark : AppColors.border,
+          ),
+
+          // Filter chips
+          for (final service in serviceOptions) ...[
+            _SelectableKayloChip(
+              label: service,
+              isSelected: activeFilters.contains(service),
+              onTap: () {
+                ref.read(jobServiceFilterProvider.notifier).toggle(service);
+              },
+            ),
+            const SizedBox(width: AppSpacing.s),
+          ],
+        ],
+      ),
+    );
+  }
+}
+
+class _SelectableKayloChip extends StatelessWidget {
+  final String label;
+  final IconData? icon;
+  final bool isSelected;
+  final VoidCallback onTap;
+
+  const _SelectableKayloChip({
+    required this.label,
+    this.icon,
+    required this.isSelected,
+    required this.onTap,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () {
+        KayloFeedback.selection();
+        onTap();
+      },
+      child: KayloChip(
+        label: label,
+        icon: icon,
+        variant: isSelected ? KayloChipVariant.brand : KayloChipVariant.neutral,
       ),
     );
   }

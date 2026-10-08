@@ -44,6 +44,8 @@ class Job {
   final String customerName; // "Anjali Menon"
   final String customerPhone; // for the call button
   final String addressLine; // "Kadavil House, Thottada, Kannur"
+  final double latitude;
+  final double longitude;
   final double distanceKm; // 2.4 (mock)
   final DateTime scheduledAt;
   final double payout; // what the worker earns
@@ -57,6 +59,8 @@ class Job {
     required this.customerName,
     required this.customerPhone,
     required this.addressLine,
+    required this.latitude,
+    required this.longitude,
     required this.distanceKm,
     required this.scheduledAt,
     required this.payout,
@@ -81,6 +85,8 @@ class Job {
     String? customerName,
     String? customerPhone,
     String? addressLine,
+    double? latitude,
+    double? longitude,
     double? distanceKm,
     DateTime? scheduledAt,
     double? payout,
@@ -94,6 +100,8 @@ class Job {
       customerName: customerName ?? this.customerName,
       customerPhone: customerPhone ?? this.customerPhone,
       addressLine: addressLine ?? this.addressLine,
+      latitude: latitude ?? this.latitude,
+      longitude: longitude ?? this.longitude,
       distanceKm: distanceKm ?? this.distanceKm,
       scheduledAt: scheduledAt ?? this.scheduledAt,
       payout: payout ?? this.payout,
@@ -109,6 +117,8 @@ class Job {
     'customerName': customerName,
     'customerPhone': customerPhone,
     'addressLine': addressLine,
+    'latitude': latitude,
+    'longitude': longitude,
     'distanceKm': distanceKm,
     'scheduledAt': scheduledAt.toIso8601String(),
     'payout': payout,
@@ -124,6 +134,8 @@ class Job {
       customerName: json['customerName'] as String,
       customerPhone: json['customerPhone'] as String,
       addressLine: json['addressLine'] as String,
+      latitude: (json['latitude'] as num?)?.toDouble() ?? 0.0,
+      longitude: (json['longitude'] as num?)?.toDouble() ?? 0.0,
       distanceKm: (json['distanceKm'] as num).toDouble(),
       scheduledAt: DateTime.parse(json['scheduledAt'] as String),
       payout: (json['payout'] as num).toDouble(),
@@ -138,8 +150,12 @@ class Job {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Job && runtimeType == other.runtimeType && id == other.id;
+      other is Job &&
+          runtimeType == other.runtimeType &&
+          id == other.id &&
+          latitude == other.latitude &&
+          longitude == other.longitude;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(id, latitude, longitude);
 }

@@ -138,6 +138,8 @@ class _KayloAppState extends ConsumerState<KayloApp>
     final careMode = ref.watch(careModeProvider);
 
     return MaterialApp.router(
+      // No debug ribbon in demos; release builds never show it anyway.
+      debugShowCheckedModeBanner: false,
       title: 'Kaylo',
       theme: careMode ? AppTheme.careTheme : AppTheme.lightTheme,
       darkTheme: careMode ? AppTheme.careTheme : AppTheme.darkTheme,

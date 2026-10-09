@@ -45,6 +45,8 @@ class KayloPartnerApp extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final router = ref.watch(partnerRouterProvider);
     return MaterialApp.router(
+      // No debug ribbon in demos; release builds never show it anyway.
+      debugShowCheckedModeBanner: false,
       title: 'Kaylo Partner',
       theme: AppTheme.lightTheme,
       darkTheme: AppTheme.darkTheme,

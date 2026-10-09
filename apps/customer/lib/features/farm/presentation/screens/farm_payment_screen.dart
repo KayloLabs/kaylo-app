@@ -24,6 +24,7 @@ import '../../application/farm_providers.dart';
 import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
+import '../../../home/presentation/widgets/sub_service_labels.dart';
 import '../../../offers/domain/kaylo_offer.dart';
 import '../../../offers/presentation/offers_screen.dart';
 import '../../../payments/application/payment_methods_providers.dart';
@@ -124,6 +125,11 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         extras: [
           if (workerName != null) ReceiptLine(l10n.worker, workerName),
           ReceiptLine(l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
+          for (final addOn in draft.addOns)
+            ReceiptLine(
+              subServiceLabel(l10n, addOn.id),
+              '+${formatRupees(addOn.price)}',
+            ),
           ReceiptLine(
             isFarm ? l10n.farmAddress : l10n.serviceAddress,
             draft.address,
@@ -216,6 +222,11 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                   '${formatRupees(draft.service.basePrice)} '
                   '${l10n.perUnit(farmUnitLabel(l10n, unit))}',
                 ),
+                for (final addOn in draft.addOns)
+                  summaryRow(
+                    subServiceLabel(l10n, addOn.id),
+                    '+${formatRupees(addOn.price)}',
+                  ),
                 summaryRow(
                   isFarm ? l10n.farmAddress : l10n.serviceAddress,
                   draft.address,

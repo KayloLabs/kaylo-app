@@ -864,5 +864,18 @@
               "type": "int"
           }
       }
+  },
+  "addOns": "கூடுதல் சேவைகள்",
+  "@addOns": {
+      "description": "Heading for priced add-ons ticked on a service page"
+  },
+  "addOnsIncluded": "கூடுதல் சேவைகள்: {list}",
+  "@addOnsIncluded": {
+      "description": "Line in the worker instructions listing the ticked add-ons",
+      "placeholders": {
+          "list": {
+              "type": "String"
+          }
+      }
   }
 }

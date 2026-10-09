@@ -25,6 +25,8 @@ import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
 import '../widgets/quantity_stepper.dart';
+import '../../../home/domain/sub_service.dart';
+import '../../../home/presentation/widgets/sub_service_labels.dart';
 
 /// Schedule step of checkout. Serves every category: the farm flow
 /// reaches it from the service details page, the home flow from a
@@ -33,7 +35,15 @@ class FarmScheduleScreen extends ConsumerWidget {
   final String serviceId;
   final String? workerId;
 
-  const FarmScheduleScreen({super.key, required this.serviceId, this.workerId});
+  /// Add-on ids from the service page (`?extras=`), priced into the draft.
+  final List<String> addOnIds;
+
+  const FarmScheduleScreen({
+    super.key,
+    required this.serviceId,
+    this.workerId,
+    this.addOnIds = const [],
+  });
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -41,8 +51,11 @@ class FarmScheduleScreen extends ConsumerWidget {
     return ref
         .watch(farmServiceProvider(serviceId))
         .when(
-          data: (service) =>
-              _ScheduleForm(service: service, workerId: workerId),
+          data: (service) => _ScheduleForm(
+            service: service,
+            workerId: workerId,
+            addOnIds: addOnIds,
+          ),
           loading: () => Scaffold(
             appBar: AppBar(),
             body: const Center(child: KayloLoader()),
@@ -62,8 +75,13 @@ class FarmScheduleScreen extends ConsumerWidget {
 class _ScheduleForm extends ConsumerStatefulWidget {
   final ServiceItem service;
   final String? workerId;
+  final List<String> addOnIds;
 
-  const _ScheduleForm({required this.service, this.workerId});
+  const _ScheduleForm({
+    required this.service,
+    this.workerId,
+    this.addOnIds = const [],
+  });
 
   @override
   ConsumerState<_ScheduleForm> createState() => _ScheduleFormState();
@@ -97,6 +115,7 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
       latitude: activeLocation.latitude,
       longitude: activeLocation.longitude,
       workerId: widget.workerId,
+      addOns: subServicesByIds(widget.service.name, widget.addOnIds),
     );
     _addressController.text = _draft.address;
   }
@@ -142,9 +161,19 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
       );
       return;
     }
+    final l10n = AppLocalizations.of(context)!;
     context.push(
       Routes.farmPayment(widget.service.id),
-      extra: _draft.copyWith(address: address),
+      extra: _draft.copyWith(
+        address: address,
+        addOnsNote: _draft.addOns.isEmpty
+            ? null
+            : l10n.addOnsIncluded(
+                _draft.addOns
+                    .map((a) => subServiceLabel(l10n, a.id))
+                    .join(', '),
+              ),
+      ),
     );
   }
 
@@ -322,6 +351,31 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                     PriceTag(amount: _draft.total, isLarge: true),
                   ],
                 ),
+                for (final addOn in _draft.addOns) ...[
+                  const SizedBox(height: AppSpacing.s),
+                  Row(
+                    children: [
+                      const Icon(
+                        Icons.add_circle_outline_rounded,
+                        size: 16,
+                        color: AppColors.brandPrimary,
+                      ),
+                      const SizedBox(width: AppSpacing.xs),
+                      Expanded(
+                        child: Text(
+                          subServiceLabel(l10n, addOn.id),
+                          style: Theme.of(context).textTheme.bodyMedium,
+                        ),
+                      ),
+                      Text(
+                        '+${formatRupees(addOn.price)}',
+                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
               ],
             ),
           ),

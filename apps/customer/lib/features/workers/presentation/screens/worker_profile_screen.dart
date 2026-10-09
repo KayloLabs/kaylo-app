@@ -21,12 +21,14 @@ import '../widgets/worker_verification_record.dart';
 class WorkerProfileScreen extends ConsumerWidget {
   final String workerId;
   final String? serviceId;
+  final String? extras;
   final Worker? initialWorker;
 
   const WorkerProfileScreen({
     super.key,
     required this.workerId,
     this.serviceId,
+    this.extras,
     this.initialWorker,
   });
 
@@ -375,7 +377,7 @@ class WorkerProfileScreen extends ConsumerWidget {
                             KayloFeedback.press();
                             // Handoff to M4's booking flow: {serviceId, workerId}
                             context.push(
-                              '${Routes.bookService}?serviceId=${serviceId ?? ''}&workerId=${w.id}',
+                              '${Routes.bookService}?serviceId=${serviceId ?? ''}&workerId=${w.id}${extras == null || extras!.isEmpty ? '' : '&extras=$extras'}',
                               extra: {
                                 'serviceId': serviceId,
                                 'workerId': w.id,

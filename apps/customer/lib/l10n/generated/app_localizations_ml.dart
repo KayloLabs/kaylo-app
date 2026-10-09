@@ -2418,4 +2418,12 @@ class AppLocalizationsMl extends AppLocalizations {
   String starLabel(int count) {
     return '5-ൽ $count സ്റ്റാർ';
   }
+
+  @override
+  String get addOns => 'ആഡ്-ഓണുകൾ';
+
+  @override
+  String addOnsIncluded(String list) {
+    return 'ആഡ്-ഓണുകൾ: $list';
+  }
 }

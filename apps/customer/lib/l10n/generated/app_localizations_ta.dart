@@ -2435,4 +2435,12 @@ class AppLocalizationsTa extends AppLocalizations {
   String starLabel(int count) {
     return '5-இல் $count நட்சத்திரம்';
   }
+
+  @override
+  String get addOns => 'கூடுதல் சேவைகள்';
+
+  @override
+  String addOnsIncluded(String list) {
+    return 'கூடுதல் சேவைகள்: $list';
+  }
 }

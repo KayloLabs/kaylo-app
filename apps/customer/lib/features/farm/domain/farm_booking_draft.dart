@@ -1,5 +1,7 @@
 import 'package:kaylo_core/models/service_item.dart';
 
+import '../../home/domain/sub_service.dart';
+
 /// A window of the day a worker can be booked for, in minutes from
 /// midnight so the domain stays free of Flutter types.
 class FarmTimeSlot {
@@ -47,6 +49,13 @@ class FarmBookingDraft {
   /// (worker list or profile); null lets Kaylo assign one.
   final String? workerId;
 
+  /// Add-ons ticked on the service page, each priced on top of the visit.
+  final List<SubService> addOns;
+
+  /// The add-ons as one translated line for the worker's instructions,
+  /// set by the schedule screen (the domain has no translations).
+  final String? addOnsNote;
+
   const FarmBookingDraft({
     required this.service,
     required this.date,
@@ -57,15 +66,25 @@ class FarmBookingDraft {
     this.locationId,
     this.latitude,
     this.longitude,
+    this.addOns = const [],
+    this.addOnsNote,
   });
 
   /// Keep the exact pin in the worker's existing instructions field, including
   /// one-off locations that the customer did not choose to save permanently.
-  String get bookingNotes => latitude != null && longitude != null
-      ? '$address\nMap: https://www.google.com/maps/search/?api=1&query=$latitude,$longitude'
-      : address;
+  String get bookingNotes {
+    final lines = [
+      if (addOnsNote != null && addOnsNote!.isNotEmpty) addOnsNote!,
+      address,
+      if (latitude != null && longitude != null)
+        'Map: https://www.google.com/maps/search/?api=1&query=$latitude,$longitude',
+    ];
+    return lines.join('\n');
+  }
 
-  double get total => service.basePrice * quantity;
+  double get addOnsTotal => addOns.fold<double>(0, (sum, a) => sum + a.price);
+
+  double get total => service.basePrice * quantity + addOnsTotal;
 
   DateTime get scheduledAt => DateTime(
     date.year,
@@ -84,6 +103,8 @@ class FarmBookingDraft {
     double? latitude,
     double? longitude,
     bool clearLocation = false,
+    List<SubService>? addOns,
+    String? addOnsNote,
   }) {
     return FarmBookingDraft(
       service: service,
@@ -95,6 +116,8 @@ class FarmBookingDraft {
       locationId: clearLocation ? null : locationId ?? this.locationId,
       latitude: clearLocation ? null : latitude ?? this.latitude,
       longitude: clearLocation ? null : longitude ?? this.longitude,
+      addOns: addOns ?? this.addOns,
+      addOnsNote: addOnsNote ?? this.addOnsNote,
     );
   }
 }

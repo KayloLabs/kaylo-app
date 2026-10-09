@@ -31,6 +31,7 @@ import '../../features/auth/presentation/screens/location_setup_screen.dart';
 import '../../features/auth/application/session_controller.dart';
 import 'package:kaylo_core/models/service_item.dart';
 import 'package:kaylo_core/models/worker.dart';
+import '../../features/home/domain/sub_service.dart';
 import '../../features/booking/domain/booking_receipt.dart';
 import '../../features/booking/presentation/screens/booking_confirmation_screen.dart';
 import '../../features/booking/presentation/screens/booking_details_screen.dart';
@@ -196,6 +197,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           child: WorkerListScreen(
             serviceId: state.uri.queryParameters['serviceId'] ?? '',
             serviceName: state.uri.queryParameters['serviceName'],
+            extras: state.uri.queryParameters['extras'],
           ),
         ),
       ),
@@ -206,6 +208,7 @@ final goRouterProvider = Provider<GoRouter>((ref) {
           child: WorkerProfileScreen(
             workerId: state.uri.queryParameters['workerId'] ?? '',
             serviceId: state.uri.queryParameters['serviceId'],
+            extras: state.uri.queryParameters['extras'],
             initialWorker: state.extra as Worker?,
           ),
         ),
@@ -234,6 +237,9 @@ final goRouterProvider = Provider<GoRouter>((ref) {
             child: FarmScheduleScreen(
               serviceId: state.uri.queryParameters['serviceId'] ?? '',
               workerId: workerId == null || workerId.isEmpty ? null : workerId,
+              addOnIds: decodeSubServiceIds(
+                state.uri.queryParameters['extras'],
+              ),
             ),
           );
         },

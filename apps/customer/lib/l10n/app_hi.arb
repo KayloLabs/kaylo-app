@@ -864,5 +864,18 @@
               "type": "int"
           }
       }
+  },
+  "addOns": "ऐड-ऑन",
+  "@addOns": {
+      "description": "Heading for priced add-ons ticked on a service page"
+  },
+  "addOnsIncluded": "ऐड-ऑन: {list}",
+  "@addOnsIncluded": {
+      "description": "Line in the worker instructions listing the ticked add-ons",
+      "placeholders": {
+          "list": {
+              "type": "String"
+          }
+      }
   }
 }

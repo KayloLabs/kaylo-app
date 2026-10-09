@@ -4319,6 +4319,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{count} of 5 stars'**
   String starLabel(int count);
+
+  /// Heading for priced add-ons ticked on a service page
+  ///
+  /// In en, this message translates to:
+  /// **'Add-ons'**
+  String get addOns;
+
+  /// Line in the worker instructions listing the ticked add-ons
+  ///
+  /// In en, this message translates to:
+  /// **'Add-ons: {list}'**
+  String addOnsIncluded(String list);
 }
 
 class _AppLocalizationsDelegate

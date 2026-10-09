@@ -23,10 +23,14 @@ class WorkerListScreen extends ConsumerWidget {
   final String serviceId;
   final String? serviceName;
 
+  /// Add-on ids chosen on the service page, passed on untouched.
+  final String? extras;
+
   const WorkerListScreen({
     super.key,
     required this.serviceId,
     this.serviceName,
+    this.extras,
   });
 
   @override
@@ -274,6 +278,7 @@ class WorkerListScreen extends ConsumerWidget {
                       return _WorkerCardRow(
                         worker: worker,
                         serviceId: serviceId,
+                        extras: extras,
                       );
                     },
                   );
@@ -573,8 +578,13 @@ class WorkerListScreen extends ConsumerWidget {
 class _WorkerCardRow extends StatelessWidget {
   final Worker worker;
   final String serviceId;
+  final String? extras;
 
-  const _WorkerCardRow({required this.worker, required this.serviceId});
+  const _WorkerCardRow({
+    required this.worker,
+    required this.serviceId,
+    this.extras,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -584,7 +594,7 @@ class _WorkerCardRow extends StatelessWidget {
       onTap: () {
         KayloFeedback.tap();
         context.push(
-          '${Routes.workerProfile}?workerId=${worker.id}&serviceId=$serviceId',
+          '${Routes.workerProfile}?workerId=${worker.id}&serviceId=$serviceId${extras == null || extras!.isEmpty ? '' : '&extras=$extras'}',
           extra: worker,
         );
       },
@@ -697,7 +707,7 @@ class _WorkerCardRow extends StatelessWidget {
                     onPressed: () {
                       KayloFeedback.tap();
                       context.push(
-                        '${Routes.workerProfile}?workerId=${worker.id}&serviceId=$serviceId',
+                        '${Routes.workerProfile}?workerId=${worker.id}&serviceId=$serviceId${extras == null || extras!.isEmpty ? '' : '&extras=$extras'}',
                         extra: worker,
                       );
                     },
@@ -724,7 +734,7 @@ class _WorkerCardRow extends StatelessWidget {
                       KayloFeedback.press();
                       // M4 Handoff Contract: {serviceId, workerId}
                       context.push(
-                        '${Routes.bookService}?serviceId=$serviceId&workerId=${worker.id}',
+                        '${Routes.bookService}?serviceId=$serviceId&workerId=${worker.id}${extras == null || extras!.isEmpty ? '' : '&extras=$extras'}',
                         extra: {
                           'serviceId': serviceId,
                           'workerId': worker.id,

@@ -2392,4 +2392,12 @@ class AppLocalizationsEn extends AppLocalizations {
   String starLabel(int count) {
     return '$count of 5 stars';
   }
+
+  @override
+  String get addOns => 'Add-ons';
+
+  @override
+  String addOnsIncluded(String list) {
+    return 'Add-ons: $list';
+  }
 }

@@ -14,7 +14,10 @@ import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import 'package:kaylo_core/utils/money.dart';
 import '../../application/home_providers.dart';
+import '../../domain/sub_service.dart';
+import '../widgets/sub_service_labels.dart';
 import '../../../workers/application/workers_providers.dart';
 
 class ServiceDetailsScreen extends ConsumerStatefulWidget {
@@ -33,76 +36,13 @@ class ServiceDetailsScreen extends ConsumerStatefulWidget {
 }
 
 class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
-  final Set<String> _selectedSubServices = {};
+  final Set<String> _selectedIds = {};
 
-  List<String> _getSubServicesFor(String serviceName, AppLocalizations l10n) {
-    final lower = serviceName.toLowerCase();
-    if (lower.contains('plumb')) {
-      return [
-        l10n.incPlumbTap,
-        l10n.incPlumbPipe,
-        l10n.incPlumbDrain,
-        l10n.incPlumbInstall,
-      ];
-    }
-    if (lower.contains('electric')) {
-      return [
-        l10n.incElecSwitch,
-        l10n.incElecWiring,
-        l10n.incElecFan,
-        l10n.incElecMcb,
-      ];
-    }
-    if (lower.contains('clean')) {
-      return [
-        l10n.incCleanDeep,
-        l10n.incCleanKitchen,
-        l10n.incCleanBath,
-        l10n.incCleanSofa,
-      ];
-    }
-    if (lower.contains('carpent')) {
-      return [
-        l10n.incCarpFurniture,
-        l10n.incCarpDoor,
-        l10n.incCarpLock,
-        l10n.incCarpCustom,
-      ];
-    }
-    if (lower.contains('paint')) {
-      return [
-        l10n.incPaintInterior,
-        l10n.incPaintExterior,
-        l10n.incPaintPutty,
-        l10n.incPaintWaterproof,
-      ];
-    }
-    if (lower.contains('ac service') ||
-        lower.contains('air condition') ||
-        lower.contains('ac repair') ||
-        lower == 'ac') {
-      return [
-        l10n.incAcFilter,
-        l10n.incAcGas,
-        l10n.incAcCooling,
-        l10n.incAcInstall,
-      ];
-    }
-    if (lower.contains('appliance')) {
-      return [
-        l10n.incApplWasher,
-        l10n.incApplFridge,
-        l10n.incApplMicrowave,
-        l10n.incApplTv,
-      ];
-    }
-    return [
-      l10n.incGenInspect,
-      l10n.incGenRepair,
-      l10n.incGenInstall,
-      l10n.incGenMaintain,
-    ];
-  }
+  double _total(ServiceItem item, List<SubService> subServices) =>
+      item.basePrice +
+      subServices
+          .where((s) => _selectedIds.contains(s.id))
+          .fold<double>(0, (sum, s) => sum + s.price);
 
   @override
   Widget build(BuildContext context) {
@@ -124,7 +64,11 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
             );
           }
 
-          final subServices = _getSubServicesFor(item.name, l10n);
+          final subServices = subServicesFor(item.name);
+          final total = _total(item, subServices);
+          final priceLabel = _selectedIds.isEmpty
+              ? l10n.startingFrom
+              : l10n.total;
 
           return Stack(
             children: [
@@ -309,8 +253,8 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           spacing: AppSpacing.s,
                           runSpacing: AppSpacing.s,
                           children: subServices.map((subService) {
-                            final isSelected = _selectedSubServices.contains(
-                              subService,
+                            final isSelected = _selectedIds.contains(
+                              subService.id,
                             );
                             return FilterChip(
                               showCheckmark: false,
@@ -331,15 +275,17 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                   ),
                                 ),
                               ),
-                              label: Text(subService),
+                              label: Text(
+                                '${subServiceLabel(l10n, subService.id)} · +${formatRupees(subService.price)}',
+                              ),
                               selected: isSelected,
                               onSelected: (selected) {
                                 KayloFeedback.tap();
                                 setState(() {
                                   if (selected) {
-                                    _selectedSubServices.add(subService);
+                                    _selectedIds.add(subService.id);
                                   } else {
-                                    _selectedSubServices.remove(subService);
+                                    _selectedIds.remove(subService.id);
                                   }
                                 });
                               },
@@ -358,7 +304,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    l10n.startingFrom,
+                                    priceLabel,
                                     style: Theme.of(context).textTheme.bodySmall
                                         ?.copyWith(
                                           color: AppColors.textSecondary,
@@ -366,7 +312,7 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                                   ),
                                   const SizedBox(height: 2),
                                   Text(
-                                    '₹${item.basePrice.toInt()}',
+                                    formatRupees(total),
                                     style: Theme.of(context)
                                         .textTheme
                                         .headlineSmall
@@ -433,14 +379,14 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.startingFrom,
+                              priceLabel,
                               style: const TextStyle(
                                 fontSize: 12,
                                 color: AppColors.textSecondary,
                               ),
                             ),
                             Text(
-                              '₹${item.basePrice.toInt()}',
+                              formatRupees(total),
                               style: const TextStyle(
                                 fontSize: 20,
                                 fontWeight: FontWeight.bold,
@@ -459,8 +405,14 @@ class _ServiceDetailsScreenState extends ConsumerState<ServiceDetailsScreen> {
                           onPressed: () {
                             KayloFeedback.press();
                             // Navigates to Worker List passing serviceId
+                            final extras = encodeSubServiceIds(
+                              subServices
+                                  .where((s) => _selectedIds.contains(s.id))
+                                  .map((s) => s.id),
+                            );
                             context.push(
-                              '${Routes.workerList}?serviceId=${item.id}&serviceName=${Uri.encodeComponent(item.name)}',
+                              '${Routes.workerList}?serviceId=${item.id}&serviceName=${Uri.encodeComponent(item.name)}'
+                              '${extras.isEmpty ? '' : '&extras=$extras'}',
                             );
                           },
                         ),

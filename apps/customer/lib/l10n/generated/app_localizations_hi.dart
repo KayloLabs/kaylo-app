@@ -2396,4 +2396,12 @@ class AppLocalizationsHi extends AppLocalizations {
   String starLabel(int count) {
     return '5 में से $count स्टार';
   }
+
+  @override
+  String get addOns => 'ऐड-ऑन';
+
+  @override
+  String addOnsIncluded(String list) {
+    return 'ऐड-ऑन: $list';
+  }
 }

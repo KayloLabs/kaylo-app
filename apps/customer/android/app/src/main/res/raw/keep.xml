@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- The notification small icon is looked up by name from Dart
+     (flutter_local_notifications), so the release resource shrinker sees
+     no reference to it and drops it, and no notification is ever shown.
+     Keeping it by name fixes that. -->
+<resources xmlns:tools="http://schemas.android.com/tools"
+    tools:keep="@drawable/ic_notification" />

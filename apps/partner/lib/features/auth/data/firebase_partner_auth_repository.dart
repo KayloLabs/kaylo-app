@@ -4,6 +4,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../domain/partner_auth_repository.dart';
+import 'partner_access_stream.dart';
 import '../../notifications/data/partner_push_service.dart';
 
 typedef PartnerStateLoader = Future<Map<String, dynamic>?> Function();
@@ -230,10 +231,8 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   @override
   Future<bool> isAuthenticated() async => (await checkAccess()).signedIn;
   @override
-  Stream<PartnerAccess> watchAccess() async* {
-    yield await checkAccess();
-    yield* _state.stream;
-  }
+  Stream<PartnerAccess> watchAccess() =>
+      watchPartnerAccess(changes: _state.stream, initial: checkAccess);
 
   @override
   Future<void> signOut() async {

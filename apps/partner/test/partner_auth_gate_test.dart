@@ -6,6 +6,7 @@ import 'package:kaylo_core/services/storage_service.dart';
 import 'package:kaylo_partner/core/router/app_router.dart';
 import 'package:kaylo_partner/core/router/routes.dart';
 import 'package:kaylo_partner/features/auth/data/mock_partner_auth_repository.dart';
+import 'package:kaylo_partner/features/auth/data/partner_access_stream.dart';
 import 'package:kaylo_partner/features/auth/application/partner_session.dart';
 import 'package:kaylo_partner/features/profile/application/profile_providers.dart';
 import 'package:kaylo_partner/features/availability/application/availability_providers.dart';
@@ -24,10 +25,8 @@ class _SwitchableAuth extends MockPartnerAuthRepository {
   @override
   Future<PartnerAccess> checkAccess() async => access;
   @override
-  Stream<PartnerAccess> watchAccess() async* {
-    yield access;
-    yield* changes.stream;
-  }
+  Stream<PartnerAccess> watchAccess() =>
+      watchPartnerAccess(changes: changes.stream, initial: () => access);
 
   void setAccess(PartnerAccess next) {
     access = next;
@@ -68,13 +67,20 @@ void main() {
       );
       addTearDown(profileSubscription.close);
       addTearDown(scheduleSubscription.close);
-      await Future<void>.delayed(Duration.zero);
+      await container.read(partnerAuthStateProvider.future);
+      await container.pump();
       final firstProfile = container.read(workerProfileRepositoryProvider);
       final firstSchedule = container.read(availabilityRepositoryProvider);
+      expect(auth.changes.hasListener, isTrue);
       auth.setAccess(
         const PartnerAccess(PartnerAccessStatus.ready, workerId: 'worker-b'),
       );
       await Future<void>.delayed(Duration.zero);
+      await container.pump();
+      expect(
+        container.read(partnerAuthStateProvider).asData?.value.workerId,
+        'worker-b',
+      );
       expect(
         identical(
           container.read(workerProfileRepositoryProvider),
@@ -92,6 +98,7 @@ void main() {
       final secondProfile = container.read(workerProfileRepositoryProvider);
       auth.setAccess(const PartnerAccess(PartnerAccessStatus.signedOut));
       await Future<void>.delayed(Duration.zero);
+      await container.pump();
       expect(
         identical(
           container.read(workerProfileRepositoryProvider),

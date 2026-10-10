@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../domain/partner_auth_repository.dart';
+import 'partner_access_stream.dart';
 
 /// Explicit sample mode. Old phone-login preferences are deliberately ignored.
 class MockPartnerAuthRepository implements PartnerAuthRepository {
@@ -34,10 +35,8 @@ class MockPartnerAuthRepository implements PartnerAuthRepository {
   @override
   Future<bool> isAuthenticated() async => _access.signedIn;
   @override
-  Stream<PartnerAccess> watchAccess() async* {
-    yield _access;
-    yield* _controller.stream;
-  }
+  Stream<PartnerAccess> watchAccess() =>
+      watchPartnerAccess(changes: _controller.stream, initial: () => _access);
 
   @override
   Future<PartnerAccess> signIn(String partnerId, String password) async {

@@ -1,4 +1,4 @@
-import 'package:kaylo_core/models/app_user.dart';
+import '../models/app_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 /// Where the person behind a sign-in is kept. Firebase (or Supabase
@@ -98,12 +98,15 @@ class ProfileSync {
   }
 }
 
-/// persons + customers in Supabase. Column names follow
-/// supabase/migrations/0001_initial_schema.sql.
+/// persons (+ customers) in Supabase. Column names follow
+/// supabase/migrations/0001_initial_schema.sql. The customer app creates
+/// the customer row that bookings hang off; the partner app does not,
+/// a worker's row comes from registration instead.
 class SupabaseProfileStore implements ProfileStore {
   final SupabaseClient _db;
+  final bool createsCustomer;
 
-  const SupabaseProfileStore(this._db);
+  const SupabaseProfileStore(this._db, {this.createsCustomer = true});
 
   static const _columns =
       'person_id, full_name, phone_number, email, profile_photo';
@@ -141,6 +144,7 @@ class SupabaseProfileStore implements ProfileStore {
 
   @override
   Future<void> ensureCustomer(String personId) async {
+    if (!createsCustomer) return;
     await _db.from('customers').upsert(
       {'person_id': personId},
       onConflict: 'person_id',
@@ -177,9 +181,12 @@ class SupabaseProfileStore implements ProfileStore {
 class InMemoryProfileStore implements ProfileStore {
   final Map<String, AppUser> _byAuthId = {};
   int _nextId = 1;
+  final bool createsCustomer;
 
   /// Person ids that have a customer row.
   final Set<String> customerIds = {};
+
+  InMemoryProfileStore({this.createsCustomer = true});
 
   @override
   Future<AppUser?> findByAuthId(String authUserId) async => _byAuthId[authUserId];
@@ -188,13 +195,13 @@ class InMemoryProfileStore implements ProfileStore {
   Future<AppUser> create(AppUser draft, {required String authUserId}) async {
     final user = draft.copyWith(id: 'person-${_nextId++}');
     _byAuthId[authUserId] = user;
-    customerIds.add(user.id);
+    if (createsCustomer) customerIds.add(user.id);
     return user;
   }
 
   @override
   Future<void> ensureCustomer(String personId) async {
-    customerIds.add(personId);
+    if (createsCustomer) customerIds.add(personId);
   }
 
   @override

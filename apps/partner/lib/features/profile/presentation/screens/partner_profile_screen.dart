@@ -1,13 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/avatar_circle.dart';
+import 'package:kaylo_ui/widgets/empty_state.dart';
+import 'package:kaylo_ui/widgets/error_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_chip.dart';
+import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
@@ -15,158 +20,208 @@ import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../core/router/routes.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/application/partner_session.dart';
+import '../../../availability/application/availability_providers.dart';
+import '../../../availability/domain/availability.dart';
+import '../../../availability/presentation/screens/availability_screen.dart';
+import '../../application/profile_providers.dart';
+import '../../domain/worker_profile.dart';
+import '../widgets/edit_profile_sheet.dart';
 import '../widgets/language_tile.dart';
 
+/// The worker's own profile: who they are, how they are doing, what they
+/// offer, where the money goes, how far verification has got, and where
+/// and when they work. Everything comes from [workerProfileProvider].
 class PartnerProfileScreen extends ConsumerWidget {
   const PartnerProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final worker = ref.watch(partnerWorkerProfileProvider);
+    final l10n = AppLocalizations.of(context)!;
+    final profileAsync = ref.watch(workerProfileProvider);
 
     return Scaffold(
-      appBar: AppBar(title: const Text('Partner Profile')),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.l,
-          AppSpacing.m,
-          AppSpacing.l,
-          100,
+      appBar: AppBar(title: Text(l10n.profileTitle)),
+      body: profileAsync.when(
+        loading: () => const Center(child: KayloLoader()),
+        error: (e, _) => ErrorState(
+          title: l10n.profileLoadFailed,
+          message: e is AppFailure ? e.message : '$e',
+          onRetry: () => ref.invalidate(workerProfileProvider),
         ),
-        children: [
-          // Identity Card
-          KayloCard(
-            child: Row(
-              children: [
-                AvatarCircle(fallbackText: worker.name, radius: 32),
-                const SizedBox(width: AppSpacing.l),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
+        data: (profile) => ListView(
+          padding: const EdgeInsets.fromLTRB(
+            AppSpacing.l,
+            AppSpacing.m,
+            AppSpacing.l,
+            100,
+          ),
+          children: [
+            if (profile == null)
+              _NotRegistered()
+            else
+              ..._sections(context, ref, l10n, profile),
+            const SizedBox(height: AppSpacing.xl),
+            SectionHeader(title: l10n.appSettingsHeader),
+            const SizedBox(height: AppSpacing.m),
+            const LanguageTile(),
+            const SizedBox(height: AppSpacing.xl),
+            KayloButton(
+              text: l10n.logOut,
+              variant: KayloButtonVariant.secondary,
+              onPressed: () => _logOut(context, ref),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  List<Widget> _sections(
+    BuildContext context,
+    WidgetRef ref,
+    AppLocalizations l10n,
+    WorkerProfile profile,
+  ) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
+    final hours = ref.watch(weeklyHoursProvider).asData?.value;
+
+    return [
+      // Identity
+      KayloCard(
+        child: Row(
+          children: [
+            AvatarCircle(
+              imageUrl: profile.photoUrl,
+              fallbackText: profile.name,
+              radius: 32,
+            ),
+            const SizedBox(width: AppSpacing.l),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          Flexible(
-                            child: Text(
-                              worker.name,
-                              style: Theme.of(context).textTheme.titleLarge
-                                  ?.copyWith(fontWeight: FontWeight.w700),
-                            ),
-                          ),
-                          const SizedBox(width: AppSpacing.s),
-                          const Icon(
-                            Icons.verified_rounded,
-                            color: AppColors.brandPrimaryBright,
-                            size: 20,
-                          ),
-                        ],
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        worker.phone,
-                        style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondary,
+                      Flexible(
+                        child: Text(
+                          profile.name,
+                          style: Theme.of(context).textTheme.titleLarge
+                              ?.copyWith(fontWeight: FontWeight.w700),
                         ),
                       ),
-                      const SizedBox(height: AppSpacing.s),
-                      const KayloChip(
-                        label: 'Verified Partner',
-                        icon: Icons.shield_rounded,
-                        variant: KayloChipVariant.success,
-                      ),
+                      if (profile.isVerified) ...[
+                        const SizedBox(width: AppSpacing.s),
+                        const Icon(
+                          Icons.verified_rounded,
+                          color: AppColors.brandPrimaryBright,
+                          size: 20,
+                        ),
+                      ],
                     ],
                   ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          // Performance Strip
-          const SectionHeader(title: 'Performance & Ratings'),
-          const SizedBox(height: AppSpacing.m),
-          KayloCard(
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _MetricColumn(
-                      title: 'Rating',
-                      value: '${worker.rating}',
-                      subtitleWidget: RatingStars(
-                        rating: worker.rating,
-                        size: 14,
-                      ),
-                    ),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: isDark ? Colors.white12 : Colors.black12,
-                    ),
-                    _MetricColumn(
-                      title: 'Total Jobs',
-                      value: '${worker.totalJobs}',
-                      subtitle: 'Kannur District',
-                    ),
-                  ],
-                ),
-                const Padding(
-                  padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
-                  child: Divider(height: 1),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceAround,
-                  children: [
-                    _MetricColumn(
-                      title: 'Acceptance',
-                      value: '${worker.acceptanceRate}%',
-                      subtitle: 'Top 5% Partner',
-                    ),
-                    Container(
-                      width: 1,
-                      height: 40,
-                      color: isDark ? Colors.white12 : Colors.black12,
-                    ),
-                    _MetricColumn(
-                      title: 'Completion',
-                      value: '${worker.completionRate}%',
-                      subtitle: '99% on-time',
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          // Skills & Services
-          const SectionHeader(title: 'Offered Services'),
-          const SizedBox(height: AppSpacing.m),
-          KayloCard(
-            child: Wrap(
-              spacing: AppSpacing.s,
-              runSpacing: AppSpacing.s,
-              children: [
-                for (final svc in worker.services)
-                  KayloChip(
-                    label: svc,
-                    icon: Icons.check_rounded,
-                    variant: KayloChipVariant.brand,
+                  const SizedBox(height: 4),
+                  Text(
+                    profile.phone,
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: secondary),
                   ),
-              ],
+                  const SizedBox(height: AppSpacing.s),
+                  _VerificationChip(status: profile.verification),
+                ],
+              ),
             ),
-          ),
-          const SizedBox(height: AppSpacing.l),
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.s),
+      Align(
+        alignment: AlignmentDirectional.centerEnd,
+        child: TextButton.icon(
+          onPressed: () => _edit(context, ref, profile),
+          icon: const Icon(Icons.edit_outlined, size: 18),
+          label: Text(l10n.editProfile),
+        ),
+      ),
+      const SizedBox(height: AppSpacing.s),
 
-          // Payout Details
-          const SectionHeader(title: 'Bank & Payout Account'),
-          const SizedBox(height: AppSpacing.m),
-          KayloCard(
-            child: Row(
+      // Performance
+      SectionHeader(title: l10n.performanceHeader),
+      const SizedBox(height: AppSpacing.m),
+      KayloCard(
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: [
+            _MetricColumn(
+              title: l10n.rating,
+              value: profile.rating.toStringAsFixed(1),
+              subtitleWidget: Column(
+                children: [
+                  RatingStars(rating: profile.rating, size: 14),
+                  const SizedBox(height: 2),
+                  Text(
+                    l10n.reviewsCount(profile.reviewsCount),
+                    style: TextStyle(fontSize: 11, color: secondary),
+                  ),
+                ],
+              ),
+            ),
+            Container(
+              width: 1,
+              height: 48,
+              color: isDark ? Colors.white12 : Colors.black12,
+            ),
+            _MetricColumn(
+              title: l10n.totalJobs,
+              value: '${profile.totalJobs}',
+              subtitle: l10n.memberSince(_monthYear(context, profile.joinedOn)),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.l),
+
+      // Services
+      SectionHeader(
+        title: l10n.offeredServicesHeader,
+        actionText: l10n.editProfile,
+        onActionPressed: () => _edit(context, ref, profile),
+      ),
+      const SizedBox(height: AppSpacing.m),
+      KayloCard(
+        child: profile.services.isEmpty
+            ? Text(
+                l10n.noServicesYet,
+                style: Theme.of(
+                  context,
+                ).textTheme.bodyMedium?.copyWith(color: secondary),
+              )
+            : Wrap(
+                spacing: AppSpacing.s,
+                runSpacing: AppSpacing.s,
+                children: [
+                  for (final svc in profile.services)
+                    KayloChip(
+                      label: svc.name,
+                      icon: Icons.check_rounded,
+                      variant: KayloChipVariant.brand,
+                    ),
+                ],
+              ),
+      ),
+      const SizedBox(height: AppSpacing.l),
+
+      // Payout
+      SectionHeader(title: l10n.payoutHeader),
+      const SizedBox(height: AppSpacing.m),
+      KayloCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
                 Container(
                   width: 44,
@@ -185,164 +240,266 @@ class PartnerProfileScreen extends ConsumerWidget {
                 ),
                 const SizedBox(width: AppSpacing.m),
                 Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        worker.bankAccount,
-                        style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                          fontWeight: FontWeight.w700,
+                  child: profile.hasPayoutAccount
+                      ? Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              profile.bankAccount ?? profile.upiId!,
+                              style: Theme.of(context).textTheme.titleSmall
+                                  ?.copyWith(fontWeight: FontWeight.w700),
+                            ),
+                            if (profile.bankAccount != null &&
+                                (profile.upiId ?? '').isNotEmpty) ...[
+                              const SizedBox(height: 2),
+                              Text(
+                                l10n.upiLabel(profile.upiId!),
+                                style: Theme.of(context).textTheme.bodySmall
+                                    ?.copyWith(color: secondary),
+                              ),
+                            ],
+                          ],
+                        )
+                      : Text(
+                          l10n.noPayoutYet,
+                          style: Theme.of(
+                            context,
+                          ).textTheme.bodyMedium?.copyWith(color: secondary),
                         ),
-                      ),
-                      const SizedBox(height: 2),
-                      Text(
-                        'UPI ID: ${worker.upiId}',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                          color: isDark
-                              ? AppColors.textSecondaryDark
-                              : AppColors.textSecondary,
-                        ),
-                      ),
-                    ],
-                  ),
                 ),
                 TextButton(
-                  onPressed: () {
-                    KayloFeedback.tap();
-                    KayloSnackbar.showInfo(
-                      context,
-                      'Bank account changes require support verification',
-                    );
-                  },
-                  child: const Text('Edit'),
+                  onPressed: () => _edit(context, ref, profile),
+                  child: Text(l10n.editProfile),
                 ),
               ],
             ),
-          ),
-          const SizedBox(height: AppSpacing.l),
+            if (profile.bankAccount != null) ...[
+              const SizedBox(height: AppSpacing.s),
+              Text(
+                l10n.bankChangeNote,
+                style: TextStyle(fontSize: 11, color: secondary),
+              ),
+            ],
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.l),
 
-          // Verification & Documents
-          const SectionHeader(title: 'KYC & Verification Status'),
-          const SizedBox(height: AppSpacing.m),
-          KayloCard(
-            child: Column(
+      // Verification
+      SectionHeader(title: l10n.verificationHeader),
+      const SizedBox(height: AppSpacing.m),
+      KayloCard(
+        child: Column(
+          children: [
+            _DocumentRow(
+              title: l10n.documentAadhaar,
+              status: profile.aadhaarStatus,
+            ),
+            const Divider(height: 1),
+            _DocumentRow(
+              title: l10n.documentPoliceCertificate,
+              status: profile.documentStatus('police_certificate'),
+            ),
+          ],
+        ),
+      ),
+      const SizedBox(height: AppSpacing.l),
+
+      // Service area and schedule
+      SectionHeader(title: l10n.areaScheduleHeader),
+      const SizedBox(height: AppSpacing.m),
+      KayloCard(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
               children: [
-                _VerificationRow(
-                  title: 'Aadhaar Card (UIDAI)',
-                  subtitle: 'Verified by Kaylo Trust Team',
-                  isVerified: worker.aadhaarVerified,
+                const Icon(
+                  Icons.location_on_outlined,
+                  size: 20,
+                  color: AppColors.farmAccent,
                 ),
-                const Divider(height: 1),
-                _VerificationRow(
-                  title: 'Police Clearance Certificate',
-                  subtitle: 'Kerala Police Background Check Passed',
-                  isVerified: worker.policeVerified,
-                ),
-                const Divider(height: 1),
-                const _VerificationRow(
-                  title: 'Partner ID Badge',
-                  subtitle: 'KYL-88219 (Active License)',
-                  isVerified: true,
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          // Availability
-          const SectionHeader(title: 'Service Area & Schedule'),
-          const SizedBox(height: AppSpacing.m),
-          KayloCard(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.schedule_rounded,
-                      size: 20,
-                      color: AppColors.brandPrimary,
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: Text(
+                    [
+                      profile.district ?? l10n.noDistrictYet,
+                      l10n.travelRadius(_km(profile.travelRadiusKm)),
+                    ].join(' · '),
+                    style: Theme.of(context).textTheme.bodyMedium?.copyWith(
+                      fontWeight: FontWeight.w600,
                     ),
-                    const SizedBox(width: AppSpacing.s),
-                    Text(
-                      worker.workingHours,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.s),
-                Row(
-                  children: [
-                    const Icon(
-                      Icons.location_on_outlined,
-                      size: 20,
-                      color: AppColors.farmAccent,
-                    ),
-                    const SizedBox(width: AppSpacing.s),
-                    Text(
-                      worker.district,
-                      style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        color: isDark
-                            ? AppColors.textSecondaryDark
-                            : AppColors.textSecondary,
-                      ),
-                    ),
-                  ],
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: AppSpacing.xl),
-
-          SectionHeader(
-            title: AppLocalizations.of(context)?.appSettingsHeader ?? 'App Settings',
-          ),
-          const SizedBox(height: AppSpacing.m),
-          const LanguageTile(),
-          const SizedBox(height: AppSpacing.xl),
-
-          // Log out
-          KayloButton(
-            text: 'Log out of Partner App',
-            variant: KayloButtonVariant.secondary,
-            onPressed: () async {
-              final confirm = await showDialog<bool>(
-                context: context,
-                builder: (ctx) => AlertDialog(
-                  title: const Text('Log out?'),
-                  content: const Text(
-                    'You will need to sign in again with your phone number to receive jobs.',
                   ),
-                  actions: [
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(false),
-                      child: const Text('Cancel'),
-                    ),
-                    TextButton(
-                      onPressed: () => Navigator.of(ctx).pop(true),
-                      child: const Text(
-                        'Log out',
-                        style: TextStyle(color: AppColors.error),
-                      ),
-                    ),
-                  ],
                 ),
-              );
+              ],
+            ),
+            const SizedBox(height: AppSpacing.s),
+            Row(
+              children: [
+                const Icon(
+                  Icons.schedule_rounded,
+                  size: 20,
+                  color: AppColors.brandPrimary,
+                ),
+                const SizedBox(width: AppSpacing.s),
+                Expanded(
+                  child: Text(
+                    _scheduleSummary(context, l10n, hours, profile),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodyMedium?.copyWith(color: secondary),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: AppSpacing.m),
+            KayloButton(
+              text: l10n.manageAvailability,
+              icon: Icons.edit_calendar_outlined,
+              variant: KayloButtonVariant.outline,
+              onPressed: () {
+                KayloFeedback.tap();
+                context.push(Routes.availability);
+              },
+            ),
+          ],
+        ),
+      ),
+    ];
+  }
 
-              if (confirm == true) {
-                KayloFeedback.press();
-                await ref.read(partnerAuthRepositoryProvider).signOut();
-                if (context.mounted) {
-                  context.go(Routes.login);
-                }
-              }
-            },
+  Future<void> _edit(
+    BuildContext context,
+    WidgetRef ref,
+    WorkerProfile profile,
+  ) async {
+    KayloFeedback.tap();
+    final saved = await showEditProfileSheet(context, profile);
+    if (saved && context.mounted) {
+      KayloSnackbar.showSuccess(
+        context,
+        AppLocalizations.of(context)!.profileSaved,
+      );
+    }
+  }
+
+  Future<void> _logOut(BuildContext context, WidgetRef ref) async {
+    final l10n = AppLocalizations.of(context)!;
+    final confirm = await showDialog<bool>(
+      context: context,
+      builder: (ctx) => AlertDialog(
+        title: Text(l10n.logOutTitle),
+        content: Text(l10n.logOutBody),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(false),
+            child: Text(l10n.cancel),
+          ),
+          TextButton(
+            onPressed: () => Navigator.of(ctx).pop(true),
+            child: Text(
+              l10n.logOut,
+              style: const TextStyle(color: AppColors.error),
+            ),
           ),
         ],
       ),
     );
+    if (confirm == true) {
+      KayloFeedback.press();
+      await ref.read(partnerAuthRepositoryProvider).signOut();
+      if (context.mounted) context.go(Routes.login);
+    }
+  }
+
+  static String _km(double km) =>
+      km == km.roundToDouble() ? km.toInt().toString() : km.toStringAsFixed(1);
+
+  static String _monthYear(BuildContext context, DateTime date) {
+    final locale = Localizations.localeOf(context).toString();
+    try {
+      return DateFormat.yMMM(locale).format(date);
+    } catch (_) {
+      return DateFormat.yMMM('en').format(date);
+    }
+  }
+
+  /// "Mon – Sat · 8:00 AM – 7:00 PM" when every working day shares one
+  /// window; otherwise a note that the days differ. Falls back to the free
+  /// text typed at registration until hours are saved.
+  static String _scheduleSummary(
+    BuildContext context,
+    AppLocalizations l10n,
+    WeeklyHours? hours,
+    WorkerProfile profile,
+  ) {
+    if (hours == null) {
+      final note = (profile.workingHoursNote ?? '').trim();
+      return note.isEmpty ? l10n.hoursNotSet : note;
+    }
+    final working = hours.workingDays;
+    if (working.isEmpty) return l10n.hoursNotSet;
+    if (!hours.hasOneWindow) return l10n.customHours;
+    final first = working.first.weekday;
+    final last = working.last.weekday;
+    final consecutive = last - first + 1 == working.length;
+    final days = consecutive
+        ? (working.length == 1
+              ? weekdayName(context, first, short: true)
+              : '${weekdayName(context, first, short: true)} – '
+                    '${weekdayName(context, last, short: true)}')
+        : working
+              .map((d) => weekdayName(context, d.weekday, short: true))
+              .join(', ');
+    return '$days · ${formatMinutes(context, working.first.startMinutes)} – '
+        '${formatMinutes(context, working.first.endMinutes)}';
+  }
+}
+
+class _NotRegistered extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return KayloCard(
+      child: EmptyState(
+        icon: Icons.badge_outlined,
+        title: l10n.notRegisteredTitle,
+        description: l10n.notRegisteredBody,
+      ),
+    );
+  }
+}
+
+class _VerificationChip extends StatelessWidget {
+  final VerificationStatus status;
+
+  const _VerificationChip({required this.status});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return switch (status) {
+      VerificationStatus.verified => KayloChip(
+        label: l10n.verifiedPartner,
+        icon: Icons.shield_rounded,
+        variant: KayloChipVariant.success,
+      ),
+      VerificationStatus.underReview => KayloChip(
+        label: l10n.verificationUnderReview,
+        icon: Icons.hourglass_top_rounded,
+        variant: KayloChipVariant.warning,
+      ),
+      VerificationStatus.rejected => KayloChip(
+        label: l10n.verificationRejected,
+        icon: Icons.error_outline_rounded,
+        variant: KayloChipVariant.error,
+      ),
+      VerificationStatus.unverified => KayloChip(
+        label: l10n.verificationNotStarted,
+        icon: Icons.shield_outlined,
+        variant: KayloChipVariant.neutral,
+      ),
+    };
   }
 }
 
@@ -362,6 +519,9 @@ class _MetricColumn extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
 
     return Column(
       children: [
@@ -376,9 +536,7 @@ class _MetricColumn extends StatelessWidget {
         Text(
           title,
           style: Theme.of(context).textTheme.labelSmall?.copyWith(
-            color: isDark
-                ? AppColors.textSecondaryDark
-                : AppColors.textSecondary,
+            color: secondary,
             fontWeight: FontWeight.w600,
           ),
         ),
@@ -386,67 +544,57 @@ class _MetricColumn extends StatelessWidget {
         if (subtitleWidget != null)
           subtitleWidget!
         else if (subtitle != null)
-          Text(
-            subtitle!,
-            style: TextStyle(
-              fontSize: 11,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondary,
-            ),
-          ),
+          Text(subtitle!, style: TextStyle(fontSize: 11, color: secondary)),
       ],
     );
   }
 }
 
-class _VerificationRow extends StatelessWidget {
+class _DocumentRow extends StatelessWidget {
   final String title;
-  final String subtitle;
-  final bool isVerified;
+  final DocumentStatus? status;
 
-  const _VerificationRow({
-    required this.title,
-    required this.subtitle,
-    required this.isVerified,
-  });
+  const _DocumentRow({required this.title, required this.status});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final l10n = AppLocalizations.of(context)!;
+    final (label, icon, variant) = switch (status) {
+      DocumentStatus.verified => (
+        l10n.statusVerified,
+        Icons.check_circle_rounded,
+        KayloChipVariant.success,
+      ),
+      DocumentStatus.pending => (
+        l10n.statusPending,
+        Icons.hourglass_top,
+        KayloChipVariant.warning,
+      ),
+      DocumentStatus.rejected => (
+        l10n.statusRejected,
+        Icons.error_outline_rounded,
+        KayloChipVariant.error,
+      ),
+      null => (
+        l10n.statusNotSubmitted,
+        Icons.upload_file_outlined,
+        KayloChipVariant.neutral,
+      ),
+    };
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: AppSpacing.s),
       child: Row(
         children: [
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  title,
-                  style: Theme.of(
-                    context,
-                  ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
-                ),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
-                  ),
-                ),
-              ],
+            child: Text(
+              title,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
             ),
           ),
-          KayloChip(
-            label: isVerified ? 'Verified' : 'Pending',
-            icon: isVerified ? Icons.check_circle_rounded : Icons.hourglass_top,
-            variant: isVerified
-                ? KayloChipVariant.success
-                : KayloChipVariant.warning,
-          ),
+          KayloChip(label: label, icon: icon, variant: variant),
         ],
       ),
     );

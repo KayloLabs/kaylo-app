@@ -1,66 +1,46 @@
 import '../../features/jobs/domain/job.dart';
+import '../../features/profile/domain/worker_profile.dart';
 
-class PartnerWorkerProfile {
-  final String id;
-  final String name;
-  final String phone;
-  final String email;
-  final double rating;
-  final int reviewsCount;
-  final int acceptanceRate;
-  final int completionRate;
-  final int totalJobs;
-  final String upiId;
-  final String bankAccount;
-  final bool aadhaarVerified;
-  final bool policeVerified;
-  final List<String> services;
-  final String district;
-  final String workingHours;
-
-  const PartnerWorkerProfile({
-    required this.id,
-    required this.name,
-    required this.phone,
-    required this.email,
-    required this.rating,
-    required this.reviewsCount,
-    required this.acceptanceRate,
-    required this.completionRate,
-    required this.totalJobs,
-    required this.upiId,
-    required this.bankAccount,
-    required this.aadhaarVerified,
-    required this.policeVerified,
-    required this.services,
-    required this.district,
-    required this.workingHours,
-  });
-}
-
+/// The sample worker (Sunil, a plumber and electrician in Kannur) and the
+/// catalogue he can pick services from.
 class PartnerSeed {
-  static const worker = PartnerWorkerProfile(
+  static const serviceOptions = [
+    ServiceOption(id: 'svc-plumbing', name: 'Plumbing Repair'),
+    ServiceOption(id: 'svc-electrical', name: 'Electrical Services'),
+    ServiceOption(id: 'svc-appliance', name: 'Appliance Repair'),
+    ServiceOption(id: 'svc-carpentry', name: 'Carpentry & Fitting'),
+    ServiceOption(id: 'svc-ac', name: 'AC Service'),
+    ServiceOption(id: 'svc-painting', name: 'Painting'),
+    ServiceOption(id: 'svc-cleaning', name: 'House Cleaning'),
+    ServiceOption(id: 'svc-coconut', name: 'Coconut Plucking'),
+    ServiceOption(id: 'svc-gardening', name: 'Gardening'),
+  ];
+
+  static final worker = WorkerProfile(
     id: 'worker-sunil-01',
+    personId: 'person-sunil-01',
     name: 'Sunil Kumar',
     phone: '+91 98470 12345',
     email: 'sunil.kaylopartner@gmail.com',
+    experienceYears: 9,
+    travelRadiusKm: 15,
+    verification: VerificationStatus.verified,
     rating: 4.88,
     reviewsCount: 142,
-    acceptanceRate: 97,
-    completionRate: 99,
     totalJobs: 142,
+    joinedOn: DateTime(2024, 3, 12),
+    district: 'Kannur',
+    services: serviceOptions.sublist(0, 4),
     upiId: 'sunilkumar@oksbi',
     bankAccount: 'State Bank of India •••• 5678',
-    aadhaarVerified: true,
-    policeVerified: true,
-    services: [
-      'Plumbing Repair',
-      'Electrical Services',
-      'Appliance Repair',
-      'Carpentry & Fitting',
+    documents: const [
+      WorkerDocument(type: 'aadhaar_front', status: DocumentStatus.verified),
+      WorkerDocument(type: 'aadhaar_back', status: DocumentStatus.verified),
+      WorkerDocument(
+        type: 'police_certificate',
+        status: DocumentStatus.verified,
+      ),
     ],
-    district: 'Kannur District (15 km radius)',
-    workingHours: 'Mon – Sat: 8:00 AM – 7:00 PM',
   );
 
   static List<Job> initialJobs() {

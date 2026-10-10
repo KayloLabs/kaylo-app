@@ -7,10 +7,11 @@ import 'package:kaylo_ui/theme/app_radius.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/empty_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
+import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 
-import '../../../auth/application/partner_session.dart';
+import '../../../profile/application/profile_providers.dart';
 import '../../../earnings/application/earnings_providers.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/jobs_providers.dart';
@@ -23,7 +24,8 @@ class JobsHomeScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final worker = ref.watch(partnerWorkerProfileProvider);
+    final profile = ref.watch(workerProfileProvider).asData?.value;
+    final district = profile?.district;
     final isOnline = ref.watch(dutyStatusProvider).asData?.value ?? true;
     final earnings = ref.watch(earningsSummaryProvider);
     final activeJobAsync = ref.watch(activeJobProvider);
@@ -41,7 +43,10 @@ class JobsHomeScreen extends ConsumerWidget {
               ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
             ),
             Text(
-              '${worker.name} • Kannur',
+              [
+                if ((profile?.name ?? '').isNotEmpty) profile!.name,
+                if ((district ?? '').isNotEmpty) district!,
+              ].join(' • '),
               style: Theme.of(context).textTheme.bodySmall?.copyWith(
                 color: isDark
                     ? AppColors.textSecondaryDark
@@ -72,9 +77,16 @@ class JobsHomeScreen extends ConsumerWidget {
           // Duty Toggle Pill
           _DutyTogglePill(
             isOnline: isOnline,
-            onChanged: (online) {
+            district: district,
+            onChanged: (online) async {
               KayloFeedback.press();
-              ref.read(jobsRepositoryProvider).setDuty(online);
+              try {
+                await ref.read(dutySwitchProvider).set(online);
+              } catch (_) {
+                if (context.mounted) {
+                  KayloSnackbar.showError(context, l10n.dutyUpdateFailed);
+                }
+              }
             },
           ),
           const SizedBox(height: AppSpacing.m),
@@ -100,7 +112,7 @@ class JobsHomeScreen extends ConsumerWidget {
               Expanded(
                 child: _SummaryBox(
                   label: l10n.rating,
-                  value: '${worker.rating} ★',
+                  value: '${(profile?.rating ?? 0).toStringAsFixed(1)} ★',
                   color: AppColors.secondaryAccent,
                 ),
               ),
@@ -200,9 +212,14 @@ class JobsHomeScreen extends ConsumerWidget {
 
 class _DutyTogglePill extends StatelessWidget {
   final bool isOnline;
+  final String? district;
   final ValueChanged<bool> onChanged;
 
-  const _DutyTogglePill({required this.isOnline, required this.onChanged});
+  const _DutyTogglePill({
+    required this.isOnline,
+    required this.district,
+    required this.onChanged,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -233,8 +250,8 @@ class _DutyTogglePill extends StatelessWidget {
               color: isOnline
                   ? AppColors.brandPrimaryBright
                   : (isDark
-                      ? AppColors.textSecondaryDark
-                      : AppColors.textSecondary),
+                        ? AppColors.textSecondaryDark
+                        : AppColors.textSecondary),
               shape: BoxShape.circle,
             ),
           ),
@@ -255,9 +272,11 @@ class _DutyTogglePill extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  isOnline
-                      ? l10n.dutyTakingOrders('Kannur')
-                      : l10n.dutyNotReceivingRequests,
+                  !isOnline
+                      ? l10n.dutyNotReceivingRequests
+                      : (district ?? '').isEmpty
+                      ? l10n.dutyTakingOrdersAnywhere
+                      : l10n.dutyTakingOrders(district!),
                   style: TextStyle(
                     fontSize: 11,
                     color: isDark

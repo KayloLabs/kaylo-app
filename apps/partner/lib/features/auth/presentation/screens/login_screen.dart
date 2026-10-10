@@ -10,7 +10,10 @@ import 'package:kaylo_ui/widgets/kaylo_logo.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 
+import 'package:kaylo_core/config/app_env.dart';
+
 import '../../../../core/router/routes.dart';
+import '../../domain/partner_auth_repository.dart';
 import '../../application/partner_session.dart';
 
 class PartnerLoginScreen extends ConsumerStatefulWidget {
@@ -21,8 +24,12 @@ class PartnerLoginScreen extends ConsumerStatefulWidget {
 }
 
 class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
-  final _phoneController = TextEditingController(text: '98470 12345');
-  final _otpController = TextEditingController(text: '1234');
+  // The sample build pre-fills the demo number and code.
+  final _phoneController = TextEditingController(
+    text: useMockData ? '98470 12345' : '',
+  );
+  final _otpController = TextEditingController(text: useMockData ? '1234' : '');
+  int get _codeLength => useMockData ? 4 : 6;
 
   bool _isOtpSent = false;
   bool _isLoading = false;
@@ -54,6 +61,8 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
         KayloFeedback.press();
         setState(() => _isOtpSent = true);
       }
+    } on PartnerAuthMessage catch (e) {
+      if (mounted) KayloSnackbar.showError(context, e.message);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -63,10 +72,12 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
     final phone = _phoneController.text.trim();
     final otp = _otpController.text.trim();
 
-    if (otp.length != 4) {
+    if (otp.length != _codeLength) {
       KayloSnackbar.showError(
         context,
-        'Please enter the 4-digit OTP (e.g. 1234)',
+        useMockData
+            ? 'Please enter the 4-digit OTP (e.g. 1234)'
+            : 'Please enter the $_codeLength-digit code from the SMS',
       );
       return;
     }
@@ -79,11 +90,27 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
       if (!mounted) return;
       if (success) {
         KayloFeedback.press();
-        KayloSnackbar.showSuccess(context, 'Welcome back, Sunil!');
+        KayloSnackbar.showSuccess(context, 'Welcome back!');
         context.go(Routes.jobs);
       } else {
         KayloSnackbar.showError(context, 'Invalid OTP. Enter 1234 for demo.');
       }
+    } on PartnerAuthMessage catch (e) {
+      if (mounted) KayloSnackbar.showError(context, e.message);
+    } finally {
+      if (mounted) setState(() => _isLoading = false);
+    }
+  }
+
+  Future<void> _handleGoogle() async {
+    setState(() => _isLoading = true);
+    try {
+      await ref.read(partnerAuthRepositoryProvider).signInWithGoogle();
+      if (!mounted) return;
+      KayloFeedback.press();
+      context.go(Routes.jobs);
+    } on PartnerAuthMessage catch (e) {
+      if (mounted) KayloSnackbar.showError(context, e.message);
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -175,6 +202,13 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
           isLoading: _isLoading,
           onPressed: _handleSendOtp,
         ),
+        const SizedBox(height: AppSpacing.m),
+        KayloButton(
+          text: 'Continue with Google',
+          icon: Icons.g_mobiledata_rounded,
+          variant: KayloButtonVariant.secondary,
+          onPressed: _isLoading ? null : _handleGoogle,
+        ),
       ],
     );
   }
@@ -192,7 +226,9 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
         ),
         const SizedBox(height: AppSpacing.xs),
         Text(
-          'Enter 4-digit code sent to +91 ${_phoneController.text.trim()} (Demo code: 1234)',
+          useMockData
+              ? 'Enter 4-digit code sent to +91 ${_phoneController.text.trim()} (Demo code: 1234)'
+              : 'Enter the $_codeLength-digit code sent to ${_phoneController.text.trim()}',
           style: Theme.of(context).textTheme.bodySmall?.copyWith(
             color: isDark
                 ? AppColors.textSecondaryDark
@@ -202,11 +238,11 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
         const SizedBox(height: AppSpacing.l),
         KayloTextField(
           controller: _otpController,
-          label: '4-digit OTP',
-          hintText: '1234',
+          label: useMockData ? '4-digit OTP' : 'Verification code',
+          hintText: useMockData ? '1234' : '',
           prefixIcon: const Icon(Icons.lock_outline_rounded),
           keyboardType: TextInputType.number,
-          maxLength: 4,
+          maxLength: _codeLength,
         ),
         const SizedBox(height: AppSpacing.m),
         Row(
@@ -216,13 +252,14 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
               onPressed: () => setState(() => _isOtpSent = false),
               child: const Text('Change number'),
             ),
-            TextButton(
-              onPressed: () {
-                _otpController.text = '1234';
-                _handleVerifyOtp();
-              },
-              child: const Text('Fill 1234'),
-            ),
+            if (useMockData)
+              TextButton(
+                onPressed: () {
+                  _otpController.text = '1234';
+                  _handleVerifyOtp();
+                },
+                child: const Text('Fill 1234'),
+              ),
           ],
         ),
         const SizedBox(height: AppSpacing.m),

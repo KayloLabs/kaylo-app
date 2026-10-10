@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/kaylo_core.dart';
 import 'package:kaylo_ui/kaylo_ui.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
@@ -19,6 +20,18 @@ Future<void> main() async {
   } on UnsupportedError {
     // No Firebase options for this platform (desktop, or not configured
     // yet); the app still runs, without push, crash reports or analytics.
+  }
+
+  if (supabaseConfigured) {
+    // The worker signs in with Firebase; Supabase verifies the Firebase
+    // ID token instead of running its own auth (migration 0005).
+    await Supabase.initialize(
+      url: supabaseUrl,
+      publishableKey: supabaseAnonKey,
+      accessToken: FirebaseBootstrap.isReady && !useMock
+          ? FirebaseBootstrap.supabaseAccessToken
+          : null,
+    );
   }
   runApp(
     ProviderScope(

@@ -48,6 +48,14 @@ class MockPartnerAuthRepository implements PartnerAuthRepository {
   }
 
   @override
+  Future<void> signInWithGoogle() async {
+    await Future.delayed(const Duration(milliseconds: 300));
+    _isAuth = true;
+    await _prefs?.setBool(_authKey, true);
+    _controller.add(true);
+  }
+
+  @override
   Future<void> signOut() async {
     _isAuth = false;
     await _prefs?.setBool(_authKey, false);

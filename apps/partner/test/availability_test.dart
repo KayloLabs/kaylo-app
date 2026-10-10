@@ -168,7 +168,7 @@ void main() {
     tester.view.devicePixelRatio = 3.0;
     addTearDown(tester.view.reset);
     final (container, app) = await createHarness();
-    final repo = container.read(availabilityRepositoryProvider);
+    var repo = container.read(availabilityRepositoryProvider);
     final now = DateTime.now();
     await repo.addTimeOff(
       startsOn: now.add(const Duration(days: 5)),
@@ -177,6 +177,9 @@ void main() {
     );
     await tester.pumpWidget(app);
     await signIn(tester);
+    // Sign-in replaces account-scoped repositories. Inspect the same active
+    // instance the screen edits, rather than the disposed pre-login fixture.
+    repo = container.read(availabilityRepositoryProvider);
 
     await tester.tap(find.text('Profile'));
     await tester.pumpAndSettle();

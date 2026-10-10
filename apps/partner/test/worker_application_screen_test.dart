@@ -16,6 +16,7 @@ import 'package:kaylo_partner/features/onboarding/presentation/screens/worker_ap
 import 'package:kaylo_partner/l10n/generated/app_localizations.dart';
 import 'package:kaylo_ui/theme/app_theme.dart';
 import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
+import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class _DocumentPicker implements ApplicationDocumentPicker {
@@ -99,6 +100,13 @@ Future<void> enter(WidgetTester tester, String label, String text) async {
 }
 
 Future<void> tapText(WidgetTester tester, String text) async {
+  if (find.text(text).evaluate().isEmpty) {
+    await tester.scrollUntilVisible(
+      find.text(text),
+      250,
+      scrollable: find.byType(Scrollable).first,
+    );
+  }
   final finder = find.text(text).last;
   await tester.ensureVisible(finder);
   await tester.tap(finder);
@@ -224,7 +232,9 @@ void main() {
           initialLocation: Routes.applicationStatus,
         );
         await enter(tester, 'Application reference', 'ka-old000001');
-        await tester.tap(find.text('Check application status').last);
+        await tester.tap(
+          find.widgetWithText(KayloButton, 'Check application status'),
+        );
         await tester.pump();
         expect(repo.requestedReferences, ['KA-OLD000001']);
         await enter(tester, 'Application reference', 'KA-NEW000002');
@@ -251,7 +261,9 @@ void main() {
         );
 
         repo.pending = Completer<ApplicationStatus>();
-        await tester.tap(find.text('Check application status').last);
+        await tester.tap(
+          find.widgetWithText(KayloButton, 'Check application status'),
+        );
         await tester.pump();
         repo.pending.complete(
           const ApplicationStatus(

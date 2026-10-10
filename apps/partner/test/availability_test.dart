@@ -34,13 +34,11 @@ Future<(ProviderContainer, Widget)> createHarness() async {
 
 Future<void> signIn(WidgetTester tester) async {
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Continue'));
+  await tester.tap(find.text('Sign in').last);
   await tester.pumpAndSettle();
-  await tester.tap(find.text('Verify & Sign In'));
-  await tester.pumpAndSettle();
-  // The "Welcome back!" snackbar covers the bottom of the screen for four
-  // seconds; let it go before tapping anything down there.
-  await tester.pump(const Duration(seconds: 5));
+  await tester.enterText(find.byType(TextFormField).at(0), 'NewKayloPass123!');
+  await tester.enterText(find.byType(TextFormField).at(1), 'NewKayloPass123!');
+  await tester.tap(find.text('Save password'));
   await tester.pumpAndSettle();
 }
 

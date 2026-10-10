@@ -1,211 +1,249 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/foundation.dart' show debugPrint, kIsWeb;
-import 'package:google_sign_in/google_sign_in.dart';
-import 'package:kaylo_core/auth/profile_store.dart';
-import 'package:kaylo_core/config/app_env.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../domain/partner_auth_repository.dart';
+import '../../notifications/data/partner_push_service.dart';
 
-/// Worker sign-in through Firebase Authentication: phone OTP and Google.
-/// The person row lives in Supabase, which trusts the Firebase ID token
-/// (migration 0005). No customer row is created for a worker; the worker
-/// row comes from registration (`register_worker`).
+typedef PartnerStateLoader = Future<Map<String, dynamic>?> Function();
+typedef PasswordChangeVerifier = Future<void> Function(String token);
+
+/// Only Kaylo-provisioned credentials may enter this app. This repository
+/// never creates a person, worker, role, or customer while signing in.
 class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   final FirebaseAuth _auth;
-  final ProfileSync _profiles;
-  final Future<String?> Function() _googleIdToken;
-
-  final _state = StreamController<bool>.broadcast();
+  final PartnerStateLoader _loadState;
+  final PasswordChangeVerifier _verifyPasswordChange;
+  final Future<void> Function() _clearPushToken;
+  final _state = StreamController<PartnerAccess>.broadcast();
   StreamSubscription<User?>? _subscription;
-  bool _signedIn = false;
-
-  /// Mobile: the id Firebase hands back once the SMS is sent.
-  /// Web: the pending confirmation (web verifies through reCAPTCHA).
-  String? _verificationId;
-  ConfirmationResult? _webConfirmation;
+  PartnerAccess _access = const PartnerAccess(PartnerAccessStatus.signedOut);
+  String? _signedInPassword;
+  bool _passwordAwaitingConfirmation = false;
+  bool _signingIn = false;
+  int _generation = 0;
+  int _accessCheck = 0;
 
   FirebasePartnerAuthRepository({
     FirebaseAuth? auth,
-    ProfileStore? profiles,
-    Future<String?> Function()? googleIdToken,
+    PartnerStateLoader? loadState,
+    PasswordChangeVerifier? verifyPasswordChange,
+    Future<void> Function()? clearPushToken,
   }) : _auth = auth ?? FirebaseAuth.instance,
-       _profiles = ProfileSync(
-         profiles ??
-             SupabaseProfileStore(
-               supabase.Supabase.instance.client,
-               createsCustomer: false,
-             ),
-       ),
-       _googleIdToken = googleIdToken ?? _googleIdTokenFromPlugin {
-    _signedIn = _auth.currentUser != null;
-    _subscription = _auth.authStateChanges().listen((user) async {
-      if (user != null) await _syncProfile(user);
-      _signedIn = user != null;
-      _state.add(_signedIn);
+       _loadState = loadState ?? _loadFromSupabase,
+       _verifyPasswordChange = verifyPasswordChange ?? _verifyWithBackend,
+       _clearPushToken = clearPushToken ?? clearPartnerPushToken {
+    _subscription = _auth.idTokenChanges().listen((user) {
+      if (_signingIn) return;
+      if (user == null) {
+        _generation++;
+        // Covers SDK-driven expiry/sign-out, where the UI did not call signOut.
+        // Explicit signOut already cleared the binding before publishing null.
+        if (_access.signedIn) {
+          unawaited(_clearPushToken().catchError((Object _) {}));
+        }
+        _publish(const PartnerAccess(PartnerAccessStatus.signedOut));
+      } else {
+        unawaited(checkAccess());
+      }
     });
   }
 
-  Future<void> _syncProfile(User user) async {
-    final identity = SignInIdentity(
-      authUserId: user.uid,
-      displayName: user.displayName,
-      email: user.email,
-      phone: user.phoneNumber,
-      photoUrl: user.photoURL,
+  static Future<Map<String, dynamic>?> _loadFromSupabase() async {
+    final result = await supabase.Supabase.instance.client.rpc(
+      'partner_login_state',
     );
-    for (var attempt = 1; attempt <= 2; attempt++) {
-      try {
-        await _profiles.resolve(identity);
-        return;
-      } catch (e) {
-        debugPrint('Kaylo Partner: profile sync attempt $attempt failed: $e');
-        if (attempt == 1) {
-          await Future<void>.delayed(const Duration(milliseconds: 800));
+    return result == null ? null : Map<String, dynamic>.from(result as Map);
+  }
+
+  static Future<void> _verifyWithBackend(String token) async {
+    final result = await supabase.Supabase.instance.client.functions.invoke(
+      'partner-password-changed',
+      headers: {'Authorization': 'Bearer $token'},
+      body: <String, dynamic>{},
+    );
+    if (result.data is! Map || result.data['ok'] != true) {
+      throw const PartnerAuthException(PartnerAuthError.passwordConfirmation);
+    }
+  }
+
+  void _publish(PartnerAccess access) {
+    if (_access == access) return;
+    _access = access;
+    if (!_state.isClosed) _state.add(access);
+  }
+
+  bool _issuedIdentity(User user) {
+    final email = user.email?.toLowerCase() ?? '';
+    return RegExp(r'^kp-[0-9]{6}@partners\.kaylo\.app$').hasMatch(email) &&
+        user.providerData.any((provider) => provider.providerId == 'password');
+  }
+
+  @override
+  Future<PartnerAccess> checkAccess() async {
+    final user = _auth.currentUser;
+    final generation = _generation;
+    final accessCheck = ++_accessCheck;
+    if (user == null) {
+      _publish(const PartnerAccess(PartnerAccessStatus.signedOut));
+      return _access;
+    }
+    if (!_issuedIdentity(user)) {
+      await signOut();
+      return _access;
+    }
+    try {
+      final data = await _loadState().timeout(const Duration(seconds: 15));
+      if (_generation != generation ||
+          accessCheck != _accessCheck ||
+          _auth.currentUser?.uid != user.uid) {
+        return _access;
+      }
+      if (data == null) {
+        _publish(const PartnerAccess(PartnerAccessStatus.registration));
+      } else {
+        final id = data['partner_id'] as String?;
+        final workerId = data['worker_id'] as String?;
+        if (id == null ||
+            workerId == null ||
+            partnerEmail(id) != user.email?.toLowerCase()) {
+          await signOut();
+          return _access;
         }
-      }
-    }
-  }
-
-  /// Indian numbers typed as ten digits become +91 numbers; anything that
-  /// already carries a country code is kept.
-  static String normalisePhone(String raw) {
-    final cleaned = raw.replaceAll(RegExp(r'[^0-9+]'), '');
-    if (cleaned.startsWith('+')) return cleaned;
-    if (cleaned.length == 10) return '+91$cleaned';
-    if (cleaned.length == 12 && cleaned.startsWith('91')) return '+$cleaned';
-    return '+$cleaned';
-  }
-
-  @override
-  Future<bool> sendOtp(String phone) async {
-    final number = normalisePhone(phone);
-    try {
-      if (kIsWeb) {
-        _webConfirmation = await _auth.signInWithPhoneNumber(number);
-        return true;
-      }
-      final sent = Completer<void>();
-      await _auth.verifyPhoneNumber(
-        phoneNumber: number,
-        timeout: const Duration(seconds: 60),
-        verificationCompleted: (credential) async {
-          // Android read the SMS itself.
-          try {
-            await _auth.signInWithCredential(credential);
-          } catch (_) {}
-          if (!sent.isCompleted) sent.complete();
-        },
-        verificationFailed: (e) {
-          if (!sent.isCompleted) {
-            sent.completeError(PartnerAuthMessage(describePartnerAuthError(e)));
-          }
-        },
-        codeSent: (verificationId, _) {
-          _verificationId = verificationId;
-          if (!sent.isCompleted) sent.complete();
-        },
-        codeAutoRetrievalTimeout: (verificationId) {
-          _verificationId = verificationId;
-        },
-      );
-      await sent.future;
-      return true;
-    } on FirebaseAuthException catch (e) {
-      throw PartnerAuthMessage(describePartnerAuthError(e));
-    }
-  }
-
-  @override
-  Future<bool> verifyOtp(String phone, String code) async {
-    try {
-      if (kIsWeb) {
-        final confirmation = _webConfirmation;
-        if (confirmation == null) {
-          throw PartnerAuthMessage('Request a new code first.');
-        }
-        await confirmation.confirm(code.trim());
-        return true;
-      }
-      final verificationId = _verificationId;
-      if (verificationId == null) {
-        throw PartnerAuthMessage('Request a new code first.');
-      }
-      await _auth.signInWithCredential(
-        PhoneAuthProvider.credential(
-          verificationId: verificationId,
-          smsCode: code.trim(),
-        ),
-      );
-      return true;
-    } on FirebaseAuthException catch (e) {
-      throw PartnerAuthMessage(describePartnerAuthError(e));
-    }
-  }
-
-  @override
-  Future<void> signInWithGoogle() async {
-    try {
-      if (kIsWeb) {
-        await _auth.signInWithPopup(GoogleAuthProvider()..addScope('email'));
-        return;
-      }
-      final idToken = await _googleIdToken();
-      if (idToken == null) {
-        throw PartnerAuthMessage(
-          'Google did not return a sign-in token. Try again.',
+        final verification = data['verification_status'] as String?;
+        // Password state must be explicit: a missing flag never grants access.
+        final status = data['must_change_password'] == true
+            ? PartnerAccessStatus.passwordChange
+            : data['must_change_password'] != false
+            ? PartnerAccessStatus.unavailable
+            : verification == 'verified'
+            ? PartnerAccessStatus.ready
+            : PartnerAccessStatus.verification;
+        _publish(
+          PartnerAccess(
+            status,
+            partnerId: id,
+            workerId: workerId,
+            verificationStatus: verification,
+          ),
         );
       }
-      await _auth.signInWithCredential(
-        GoogleAuthProvider.credential(idToken: idToken),
-      );
-    } on FirebaseAuthException catch (e) {
-      throw PartnerAuthMessage(describePartnerAuthError(e));
-    }
-  }
-
-  static Future<void>? _googleInit;
-
-  static Future<String?> _googleIdTokenFromPlugin() async {
-    try {
-      _googleInit ??= GoogleSignIn.instance.initialize(
-        serverClientId: googleServerClientId.isEmpty
-            ? null
-            : googleServerClientId,
-      );
-      await _googleInit;
-      final account = await GoogleSignIn.instance.authenticate();
-      return account.authentication.idToken;
-    } on GoogleSignInException catch (e) {
-      if (e.code == GoogleSignInExceptionCode.canceled) {
-        throw PartnerAuthMessage('Sign-in cancelled.');
+    } catch (error) {
+      if (_generation != generation || accessCheck != _accessCheck) {
+        return _access;
       }
-      throw PartnerAuthMessage(
-        e.description ?? 'Google sign-in failed. Try again.',
-      );
+      if (error is FirebaseAuthException &&
+              [
+                'user-disabled',
+                'user-token-expired',
+                'invalid-user-token',
+              ].contains(error.code) ||
+          error is supabase.PostgrestException &&
+              [
+                'PGRST301',
+                'PGRST302',
+                'PGRST303',
+                '28000',
+              ].contains(error.code)) {
+        await signOut();
+      } else {
+        _publish(const PartnerAccess(PartnerAccessStatus.unavailable));
+      }
+    }
+    return _access;
+  }
+
+  @override
+  Future<PartnerAccess> signIn(String partnerId, String password) async {
+    final email = partnerEmail(partnerId);
+    if (password.isEmpty) {
+      throw const PartnerAuthException(PartnerAuthError.invalidCredentials);
+    }
+    _generation++;
+    _signingIn = true;
+    try {
+      await _auth.signInWithEmailAndPassword(email: email, password: password);
+      _signedInPassword = password;
+      _passwordAwaitingConfirmation = false;
+      final access = await checkAccess();
+      if (access.status == PartnerAccessStatus.signedOut) {
+        throw const PartnerAuthException(PartnerAuthError.identityNotAllowed);
+      }
+      return access;
+    } on FirebaseAuthException catch (error) {
+      throw PartnerAuthException(partnerAuthError(error));
+    } finally {
+      _signingIn = false;
     }
   }
 
   @override
-  Future<bool> isAuthenticated() async => _auth.currentUser != null;
+  Future<PartnerAccess> changePassword(String password) async {
+    final user = _auth.currentUser;
+    if (user == null || !_issuedIdentity(user)) {
+      throw const PartnerAuthException(PartnerAuthError.sessionExpired);
+    }
+    if (password.length < 12) {
+      throw const PartnerAuthException(PartnerAuthError.weakPassword);
+    }
+    if (!_passwordAwaitingConfirmation && password == _signedInPassword) {
+      throw const PartnerAuthException(PartnerAuthError.differentPassword);
+    }
+    try {
+      if (!_passwordAwaitingConfirmation) {
+        await user.updatePassword(password);
+        _signedInPassword = null;
+        _passwordAwaitingConfirmation = true;
+      }
+      final token = await user.getIdToken(true);
+      if (token == null) {
+        throw const PartnerAuthException(PartnerAuthError.sessionExpired);
+      }
+      await _verifyPasswordChange(token).timeout(const Duration(seconds: 20));
+      final access = await checkAccess();
+      if (access.status == PartnerAccessStatus.passwordChange ||
+          access.status == PartnerAccessStatus.unavailable) {
+        throw const PartnerAuthException(PartnerAuthError.passwordConfirmation);
+      }
+      _passwordAwaitingConfirmation = false;
+      return access;
+    } on FirebaseAuthException catch (error) {
+      throw PartnerAuthException(partnerAuthError(error));
+    } on supabase.FunctionException catch (error) {
+      if (error.status == 401 || error.status == 403) {
+        await signOut();
+        throw PartnerAuthException(
+          error.status == 401
+              ? PartnerAuthError.sessionExpired
+              : PartnerAuthError.identityNotAllowed,
+        );
+      }
+      throw const PartnerAuthException(PartnerAuthError.passwordConfirmation);
+    } on PartnerAuthException {
+      rethrow;
+    } catch (_) {
+      throw const PartnerAuthException(PartnerAuthError.passwordConfirmation);
+    }
+  }
 
   @override
-  Stream<bool> watchAuthState() async* {
-    yield _signedIn;
+  Future<bool> isAuthenticated() async => (await checkAccess()).signedIn;
+  @override
+  Stream<PartnerAccess> watchAccess() async* {
+    yield await checkAccess();
     yield* _state.stream;
   }
 
   @override
   Future<void> signOut() async {
-    _verificationId = null;
-    _webConfirmation = null;
-    if (!kIsWeb) {
-      try {
-        await GoogleSignIn.instance.signOut();
-      } catch (_) {}
-    }
+    _generation++;
+    _signedInPassword = null;
+    _passwordAwaitingConfirmation = false;
+    try {
+      await _clearPushToken();
+    } catch (_) {}
+    _publish(const PartnerAccess(PartnerAccessStatus.signedOut));
     await _auth.signOut();
   }
 
@@ -216,22 +254,19 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   }
 }
 
-/// Firebase error codes in words the sign-in screen can show as they are.
-String describePartnerAuthError(FirebaseAuthException e) => switch (e.code) {
-  'invalid-phone-number' => 'That phone number does not look right.',
-  'invalid-verification-code' =>
-    'That code is not right. Check the SMS and try again.',
-  'session-expired' ||
-  'code-expired' => 'That code has expired. Request a new one.',
-  'too-many-requests' =>
-    'Too many attempts. Please wait a while and try again.',
-  'network-request-failed' =>
-    'No connection. Check your network and try again.',
-  'quota-exceeded' => 'SMS limit reached for today. Please try again later.',
-  'popup-closed-by-user' || 'cancelled-popup-request' => 'Sign-in cancelled.',
-  'popup-blocked' =>
-    'The browser blocked the sign-in window. Allow pop-ups and try again.',
-  'operation-not-allowed' =>
-    'This sign-in method is not enabled for Kaylo yet.',
-  _ => e.message ?? 'Sign-in failed. Please try again.',
-};
+PartnerAuthError partnerAuthError(FirebaseAuthException error) =>
+    switch (error.code) {
+      'invalid-credential' ||
+      'wrong-password' ||
+      'user-not-found' ||
+      'invalid-email' => PartnerAuthError.invalidCredentials,
+      'too-many-requests' => PartnerAuthError.tooManyAttempts,
+      'network-request-failed' => PartnerAuthError.network,
+      'weak-password' ||
+      'password-does-not-meet-requirements' => PartnerAuthError.weakPassword,
+      'requires-recent-login' ||
+      'user-token-expired' ||
+      'invalid-user-token' ||
+      'user-disabled' => PartnerAuthError.sessionExpired,
+      _ => PartnerAuthError.unavailable,
+    };

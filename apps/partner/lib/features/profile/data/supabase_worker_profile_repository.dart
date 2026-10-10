@@ -26,7 +26,9 @@ class SupabaseWorkerProfileRepository implements WorkerProfileRepository {
     try {
       final row = await _client.rpc('my_worker_profile');
       if (row == null) return null;
-      return WorkerProfile.fromJson(Map<String, dynamic>.from(row as Map));
+      return _withPhoto(
+        WorkerProfile.fromJson(Map<String, dynamic>.from(row as Map)),
+      );
     } catch (e) {
       throw mapSupabaseError(e);
     }
@@ -43,9 +45,24 @@ class SupabaseWorkerProfileRepository implements WorkerProfileRepository {
         Map<String, dynamic>.from(row as Map),
       );
       if (!_refresh.isClosed) _refresh.add(null);
-      return profile;
+      return _withPhoto(profile);
     } catch (e) {
       throw mapSupabaseError(e);
+    }
+  }
+
+  Future<WorkerProfile> _withPhoto(WorkerProfile profile) async {
+    final path = profile.photoUrl;
+    if (path == null || !path.startsWith('applications/')) return profile;
+    // Application photos remain private. Only this issued worker's RLS session
+    // may obtain the short-lived URL used by their profile screen.
+    try {
+      final url = await _client.storage
+          .from('worker-documents')
+          .createSignedUrl(path, 3600);
+      return profile.copyWith(photoUrl: url);
+    } catch (_) {
+      return profile.copyWith(photoUrl: '');
     }
   }
 

@@ -14,9 +14,12 @@ class MockPartnerLocaleNotifier extends PartnerLocaleNotifier {
 }
 
 void main() {
-  testWidgets('app language changes to Malayalam when locale is ml', (tester) async {
+  testWidgets('app language changes to Malayalam when locale is ml', (
+    tester,
+  ) async {
     SharedPreferences.setMockInitialValues({
-      'kaylo_partner_is_authenticated': true,
+      'kaylo_partner_issued_session': 'KP-000123',
+      'kaylo_partner_password_changed': true,
     });
     final prefs = await SharedPreferences.getInstance();
 

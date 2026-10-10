@@ -1,274 +1,206 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
+import 'package:kaylo_core/config/app_env.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
-import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/kaylo_button.dart';
 import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_logo.dart';
-import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
-
-import 'package:kaylo_core/config/app_env.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/router/routes.dart';
-import '../../domain/partner_auth_repository.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../application/partner_session.dart';
+import '../../domain/partner_auth_repository.dart';
+import 'auth_messages.dart';
+
+Future<void> contactPartnerSupport(BuildContext context) async {
+  final l10n = AppLocalizations.of(context)!;
+  var opened = false;
+  try {
+    opened = await launchUrl(Uri(scheme: 'mailto', path: 'kayloapp@gmail.com'));
+  } catch (_) {
+    // Keep the support address available even without an email application.
+  }
+  if (!opened && context.mounted) {
+    await showDialog<void>(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text(l10n.authSupport),
+        content: const SelectableText('kayloapp@gmail.com'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+}
 
 class PartnerLoginScreen extends ConsumerStatefulWidget {
   const PartnerLoginScreen({super.key});
-
   @override
   ConsumerState<PartnerLoginScreen> createState() => _PartnerLoginScreenState();
 }
 
 class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
-  // The sample build pre-fills the demo number and code.
-  final _phoneController = TextEditingController(
-    text: useMockData ? '98470 12345' : '',
-  );
-  final _otpController = TextEditingController(text: useMockData ? '1234' : '');
-  int get _codeLength => useMockData ? 4 : 6;
-
-  bool _isOtpSent = false;
-  bool _isLoading = false;
+  final _id = TextEditingController(text: useMockData ? 'KP-000123' : '');
+  final _password = TextEditingController(text: useMockData ? 'kaylo123' : '');
+  bool _loading = false;
+  bool _showPassword = false;
+  String? _error;
 
   @override
   void dispose() {
-    _phoneController.dispose();
-    _otpController.dispose();
+    _id.dispose();
+    _password.dispose();
     super.dispose();
   }
 
-  Future<void> _handleSendOtp() async {
-    final phone = _phoneController.text.trim().replaceAll(RegExp(r'\s+'), '');
-    if (phone.length < 10) {
-      KayloSnackbar.showError(
-        context,
-        'Please enter a valid 10-digit phone number',
-      );
+  Future<void> _signIn() async {
+    if (_loading) return;
+    final l10n = AppLocalizations.of(context)!;
+    if (normalizePartnerId(_id.text) == null) {
+      setState(() => _error = l10n.authInvalidId);
       return;
     }
-
-    setState(() => _isLoading = true);
+    setState(() {
+      _loading = true;
+      _error = null;
+    });
     try {
-      final success = await ref
+      await ref
           .read(partnerAuthRepositoryProvider)
-          .sendOtp(phone);
-      if (!mounted) return;
-      if (success) {
-        KayloFeedback.press();
-        setState(() => _isOtpSent = true);
-      }
-    } on PartnerAuthMessage catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.message);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _handleVerifyOtp() async {
-    final phone = _phoneController.text.trim();
-    final otp = _otpController.text.trim();
-
-    if (otp.length != _codeLength) {
-      KayloSnackbar.showError(
-        context,
-        useMockData
-            ? 'Please enter the 4-digit OTP (e.g. 1234)'
-            : 'Please enter the $_codeLength-digit code from the SMS',
-      );
-      return;
-    }
-
-    setState(() => _isLoading = true);
-    try {
-      final success = await ref
-          .read(partnerAuthRepositoryProvider)
-          .verifyOtp(phone, otp);
-      if (!mounted) return;
-      if (success) {
-        KayloFeedback.press();
-        KayloSnackbar.showSuccess(context, 'Welcome back!');
-        context.go(Routes.jobs);
-      } else {
-        KayloSnackbar.showError(context, 'Invalid OTP. Enter 1234 for demo.');
-      }
-    } on PartnerAuthMessage catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.message);
-    } finally {
-      if (mounted) setState(() => _isLoading = false);
-    }
-  }
-
-  Future<void> _handleGoogle() async {
-    setState(() => _isLoading = true);
-    try {
-      await ref.read(partnerAuthRepositoryProvider).signInWithGoogle();
+          .signIn(_id.text, _password.text);
       if (!mounted) return;
       KayloFeedback.press();
       context.go(Routes.jobs);
-    } on PartnerAuthMessage catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.message);
+    } catch (error) {
+      if (mounted) setState(() => _error = partnerAuthMessage(l10n, error));
     } finally {
-      if (mounted) setState(() => _isLoading = false);
+      if (mounted) setState(() => _loading = false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
+    final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: SafeArea(
         child: Center(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(
-              horizontal: AppSpacing.xl,
-              vertical: AppSpacing.l,
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                const KayloLogo(width: 80),
-                const SizedBox(height: AppSpacing.m),
-                Text(
-                  'Kaylo Partner',
-                  style: Theme.of(context).textTheme.headlineMedium?.copyWith(
-                    fontWeight: FontWeight.w800,
-                    letterSpacing: -0.5,
+            padding: const EdgeInsets.all(AppSpacing.xl),
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 460),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  const KayloLogo(width: 80),
+                  const SizedBox(height: AppSpacing.m),
+                  Text(
+                    l10n.appTitle,
+                    style: Theme.of(context).textTheme.headlineMedium?.copyWith(
+                      fontWeight: FontWeight.w800,
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xs),
-                Text(
-                  'Service professionals delivery partner portal',
-                  textAlign: TextAlign.center,
-                  style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
+                  const SizedBox(height: AppSpacing.s),
+                  Text(l10n.authSubtitle, textAlign: TextAlign.center),
+                  const SizedBox(height: AppSpacing.xl),
+                  KayloCard(
+                    child: AutofillGroup(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            l10n.authSignIn,
+                            style: Theme.of(context).textTheme.titleLarge,
+                          ),
+                          const SizedBox(height: AppSpacing.l),
+                          KayloTextField(
+                            key: const Key('partner-id'),
+                            label: l10n.authPartnerId,
+                            hintText: 'KP-000123',
+                            controller: _id,
+                            autofillHints: const [AutofillHints.username],
+                            textInputAction: TextInputAction.next,
+                            prefixIcon: const Icon(Icons.badge_outlined),
+                          ),
+                          const SizedBox(height: AppSpacing.m),
+                          KayloTextField(
+                            key: const Key('partner-password'),
+                            label: l10n.authPassword,
+                            controller: _password,
+                            obscureText: !_showPassword,
+                            autofillHints: const [AutofillHints.password],
+                            onSubmitted: (_) => _signIn(),
+                            textInputAction: TextInputAction.done,
+                            prefixIcon: const Icon(Icons.lock_outline),
+                            suffixIcon: IconButton(
+                              tooltip: _showPassword
+                                  ? l10n.authHidePassword
+                                  : l10n.authShowPassword,
+                              onPressed: () => setState(
+                                () => _showPassword = !_showPassword,
+                              ),
+                              icon: Icon(
+                                _showPassword
+                                    ? Icons.visibility_off_outlined
+                                    : Icons.visibility_outlined,
+                              ),
+                            ),
+                          ),
+                          if (_error != null)
+                            Padding(
+                              padding: const EdgeInsets.only(top: AppSpacing.m),
+                              child: Semantics(
+                                liveRegion: true,
+                                child: Text(
+                                  _error!,
+                                  style: TextStyle(
+                                    color: Theme.of(context).colorScheme.error,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          const SizedBox(height: AppSpacing.l),
+                          KayloButton(
+                            text: l10n.authSignIn,
+                            isLoading: _loading,
+                            onPressed: _loading ? null : _signIn,
+                          ),
+                          TextButton(
+                            onPressed: () => contactPartnerSupport(context),
+                            child: Text(l10n.authForgotPassword),
+                          ),
+                          if (useMockData)
+                            Text(
+                              l10n.authDemoCredentials,
+                              textAlign: TextAlign.center,
+                              style: Theme.of(context).textTheme.bodySmall,
+                            ),
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-                const SizedBox(height: AppSpacing.xl),
-
-                KayloCard(
-                  child: AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
-                    child: _isOtpSent
-                        ? _buildOtpForm(isDark)
-                        : _buildPhoneForm(isDark),
+                  const SizedBox(height: AppSpacing.m),
+                  TextButton(
+                    onPressed: () => context.go(Routes.apply),
+                    child: Text(l10n.authApply),
                   ),
-                ),
-              ],
+                  TextButton(
+                    onPressed: () => context.go(Routes.applicationStatus),
+                    child: Text(l10n.authCheckStatus),
+                  ),
+                ],
+              ),
             ),
           ),
         ),
       ),
-    );
-  }
-
-  Widget _buildPhoneForm(bool isDark) {
-    return Column(
-      key: const ValueKey('phone_form'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'Partner Sign In',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          'Enter your registered phone number to receive a verification code.',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: isDark
-                ? AppColors.textSecondaryDark
-                : AppColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.l),
-        KayloTextField(
-          controller: _phoneController,
-          label: 'Mobile number',
-          hintText: '98470 12345',
-          prefixIcon: const Icon(Icons.phone_android_rounded),
-          keyboardType: TextInputType.phone,
-        ),
-        const SizedBox(height: AppSpacing.xl),
-        KayloButton(
-          text: 'Continue',
-          isLoading: _isLoading,
-          onPressed: _handleSendOtp,
-        ),
-        const SizedBox(height: AppSpacing.m),
-        KayloButton(
-          text: 'Continue with Google',
-          icon: Icons.g_mobiledata_rounded,
-          variant: KayloButtonVariant.secondary,
-          onPressed: _isLoading ? null : _handleGoogle,
-        ),
-      ],
-    );
-  }
-
-  Widget _buildOtpForm(bool isDark) {
-    return Column(
-      key: const ValueKey('otp_form'),
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          'Verify OTP',
-          style: Theme.of(
-            context,
-          ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
-        ),
-        const SizedBox(height: AppSpacing.xs),
-        Text(
-          useMockData
-              ? 'Enter 4-digit code sent to +91 ${_phoneController.text.trim()} (Demo code: 1234)'
-              : 'Enter the $_codeLength-digit code sent to ${_phoneController.text.trim()}',
-          style: Theme.of(context).textTheme.bodySmall?.copyWith(
-            color: isDark
-                ? AppColors.textSecondaryDark
-                : AppColors.textSecondary,
-          ),
-        ),
-        const SizedBox(height: AppSpacing.l),
-        KayloTextField(
-          controller: _otpController,
-          label: useMockData ? '4-digit OTP' : 'Verification code',
-          hintText: useMockData ? '1234' : '',
-          prefixIcon: const Icon(Icons.lock_outline_rounded),
-          keyboardType: TextInputType.number,
-          maxLength: _codeLength,
-        ),
-        const SizedBox(height: AppSpacing.m),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            TextButton(
-              onPressed: () => setState(() => _isOtpSent = false),
-              child: const Text('Change number'),
-            ),
-            if (useMockData)
-              TextButton(
-                onPressed: () {
-                  _otpController.text = '1234';
-                  _handleVerifyOtp();
-                },
-                child: const Text('Fill 1234'),
-              ),
-          ],
-        ),
-        const SizedBox(height: AppSpacing.m),
-        KayloButton(
-          text: 'Verify & Sign In',
-          isLoading: _isLoading,
-          onPressed: _handleVerifyOtp,
-        ),
-      ],
     );
   }
 }

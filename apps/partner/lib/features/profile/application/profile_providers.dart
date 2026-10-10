@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/config/app_env.dart';
-import 'package:kaylo_core/firebase/firebase_bootstrap.dart';
 import 'package:kaylo_core/network/supabase_providers.dart';
 import 'package:kaylo_core/services/storage_service.dart';
+import '../../auth/application/partner_session.dart';
 
 import '../../jobs/application/jobs_providers.dart';
 import '../../jobs/domain/jobs_repository.dart';
@@ -16,7 +16,14 @@ import '../domain/worker_profile.dart';
 final workerProfileRepositoryProvider = Provider<WorkerProfileRepository>((
   ref,
 ) {
-  final WorkerProfileRepository repo = useMockData || !FirebaseBootstrap.isReady
+  // Recreate per issued identity; cached rows must not cross sign-ins.
+  ref.watch(
+    partnerAuthStateProvider.select((session) {
+      final access = session.asData?.value;
+      return (access?.workerId, access?.status);
+    }),
+  );
+  final WorkerProfileRepository repo = useMockData
       ? MockWorkerProfileRepository(ref.watch(sharedPreferencesProvider))
       : SupabaseWorkerProfileRepository(ref.watch(supabaseClientProvider));
   ref.onDispose(repo.dispose);

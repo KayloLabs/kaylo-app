@@ -4,6 +4,11 @@ import 'package:go_router/go_router.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 
 import '../../../features/auth/application/partner_session.dart';
+import '../../../features/auth/domain/partner_auth_repository.dart';
+import '../../../features/auth/presentation/screens/change_password_screen.dart';
+import '../../../features/auth/presentation/screens/account_status_screen.dart';
+import '../../../features/onboarding/presentation/screens/worker_application_screen.dart';
+import '../../../features/onboarding/presentation/screens/worker_application_status_screen.dart';
 import '../../../features/auth/presentation/screens/login_screen.dart';
 import '../../../features/availability/presentation/screens/availability_screen.dart';
 import '../../../features/splash/presentation/screens/partner_splash_screen.dart';
@@ -27,16 +32,11 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
     initialLocation: Routes.splash,
     refreshListenable: listenable,
     redirect: (context, state) async {
-      // The splash decides where to go once it has checked the session.
       if (state.matchedLocation == Routes.splash) return null;
-      final isLoggedIn = await ref
+      final access = await ref
           .read(partnerAuthRepositoryProvider)
-          .isAuthenticated();
-      final isGoingToLogin = state.matchedLocation.startsWith(Routes.login);
-
-      if (!isLoggedIn && !isGoingToLogin) return Routes.login;
-      if (isLoggedIn && isGoingToLogin) return Routes.jobs;
-      return null;
+          .checkAccess();
+      return partnerRedirect(access, state.matchedLocation);
     },
     routes: [
       GoRoute(
@@ -46,6 +46,24 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.login,
         builder: (_, _) => const PartnerLoginScreen(),
+      ),
+      GoRoute(
+        path: Routes.apply,
+        builder: (_, _) => const WorkerApplicationScreen(),
+      ),
+      GoRoute(
+        path: Routes.applicationStatus,
+        builder: (_, state) => WorkerApplicationStatusScreen(
+          initialReference: state.uri.queryParameters['reference'],
+        ),
+      ),
+      GoRoute(
+        path: Routes.changePassword,
+        builder: (_, _) => const PartnerChangePasswordScreen(),
+      ),
+      GoRoute(
+        path: Routes.accountStatus,
+        builder: (_, _) => const PartnerAccountStatusScreen(),
       ),
       // Job detail – full-screen over the shell
       GoRoute(
@@ -95,6 +113,52 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
     ],
   );
 });
+
+/// Every deep link passes the same identity and verification checks.
+String? partnerRedirect(PartnerAccess access, String location) {
+  final public = [
+    Routes.login,
+    Routes.apply,
+    Routes.applicationStatus,
+  ].contains(location);
+  String? target;
+  switch (access.status) {
+    case PartnerAccessStatus.signedOut:
+      target = public ? null : Routes.login;
+    case PartnerAccessStatus.passwordChange:
+      target = Routes.changePassword;
+    case PartnerAccessStatus.unavailable:
+      target =
+          [
+            Routes.login,
+            Routes.apply,
+            Routes.applicationStatus,
+            Routes.accountStatus,
+          ].contains(location)
+          ? null
+          : Routes.accountStatus;
+    case PartnerAccessStatus.registration:
+      target =
+          [
+            Routes.apply,
+            Routes.applicationStatus,
+            Routes.accountStatus,
+          ].contains(location)
+          ? null
+          : Routes.accountStatus;
+    case PartnerAccessStatus.verification:
+      target = [Routes.profile, Routes.accountStatus].contains(location)
+          ? null
+          : Routes.accountStatus;
+    case PartnerAccessStatus.ready:
+      target =
+          public ||
+              [Routes.changePassword, Routes.accountStatus].contains(location)
+          ? Routes.jobs
+          : null;
+  }
+  return target == location ? null : target;
+}
 
 // ---------------------------------------------------------------------------
 // Shell scaffold – bottom navigation bar for the partner app

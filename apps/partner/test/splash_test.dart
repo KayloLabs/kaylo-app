@@ -16,7 +16,8 @@ Future<({ProviderContainer container, Widget app})> _app({
   required bool signedIn,
 }) async {
   SharedPreferences.setMockInitialValues({
-    'kaylo_partner_is_authenticated': signedIn,
+    if (signedIn) 'kaylo_partner_issued_session': 'KP-000123',
+    if (signedIn) 'kaylo_partner_password_changed': true,
   });
   final prefs = await SharedPreferences.getInstance();
   final container = ProviderContainer(
@@ -53,7 +54,7 @@ void main() {
     expect(find.bySemanticsLabel('Kaylo Partner'), findsOneWidget);
     await tester.pumpAndSettle();
     expect(find.byType(PartnerSplashScreen), findsNothing);
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Sign in'), findsWidgets);
     await _shutDown(tester, harness.container);
   });
 
@@ -62,7 +63,7 @@ void main() {
     await tester.pumpWidget(harness.app);
     await tester.pumpAndSettle();
     expect(find.byType(PartnerSplashScreen), findsNothing);
-    expect(find.text('Continue'), findsNothing);
+    expect(find.text('Sign in'), findsNothing);
     await _shutDown(tester, harness.container);
   });
 
@@ -80,7 +81,7 @@ void main() {
     await tester.pump(const Duration(milliseconds: 300));
     await tester.pump(const Duration(milliseconds: 300));
     await tester.pumpAndSettle();
-    expect(find.text('Continue'), findsOneWidget);
+    expect(find.text('Sign in'), findsWidgets);
     await _shutDown(tester, harness.container);
   });
 }

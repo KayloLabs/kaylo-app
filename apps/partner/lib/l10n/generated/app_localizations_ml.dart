@@ -226,7 +226,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get logOutBody =>
-      'ജോലികൾ ലഭിക്കാൻ ഫോൺ നമ്പർ ഉപയോഗിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യേണ്ടി വരും.';
+      'വീണ്ടും സൈൻ ഇൻ ചെയ്യാൻ പാർട്ണർ ഐഡിയും പാസ്‌വേഡും വേണം.';
 
   @override
   String get cancel => 'റദ്ദാക്കുക';
@@ -354,4 +354,380 @@ class AppLocalizationsMl extends AppLocalizations {
   String dateRange(String from, String to) {
     return '$from മുതൽ $to വരെ';
   }
+
+  @override
+  String get authSubtitle =>
+      'Kaylo നൽകിയ പാർട്ണർ ഐഡി ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്യുക.';
+
+  @override
+  String get authSignIn => 'സൈൻ ഇൻ';
+
+  @override
+  String get authPartnerId => 'പാർട്ണർ ഐഡി';
+
+  @override
+  String get authPassword => 'പാസ്‌വേഡ്';
+
+  @override
+  String get authShowPassword => 'പാസ്‌വേഡ് കാണിക്കുക';
+
+  @override
+  String get authHidePassword => 'പാസ്‌വേഡ് മറയ്ക്കുക';
+
+  @override
+  String get authForgotPassword => 'പാസ്‌വേഡ് മറന്നോ? Kaylo-യെ ബന്ധപ്പെടുക';
+
+  @override
+  String get authSupport => 'Kaylo സഹായം തേടുക';
+
+  @override
+  String get authApply => 'പാർട്ണറാകാൻ അപേക്ഷിക്കുക';
+
+  @override
+  String get authCheckStatus => 'അപേക്ഷയുടെ സ്ഥിതി പരിശോധിക്കുക';
+
+  @override
+  String get authDemoCredentials => 'ഡെമോ: KP-000123 / kaylo123';
+
+  @override
+  String get authInvalidId => 'KP-000123 പോലെയുള്ള സാധുവായ പാർട്ണർ ഐഡി നൽകുക.';
+
+  @override
+  String get authInvalidCredentials => 'പാർട്ണർ ഐഡിയോ പാസ്‌വേഡോ തെറ്റാണ്.';
+
+  @override
+  String get authTooManyAttempts =>
+      'നിരവധി ശ്രമങ്ങൾ നടന്നു. അൽപ്പം കഴിഞ്ഞ് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get authNetworkError =>
+      'ഇന്റർനെറ്റ് കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get authUnavailableTitle => 'അക്കൗണ്ട് പരിശോധിക്കാനായില്ല';
+
+  @override
+  String get authUnavailable =>
+      'നിങ്ങളുടെ പാർട്ണർ പ്രവേശനം പരിശോധിക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക അല്ലെങ്കിൽ Kaylo സഹായം തേടുക.';
+
+  @override
+  String get authPasswordRule =>
+      'പുതിയ പാസ്‌വേഡിൽ കുറഞ്ഞത് 12 അക്ഷരങ്ങൾ ഉപയോഗിക്കുക.';
+
+  @override
+  String get authDifferentPassword =>
+      'താൽക്കാലിക പാസ്‌വേഡിൽനിന്ന് വ്യത്യസ്തമായത് തിരഞ്ഞെടുക്കുക.';
+
+  @override
+  String get authSessionExpired =>
+      'സെഷൻ കാലഹരണപ്പെട്ടു. സൈൻ ഔട്ട് ചെയ്ത് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക.';
+
+  @override
+  String get authPasswordConfirmation =>
+      'പാസ്‌വേഡ് മാറ്റം സ്ഥിരീകരിക്കേണ്ടതുണ്ട്. വീണ്ടും ശ്രമിക്കാൻ പാസ്‌വേഡ് സംരക്ഷിക്കുക അമർത്തുക.';
+
+  @override
+  String get authIdentityNotAllowed =>
+      'Kaylo നൽകിയ പാർട്ണർ ഐഡിയും പാസ്‌വേഡും ഉപയോഗിക്കുക. ഉപഭോക്തൃ അക്കൗണ്ടുകൾക്ക് ഇവിടെ പ്രവേശിക്കാനാകില്ല.';
+
+  @override
+  String get authChangePassword => 'നിങ്ങളുടെ പാസ്‌വേഡ് സജ്ജമാക്കുക';
+
+  @override
+  String get authChangePasswordBody =>
+      'പാർട്ണർ അക്കൗണ്ടിൽ പ്രവേശിക്കുന്നതിനുമുമ്പ് താൽക്കാലിക പാസ്‌വേഡ് മാറ്റുക.';
+
+  @override
+  String get authNewPassword => 'പുതിയ പാസ്‌വേഡ്';
+
+  @override
+  String get authConfirmPassword => 'പുതിയ പാസ്‌വേഡ് ഉറപ്പാക്കുക';
+
+  @override
+  String get authSavePassword => 'പാസ്‌വേഡ് സംരക്ഷിക്കുക';
+
+  @override
+  String get authPasswordMismatch => 'പാസ്‌വേഡുകൾ പൊരുത്തപ്പെടുന്നില്ല.';
+
+  @override
+  String get authNotIssuedBody =>
+      'ഈ അക്കൗണ്ടിന് നൽകിയ തൊഴിലാളി പ്രൊഫൈൽ ഇല്ല. Kaylo-യിൽ അപേക്ഷിക്കുക അല്ലെങ്കിൽ അപേക്ഷയെക്കുറിച്ച് സഹായം തേടുക.';
+
+  @override
+  String get authVerificationBody =>
+      'Kaylo പരിശോധന അംഗീകരിച്ചശേഷം ജോലികൾ ലഭ്യമാകും. പ്രൊഫൈൽ കാണുകയോ സഹായം തേടുകയോ ചെയ്യാം.';
+
+  @override
+  String get partnerJobNotifications => 'ജോലി അഭ്യർത്ഥനകൾ';
+
+  @override
+  String get partnerNewJobRequest => 'പുതിയ ജോലി അഭ്യർത്ഥന';
+
+  @override
+  String get partnerOpenJobRequest =>
+      'അഭ്യർത്ഥന പരിശോധിക്കാൻ Kaylo Partner തുറക്കുക.';
+
+  @override
+  String get applicationTitle => 'Kaylo-യിൽ അപേക്ഷിക്കുക';
+
+  @override
+  String get applicationPersonal => 'നിങ്ങളെക്കുറിച്ച്';
+
+  @override
+  String get applicationSkills => 'നിങ്ങളുടെ ജോലിയും സേവന മേഖലയും';
+
+  @override
+  String get applicationDocuments => 'നിങ്ങളുടെ രേഖകൾ';
+
+  @override
+  String get applicationPayout => 'പണമടയ്ക്കലും സമ്മതവും';
+
+  @override
+  String applicationStep(int current, int total) {
+    return 'ഘട്ടം $current / $total';
+  }
+
+  @override
+  String get applicationIntro =>
+      'അക്കൗണ്ടില്ലാതെ അപേക്ഷിക്കാം. പാർട്ണർ ലോഗിൻ നൽകുന്നതിന് മുമ്പ് Kaylo നിങ്ങളുടെ വിവരങ്ങളും രേഖകളും പരിശോധിക്കും.';
+
+  @override
+  String get applicationPhone => 'ഫോൺ നമ്പർ';
+
+  @override
+  String get applicationEmail => 'വിവരങ്ങൾ അയയ്ക്കേണ്ട ഇമെയിൽ';
+
+  @override
+  String get applicationEmailHint =>
+      'നിങ്ങൾക്ക് തുറക്കാനാകുന്ന ഇമെയിൽ നൽകുക. അംഗീകാരത്തിന് ശേഷം പാർട്ണർ ഐഡിയും താൽക്കാലിക പാസ്‌വേഡും Kaylo ഇതിലേക്ക് അയയ്ക്കും.';
+
+  @override
+  String get applicationInvalidPhone =>
+      'രാജ്യ കോഡ് സഹിതം ശരിയായ ഫോൺ നമ്പർ നൽകുക';
+
+  @override
+  String get applicationInvalidEmail => 'ശരിയായ ഇമെയിൽ വിലാസം നൽകുക';
+
+  @override
+  String get applicationProfession => 'തൊഴിൽ';
+
+  @override
+  String get applicationProfessionRequired => 'നിങ്ങളുടെ തൊഴിൽ നൽകുക';
+
+  @override
+  String get applicationExperience => 'പ്രവൃത്തിപരിചയം (വർഷം)';
+
+  @override
+  String get applicationInvalidExperience =>
+      '0 മുതൽ 60 വർഷം വരെയുള്ള പരിചയം നൽകുക';
+
+  @override
+  String get applicationChooseDistrict => 'നിങ്ങളുടെ ജില്ല തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String get applicationNoServices =>
+      'സേവന പട്ടിക ഇപ്പോൾ ലഭ്യമല്ല. പിന്നീട് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get applicationDocumentsHint =>
+      'അഞ്ച് രേഖകളും ചേർക്കുക. ഫോട്ടോകൾക്ക് JPG അല്ലെങ്കിൽ PNG; മറ്റ് രേഖകൾക്ക് JPG, PNG അല്ലെങ്കിൽ PDF. ഓരോ ഫയലും പരമാവധി 10 MB.';
+
+  @override
+  String get applicationDocumentsPrivacy =>
+      'അപേക്ഷ പരിശോധിക്കാൻ രേഖകൾ സ്വകാര്യമായി Kaylo-യിലേക്ക് അപ്‌ലോഡ് ചെയ്യുന്നു. പൊതു സ്റ്റാറ്റസ് പരിശോധനയിൽ അവ കാണിക്കില്ല.';
+
+  @override
+  String get applicationPhoto => 'പ്രൊഫൈൽ ഫോട്ടോ';
+
+  @override
+  String get applicationAadhaarFront => 'ആധാറിന്റെ മുൻവശം';
+
+  @override
+  String get applicationAadhaarBack => 'ആധാറിന്റെ പിൻവശം';
+
+  @override
+  String get applicationSelfie => 'സെൽഫി';
+
+  @override
+  String get applicationChooseFile => 'ഫയൽ തിരഞ്ഞെടുക്കുക';
+
+  @override
+  String get applicationAllDocuments => 'തുടരാൻ അഞ്ച് രേഖകളും ചേർക്കുക';
+
+  @override
+  String get applicationUpi => 'UPI';
+
+  @override
+  String get applicationBank => 'ബാങ്ക് അക്കൗണ്ട്';
+
+  @override
+  String get applicationAccountHolder => 'അക്കൗണ്ട് ഉടമയുടെ പേര്';
+
+  @override
+  String get applicationBankName => 'ബാങ്കിന്റെ പേര്';
+
+  @override
+  String get applicationAccountNumber => 'അക്കൗണ്ട് നമ്പർ';
+
+  @override
+  String get applicationConfirmAccount => 'അക്കൗണ്ട് നമ്പർ വീണ്ടും നൽകുക';
+
+  @override
+  String get applicationIfsc => 'IFSC കോഡ്';
+
+  @override
+  String get applicationBankRequired => 'ബാങ്ക് വിവരങ്ങൾ നൽകുക';
+
+  @override
+  String get applicationInvalidAccount =>
+      '9 മുതൽ 18 അക്കങ്ങളുള്ള അക്കൗണ്ട് നമ്പർ നൽകുക';
+
+  @override
+  String get applicationAccountMismatch =>
+      'അക്കൗണ്ട് നമ്പറുകൾ പൊരുത്തപ്പെടുന്നില്ല';
+
+  @override
+  String get applicationInvalidIfsc =>
+      '11 അക്ഷരങ്ങളുള്ള ശരിയായ IFSC കോഡ് നൽകുക';
+
+  @override
+  String get applicationReviewHint =>
+      'അയയ്ക്കുന്നതിന് മുമ്പ് വിവരങ്ങൾ പരിശോധിക്കുക.';
+
+  @override
+  String get applicationConsent =>
+      'ഈ വിവരങ്ങൾ എന്റേതും ശരിയുമാണെന്ന് ഞാൻ സ്ഥിരീകരിക്കുന്നു. പാർട്ണർ പരിശോധനയ്ക്കായി എന്റെ വിവരങ്ങളും രേഖകളും സൂക്ഷിക്കാനും പരിശോധിക്കാനും Kaylo-യ്ക്ക് സമ്മതം നൽകുന്നു.';
+
+  @override
+  String get applicationConsentRequired =>
+      'അയയ്ക്കുന്നതിന് മുമ്പ് സമ്മതം നൽകുക';
+
+  @override
+  String get applicationKeepOpen =>
+      'എല്ലാ രേഖകളും അപ്‌ലോഡ് ആകുന്നത് വരെ Kaylo തുറന്നുവയ്ക്കുക. ബന്ധം നഷ്ടപ്പെട്ടാൽ പുതിയ അപേക്ഷ നൽകാതെ ഇവിടെ തന്നെ വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get applicationBack => 'പിന്നോട്ട്';
+
+  @override
+  String get applicationContinue => 'തുടരുക';
+
+  @override
+  String get applicationSubmit => 'അപേക്ഷ അയയ്ക്കുക';
+
+  @override
+  String get applicationSending => 'അപേക്ഷ അയയ്ക്കുന്നത് പൂർത്തിയാക്കുക';
+
+  @override
+  String get applicationRecoveryHint =>
+      'അഞ്ച് രേഖകളും ലഭിച്ചാൽ മാത്രമേ അപേക്ഷ പരിശോധനയ്ക്ക് തയ്യാറാകൂ. വീണ്ടും ശ്രമിക്കുമ്പോൾ അതേ അപേക്ഷ തുടരും. പൂർത്തിയാകുന്നതിന് മുമ്പ് ആപ്പ് അടച്ചാൽ റഫറൻസ് നൽകി Kaylo-യെ ബന്ധപ്പെടുക.';
+
+  @override
+  String get applicationReference => 'അപേക്ഷയുടെ റഫറൻസ്';
+
+  @override
+  String applicationUploadProgress(int count, int total) {
+    return '$total രേഖകളിൽ $count ലഭിച്ചു';
+  }
+
+  @override
+  String get applicationCheckStatus => 'അപേക്ഷയുടെ നില പരിശോധിക്കുക';
+
+  @override
+  String get applicationBackToSignIn => 'സൈൻ ഇന്നിലേക്ക് മടങ്ങുക';
+
+  @override
+  String get applicationStatusHint =>
+      'നില അറിയാൻ അപേക്ഷയുടെ റഫറൻസ് നൽകുക. വ്യക്തിഗത വിവരങ്ങളും രേഖകളും ഇവിടെ ഒരിക്കലും കാണിക്കില്ല.';
+
+  @override
+  String get applicationInvalidReference => 'അപേക്ഷയിൽ ലഭിച്ച റഫറൻസ് നൽകുക';
+
+  @override
+  String get applicationUnderReview => 'അപേക്ഷ പരിശോധിച്ചുകൊണ്ടിരിക്കുന്നു';
+
+  @override
+  String get applicationUnderReviewHint =>
+      'നിങ്ങളുടെ വിവരങ്ങളും അഞ്ച് രേഖകളും ലഭിച്ചു. തീരുമാനമെടുക്കുന്നതിന് മുമ്പ് Kaylo അവ പരിശോധിക്കും. ഈ റഫറൻസ് പാർട്ണർ ലോഗിൻ അല്ല.';
+
+  @override
+  String get applicationIncomplete => 'രേഖകൾ ഇനിയും ലഭിക്കാനുണ്ട്';
+
+  @override
+  String get applicationIncompleteHint =>
+      'നിങ്ങളുടെ വിവരങ്ങൾ ലഭിച്ചു, എന്നാൽ രേഖകളുടെ അപ്‌ലോഡ് പൂർത്തിയായിട്ടില്ല. ഈ ആപ്പ് സെഷനിൽ തുടരുക അല്ലെങ്കിൽ റഫറൻസ് നൽകി Kaylo-യുടെ സഹായം തേടുക.';
+
+  @override
+  String get applicationApproved => 'അപേക്ഷ അംഗീകരിച്ചു';
+
+  @override
+  String get applicationApprovedHint =>
+      'അംഗീകാരത്തിന് ശേഷം പാർട്ണർ ഐഡിയും താൽക്കാലിക പാസ്‌വേഡും Kaylo ഇമെയിലിൽ അയയ്ക്കും. ലഭിച്ചില്ലെങ്കിൽ സഹായത്തിനായി ബന്ധപ്പെടുക. ആദ്യ സൈൻ ഇന്നിൽ പുതിയ പാസ്‌വേഡ് നൽകണം.';
+
+  @override
+  String get applicationRejected => 'അപേക്ഷ അംഗീകരിച്ചില്ല';
+
+  @override
+  String get applicationRejectedHint =>
+      'ഈ അപേക്ഷ Kaylo അംഗീകരിച്ചിട്ടില്ല. ഇതിന് പാർട്ണർ ലോഗിൻ ലഭ്യമല്ല. കൂടുതൽ സഹായത്തിന് റഫറൻസ് നൽകി ബന്ധപ്പെടുക.';
+
+  @override
+  String get applicationCopyReference => 'റഫറൻസ് പകർത്തുക';
+
+  @override
+  String get applicationReferenceCopied => 'റഫറൻസ് പകർത്തി';
+
+  @override
+  String get applicationResumeUpload => 'രേഖകളുടെ അപ്‌ലോഡ് തുടരുക';
+
+  @override
+  String get applicationContactSupport => 'Kaylo സഹായവുമായി ബന്ധപ്പെടുക';
+
+  @override
+  String applicationSupportSubject(String reference) {
+    return 'പാർട്ണർ അപേക്ഷ സഹായം: $reference';
+  }
+
+  @override
+  String get applicationSupportHint =>
+      'അപേക്ഷയുടെ റഫറൻസ് സഹിതം kayloapp@gmail.com-ലേക്ക് ഇമെയിൽ അയയ്ക്കുക.';
+
+  @override
+  String get applicationDemoNotice =>
+      'സാമ്പിൾ മോഡ്: ഈ അപേക്ഷ ഈ ആപ്പ് സെഷനിൽ മാത്രം നിലനിൽക്കും; Kaylo-യ്ക്ക് അയയ്ക്കില്ല.';
+
+  @override
+  String get applicationConnectionError =>
+      'ബന്ധപ്പെടാനായില്ല. ഇന്റർനെറ്റ് പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get applicationAlreadyOpen =>
+      'ഈ ഫോൺ നമ്പറിൽ ഒരു അപേക്ഷ നിലവിലുണ്ട്. അതിന്റെ നില പരിശോധിക്കുക അല്ലെങ്കിൽ Kaylo സഹായവുമായി ബന്ധപ്പെടുക.';
+
+  @override
+  String get applicationInvalidDetails => 'അപേക്ഷയിലെ വിവരങ്ങൾ പരിശോധിക്കുക.';
+
+  @override
+  String get applicationInvalidDocument =>
+      '10 MB വരെയുള്ള ശരിയായ JPG, PNG അല്ലെങ്കിൽ PDF ഫയൽ തിരഞ്ഞെടുക്കുക. പ്രൊഫൈൽ ഫോട്ടോയും സെൽഫിയും ചിത്രങ്ങളായിരിക്കണം.';
+
+  @override
+  String get applicationUploadExpired =>
+      'അപ്‌ലോഡ് സെഷൻ ഇനി ലഭ്യമല്ല. അപേക്ഷ പൂർത്തിയാക്കാൻ റഫറൻസ് നൽകി Kaylo-യെ ബന്ധപ്പെടുക.';
+
+  @override
+  String get applicationNotFound =>
+      'ഈ റഫറൻസിൽ അപേക്ഷ കണ്ടെത്തിയില്ല. റഫറൻസ് പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get applicationUnavailable =>
+      'അപേക്ഷ സേവനം ഇപ്പോൾ ലഭ്യമല്ല. പിന്നീട് ശ്രമിക്കുക അല്ലെങ്കിൽ Kaylo സഹായവുമായി ബന്ധപ്പെടുക.';
+
+  @override
+  String get applicationIdentityInUse =>
+      'ഈ ഫോണോ ഇമെയിലോ ഒരു Kaylo അക്കൗണ്ടിൽ ഉപയോഗിക്കുന്നു. ഈ വിവരങ്ങൾ ഉപയോഗിച്ച് അപേക്ഷിക്കുന്നതിന് മുമ്പ് സഹായവുമായി ബന്ധപ്പെടുക.';
+
+  @override
+  String get liveJobsPending =>
+      'തത്സമയ ജോലി അഭ്യർത്ഥനകളും വരുമാനവും ഇതുവരെ ലഭ്യമല്ല. നിങ്ങളുടെ പ്രൊഫൈലും ലഭ്യതയും ഉപയോഗിക്കാം.';
 }

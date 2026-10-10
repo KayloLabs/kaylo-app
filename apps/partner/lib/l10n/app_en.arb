@@ -298,7 +298,7 @@
   "@logOutTitle": {
     "description": "Log out dialog title"
   },
-  "logOutBody": "You will need to sign in again with your phone number to receive jobs.",
+  "logOutBody": "You will need your partner ID and password to sign in again.",
   "@logOutBody": {
     "description": "Log out dialog body"
   },
@@ -466,5 +466,240 @@
         "type": "String"
       }
     }
-  }
+  },
+  "authSubtitle": "Sign in with the partner ID issued by Kaylo.",
+  "@authSubtitle": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authSignIn": "Sign in",
+  "@authSignIn": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authPartnerId": "Partner ID",
+  "@authPartnerId": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authPassword": "Password",
+  "@authPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authShowPassword": "Show password",
+  "@authShowPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authHidePassword": "Hide password",
+  "@authHidePassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authForgotPassword": "Forgot password? Contact Kaylo",
+  "@authForgotPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authSupport": "Contact Kaylo support",
+  "@authSupport": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authApply": "Apply as a partner",
+  "@authApply": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authCheckStatus": "Check application status",
+  "@authCheckStatus": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authDemoCredentials": "Demo: KP-000123 / kaylo123",
+  "@authDemoCredentials": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authInvalidId": "Enter a valid partner ID, like KP-000123.",
+  "@authInvalidId": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authInvalidCredentials": "The partner ID or password is incorrect.",
+  "@authInvalidCredentials": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authTooManyAttempts": "Too many attempts. Please wait and try again.",
+  "@authTooManyAttempts": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authNetworkError": "Check your internet connection and try again.",
+  "@authNetworkError": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authUnavailableTitle": "Unable to verify your account",
+  "@authUnavailableTitle": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authUnavailable": "We could not verify your partner access. Try again or contact Kaylo support.",
+  "@authUnavailable": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authPasswordRule": "Use at least 12 characters for your new password.",
+  "@authPasswordRule": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authDifferentPassword": "Choose a password different from your temporary password.",
+  "@authDifferentPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authSessionExpired": "Your session expired. Sign out and sign in again.",
+  "@authSessionExpired": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authPasswordConfirmation": "Your password update needs confirmation. Tap Save password again to retry securely.",
+  "@authPasswordConfirmation": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authIdentityNotAllowed": "Use the partner ID and password issued by Kaylo. Customer accounts cannot sign in here.",
+  "@authIdentityNotAllowed": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authChangePassword": "Set your password",
+  "@authChangePassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authChangePasswordBody": "Replace your temporary password before opening your partner account.",
+  "@authChangePasswordBody": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authNewPassword": "New password",
+  "@authNewPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authConfirmPassword": "Confirm new password",
+  "@authConfirmPassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authSavePassword": "Save password",
+  "@authSavePassword": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authPasswordMismatch": "The passwords do not match.",
+  "@authPasswordMismatch": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authNotIssuedBody": "This account has no issued worker profile. Apply to Kaylo or contact support about your application.",
+  "@authNotIssuedBody": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "authVerificationBody": "Jobs are available after Kaylo approves your verification. You can view your profile or contact support.",
+  "@authVerificationBody": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "partnerJobNotifications": "Job requests",
+  "@partnerJobNotifications": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "partnerNewJobRequest": "New job request",
+  "@partnerNewJobRequest": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "partnerOpenJobRequest": "Open Kaylo Partner to review the request.",
+  "@partnerOpenJobRequest": {
+    "description": "Partner issued-account authentication or notification text"
+  },
+  "applicationTitle": "Apply to Kaylo",
+  "applicationPersonal": "About you",
+  "applicationSkills": "Your work & service area",
+  "applicationDocuments": "Your documents",
+  "applicationPayout": "Payout & consent",
+  "applicationStep": "Step {current} of {total}",
+  "applicationIntro": "Apply without an account. Kaylo will review your details and documents before issuing a partner login.",
+  "applicationPhone": "Phone number",
+  "applicationEmail": "Delivery email",
+  "applicationEmailHint": "Use an email you can access. Kaylo sends your partner ID and temporary password here after approval.",
+  "applicationInvalidPhone": "Enter a valid phone number with country code",
+  "applicationInvalidEmail": "Enter a valid delivery email",
+  "applicationProfession": "Profession",
+  "applicationProfessionRequired": "Enter your profession",
+  "applicationExperience": "Experience (years)",
+  "applicationInvalidExperience": "Enter experience from 0 to 60 years",
+  "applicationChooseDistrict": "Choose your district",
+  "applicationNoServices": "The service catalogue is not available yet. Please try again later.",
+  "applicationDocumentsHint": "Add all five documents. Use JPG or PNG for photos; JPG, PNG or PDF for other documents. Maximum 10 MB per file.",
+  "applicationDocumentsPrivacy": "Documents are uploaded privately for Kaylo’s application review. They are not shown in the public status lookup.",
+  "applicationPhoto": "Profile photo",
+  "applicationAadhaarFront": "Aadhaar front",
+  "applicationAadhaarBack": "Aadhaar back",
+  "applicationSelfie": "Selfie",
+  "applicationChooseFile": "Choose a file",
+  "applicationAllDocuments": "Add all five documents to continue",
+  "applicationUpi": "UPI",
+  "applicationBank": "Bank account",
+  "applicationAccountHolder": "Account holder name",
+  "applicationBankName": "Bank name",
+  "applicationAccountNumber": "Account number",
+  "applicationConfirmAccount": "Confirm account number",
+  "applicationIfsc": "IFSC code",
+  "applicationBankRequired": "Enter the bank details",
+  "applicationInvalidAccount": "Enter a 9 to 18 digit account number",
+  "applicationAccountMismatch": "The account numbers do not match",
+  "applicationInvalidIfsc": "Enter a valid 11-character IFSC code",
+  "applicationReviewHint": "Check your details before sending.",
+  "applicationConsent": "I confirm these details are mine and accurate, and consent to Kaylo storing and reviewing my details and documents for partner verification.",
+  "applicationConsentRequired": "Please give consent before submitting",
+  "applicationKeepOpen": "Keep Kaylo open until all documents finish uploading. If your connection drops, retry here without creating another application.",
+  "applicationBack": "Back",
+  "applicationContinue": "Continue",
+  "applicationSubmit": "Submit application",
+  "applicationSending": "Finish sending your application",
+  "applicationRecoveryHint": "Your application is only ready for review when all five documents are received. Retry continues the same application. If you close the app before finishing, contact Kaylo with your reference.",
+  "applicationReference": "Application reference",
+  "applicationUploadProgress": "{count} of {total} documents received",
+  "applicationCheckStatus": "Check application status",
+  "applicationBackToSignIn": "Back to sign in",
+  "applicationStatusHint": "Enter your application reference to see its status. Personal details and documents are never displayed here.",
+  "applicationInvalidReference": "Enter the reference from your application",
+  "applicationUnderReview": "Application under review",
+  "applicationUnderReviewHint": "Your details and all five documents have been received. Kaylo will review them before deciding on your application. This reference is not a partner login.",
+  "applicationIncomplete": "Documents still needed",
+  "applicationIncompleteHint": "Your details were received, but document upload is not complete. Resume from this app session or contact Kaylo with your reference for help.",
+  "applicationApproved": "Application approved",
+  "applicationApprovedHint": "Kaylo sends your partner ID and temporary password to your delivery email after approval. If you have not received them, contact support. Your first sign-in requires a new password.",
+  "applicationRejected": "Application not approved",
+  "applicationRejectedHint": "Kaylo has not approved this application. No partner login is available for it. Contact support with your reference for further help.",
+  "applicationCopyReference": "Copy reference",
+  "applicationReferenceCopied": "Reference copied",
+  "applicationResumeUpload": "Resume document upload",
+  "applicationContactSupport": "Contact Kaylo support",
+  "applicationSupportSubject": "Partner application help: {reference}",
+  "applicationSupportHint": "Email kayloapp@gmail.com with your application reference.",
+  "applicationDemoNotice": "Sample mode: this application stays in this app session and is not sent to Kaylo.",
+  "applicationConnectionError": "Could not connect. Check your connection and retry.",
+  "applicationAlreadyOpen": "There is already an open application for this phone number. Check its status or contact Kaylo support.",
+  "applicationInvalidDetails": "Please check your application details.",
+  "applicationInvalidDocument": "Choose a valid JPG, PNG or PDF file, up to 10 MB. Profile photos and selfies must be images.",
+  "applicationUploadExpired": "The upload session is no longer available. Contact Kaylo with your reference to finish your application.",
+  "applicationNotFound": "No application matches that reference. Check the reference and try again.",
+  "applicationUnavailable": "Applications are unavailable right now. Please try again later or contact Kaylo support.",
+  "@applicationStep": {
+    "placeholders": {
+      "current": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@applicationUploadProgress": {
+    "placeholders": {
+      "count": {
+        "type": "int"
+      },
+      "total": {
+        "type": "int"
+      }
+    }
+  },
+  "@applicationSupportSubject": {
+    "placeholders": {
+      "reference": {
+        "type": "String"
+      }
+    }
+  },
+  "applicationIdentityInUse": "This phone or email is already used by a Kaylo account. Contact support before applying with this identity.",
+  "liveJobsPending": "Live job requests and earnings are not available yet. Your profile and availability are ready to use."
 }

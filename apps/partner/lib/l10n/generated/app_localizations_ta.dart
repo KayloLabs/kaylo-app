@@ -226,7 +226,7 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get logOutBody =>
-      'வேலைகளைப் பெற உங்கள் தொலைபேசி எண்ணுடன் மீண்டும் உள்நுழைய வேண்டும்.';
+      'மீண்டும் உள்நுழைய பார்ட்னர் ஐடியும் கடவுச்சொல்லும் தேவை.';
 
   @override
   String get cancel => 'ரத்து';
@@ -355,4 +355,384 @@ class AppLocalizationsTa extends AppLocalizations {
   String dateRange(String from, String to) {
     return '$from முதல் $to வரை';
   }
+
+  @override
+  String get authSubtitle => 'Kaylo வழங்கிய பார்ட்னர் ஐடியுடன் உள்நுழையவும்.';
+
+  @override
+  String get authSignIn => 'உள்நுழைக';
+
+  @override
+  String get authPartnerId => 'பார்ட்னர் ஐடி';
+
+  @override
+  String get authPassword => 'கடவுச்சொல்';
+
+  @override
+  String get authShowPassword => 'கடவுச்சொல்லைக் காட்டு';
+
+  @override
+  String get authHidePassword => 'கடவுச்சொல்லை மறை';
+
+  @override
+  String get authForgotPassword =>
+      'கடவுச்சொல் மறந்துவிட்டதா? Kaylo-வைத் தொடர்புகொள்ளுங்கள்';
+
+  @override
+  String get authSupport => 'Kaylo உதவியைத் தொடர்புகொள்ளுங்கள்';
+
+  @override
+  String get authApply => 'பார்ட்னராக விண்ணப்பிக்கவும்';
+
+  @override
+  String get authCheckStatus => 'விண்ணப்ப நிலையைச் சரிபார்க்கவும்';
+
+  @override
+  String get authDemoCredentials => 'மாதிரி: KP-000123 / kaylo123';
+
+  @override
+  String get authInvalidId =>
+      'KP-000123 போன்ற செல்லுபடியான பார்ட்னர் ஐடியை உள்ளிடவும்.';
+
+  @override
+  String get authInvalidCredentials =>
+      'பார்ட்னர் ஐடி அல்லது கடவுச்சொல் தவறானது.';
+
+  @override
+  String get authTooManyAttempts =>
+      'அதிக முயற்சிகள். சிறிது நேரம் கழித்து மீண்டும் முயலவும்.';
+
+  @override
+  String get authNetworkError =>
+      'இணைய இணைப்பைச் சரிபார்த்து மீண்டும் முயலவும்.';
+
+  @override
+  String get authUnavailableTitle => 'கணக்கைச் சரிபார்க்க முடியவில்லை';
+
+  @override
+  String get authUnavailable =>
+      'உங்கள் பார்ட்னர் அணுகலைச் சரிபார்க்க முடியவில்லை. மீண்டும் முயலவும் அல்லது Kaylo உதவியைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get authPasswordRule =>
+      'புதிய கடவுச்சொல்லில் குறைந்தது 12 எழுத்துகளைப் பயன்படுத்தவும்.';
+
+  @override
+  String get authDifferentPassword =>
+      'தற்காலிக கடவுச்சொல்லிலிருந்து வேறுபட்ட ஒன்றைத் தேர்ந்தெடுக்கவும்.';
+
+  @override
+  String get authSessionExpired =>
+      'அமர்வு காலாவதியானது. வெளியேறி மீண்டும் உள்நுழையவும்.';
+
+  @override
+  String get authPasswordConfirmation =>
+      'கடவுச்சொல் மாற்றத்தை உறுதிசெய்ய வேண்டும். மீண்டும் முயல கடவுச்சொல்லைச் சேமி என்பதை அழுத்தவும்.';
+
+  @override
+  String get authIdentityNotAllowed =>
+      'Kaylo வழங்கிய பார்ட்னர் ஐடியையும் கடவுச்சொல்லையும் பயன்படுத்தவும். வாடிக்கையாளர் கணக்குகளால் இங்கு உள்நுழைய முடியாது.';
+
+  @override
+  String get authChangePassword => 'உங்கள் கடவுச்சொல்லை அமைக்கவும்';
+
+  @override
+  String get authChangePasswordBody =>
+      'பார்ட்னர் கணக்கைத் திறப்பதற்கு முன் தற்காலிக கடவுச்சொல்லை மாற்றவும்.';
+
+  @override
+  String get authNewPassword => 'புதிய கடவுச்சொல்';
+
+  @override
+  String get authConfirmPassword => 'புதிய கடவுச்சொல்லை உறுதிசெய்யவும்';
+
+  @override
+  String get authSavePassword => 'கடவுச்சொல்லைச் சேமி';
+
+  @override
+  String get authPasswordMismatch => 'கடவுச்சொற்கள் பொருந்தவில்லை.';
+
+  @override
+  String get authNotIssuedBody =>
+      'இந்தக் கணக்கிற்கு பணியாளர் சுயவிவரம் வழங்கப்படவில்லை. Kaylo-வில் விண்ணப்பிக்கவும் அல்லது உங்கள் விண்ணப்பம் குறித்து உதவியைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get authVerificationBody =>
+      'Kaylo உங்கள் சரிபார்ப்பை அங்கீகரித்த பிறகு வேலைகள் கிடைக்கும். சுயவிவரத்தைப் பார்க்கலாம் அல்லது உதவியைத் தொடர்புகொள்ளலாம்.';
+
+  @override
+  String get partnerJobNotifications => 'வேலை கோரிக்கைகள்';
+
+  @override
+  String get partnerNewJobRequest => 'புதிய வேலை கோரிக்கை';
+
+  @override
+  String get partnerOpenJobRequest =>
+      'கோரிக்கையைப் பார்க்க Kaylo Partner-ஐத் திறக்கவும்.';
+
+  @override
+  String get applicationTitle => 'Kaylo-விற்கு விண்ணப்பிக்கவும்';
+
+  @override
+  String get applicationPersonal => 'உங்களைப் பற்றி';
+
+  @override
+  String get applicationSkills => 'உங்கள் பணி மற்றும் சேவைப் பகுதி';
+
+  @override
+  String get applicationDocuments => 'உங்கள் ஆவணங்கள்';
+
+  @override
+  String get applicationPayout => 'பணம் பெறுதல் மற்றும் ஒப்புதல்';
+
+  @override
+  String applicationStep(int current, int total) {
+    return 'படி $current / $total';
+  }
+
+  @override
+  String get applicationIntro =>
+      'கணக்கு இல்லாமல் விண்ணப்பிக்கலாம். கூட்டாளர் உள்நுழைவை வழங்கும் முன் Kaylo உங்கள் விவரங்களையும் ஆவணங்களையும் மதிப்பாய்வு செய்யும்.';
+
+  @override
+  String get applicationPhone => 'தொலைபேசி எண்';
+
+  @override
+  String get applicationEmail => 'தகவல் பெறும் மின்னஞ்சல்';
+
+  @override
+  String get applicationEmailHint =>
+      'நீங்கள் அணுகக்கூடிய மின்னஞ்சலை வழங்கவும். ஒப்புதலுக்குப் பிறகு கூட்டாளர் ID மற்றும் தற்காலிக கடவுச்சொல்லை Kaylo இங்கு அனுப்பும்.';
+
+  @override
+  String get applicationInvalidPhone =>
+      'நாட்டுக் குறியீட்டுடன் சரியான தொலைபேசி எண்ணை உள்ளிடவும்';
+
+  @override
+  String get applicationInvalidEmail => 'சரியான மின்னஞ்சல் முகவரியை உள்ளிடவும்';
+
+  @override
+  String get applicationProfession => 'தொழில்';
+
+  @override
+  String get applicationProfessionRequired => 'உங்கள் தொழிலை உள்ளிடவும்';
+
+  @override
+  String get applicationExperience => 'அனுபவம் (ஆண்டுகள்)';
+
+  @override
+  String get applicationInvalidExperience =>
+      '0 முதல் 60 ஆண்டுகள் வரை அனுபவத்தை உள்ளிடவும்';
+
+  @override
+  String get applicationChooseDistrict =>
+      'உங்கள் மாவட்டத்தைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get applicationNoServices =>
+      'சேவைப் பட்டியல் இன்னும் கிடைக்கவில்லை. பின்னர் மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get applicationDocumentsHint =>
+      'ஐந்து ஆவணங்களையும் சேர்க்கவும். புகைப்படங்களுக்கு JPG அல்லது PNG; மற்ற ஆவணங்களுக்கு JPG, PNG அல்லது PDF. ஒவ்வொரு கோப்பும் அதிகபட்சம் 10 MB.';
+
+  @override
+  String get applicationDocumentsPrivacy =>
+      'Kaylo விண்ணப்ப மதிப்பாய்விற்காக ஆவணங்கள் தனிப்பட்ட முறையில் பதிவேற்றப்படும். பொது நிலை தேடலில் அவை காட்டப்படாது.';
+
+  @override
+  String get applicationPhoto => 'சுயவிவரப் புகைப்படம்';
+
+  @override
+  String get applicationAadhaarFront => 'ஆதார் முன்பக்கம்';
+
+  @override
+  String get applicationAadhaarBack => 'ஆதார் பின்பக்கம்';
+
+  @override
+  String get applicationSelfie => 'செல்ஃபி';
+
+  @override
+  String get applicationChooseFile => 'கோப்பைத் தேர்ந்தெடுக்கவும்';
+
+  @override
+  String get applicationAllDocuments => 'தொடர ஐந்து ஆவணங்களையும் சேர்க்கவும்';
+
+  @override
+  String get applicationUpi => 'UPI';
+
+  @override
+  String get applicationBank => 'வங்கிக் கணக்கு';
+
+  @override
+  String get applicationAccountHolder => 'கணக்கு வைத்திருப்பவர் பெயர்';
+
+  @override
+  String get applicationBankName => 'வங்கியின் பெயர்';
+
+  @override
+  String get applicationAccountNumber => 'கணக்கு எண்';
+
+  @override
+  String get applicationConfirmAccount => 'கணக்கு எண்ணை உறுதிப்படுத்தவும்';
+
+  @override
+  String get applicationIfsc => 'IFSC குறியீடு';
+
+  @override
+  String get applicationBankRequired => 'வங்கி விவரங்களை உள்ளிடவும்';
+
+  @override
+  String get applicationInvalidAccount =>
+      '9 முதல் 18 இலக்க கணக்கு எண்ணை உள்ளிடவும்';
+
+  @override
+  String get applicationAccountMismatch => 'கணக்கு எண்கள் பொருந்தவில்லை';
+
+  @override
+  String get applicationInvalidIfsc =>
+      'சரியான 11 எழுத்து IFSC குறியீட்டை உள்ளிடவும்';
+
+  @override
+  String get applicationReviewHint =>
+      'அனுப்பும் முன் உங்கள் விவரங்களைச் சரிபார்க்கவும்.';
+
+  @override
+  String get applicationConsent =>
+      'இந்த விவரங்கள் என்னுடையவை மற்றும் சரியானவை என உறுதிப்படுத்துகிறேன். கூட்டாளர் சரிபார்ப்பிற்காக எனது விவரங்களையும் ஆவணங்களையும் Kaylo சேமித்து மதிப்பாய்வு செய்ய ஒப்புக்கொள்கிறேன்.';
+
+  @override
+  String get applicationConsentRequired =>
+      'சமர்ப்பிக்கும் முன் ஒப்புதல் வழங்கவும்';
+
+  @override
+  String get applicationKeepOpen =>
+      'அனைத்து ஆவணங்களும் பதிவேற்றப்படும் வரை Kaylo-வைத் திறந்து வைத்திருக்கவும். இணைப்பு துண்டிக்கப்பட்டால் புதிய விண்ணப்பம் உருவாக்காமல் இங்கே மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get applicationBack => 'பின்னால்';
+
+  @override
+  String get applicationContinue => 'தொடரவும்';
+
+  @override
+  String get applicationSubmit => 'விண்ணப்பத்தைச் சமர்ப்பிக்கவும்';
+
+  @override
+  String get applicationSending => 'விண்ணப்பத்தை அனுப்பி முடிக்கவும்';
+
+  @override
+  String get applicationRecoveryHint =>
+      'ஐந்து ஆவணங்களும் கிடைத்த பிறகே விண்ணப்பம் மதிப்பாய்விற்குத் தயாராகும். மீண்டும் முயற்சிப்பது அதே விண்ணப்பத்தைத் தொடரும். முடியும் முன் செயலியை மூடினால் குறிப்பெண்ணுடன் Kaylo-வைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get applicationReference => 'விண்ணப்பக் குறிப்பெண்';
+
+  @override
+  String applicationUploadProgress(int count, int total) {
+    return '$total ஆவணங்களில் $count பெறப்பட்டன';
+  }
+
+  @override
+  String get applicationCheckStatus => 'விண்ணப்ப நிலையைப் பார்க்கவும்';
+
+  @override
+  String get applicationBackToSignIn => 'உள்நுழைவுக்குத் திரும்பவும்';
+
+  @override
+  String get applicationStatusHint =>
+      'நிலையைப் பார்க்க உங்கள் விண்ணப்பக் குறிப்பெண்ணை உள்ளிடவும். தனிப்பட்ட விவரங்களும் ஆவணங்களும் இங்கு காட்டப்படாது.';
+
+  @override
+  String get applicationInvalidReference =>
+      'உங்கள் விண்ணப்பத்தின் குறிப்பெண்ணை உள்ளிடவும்';
+
+  @override
+  String get applicationUnderReview => 'விண்ணப்பம் மதிப்பாய்வில் உள்ளது';
+
+  @override
+  String get applicationUnderReviewHint =>
+      'உங்கள் விவரங்களும் ஐந்து ஆவணங்களும் பெறப்பட்டன. முடிவெடுக்கும் முன் Kaylo அவற்றை மதிப்பாய்வு செய்யும். இந்தக் குறிப்பெண் கூட்டாளர் உள்நுழைவு அல்ல.';
+
+  @override
+  String get applicationIncomplete => 'ஆவணங்கள் இன்னும் தேவை';
+
+  @override
+  String get applicationIncompleteHint =>
+      'உங்கள் விவரங்கள் பெறப்பட்டன, ஆனால் ஆவணப் பதிவேற்றம் முடியவில்லை. இந்தச் செயலி அமர்விலிருந்து தொடரவும் அல்லது குறிப்பெண்ணுடன் Kaylo உதவியை நாடவும்.';
+
+  @override
+  String get applicationApproved => 'விண்ணப்பம் ஏற்கப்பட்டது';
+
+  @override
+  String get applicationApprovedHint =>
+      'ஒப்புதலுக்குப் பிறகு கூட்டாளர் ID மற்றும் தற்காலிக கடவுச்சொல்லை Kaylo மின்னஞ்சலில் அனுப்பும். கிடைக்கவில்லை என்றால் ஆதரவைத் தொடர்புகொள்ளவும். முதல் உள்நுழைவில் புதிய கடவுச்சொல் அமைக்க வேண்டும்.';
+
+  @override
+  String get applicationRejected => 'விண்ணப்பம் ஏற்கப்படவில்லை';
+
+  @override
+  String get applicationRejectedHint =>
+      'இந்த விண்ணப்பத்தை Kaylo ஏற்கவில்லை. இதற்குக் கூட்டாளர் உள்நுழைவு கிடையாது. மேலும் உதவிக்கு குறிப்பெண்ணுடன் ஆதரவைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get applicationCopyReference => 'குறிப்பெண்ணை நகலெடுக்கவும்';
+
+  @override
+  String get applicationReferenceCopied => 'குறிப்பெண் நகலெடுக்கப்பட்டது';
+
+  @override
+  String get applicationResumeUpload => 'ஆவணப் பதிவேற்றத்தைத் தொடரவும்';
+
+  @override
+  String get applicationContactSupport => 'Kaylo ஆதரவைத் தொடர்புகொள்ளவும்';
+
+  @override
+  String applicationSupportSubject(String reference) {
+    return 'கூட்டாளர் விண்ணப்ப உதவி: $reference';
+  }
+
+  @override
+  String get applicationSupportHint =>
+      'உங்கள் விண்ணப்பக் குறிப்பெண்ணுடன் kayloapp@gmail.com-க்கு மின்னஞ்சல் அனுப்பவும்.';
+
+  @override
+  String get applicationDemoNotice =>
+      'மாதிரி முறை: இந்த விண்ணப்பம் இந்தச் செயலி அமர்வில் மட்டுமே இருக்கும்; Kaylo-விற்கு அனுப்பப்படாது.';
+
+  @override
+  String get applicationConnectionError =>
+      'இணைக்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get applicationAlreadyOpen =>
+      'இந்தத் தொலைபேசி எண்ணிற்கு ஏற்கனவே விண்ணப்பம் உள்ளது. அதன் நிலையைப் பார்க்கவும் அல்லது Kaylo ஆதரவைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get applicationInvalidDetails =>
+      'உங்கள் விண்ணப்ப விவரங்களைச் சரிபார்க்கவும்.';
+
+  @override
+  String get applicationInvalidDocument =>
+      '10 MB வரையிலான சரியான JPG, PNG அல்லது PDF கோப்பைத் தேர்ந்தெடுக்கவும். சுயவிவரப் புகைப்படமும் செல்ஃபியும் படங்களாக இருக்க வேண்டும்.';
+
+  @override
+  String get applicationUploadExpired =>
+      'பதிவேற்ற அமர்வு இனி கிடைக்கவில்லை. விண்ணப்பத்தை முடிக்க குறிப்பெண்ணுடன் Kaylo-வைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get applicationNotFound =>
+      'இந்தக் குறிப்பெண்ணிற்கு விண்ணப்பம் இல்லை. குறிப்பெண்ணைச் சரிபார்த்து மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get applicationUnavailable =>
+      'விண்ணப்ப சேவை தற்போது கிடைக்கவில்லை. பின்னர் முயற்சிக்கவும் அல்லது Kaylo ஆதரவைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get applicationIdentityInUse =>
+      'இந்தத் தொலைபேசி அல்லது மின்னஞ்சல் ஏற்கனவே Kaylo கணக்கில் பயன்படுத்தப்படுகிறது. இந்த விவரங்களுடன் விண்ணப்பிக்கும் முன் ஆதரவைத் தொடர்புகொள்ளவும்.';
+
+  @override
+  String get liveJobsPending =>
+      'நேரடி வேலைக் கோரிக்கைகளும் வருமானமும் இன்னும் கிடைக்கவில்லை. உங்கள் சுயவிவரத்தையும் கிடைக்கும் நேரங்களையும் பயன்படுத்தலாம்.';
 }

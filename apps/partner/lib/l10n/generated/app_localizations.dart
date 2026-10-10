@@ -507,7 +507,7 @@ abstract class AppLocalizations {
   /// Log out dialog body
   ///
   /// In en, this message translates to:
-  /// **'You will need to sign in again with your phone number to receive jobs.'**
+  /// **'You will need your partner ID and password to sign in again.'**
   String get logOutBody;
 
   /// Dialog dismiss button
@@ -737,6 +737,660 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'{from} to {to}'**
   String dateRange(String from, String to);
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in with the partner ID issued by Kaylo.'**
+  String get authSubtitle;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Sign in'**
+  String get authSignIn;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Partner ID'**
+  String get authPartnerId;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Password'**
+  String get authPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Show password'**
+  String get authShowPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Hide password'**
+  String get authHidePassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Forgot password? Contact Kaylo'**
+  String get authForgotPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Kaylo support'**
+  String get authSupport;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Apply as a partner'**
+  String get authApply;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Check application status'**
+  String get authCheckStatus;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Demo: KP-000123 / kaylo123'**
+  String get authDemoCredentials;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid partner ID, like KP-000123.'**
+  String get authInvalidId;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'The partner ID or password is incorrect.'**
+  String get authInvalidCredentials;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Too many attempts. Please wait and try again.'**
+  String get authTooManyAttempts;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Check your internet connection and try again.'**
+  String get authNetworkError;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Unable to verify your account'**
+  String get authUnavailableTitle;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'We could not verify your partner access. Try again or contact Kaylo support.'**
+  String get authUnavailable;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Use at least 12 characters for your new password.'**
+  String get authPasswordRule;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a password different from your temporary password.'**
+  String get authDifferentPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Your session expired. Sign out and sign in again.'**
+  String get authSessionExpired;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Your password update needs confirmation. Tap Save password again to retry securely.'**
+  String get authPasswordConfirmation;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Use the partner ID and password issued by Kaylo. Customer accounts cannot sign in here.'**
+  String get authIdentityNotAllowed;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Set your password'**
+  String get authChangePassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Replace your temporary password before opening your partner account.'**
+  String get authChangePasswordBody;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'New password'**
+  String get authNewPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm new password'**
+  String get authConfirmPassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Save password'**
+  String get authSavePassword;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'The passwords do not match.'**
+  String get authPasswordMismatch;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'This account has no issued worker profile. Apply to Kaylo or contact support about your application.'**
+  String get authNotIssuedBody;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Jobs are available after Kaylo approves your verification. You can view your profile or contact support.'**
+  String get authVerificationBody;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Job requests'**
+  String get partnerJobNotifications;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'New job request'**
+  String get partnerNewJobRequest;
+
+  /// Partner issued-account authentication or notification text
+  ///
+  /// In en, this message translates to:
+  /// **'Open Kaylo Partner to review the request.'**
+  String get partnerOpenJobRequest;
+
+  /// No description provided for @applicationTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply to Kaylo'**
+  String get applicationTitle;
+
+  /// No description provided for @applicationPersonal.
+  ///
+  /// In en, this message translates to:
+  /// **'About you'**
+  String get applicationPersonal;
+
+  /// No description provided for @applicationSkills.
+  ///
+  /// In en, this message translates to:
+  /// **'Your work & service area'**
+  String get applicationSkills;
+
+  /// No description provided for @applicationDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Your documents'**
+  String get applicationDocuments;
+
+  /// No description provided for @applicationPayout.
+  ///
+  /// In en, this message translates to:
+  /// **'Payout & consent'**
+  String get applicationPayout;
+
+  /// No description provided for @applicationStep.
+  ///
+  /// In en, this message translates to:
+  /// **'Step {current} of {total}'**
+  String applicationStep(int current, int total);
+
+  /// No description provided for @applicationIntro.
+  ///
+  /// In en, this message translates to:
+  /// **'Apply without an account. Kaylo will review your details and documents before issuing a partner login.'**
+  String get applicationIntro;
+
+  /// No description provided for @applicationPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Phone number'**
+  String get applicationPhone;
+
+  /// No description provided for @applicationEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Delivery email'**
+  String get applicationEmail;
+
+  /// No description provided for @applicationEmailHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Use an email you can access. Kaylo sends your partner ID and temporary password here after approval.'**
+  String get applicationEmailHint;
+
+  /// No description provided for @applicationInvalidPhone.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid phone number with country code'**
+  String get applicationInvalidPhone;
+
+  /// No description provided for @applicationInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid delivery email'**
+  String get applicationInvalidEmail;
+
+  /// No description provided for @applicationProfession.
+  ///
+  /// In en, this message translates to:
+  /// **'Profession'**
+  String get applicationProfession;
+
+  /// No description provided for @applicationProfessionRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your profession'**
+  String get applicationProfessionRequired;
+
+  /// No description provided for @applicationExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Experience (years)'**
+  String get applicationExperience;
+
+  /// No description provided for @applicationInvalidExperience.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter experience from 0 to 60 years'**
+  String get applicationInvalidExperience;
+
+  /// No description provided for @applicationChooseDistrict.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose your district'**
+  String get applicationChooseDistrict;
+
+  /// No description provided for @applicationNoServices.
+  ///
+  /// In en, this message translates to:
+  /// **'The service catalogue is not available yet. Please try again later.'**
+  String get applicationNoServices;
+
+  /// No description provided for @applicationDocumentsHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Add all five documents. Use JPG or PNG for photos; JPG, PNG or PDF for other documents. Maximum 10 MB per file.'**
+  String get applicationDocumentsHint;
+
+  /// No description provided for @applicationDocumentsPrivacy.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents are uploaded privately for Kaylo’s application review. They are not shown in the public status lookup.'**
+  String get applicationDocumentsPrivacy;
+
+  /// No description provided for @applicationPhoto.
+  ///
+  /// In en, this message translates to:
+  /// **'Profile photo'**
+  String get applicationPhoto;
+
+  /// No description provided for @applicationAadhaarFront.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar front'**
+  String get applicationAadhaarFront;
+
+  /// No description provided for @applicationAadhaarBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Aadhaar back'**
+  String get applicationAadhaarBack;
+
+  /// No description provided for @applicationSelfie.
+  ///
+  /// In en, this message translates to:
+  /// **'Selfie'**
+  String get applicationSelfie;
+
+  /// No description provided for @applicationChooseFile.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a file'**
+  String get applicationChooseFile;
+
+  /// No description provided for @applicationAllDocuments.
+  ///
+  /// In en, this message translates to:
+  /// **'Add all five documents to continue'**
+  String get applicationAllDocuments;
+
+  /// No description provided for @applicationUpi.
+  ///
+  /// In en, this message translates to:
+  /// **'UPI'**
+  String get applicationUpi;
+
+  /// No description provided for @applicationBank.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank account'**
+  String get applicationBank;
+
+  /// No description provided for @applicationAccountHolder.
+  ///
+  /// In en, this message translates to:
+  /// **'Account holder name'**
+  String get applicationAccountHolder;
+
+  /// No description provided for @applicationBankName.
+  ///
+  /// In en, this message translates to:
+  /// **'Bank name'**
+  String get applicationBankName;
+
+  /// No description provided for @applicationAccountNumber.
+  ///
+  /// In en, this message translates to:
+  /// **'Account number'**
+  String get applicationAccountNumber;
+
+  /// No description provided for @applicationConfirmAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm account number'**
+  String get applicationConfirmAccount;
+
+  /// No description provided for @applicationIfsc.
+  ///
+  /// In en, this message translates to:
+  /// **'IFSC code'**
+  String get applicationIfsc;
+
+  /// No description provided for @applicationBankRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the bank details'**
+  String get applicationBankRequired;
+
+  /// No description provided for @applicationInvalidAccount.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a 9 to 18 digit account number'**
+  String get applicationInvalidAccount;
+
+  /// No description provided for @applicationAccountMismatch.
+  ///
+  /// In en, this message translates to:
+  /// **'The account numbers do not match'**
+  String get applicationAccountMismatch;
+
+  /// No description provided for @applicationInvalidIfsc.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter a valid 11-character IFSC code'**
+  String get applicationInvalidIfsc;
+
+  /// No description provided for @applicationReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your details before sending.'**
+  String get applicationReviewHint;
+
+  /// No description provided for @applicationConsent.
+  ///
+  /// In en, this message translates to:
+  /// **'I confirm these details are mine and accurate, and consent to Kaylo storing and reviewing my details and documents for partner verification.'**
+  String get applicationConsent;
+
+  /// No description provided for @applicationConsentRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Please give consent before submitting'**
+  String get applicationConsentRequired;
+
+  /// No description provided for @applicationKeepOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Kaylo open until all documents finish uploading. If your connection drops, retry here without creating another application.'**
+  String get applicationKeepOpen;
+
+  /// No description provided for @applicationBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back'**
+  String get applicationBack;
+
+  /// No description provided for @applicationContinue.
+  ///
+  /// In en, this message translates to:
+  /// **'Continue'**
+  String get applicationContinue;
+
+  /// No description provided for @applicationSubmit.
+  ///
+  /// In en, this message translates to:
+  /// **'Submit application'**
+  String get applicationSubmit;
+
+  /// No description provided for @applicationSending.
+  ///
+  /// In en, this message translates to:
+  /// **'Finish sending your application'**
+  String get applicationSending;
+
+  /// No description provided for @applicationRecoveryHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your application is only ready for review when all five documents are received. Retry continues the same application. If you close the app before finishing, contact Kaylo with your reference.'**
+  String get applicationRecoveryHint;
+
+  /// No description provided for @applicationReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Application reference'**
+  String get applicationReference;
+
+  /// No description provided for @applicationUploadProgress.
+  ///
+  /// In en, this message translates to:
+  /// **'{count} of {total} documents received'**
+  String applicationUploadProgress(int count, int total);
+
+  /// No description provided for @applicationCheckStatus.
+  ///
+  /// In en, this message translates to:
+  /// **'Check application status'**
+  String get applicationCheckStatus;
+
+  /// No description provided for @applicationBackToSignIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get applicationBackToSignIn;
+
+  /// No description provided for @applicationStatusHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your application reference to see its status. Personal details and documents are never displayed here.'**
+  String get applicationStatusHint;
+
+  /// No description provided for @applicationInvalidReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter the reference from your application'**
+  String get applicationInvalidReference;
+
+  /// No description provided for @applicationUnderReview.
+  ///
+  /// In en, this message translates to:
+  /// **'Application under review'**
+  String get applicationUnderReview;
+
+  /// No description provided for @applicationUnderReviewHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your details and all five documents have been received. Kaylo will review them before deciding on your application. This reference is not a partner login.'**
+  String get applicationUnderReviewHint;
+
+  /// No description provided for @applicationIncomplete.
+  ///
+  /// In en, this message translates to:
+  /// **'Documents still needed'**
+  String get applicationIncomplete;
+
+  /// No description provided for @applicationIncompleteHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Your details were received, but document upload is not complete. Resume from this app session or contact Kaylo with your reference for help.'**
+  String get applicationIncompleteHint;
+
+  /// No description provided for @applicationApproved.
+  ///
+  /// In en, this message translates to:
+  /// **'Application approved'**
+  String get applicationApproved;
+
+  /// No description provided for @applicationApprovedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo sends your partner ID and temporary password to your delivery email after approval. If you have not received them, contact support. Your first sign-in requires a new password.'**
+  String get applicationApprovedHint;
+
+  /// No description provided for @applicationRejected.
+  ///
+  /// In en, this message translates to:
+  /// **'Application not approved'**
+  String get applicationRejected;
+
+  /// No description provided for @applicationRejectedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo has not approved this application. No partner login is available for it. Contact support with your reference for further help.'**
+  String get applicationRejectedHint;
+
+  /// No description provided for @applicationCopyReference.
+  ///
+  /// In en, this message translates to:
+  /// **'Copy reference'**
+  String get applicationCopyReference;
+
+  /// No description provided for @applicationReferenceCopied.
+  ///
+  /// In en, this message translates to:
+  /// **'Reference copied'**
+  String get applicationReferenceCopied;
+
+  /// No description provided for @applicationResumeUpload.
+  ///
+  /// In en, this message translates to:
+  /// **'Resume document upload'**
+  String get applicationResumeUpload;
+
+  /// No description provided for @applicationContactSupport.
+  ///
+  /// In en, this message translates to:
+  /// **'Contact Kaylo support'**
+  String get applicationContactSupport;
+
+  /// No description provided for @applicationSupportSubject.
+  ///
+  /// In en, this message translates to:
+  /// **'Partner application help: {reference}'**
+  String applicationSupportSubject(String reference);
+
+  /// No description provided for @applicationSupportHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Email kayloapp@gmail.com with your application reference.'**
+  String get applicationSupportHint;
+
+  /// No description provided for @applicationDemoNotice.
+  ///
+  /// In en, this message translates to:
+  /// **'Sample mode: this application stays in this app session and is not sent to Kaylo.'**
+  String get applicationDemoNotice;
+
+  /// No description provided for @applicationConnectionError.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect. Check your connection and retry.'**
+  String get applicationConnectionError;
+
+  /// No description provided for @applicationAlreadyOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'There is already an open application for this phone number. Check its status or contact Kaylo support.'**
+  String get applicationAlreadyOpen;
+
+  /// No description provided for @applicationInvalidDetails.
+  ///
+  /// In en, this message translates to:
+  /// **'Please check your application details.'**
+  String get applicationInvalidDetails;
+
+  /// No description provided for @applicationInvalidDocument.
+  ///
+  /// In en, this message translates to:
+  /// **'Choose a valid JPG, PNG or PDF file, up to 10 MB. Profile photos and selfies must be images.'**
+  String get applicationInvalidDocument;
+
+  /// No description provided for @applicationUploadExpired.
+  ///
+  /// In en, this message translates to:
+  /// **'The upload session is no longer available. Contact Kaylo with your reference to finish your application.'**
+  String get applicationUploadExpired;
+
+  /// No description provided for @applicationNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'No application matches that reference. Check the reference and try again.'**
+  String get applicationNotFound;
+
+  /// No description provided for @applicationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Applications are unavailable right now. Please try again later or contact Kaylo support.'**
+  String get applicationUnavailable;
+
+  /// No description provided for @applicationIdentityInUse.
+  ///
+  /// In en, this message translates to:
+  /// **'This phone or email is already used by a Kaylo account. Contact support before applying with this identity.'**
+  String get applicationIdentityInUse;
+
+  /// No description provided for @liveJobsPending.
+  ///
+  /// In en, this message translates to:
+  /// **'Live job requests and earnings are not available yet. Your profile and availability are ready to use.'**
+  String get liveJobsPending;
 }
 
 class _AppLocalizationsDelegate

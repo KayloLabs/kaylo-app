@@ -225,7 +225,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get logOutBody =>
-      'You will need to sign in again with your phone number to receive jobs.';
+      'You will need your partner ID and password to sign in again.';
 
   @override
   String get cancel => 'Cancel';
@@ -352,4 +352,379 @@ class AppLocalizationsEn extends AppLocalizations {
   String dateRange(String from, String to) {
     return '$from to $to';
   }
+
+  @override
+  String get authSubtitle => 'Sign in with the partner ID issued by Kaylo.';
+
+  @override
+  String get authSignIn => 'Sign in';
+
+  @override
+  String get authPartnerId => 'Partner ID';
+
+  @override
+  String get authPassword => 'Password';
+
+  @override
+  String get authShowPassword => 'Show password';
+
+  @override
+  String get authHidePassword => 'Hide password';
+
+  @override
+  String get authForgotPassword => 'Forgot password? Contact Kaylo';
+
+  @override
+  String get authSupport => 'Contact Kaylo support';
+
+  @override
+  String get authApply => 'Apply as a partner';
+
+  @override
+  String get authCheckStatus => 'Check application status';
+
+  @override
+  String get authDemoCredentials => 'Demo: KP-000123 / kaylo123';
+
+  @override
+  String get authInvalidId => 'Enter a valid partner ID, like KP-000123.';
+
+  @override
+  String get authInvalidCredentials =>
+      'The partner ID or password is incorrect.';
+
+  @override
+  String get authTooManyAttempts =>
+      'Too many attempts. Please wait and try again.';
+
+  @override
+  String get authNetworkError =>
+      'Check your internet connection and try again.';
+
+  @override
+  String get authUnavailableTitle => 'Unable to verify your account';
+
+  @override
+  String get authUnavailable =>
+      'We could not verify your partner access. Try again or contact Kaylo support.';
+
+  @override
+  String get authPasswordRule =>
+      'Use at least 12 characters for your new password.';
+
+  @override
+  String get authDifferentPassword =>
+      'Choose a password different from your temporary password.';
+
+  @override
+  String get authSessionExpired =>
+      'Your session expired. Sign out and sign in again.';
+
+  @override
+  String get authPasswordConfirmation =>
+      'Your password update needs confirmation. Tap Save password again to retry securely.';
+
+  @override
+  String get authIdentityNotAllowed =>
+      'Use the partner ID and password issued by Kaylo. Customer accounts cannot sign in here.';
+
+  @override
+  String get authChangePassword => 'Set your password';
+
+  @override
+  String get authChangePasswordBody =>
+      'Replace your temporary password before opening your partner account.';
+
+  @override
+  String get authNewPassword => 'New password';
+
+  @override
+  String get authConfirmPassword => 'Confirm new password';
+
+  @override
+  String get authSavePassword => 'Save password';
+
+  @override
+  String get authPasswordMismatch => 'The passwords do not match.';
+
+  @override
+  String get authNotIssuedBody =>
+      'This account has no issued worker profile. Apply to Kaylo or contact support about your application.';
+
+  @override
+  String get authVerificationBody =>
+      'Jobs are available after Kaylo approves your verification. You can view your profile or contact support.';
+
+  @override
+  String get partnerJobNotifications => 'Job requests';
+
+  @override
+  String get partnerNewJobRequest => 'New job request';
+
+  @override
+  String get partnerOpenJobRequest =>
+      'Open Kaylo Partner to review the request.';
+
+  @override
+  String get applicationTitle => 'Apply to Kaylo';
+
+  @override
+  String get applicationPersonal => 'About you';
+
+  @override
+  String get applicationSkills => 'Your work & service area';
+
+  @override
+  String get applicationDocuments => 'Your documents';
+
+  @override
+  String get applicationPayout => 'Payout & consent';
+
+  @override
+  String applicationStep(int current, int total) {
+    return 'Step $current of $total';
+  }
+
+  @override
+  String get applicationIntro =>
+      'Apply without an account. Kaylo will review your details and documents before issuing a partner login.';
+
+  @override
+  String get applicationPhone => 'Phone number';
+
+  @override
+  String get applicationEmail => 'Delivery email';
+
+  @override
+  String get applicationEmailHint =>
+      'Use an email you can access. Kaylo sends your partner ID and temporary password here after approval.';
+
+  @override
+  String get applicationInvalidPhone =>
+      'Enter a valid phone number with country code';
+
+  @override
+  String get applicationInvalidEmail => 'Enter a valid delivery email';
+
+  @override
+  String get applicationProfession => 'Profession';
+
+  @override
+  String get applicationProfessionRequired => 'Enter your profession';
+
+  @override
+  String get applicationExperience => 'Experience (years)';
+
+  @override
+  String get applicationInvalidExperience =>
+      'Enter experience from 0 to 60 years';
+
+  @override
+  String get applicationChooseDistrict => 'Choose your district';
+
+  @override
+  String get applicationNoServices =>
+      'The service catalogue is not available yet. Please try again later.';
+
+  @override
+  String get applicationDocumentsHint =>
+      'Add all five documents. Use JPG or PNG for photos; JPG, PNG or PDF for other documents. Maximum 10 MB per file.';
+
+  @override
+  String get applicationDocumentsPrivacy =>
+      'Documents are uploaded privately for Kaylo’s application review. They are not shown in the public status lookup.';
+
+  @override
+  String get applicationPhoto => 'Profile photo';
+
+  @override
+  String get applicationAadhaarFront => 'Aadhaar front';
+
+  @override
+  String get applicationAadhaarBack => 'Aadhaar back';
+
+  @override
+  String get applicationSelfie => 'Selfie';
+
+  @override
+  String get applicationChooseFile => 'Choose a file';
+
+  @override
+  String get applicationAllDocuments => 'Add all five documents to continue';
+
+  @override
+  String get applicationUpi => 'UPI';
+
+  @override
+  String get applicationBank => 'Bank account';
+
+  @override
+  String get applicationAccountHolder => 'Account holder name';
+
+  @override
+  String get applicationBankName => 'Bank name';
+
+  @override
+  String get applicationAccountNumber => 'Account number';
+
+  @override
+  String get applicationConfirmAccount => 'Confirm account number';
+
+  @override
+  String get applicationIfsc => 'IFSC code';
+
+  @override
+  String get applicationBankRequired => 'Enter the bank details';
+
+  @override
+  String get applicationInvalidAccount =>
+      'Enter a 9 to 18 digit account number';
+
+  @override
+  String get applicationAccountMismatch => 'The account numbers do not match';
+
+  @override
+  String get applicationInvalidIfsc => 'Enter a valid 11-character IFSC code';
+
+  @override
+  String get applicationReviewHint => 'Check your details before sending.';
+
+  @override
+  String get applicationConsent =>
+      'I confirm these details are mine and accurate, and consent to Kaylo storing and reviewing my details and documents for partner verification.';
+
+  @override
+  String get applicationConsentRequired =>
+      'Please give consent before submitting';
+
+  @override
+  String get applicationKeepOpen =>
+      'Keep Kaylo open until all documents finish uploading. If your connection drops, retry here without creating another application.';
+
+  @override
+  String get applicationBack => 'Back';
+
+  @override
+  String get applicationContinue => 'Continue';
+
+  @override
+  String get applicationSubmit => 'Submit application';
+
+  @override
+  String get applicationSending => 'Finish sending your application';
+
+  @override
+  String get applicationRecoveryHint =>
+      'Your application is only ready for review when all five documents are received. Retry continues the same application. If you close the app before finishing, contact Kaylo with your reference.';
+
+  @override
+  String get applicationReference => 'Application reference';
+
+  @override
+  String applicationUploadProgress(int count, int total) {
+    return '$count of $total documents received';
+  }
+
+  @override
+  String get applicationCheckStatus => 'Check application status';
+
+  @override
+  String get applicationBackToSignIn => 'Back to sign in';
+
+  @override
+  String get applicationStatusHint =>
+      'Enter your application reference to see its status. Personal details and documents are never displayed here.';
+
+  @override
+  String get applicationInvalidReference =>
+      'Enter the reference from your application';
+
+  @override
+  String get applicationUnderReview => 'Application under review';
+
+  @override
+  String get applicationUnderReviewHint =>
+      'Your details and all five documents have been received. Kaylo will review them before deciding on your application. This reference is not a partner login.';
+
+  @override
+  String get applicationIncomplete => 'Documents still needed';
+
+  @override
+  String get applicationIncompleteHint =>
+      'Your details were received, but document upload is not complete. Resume from this app session or contact Kaylo with your reference for help.';
+
+  @override
+  String get applicationApproved => 'Application approved';
+
+  @override
+  String get applicationApprovedHint =>
+      'Kaylo sends your partner ID and temporary password to your delivery email after approval. If you have not received them, contact support. Your first sign-in requires a new password.';
+
+  @override
+  String get applicationRejected => 'Application not approved';
+
+  @override
+  String get applicationRejectedHint =>
+      'Kaylo has not approved this application. No partner login is available for it. Contact support with your reference for further help.';
+
+  @override
+  String get applicationCopyReference => 'Copy reference';
+
+  @override
+  String get applicationReferenceCopied => 'Reference copied';
+
+  @override
+  String get applicationResumeUpload => 'Resume document upload';
+
+  @override
+  String get applicationContactSupport => 'Contact Kaylo support';
+
+  @override
+  String applicationSupportSubject(String reference) {
+    return 'Partner application help: $reference';
+  }
+
+  @override
+  String get applicationSupportHint =>
+      'Email kayloapp@gmail.com with your application reference.';
+
+  @override
+  String get applicationDemoNotice =>
+      'Sample mode: this application stays in this app session and is not sent to Kaylo.';
+
+  @override
+  String get applicationConnectionError =>
+      'Could not connect. Check your connection and retry.';
+
+  @override
+  String get applicationAlreadyOpen =>
+      'There is already an open application for this phone number. Check its status or contact Kaylo support.';
+
+  @override
+  String get applicationInvalidDetails =>
+      'Please check your application details.';
+
+  @override
+  String get applicationInvalidDocument =>
+      'Choose a valid JPG, PNG or PDF file, up to 10 MB. Profile photos and selfies must be images.';
+
+  @override
+  String get applicationUploadExpired =>
+      'The upload session is no longer available. Contact Kaylo with your reference to finish your application.';
+
+  @override
+  String get applicationNotFound =>
+      'No application matches that reference. Check the reference and try again.';
+
+  @override
+  String get applicationUnavailable =>
+      'Applications are unavailable right now. Please try again later or contact Kaylo support.';
+
+  @override
+  String get applicationIdentityInUse =>
+      'This phone or email is already used by a Kaylo account. Contact support before applying with this identity.';
+
+  @override
+  String get liveJobsPending =>
+      'Live job requests and earnings are not available yet. Your profile and availability are ready to use.';
 }

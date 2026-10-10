@@ -1,0 +1,124 @@
+// ignore: unused_import
+import 'package:intl/intl.dart' as intl;
+import 'app_localizations.dart';
+
+// ignore_for_file: type=lint
+
+/// The translations for Hindi (`hi`).
+class AppLocalizationsHi extends AppLocalizations {
+  AppLocalizationsHi([String locale = 'hi']) : super(locale);
+
+  @override
+  String get appTitle => 'Kaylo Partner';
+
+  @override
+  String get refreshJobsTooltip => 'नौकरियों को रिफ्रेश करें';
+
+  @override
+  String get tabJobs => 'नौकरियां';
+
+  @override
+  String get tabEarnings => 'कमाई';
+
+  @override
+  String get tabProfile => 'प्रोफ़ाइल';
+
+  @override
+  String get dutyOnline => 'आप ऑनलाइन हैं';
+
+  @override
+  String get dutyOffline => 'आप ऑफ़लाइन हैं';
+
+  @override
+  String dutyTakingOrders(String district) {
+    return '$district में ऑर्डर ले रहे हैं';
+  }
+
+  @override
+  String get dutyNotReceivingRequests => 'अनुरोध प्राप्त नहीं कर रहे हैं';
+
+  @override
+  String get todaysPay => 'आज की कमाई';
+
+  @override
+  String get jobsToday => 'आज की नौकरियां';
+
+  @override
+  String get rating => 'रेटिंग';
+
+  @override
+  String get activeJob => 'सक्रिय नौकरी';
+
+  @override
+  String get offlineTitle => 'आप ऑफ़लाइन हैं';
+
+  @override
+  String get offlineDescription =>
+      'आस-पास के ग्राहकों से नौकरी के अनुरोध प्राप्त करने के लिए अपनी ड्यूटी स्थिति को ऑनलाइन में बदलें।';
+
+  @override
+  String newRequests(int count) {
+    return 'नए अनुरोध ($count)';
+  }
+
+  @override
+  String get searchingForRequests => 'अनुरोधों की खोज कर रहे हैं...';
+
+  @override
+  String get searchingForRequestsSubtitle =>
+      'जब कोई आस-पास का ग्राहक बुक करेगा तो आपको एक पिंग सुनाई देगी।';
+
+  @override
+  String get payout => 'भुगतान';
+
+  @override
+  String get decline => 'अस्वीकार करें';
+
+  @override
+  String get acceptJob => 'नौकरी स्वीकार करें';
+
+  @override
+  String get stageRequested => 'अनुरोध किया गया';
+
+  @override
+  String get stageAccepted => 'स्वीकार किया गया';
+
+  @override
+  String get stageOnTheWay => 'रास्ते में';
+
+  @override
+  String get stageArrived => 'पहुंच गए';
+
+  @override
+  String get stageInProgress => 'प्रगति पर';
+
+  @override
+  String get stageCompleted => 'पूरा हुआ';
+
+  @override
+  String get stageCancelled => 'रद्द किया गया';
+
+  @override
+  String get actionAccept => 'स्वीकार करें';
+
+  @override
+  String get actionStartTravel => 'यात्रा शुरू करें';
+
+  @override
+  String get actionArrived => 'मैं पहुंच गया हूं';
+
+  @override
+  String get actionStartJob => 'नौकरी शुरू करें';
+
+  @override
+  String get actionCompleteJob => 'नौकरी पूरी करें';
+
+  @override
+  String get languageSettings => 'भाषा सेटिंग्स';
+
+  @override
+  String get profileLanguageTile => 'भाषा';
+
+  @override
+  String get appSettingsHeader => 'ऐप सेटिंग्स';
+}

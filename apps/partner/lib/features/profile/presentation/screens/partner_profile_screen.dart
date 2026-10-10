@@ -13,7 +13,9 @@ import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 
 import '../../../../core/router/routes.dart';
+import '../../../../l10n/generated/app_localizations.dart';
 import '../../../auth/application/partner_session.dart';
+import '../widgets/language_tile.dart';
 
 class PartnerProfileScreen extends ConsumerWidget {
   const PartnerProfileScreen({super.key});
@@ -292,6 +294,13 @@ class PartnerProfileScreen extends ConsumerWidget {
               ],
             ),
           ),
+          const SizedBox(height: AppSpacing.xl),
+
+          SectionHeader(
+            title: AppLocalizations.of(context)?.appSettingsHeader ?? 'App Settings',
+          ),
+          const SizedBox(height: AppSpacing.m),
+          const LanguageTile(),
           const SizedBox(height: AppSpacing.xl),
 
           // Log out

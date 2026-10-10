@@ -379,6 +379,8 @@ Offer wording is translated in the app by code (`offer_copy.dart`), with the dat
 
 Notifications: workers get `New job request`, `Booking cancelled`, `Job completed`; customers additionally get `Your worker is on the way` and `Your worker has arrived`.
 
+`0021_worker_time_slots.sql`: a worker's slot is held by any open booking. `worker_taken_slots(worker_id, date)` lists the held times for anyone signed in (times only, no customer data), and a trigger refuses a second open booking for the same worker, day and time, including reschedules. Cancelled and completed bookings free the slot. `supabase/tests/worker_time_slots.sql` checks it.
+
 | Service | Price | Per |
 | --- | --- | --- |
 | Coconut Plucking | 50 | tree |

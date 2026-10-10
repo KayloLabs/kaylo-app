@@ -10,6 +10,10 @@ jobs:
   # One job named "check" is what branch protection on main waits for.
   check:
     runs-on: ubuntu-latest
+    # Match the time zone the apps are built for so clock-sensitive tests
+    # behave the same on CI as on a developer machine.
+    env:
+      TZ: Asia/Kolkata
     steps:
       - uses: actions/checkout@v4
 

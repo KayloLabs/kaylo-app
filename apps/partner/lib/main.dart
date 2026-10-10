@@ -10,6 +10,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'core/providers/locale_provider.dart';
 import 'core/router/app_router.dart';
 import 'firebase_options.dart';
+import 'features/notifications/application/partner_push_registration.dart';
 import 'l10n/generated/app_localizations.dart';
 
 Future<void> main() async {
@@ -56,6 +57,7 @@ class KayloPartnerApp extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    ref.watch(partnerPushRegistrationProvider);
     final router = ref.watch(partnerRouterProvider);
     return MaterialApp.router(
       // No debug ribbon in demos; release builds never show it anyway.

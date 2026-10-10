@@ -3,6 +3,7 @@
 /// (location, speech, sound, storage, haptics, payments).
 library;
 
+export 'auth/profile_store.dart';
 export 'config/app_env.dart';
 export 'firebase/firebase_bootstrap.dart';
 export 'models/app_user.dart';

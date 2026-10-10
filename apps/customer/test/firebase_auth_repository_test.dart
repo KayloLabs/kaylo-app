@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kaylo/features/auth/data/firebase_auth_repository.dart';
-import 'package:kaylo/features/auth/domain/profile_store.dart';
+import 'package:kaylo_core/auth/profile_store.dart';
 import 'package:kaylo_core/models/app_user.dart';
 
 void main() {

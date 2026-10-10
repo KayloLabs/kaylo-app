@@ -8,7 +8,7 @@ import 'package:kaylo_core/models/app_user.dart';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 
 import '../domain/auth_repository.dart';
-import '../domain/profile_store.dart';
+import 'package:kaylo_core/auth/profile_store.dart';
 
 /// Sign-in through Firebase Authentication: phone OTP, Google, Apple
 /// (web). The profile row lives in Supabase, which trusts the Firebase

@@ -2,7 +2,7 @@ import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart' as supabase;
 import 'package:kaylo_core/models/app_user.dart';
 import '../domain/auth_repository.dart';
-import '../domain/profile_store.dart';
+import 'package:kaylo_core/auth/profile_store.dart';
 
 /// Supabase's own email OTP and OAuth. The fallback where Firebase is
 /// not configured (desktop builds); the profile handling is shared with

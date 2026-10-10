@@ -75,6 +75,13 @@ void main() {
   });
 
   testWidgets('completing a job adds it to earnings history', (tester) async {
+    // The completed-jobs list is sorted by schedule time, so where this job
+    // lands depends on the time of day. A surface that keeps the default
+    // 800 px width but is much taller builds every row, so the test does not
+    // depend on the clock (CI runs in UTC).
+    tester.view.physicalSize = const Size(2400, 12000);
+    tester.view.devicePixelRatio = 3.0;
+    addTearDown(tester.view.reset);
     final (container, app) = await createHarness();
     addTearDown(() async {
       await container.read(jobsRepositoryProvider).setDuty(false);

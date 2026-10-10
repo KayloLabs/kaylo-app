@@ -71,8 +71,8 @@ void main() {
     expect(find.text('+91 9847012345'), findsOneWidget);
     expect(find.text('Completed'), findsOneWidget);
     expect(find.text('4.9'), findsNothing, reason: 'no invented rating');
-    // Mock data: 3 bookings, 2 of them completed, 1 saved address.
-    expect(find.text('3'), findsOneWidget);
+    // Mock data: 5 bookings (two of them Care), 2 completed, 1 address.
+    expect(find.text('5'), findsOneWidget);
     expect(find.text('2'), findsOneWidget);
     expect(find.text('1'), findsOneWidget);
   });

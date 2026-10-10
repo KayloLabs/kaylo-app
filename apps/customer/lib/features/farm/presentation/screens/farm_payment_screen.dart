@@ -124,7 +124,11 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
         paymentMethod: _method,
         extras: [
           if (workerName != null) ReceiptLine(l10n.worker, workerName),
-          ReceiptLine(l10n.quantity, farmUnitCount(l10n, unit, draft.quantity)),
+          if (unit != FarmUnit.visit)
+            ReceiptLine(
+              l10n.quantity,
+              farmUnitCount(l10n, unit, draft.quantity),
+            ),
           for (final addOn in draft.addOns)
             ReceiptLine(
               subServiceLabel(l10n, addOn.id),
@@ -213,10 +217,11 @@ class _FarmPaymentScreenState extends ConsumerState<FarmPaymentScreen> {
                 if (workerName != null) summaryRow(l10n.worker, workerName),
                 summaryRow(l10n.date, loc.formatMediumDate(draft.date)),
                 summaryRow(l10n.time, formatTimeSlot(context, draft.slot)),
-                summaryRow(
-                  l10n.quantity,
-                  farmUnitCount(l10n, unit, draft.quantity),
-                ),
+                if (unit != FarmUnit.visit)
+                  summaryRow(
+                    l10n.quantity,
+                    farmUnitCount(l10n, unit, draft.quantity),
+                  ),
                 summaryRow(
                   l10n.rate,
                   '${formatRupees(draft.service.basePrice)} '

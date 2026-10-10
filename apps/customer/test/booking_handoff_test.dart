@@ -64,9 +64,10 @@ void main() {
     expect(find.text('Plumbing'), findsOneWidget);
     expect(
       find.text('1 visit'),
-      findsOneWidget,
-      reason: 'a callout is one visit',
+      findsNothing,
+      reason: 'a callout is one visit: nothing to count',
     );
+    expect(find.textContaining('per visit'), findsWidgets);
     expect(find.text('Service address'), findsOneWidget);
     expect(find.text('Farm address'), findsNothing);
     expect(find.textContaining('Handoff to M4'), findsNothing);

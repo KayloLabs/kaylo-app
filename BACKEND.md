@@ -381,6 +381,10 @@ Notifications: workers get `New job request`, `Booking cancelled`, `Job complete
 
 `0021_worker_time_slots.sql`: a worker's slot is held by any open booking. `worker_taken_slots(worker_id, date)` lists the held times for anyone signed in (times only, no customer data), and a trigger refuses a second open booking for the same worker, day and time, including reschedules. Cancelled and completed bookings free the slot. `supabase/tests/worker_time_slots.sql` checks it.
 
+`0022_worker_profile_rpcs.sql` is the partner app's own profile. `my_worker_profile()` returns the signed-in worker's person, worker row, services, service area, payout account and document states as one JSON object (null for someone who is not a worker). `update_worker_profile(details jsonb)` takes the same keys as `register_worker` and changes only the ones present, so a partial edit never blanks a field; it refuses an empty name, an empty service list and a radius outside 1 to 100 km. `set_worker_available(flag)` is the on-duty switch behind `workers.is_available`. `supabase/tests/worker_profile_rpcs.sql` checks all three.
+
+`0023_worker_availability.sql` adds the worker's side of slot availability. `worker_weekly_hours` holds one row per ISO weekday (1 = Monday) with a window or `works = false` for a day off; `worker_time_off` holds date ranges. Both default `worker_id` to the caller, so the partner app inserts and upserts them directly under row-level security. A worker with no weekly rows is available at any time. `worker_taken_slots(worker, date)` now also returns every half hour outside the window, or the whole day for a day off, so the customer app greys those slots with no change on its side, and the booking trigger refuses a new or moved booking outside the hours (a status change on an existing booking is never re-checked). `supabase/tests/worker_availability.sql` checks it.
+
 | Service | Price | Per |
 | --- | --- | --- |
 | Coconut Plucking | 50 | tree |

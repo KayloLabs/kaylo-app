@@ -2352,3 +2352,300 @@ create trigger bookings_no_double_booking
 
 notify pgrst, 'reload schema';
 commit;
+
+-- ============================================================
+-- 0022_worker_profile_rpcs.sql
+-- ============================================================
+-- The partner app's own profile, in three calls.
+--
+-- my_worker_profile() returns everything the profile screen shows for the
+-- signed-in worker in one round trip: the person, the worker row, the
+-- services offered, the service area, the payout account and the state of
+-- each submitted document. update_worker_profile(details) changes only the
+-- keys it is given, the same shape register_worker takes, so a partial edit
+-- never blanks a field. set_worker_available(flag) is the on-duty switch:
+-- false hides the worker from new bookings without touching anything else.
+-- All three run as the owner and find the worker through the Firebase
+-- subject, so a worker can never read or change another worker's row.
+-- Safe to run more than once.
+begin;
+
+create or replace function my_worker_profile()
+returns jsonb
+language sql stable security definer set search_path = public as $$
+  select jsonb_build_object(
+    'worker_id', w.worker_id,
+    'person_id', p.person_id,
+    'full_name', p.full_name,
+    'phone_number', p.phone_number,
+    'email', p.email,
+    'profile_photo', p.profile_photo,
+    'experience_years', w.experience_years,
+    'hourly_rate', w.hourly_rate,
+    'travel_radius_km', w.travel_radius_km,
+    'bio', w.bio,
+    'is_verified', w.is_verified,
+    'verification_status', w.verification_status,
+    'is_available', w.is_available,
+    'average_rating', w.average_rating,
+    'total_jobs', w.total_jobs,
+    'reviews_count', (select count(*) from reviews r where r.worker_id = w.worker_id),
+    'joined_date', w.joined_date,
+    'working_hours', w.working_hours,
+    'district', (select l.district from locations l
+                 where l.person_id = p.person_id
+                 order by l.is_default desc, l.created_at limit 1),
+    'services', coalesce((
+      select jsonb_agg(jsonb_build_object('service_id', s.service_id, 'service_name', s.service_name)
+                       order by s.service_name)
+      from worker_services ws join services s on s.service_id = ws.service_id
+      where ws.worker_id = w.worker_id), '[]'::jsonb),
+    'upi_id', pa.upi_id,
+    'bank_account', pa.bank_account,
+    'documents', coalesce((
+      select jsonb_agg(jsonb_build_object('doc_type', d.doc_type, 'status', d.status) order by d.doc_type)
+      from worker_documents d where d.worker_id = w.worker_id), '[]'::jsonb)
+  )
+  from workers w
+  join persons p on p.person_id = w.person_id
+  left join worker_payout_accounts pa on pa.worker_id = w.worker_id
+  where w.worker_id = current_worker_id();
+$$;
+revoke all on function my_worker_profile() from public;
+grant execute on function my_worker_profile() to anon, authenticated;
+
+-- details: any of { full_name, photo_path, bio, experience_years, hourly_rate,
+--   travel_radius_km, working_hours, district, services: [service_id, ...],
+--   upi_id, bank_account }. Keys that are absent stay as they are.
+create or replace function update_worker_profile(p_details jsonb)
+returns jsonb
+language plpgsql security definer set search_path = public as $$
+declare
+  wid uuid := current_worker_id();
+  me uuid := current_person_id();
+  svc text;
+begin
+  if me is null then raise exception 'Sign in first'; end if;
+  if wid is null then raise exception 'Register as a worker first'; end if;
+
+  if p_details ? 'full_name' then
+    if coalesce(trim(p_details->>'full_name'), '') = '' then
+      raise exception 'Name is required';
+    end if;
+    update persons set full_name = trim(p_details->>'full_name') where person_id = me;
+  end if;
+  if p_details ? 'photo_path' and coalesce(p_details->>'photo_path', '') <> '' then
+    update persons set profile_photo = p_details->>'photo_path' where person_id = me;
+  end if;
+
+  if p_details ? 'travel_radius_km' then
+    if (p_details->>'travel_radius_km')::numeric not between 1 and 100 then
+      raise exception 'Travel radius must be between 1 and 100 km';
+    end if;
+  end if;
+  update workers set
+    bio = case when p_details ? 'bio' then nullif(trim(p_details->>'bio'), '') else bio end,
+    experience_years = case when p_details ? 'experience_years'
+                            then coalesce((p_details->>'experience_years')::int, experience_years)
+                            else experience_years end,
+    hourly_rate = case when p_details ? 'hourly_rate' then (p_details->>'hourly_rate')::numeric else hourly_rate end,
+    travel_radius_km = case when p_details ? 'travel_radius_km'
+                            then (p_details->>'travel_radius_km')::numeric else travel_radius_km end,
+    working_hours = case when p_details ? 'working_hours'
+                         then nullif(trim(p_details->>'working_hours'), '') else working_hours end
+    where worker_id = wid;
+
+  if p_details ? 'services' then
+    if jsonb_typeof(p_details->'services') is distinct from 'array'
+       or jsonb_array_length(p_details->'services') = 0 then
+      raise exception 'Choose at least one service';
+    end if;
+    delete from worker_services where worker_id = wid
+      and service_id not in (select jsonb_array_elements_text(p_details->'services')::uuid);
+    for svc in select jsonb_array_elements_text(p_details->'services') loop
+      insert into worker_services (worker_id, service_id, experience_years)
+      values (wid, svc::uuid, (select experience_years from workers where worker_id = wid))
+      on conflict (worker_id, service_id) do nothing;
+    end loop;
+  end if;
+
+  if coalesce(p_details->>'district', '') <> '' then
+    if exists (select 1 from locations where person_id = me) then
+      update locations set district = p_details->>'district'
+        where location_id = (
+          select location_id from locations where person_id = me
+          order by is_default desc, created_at limit 1);
+    else
+      insert into locations (person_id, district, is_default, nickname)
+      values (me, p_details->>'district', true, 'Work area');
+    end if;
+  end if;
+
+  if p_details ? 'upi_id' or p_details ? 'bank_account' then
+    insert into worker_payout_accounts (worker_id, upi_id, bank_account)
+    values (wid, nullif(trim(coalesce(p_details->>'upi_id', '')), ''),
+                 nullif(trim(coalesce(p_details->>'bank_account', '')), ''))
+    on conflict (worker_id) do update
+      set upi_id = case when p_details ? 'upi_id' then excluded.upi_id else worker_payout_accounts.upi_id end,
+          bank_account = case when p_details ? 'bank_account'
+                              then excluded.bank_account else worker_payout_accounts.bank_account end,
+          updated_at = now();
+  end if;
+
+  return my_worker_profile();
+end $$;
+revoke all on function update_worker_profile(jsonb) from public;
+grant execute on function update_worker_profile(jsonb) to anon, authenticated;
+
+create or replace function set_worker_available(p_available boolean)
+returns boolean
+language plpgsql security definer set search_path = public as $$
+declare
+  wid uuid := current_worker_id();
+begin
+  if wid is null then raise exception 'Register as a worker first'; end if;
+  update workers set is_available = coalesce(p_available, true) where worker_id = wid;
+  return coalesce(p_available, true);
+end $$;
+revoke all on function set_worker_available(boolean) from public;
+grant execute on function set_worker_available(boolean) to anon, authenticated;
+
+notify pgrst, 'reload schema';
+commit;
+
+-- ============================================================
+-- 0023_worker_availability.sql
+-- ============================================================
+-- When a worker is available at all: weekly working hours and days off.
+--
+-- Migration 0021 made a slot unavailable once a booking holds it. This adds
+-- the worker's own side: worker_weekly_hours (one row per weekday, a window
+-- or a day off) and worker_time_off (date ranges). Both tables belong to the
+-- worker, whose id fills in by default, so the partner app writes them
+-- directly. A worker with no weekly rows is available at any time, which
+-- keeps every existing worker bookable.
+--
+-- The customer app keeps calling worker_taken_slots(worker, date): it now
+-- also lists every half hour outside the working window, or the whole day
+-- for a day off, so those slots show as unavailable without any app change.
+-- The booking trigger refuses a new or moved booking outside the hours; a
+-- status change on an existing booking is never re-checked, so adding a day
+-- off later does not stop a job from being completed. Safe to run more than
+-- once.
+begin;
+
+create table if not exists worker_weekly_hours (
+  worker_id uuid not null default current_worker_id() references workers (worker_id) on delete cascade,
+  weekday smallint not null check (weekday between 1 and 7),  -- 1 = Monday, 7 = Sunday (ISO)
+  works boolean not null default true,
+  start_time time not null default '08:00',
+  end_time time not null default '19:00',
+  updated_at timestamptz not null default now(),
+  primary key (worker_id, weekday),
+  check (end_time > start_time)
+);
+alter table worker_weekly_hours enable row level security;
+drop policy if exists "own weekly hours" on worker_weekly_hours;
+create policy "own weekly hours" on worker_weekly_hours
+  for all
+  using (worker_id = current_worker_id())
+  with check (worker_id = current_worker_id());
+grant select, insert, update, delete on worker_weekly_hours to anon, authenticated;
+
+create table if not exists worker_time_off (
+  time_off_id uuid primary key default gen_random_uuid(),
+  worker_id uuid not null default current_worker_id() references workers (worker_id) on delete cascade,
+  starts_on date not null,
+  ends_on date not null,
+  reason text,
+  created_at timestamptz not null default now(),
+  check (ends_on >= starts_on)
+);
+create index if not exists worker_time_off_worker_idx on worker_time_off (worker_id, starts_on);
+alter table worker_time_off enable row level security;
+drop policy if exists "own time off" on worker_time_off;
+create policy "own time off" on worker_time_off
+  for all
+  using (worker_id = current_worker_id())
+  with check (worker_id = current_worker_id());
+grant select, insert, update, delete on worker_time_off to anon, authenticated;
+
+-- True when the worker's own hours allow a job at that moment.
+create or replace function worker_is_available_at(p_worker_id uuid, p_date date, p_time time)
+returns boolean
+language sql stable security definer set search_path = public as $$
+  select not exists (
+      select 1 from worker_time_off t
+      where t.worker_id = p_worker_id and p_date between t.starts_on and t.ends_on)
+    and coalesce((
+      select h.works and p_time >= h.start_time and p_time < h.end_time
+      from worker_weekly_hours h
+      where h.worker_id = p_worker_id and h.weekday = extract(isodow from p_date)), true);
+$$;
+revoke all on function worker_is_available_at(uuid, date, time) from public;
+grant execute on function worker_is_available_at(uuid, date, time) to anon, authenticated;
+
+-- Every half hour of the day the worker is not working: all 48 on a day
+-- off, otherwise the ones outside the window. Nothing when hours are unset.
+create or replace function worker_blocked_times(p_worker_id uuid, p_date date)
+returns setof time
+language sql stable security definer set search_path = public as $$
+  select t
+  from generate_series(0, 47) as n, lateral (select (n * interval '30 minutes')::time) as s(t)
+  where not worker_is_available_at(p_worker_id, p_date, s.t);
+$$;
+revoke all on function worker_blocked_times(uuid, date) from public;
+grant execute on function worker_blocked_times(uuid, date) to anon, authenticated;
+
+-- Held by a booking, or outside the worker's hours: either makes a slot
+-- unavailable in the customer app.
+create or replace function worker_taken_slots(p_worker_id uuid, p_date date)
+returns setof time
+language sql stable security definer set search_path = public as $$
+  select booking_time from bookings
+  where worker_id = p_worker_id
+    and booking_date = p_date
+    and status in ('pending', 'confirmed', 'in_progress')
+  union
+  select * from worker_blocked_times(p_worker_id, p_date);
+$$;
+
+create or replace function prevent_double_booking()
+returns trigger language plpgsql security definer set search_path = public as $$
+begin
+  if new.worker_id is null
+     or new.status not in ('pending', 'confirmed', 'in_progress') then
+    return new;
+  end if;
+  if exists (
+    select 1 from bookings b
+    where b.worker_id = new.worker_id
+      and b.booking_date = new.booking_date
+      and b.booking_time = new.booking_time
+      and b.status in ('pending', 'confirmed', 'in_progress')
+      and b.booking_id <> new.booking_id
+  ) then
+    raise exception 'That time is no longer available for this worker'
+      using errcode = 'unique_violation';
+  end if;
+  -- Only a new booking, or one moved to another worker, day or time, has
+  -- to fall inside the worker's hours.
+  if tg_op = 'INSERT'
+     or new.worker_id is distinct from old.worker_id
+     or new.booking_date is distinct from old.booking_date
+     or new.booking_time is distinct from old.booking_time then
+    if not worker_is_available_at(new.worker_id, new.booking_date, new.booking_time) then
+      raise exception 'The worker is not available at that time'
+        using errcode = 'check_violation';
+    end if;
+  end if;
+  return new;
+end $$;
+
+drop trigger if exists bookings_no_double_booking on bookings;
+create trigger bookings_no_double_booking
+  before insert or update of worker_id, booking_date, booking_time, status on bookings
+  for each row execute function prevent_double_booking();
+
+notify pgrst, 'reload schema';
+commit;

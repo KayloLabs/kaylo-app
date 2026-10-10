@@ -588,7 +588,9 @@ class _DoctorAppointmentScreenState
                       if (useMockData) {
                         await ref
                             .read(doctorAppointmentsProvider.notifier)
-                            .bookAppointment(appointment);
+                            .bookAppointment(
+                              appointment.withBooking(_checkout.bookingId),
+                            );
                       }
                     } catch (error) {
                       if (!context.mounted) return;

@@ -1149,5 +1149,54 @@
       "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "This is a Kaylo Partner account. Please use the Kaylo Partner app.",
-  "customerProfileUnavailable": "We could not verify your customer profile. Check your connection and sign in again."
+  "customerProfileUnavailable": "We could not verify your customer profile. Check your connection and sign in again.",
+  "yourDoctor": "Your doctor",
+  "@yourDoctor": {
+    "description": "Section header on a doctor appointment booking"
+  },
+  "yourCaregiver": "Your caregiver",
+  "@yourCaregiver": {
+    "description": "Section header on a caregiver booking"
+  },
+  "doctorPending": "Kaylo Care is confirming your doctor. We will let you know as soon as it is done.",
+  "@doctorPending": {
+    "description": "Doctor booking whose appointment record is not available yet"
+  },
+  "caregiverPending": "Kaylo Care is confirming your caregiver. We will let you know as soon as it is done.",
+  "@caregiverPending": {
+    "description": "Caregiver booking whose record is not available yet"
+  },
+  "careRequestHandled": "The Kaylo Care team is handling this request.",
+  "@careRequestHandled": {
+    "description": "Other Care bookings, such as medicine delivery, which have no provider card"
+  },
+  "patientLabel": "Patient",
+  "@patientLabel": {
+    "description": "Label before the patient name on a doctor appointment"
+  },
+  "appointmentTime": "Appointment time",
+  "@appointmentTime": {
+    "description": "Label before the time slot on a doctor appointment"
+  },
+  "startsAt": "Starts at",
+  "@startsAt": {
+    "description": "Label before the start time of a caregiver visit"
+  },
+  "hoursCount": "{count, plural, =1{1 hour} other{{count} hours}}",
+  "@hoursCount": {
+    "description": "Length of a caregiver visit",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelCareBookingMessage": "This Care booking will be cancelled. You can book again anytime.",
+  "@cancelCareBookingMessage": {
+    "description": "Cancel dialog body for a Care booking, which has no worker to release"
+  },
+  "bookingNotes": "Notes",
+  "@bookingNotes": {
+    "description": "Label for the notes line of a Care booking"
+  }
 }

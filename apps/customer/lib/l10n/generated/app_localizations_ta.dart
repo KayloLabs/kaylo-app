@@ -2458,4 +2458,49 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get customerProfileUnavailable =>
       'உங்கள் வாடிக்கையாளர் சுயவிவரத்தைச் சரிபார்க்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் உள்நுழையவும்.';
+
+  @override
+  String get yourDoctor => 'உங்கள் மருத்துவர்';
+
+  @override
+  String get yourCaregiver => 'உங்கள் பராமரிப்பாளர்';
+
+  @override
+  String get doctorPending =>
+      'Kaylo Care உங்கள் மருத்துவரை உறுதி செய்கிறது. முடிந்ததும் உங்களுக்குத் தெரிவிப்போம்.';
+
+  @override
+  String get caregiverPending =>
+      'Kaylo Care உங்கள் பராமரிப்பாளரை உறுதி செய்கிறது. முடிந்ததும் உங்களுக்குத் தெரிவிப்போம்.';
+
+  @override
+  String get careRequestHandled =>
+      'Kaylo Care குழு இந்தக் கோரிக்கையைக் கையாள்கிறது.';
+
+  @override
+  String get patientLabel => 'நோயாளி';
+
+  @override
+  String get appointmentTime => 'சந்திப்பு நேரம்';
+
+  @override
+  String get startsAt => 'தொடங்கும் நேரம்';
+
+  @override
+  String hoursCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count மணி நேரம்',
+      one: '1 மணி நேரம்',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelCareBookingMessage =>
+      'இந்த Care முன்பதிவு ரத்து செய்யப்படும். எப்போது வேண்டுமானாலும் மீண்டும் முன்பதிவு செய்யலாம்.';
+
+  @override
+  String get bookingNotes => 'குறிப்புகள்';
 }

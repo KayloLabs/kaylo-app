@@ -36,11 +36,31 @@ class MockBookingsRepository implements BookingsRepository {
       totalAmount: 300,
       notes: 'Thekkedath House, Kaloor',
     ),
+    // Care bookings have no worker: the customer chose the doctor or the
+    // caregiver, whose record points back here through its bookingId.
+    Booking(
+      id: 'b4',
+      userId: 'mock_uid_1',
+      serviceId: 'care-doctor', // Doctor Appointment
+      scheduledAt: _daysFromNow(2, hour: 10, minute: 30),
+      status: BookingStatus.confirmed,
+      totalAmount: 300,
+      notes: 'Routine blood pressure and diabetic checkup.',
+    ),
+    Booking(
+      id: 'b5',
+      userId: 'mock_uid_1',
+      serviceId: '8', // Caregiver Visit
+      scheduledAt: _daysFromNow(4, hour: 9),
+      status: BookingStatus.confirmed,
+      totalAmount: 600,
+      notes: 'Thekkedath House, Kaloor',
+    ),
   ];
 
-  static DateTime _daysFromNow(int days, {required int hour}) {
+  static DateTime _daysFromNow(int days, {required int hour, int minute = 0}) {
     final now = DateTime.now();
-    return DateTime(now.year, now.month, now.day + days, hour);
+    return DateTime(now.year, now.month, now.day + days, hour, minute);
   }
 
   // The demo has a single customer, and the mock auth layer hands out a

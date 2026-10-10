@@ -37,6 +37,10 @@ class CaregiverBookingRecord {
   final String? notes;
   final String status;
 
+  /// The `bookings` row this visit was paid through; null for records
+  /// written before the link existed.
+  final String? bookingId;
+
   const CaregiverBookingRecord({
     required this.id,
     required this.caregiverId,
@@ -49,5 +53,22 @@ class CaregiverBookingRecord {
     required this.careType,
     this.notes,
     required this.status,
+    this.bookingId,
   });
+
+  CaregiverBookingRecord withBooking(String? bookingId) =>
+      CaregiverBookingRecord(
+        id: id,
+        caregiverId: caregiverId,
+        caregiverName: caregiverName,
+        date: date,
+        startTime: startTime,
+        hours: hours,
+        hourlyRate: hourlyRate,
+        totalAmount: totalAmount,
+        careType: careType,
+        notes: notes,
+        status: status,
+        bookingId: bookingId ?? this.bookingId,
+      );
 }

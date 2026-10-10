@@ -384,6 +384,7 @@ class SupabaseCareRepository implements CareRepository {
             status: r['status'] as String? ?? 'confirmed',
             patientName: r['patient_name'] as String? ?? 'Senior',
             notes: r['notes'] as String?,
+            bookingId: r['booking_id'] as String?,
           ),
         )
         .toList();
@@ -405,6 +406,7 @@ class SupabaseCareRepository implements CareRepository {
       'status': appointment.status,
       'patient_name': appointment.patientName,
       'notes': appointment.notes,
+      if (appointment.bookingId != null) 'booking_id': appointment.bookingId,
     });
     return appointment;
   }
@@ -472,6 +474,7 @@ class SupabaseCareRepository implements CareRepository {
             careType: r['care_type'] as String,
             notes: r['notes'] as String?,
             status: r['status'] as String? ?? 'confirmed',
+            bookingId: r['booking_id'] as String?,
           ),
         )
         .toList();
@@ -494,6 +497,7 @@ class SupabaseCareRepository implements CareRepository {
       'hourly_rate': booking.hourlyRate,
       'total_amount': booking.totalAmount,
       'care_type': booking.careType,
+      if (booking.bookingId != null) 'booking_id': booking.bookingId,
       'notes': booking.notes,
       'status': booking.status,
     });

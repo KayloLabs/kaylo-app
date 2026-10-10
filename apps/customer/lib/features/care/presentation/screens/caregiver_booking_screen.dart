@@ -482,7 +482,9 @@ class _CaregiverBookingScreenState
                                 if (useMockData) {
                                   await ref
                                       .read(caregiverBookingsProvider.notifier)
-                                      .bookCaregiver(record);
+                                      .bookCaregiver(
+                                        record.withBooking(_checkout.bookingId),
+                                      );
                                 }
                               } catch (error) {
                                 if (!context.mounted) return;

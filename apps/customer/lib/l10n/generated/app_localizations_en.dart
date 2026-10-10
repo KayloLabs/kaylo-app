@@ -2415,4 +2415,49 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get customerProfileUnavailable =>
       'We could not verify your customer profile. Check your connection and sign in again.';
+
+  @override
+  String get yourDoctor => 'Your doctor';
+
+  @override
+  String get yourCaregiver => 'Your caregiver';
+
+  @override
+  String get doctorPending =>
+      'Kaylo Care is confirming your doctor. We will let you know as soon as it is done.';
+
+  @override
+  String get caregiverPending =>
+      'Kaylo Care is confirming your caregiver. We will let you know as soon as it is done.';
+
+  @override
+  String get careRequestHandled =>
+      'The Kaylo Care team is handling this request.';
+
+  @override
+  String get patientLabel => 'Patient';
+
+  @override
+  String get appointmentTime => 'Appointment time';
+
+  @override
+  String get startsAt => 'Starts at';
+
+  @override
+  String hoursCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count hours',
+      one: '1 hour',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelCareBookingMessage =>
+      'This Care booking will be cancelled. You can book again anytime.';
+
+  @override
+  String get bookingNotes => 'Notes';
 }

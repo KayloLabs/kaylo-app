@@ -4355,6 +4355,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We could not verify your customer profile. Check your connection and sign in again.'**
   String get customerProfileUnavailable;
+
+  /// Section header on a doctor appointment booking
+  ///
+  /// In en, this message translates to:
+  /// **'Your doctor'**
+  String get yourDoctor;
+
+  /// Section header on a caregiver booking
+  ///
+  /// In en, this message translates to:
+  /// **'Your caregiver'**
+  String get yourCaregiver;
+
+  /// Doctor booking whose appointment record is not available yet
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo Care is confirming your doctor. We will let you know as soon as it is done.'**
+  String get doctorPending;
+
+  /// Caregiver booking whose record is not available yet
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo Care is confirming your caregiver. We will let you know as soon as it is done.'**
+  String get caregiverPending;
+
+  /// Other Care bookings, such as medicine delivery, which have no provider card
+  ///
+  /// In en, this message translates to:
+  /// **'The Kaylo Care team is handling this request.'**
+  String get careRequestHandled;
+
+  /// Label before the patient name on a doctor appointment
+  ///
+  /// In en, this message translates to:
+  /// **'Patient'**
+  String get patientLabel;
+
+  /// Label before the time slot on a doctor appointment
+  ///
+  /// In en, this message translates to:
+  /// **'Appointment time'**
+  String get appointmentTime;
+
+  /// Label before the start time of a caregiver visit
+  ///
+  /// In en, this message translates to:
+  /// **'Starts at'**
+  String get startsAt;
+
+  /// Length of a caregiver visit
+  ///
+  /// In en, this message translates to:
+  /// **'{count, plural, =1{1 hour} other{{count} hours}}'**
+  String hoursCount(int count);
+
+  /// Cancel dialog body for a Care booking, which has no worker to release
+  ///
+  /// In en, this message translates to:
+  /// **'This Care booking will be cancelled. You can book again anytime.'**
+  String get cancelCareBookingMessage;
+
+  /// Label for the notes line of a Care booking
+  ///
+  /// In en, this message translates to:
+  /// **'Notes'**
+  String get bookingNotes;
 }
 
 class _AppLocalizationsDelegate

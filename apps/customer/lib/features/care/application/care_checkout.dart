@@ -19,6 +19,11 @@ class CareCheckout {
   Booking? _mockBooking;
   bool _hasStartedPayment = false;
   bool get hasStartedPayment => _hasStartedPayment;
+
+  /// The booking the last successful [pay] created, so the appointment or
+  /// caregiver record saved afterwards can point back at it.
+  String? _bookingId;
+  String? get bookingId => _bookingId;
   Future<bool> pay(
     WidgetRef ref, {
     required String kind,
@@ -64,6 +69,7 @@ class CareCheckout {
               );
       _mockBooking = booking;
       bookingId = booking.id;
+      _bookingId = bookingId;
     } else {
       try {
         bookingId =
@@ -78,6 +84,7 @@ class CareCheckout {
                       },
                     )
                 as String;
+        _bookingId = bookingId;
         final row = await ref
             .read(supabaseClientProvider)
             .from('bookings')

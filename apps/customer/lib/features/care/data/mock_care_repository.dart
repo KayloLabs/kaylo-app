@@ -143,10 +143,26 @@ class MockCareRepository implements CareRepository {
       status: 'confirmed',
       patientName: 'Kunjamma V.',
       notes: 'Routine blood pressure and diabetic checkup.',
+      bookingId: 'b4',
     ),
   ];
 
-  final List<CaregiverBookingRecord> _caregiverBookings = [];
+  final List<CaregiverBookingRecord> _caregiverBookings = [
+    CaregiverBookingRecord(
+      id: 'cgb1',
+      caregiverId: 'cg1',
+      caregiverName: 'Mary Varghese',
+      date: DateTime.now().add(const Duration(days: 4)),
+      startTime: '09:00 AM',
+      hours: 4,
+      hourlyRate: 150,
+      totalAmount: 600,
+      careType: 'Elderly Care',
+      notes: 'Thekkedath House, Kaloor',
+      status: 'confirmed',
+      bookingId: 'b5',
+    ),
+  ];
 
   // --- M5 Data: Reminders, Contacts & SOS ---
   final List<MedicineReminder> _reminders = [

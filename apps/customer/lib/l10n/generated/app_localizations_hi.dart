@@ -2419,4 +2419,48 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get customerProfileUnavailable =>
       'हम आपकी ग्राहक प्रोफ़ाइल सत्यापित नहीं कर सके। अपना कनेक्शन जाँचें और फिर से साइन इन करें।';
+
+  @override
+  String get yourDoctor => 'आपके डॉक्टर';
+
+  @override
+  String get yourCaregiver => 'आपके केयरगिवर';
+
+  @override
+  String get doctorPending =>
+      'Kaylo Care आपके डॉक्टर की पुष्टि कर रहा है। पूरा होते ही हम आपको बता देंगे।';
+
+  @override
+  String get caregiverPending =>
+      'Kaylo Care आपके केयरगिवर की पुष्टि कर रहा है। पूरा होते ही हम आपको बता देंगे।';
+
+  @override
+  String get careRequestHandled => 'Kaylo Care टीम इस अनुरोध को संभाल रही है।';
+
+  @override
+  String get patientLabel => 'मरीज़';
+
+  @override
+  String get appointmentTime => 'अपॉइंटमेंट का समय';
+
+  @override
+  String get startsAt => 'शुरू होगा';
+
+  @override
+  String hoursCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count घंटे',
+      one: '1 घंटा',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelCareBookingMessage =>
+      'यह Care बुकिंग रद्द हो जाएगी। आप कभी भी फिर से बुक कर सकते हैं।';
+
+  @override
+  String get bookingNotes => 'नोट्स';
 }

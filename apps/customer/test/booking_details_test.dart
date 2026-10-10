@@ -105,4 +105,79 @@ void main() {
     expect(find.text('Reschedule'), findsNothing);
     expect(find.text('Cancel booking'), findsNothing);
   });
+
+  testWidgets('a doctor appointment shows the doctor, never a worker', (
+    tester,
+  ) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.bookingDetails('b4'),
+        routes: _routes,
+      ),
+    );
+    await settle(tester);
+
+    expect(find.text('Your doctor'), findsOneWidget);
+    expect(find.text('Dr. Priya Nambiar'), findsOneWidget);
+    expect(
+      find.text('General Physician · Aster Medcity, Kochi'),
+      findsOneWidget,
+    );
+    expect(find.text('Home Visit'), findsOneWidget);
+    expect(find.text('Kunjamma V.'), findsOneWidget);
+    expect(find.text('Notes'), findsOneWidget);
+    expect(find.text('Your worker'), findsNothing);
+    expect(
+      find.text('A worker will be assigned before the visit.'),
+      findsNothing,
+    );
+    expect(find.text('Reschedule'), findsNothing);
+
+    await tester.tap(find.text('Cancel booking'));
+    await settle(tester);
+    expect(
+      find.text(
+        'This Care booking will be cancelled. You can book again anytime.',
+      ),
+      findsOneWidget,
+    );
+    expect(
+      find.text('The worker will be released. You can book again anytime.'),
+      findsNothing,
+    );
+  });
+
+  testWidgets('a caregiver booking shows the caregiver and the visit', (
+    tester,
+  ) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(
+      await testApp(
+        initialLocation: Routes.bookingDetails('b5'),
+        routes: _routes,
+      ),
+    );
+    await settle(tester);
+
+    expect(find.text('Your caregiver'), findsOneWidget);
+    expect(find.text('Mary Varghese'), findsOneWidget);
+    expect(find.text('Elderly Care'), findsOneWidget);
+    expect(find.text('09:00 AM · 4 hours'), findsOneWidget);
+    expect(find.text('Your worker'), findsNothing);
+    expect(find.text('Reschedule'), findsNothing);
+  });
+
+  testWidgets('the bookings list names the doctor on a Care booking', (
+    tester,
+  ) async {
+    useTallPhone(tester);
+    await tester.pumpWidget(
+      await testApp(initialLocation: Routes.bookings, routes: _routes),
+    );
+    await settle(tester);
+
+    expect(find.text('Dr. Priya Nambiar · General Physician'), findsOneWidget);
+    expect(find.text('Mary Varghese · Elderly Care'), findsOneWidget);
+  });
 }

@@ -18,6 +18,7 @@ import 'package:kaylo_ui/widgets/section_header.dart';
 import 'package:kaylo_ui/widgets/shimmer_box.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../../home/application/home_providers.dart';
+import '../../../care/application/care_booking_link.dart';
 import '../../application/bookings_providers.dart';
 import '../widgets/booking_labels.dart';
 
@@ -191,14 +192,14 @@ class BookingsScreen extends ConsumerWidget {
   }
 }
 
-class _BookingCard extends StatelessWidget {
+class _BookingCard extends ConsumerWidget {
   final Booking booking;
   final ServiceItem? service;
 
   const _BookingCard({required this.booking, required this.service});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final loc = MaterialLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
@@ -291,10 +292,36 @@ class _BookingCard extends StatelessWidget {
             '${loc.formatTimeOfDay(TimeOfDay.fromDateTime(booking.scheduledAt))}',
           ),
           detail(Icons.payments_rounded, formatRupees(booking.totalAmount)),
+          // Care bookings name the doctor or caregiver the customer chose.
+          if (isCareService(service))
+            ...ref
+                .watch(careBookingInfoProvider(booking.id))
+                .maybeWhen(
+                  data: (info) => [
+                    if (info.appointment != null)
+                      detail(
+                        Icons.medical_services_rounded,
+                        '${info.appointment!.doctorName} · '
+                        '${info.appointment!.specialty}',
+                      ),
+                    if (info.caregiverBooking != null)
+                      detail(
+                        Icons.volunteer_activism_rounded,
+                        '${info.caregiverBooking!.caregiverName} · '
+                        '${info.caregiverBooking!.careType}',
+                      ),
+                  ],
+                  orElse: () => const <Widget>[],
+                ),
           const SizedBox(height: AppSpacing.s),
           BookingStatusChip(status: booking.status),
           if (booking.notes != null && booking.notes!.isNotEmpty)
-            detail(Icons.pin_drop_rounded, booking.notes!),
+            detail(
+              isCareService(service)
+                  ? Icons.notes_rounded
+                  : Icons.pin_drop_rounded,
+              booking.notes!,
+            ),
         ],
       ),
     );

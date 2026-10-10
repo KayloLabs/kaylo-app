@@ -11,6 +11,7 @@ import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
+import 'package:kaylo_ui/theme/app_theme.dart';
 import 'package:kaylo_ui/widgets/avatar_circle.dart';
 import 'package:kaylo_ui/widgets/error_state.dart';
 import 'package:kaylo_ui/widgets/kaylo_button.dart';
@@ -21,6 +22,9 @@ import 'package:kaylo_ui/widgets/price_tag.dart';
 import 'package:kaylo_ui/widgets/rating_stars.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../care/application/care_booking_link.dart';
+import '../../../care/domain/models/appointment.dart';
+import '../../../care/domain/models/caregiver.dart';
 import '../../../home/application/home_providers.dart';
 import '../../../messages/application/messages_providers.dart';
 import '../../../farm/domain/farm_booking_draft.dart';
@@ -64,11 +68,32 @@ class BookingDetailsScreen extends ConsumerWidget {
   }
 }
 
-class _Details extends ConsumerWidget {
+/// Care bookings keep the Care section's always-light, larger-text theme,
+/// the way every other Care screen does.
+class _Details extends StatelessWidget {
   final Booking booking;
   final ServiceItem? service;
 
   const _Details({required this.booking, required this.service});
+
+  @override
+  Widget build(BuildContext context) {
+    final body = _DetailsBody(booking: booking, service: service);
+    if (!isCareService(service)) return body;
+    return Theme(data: AppTheme.careTheme, child: body);
+  }
+}
+
+class _DetailsBody extends ConsumerWidget {
+  final Booking booking;
+  final ServiceItem? service;
+
+  const _DetailsBody({required this.booking, required this.service});
+
+  /// A doctor or caregiver is chosen by the customer, so nothing about
+  /// workers, assignment or slots applies to these bookings.
+  bool get _isCare => isCareService(service);
+  CareKind? get _careKind => careKindOf(service);
 
   bool get _isActive =>
       (booking.status == BookingStatus.pending ||
@@ -81,7 +106,9 @@ class _Details extends ConsumerWidget {
       context: context,
       builder: (context) => AlertDialog(
         title: Text(l10n.cancelBookingTitle),
-        content: Text(l10n.cancelBookingMessage),
+        content: Text(
+          _isCare ? l10n.cancelCareBookingMessage : l10n.cancelBookingMessage,
+        ),
         actions: [
           TextButton(
             onPressed: () => Navigator.pop(context, false),
@@ -237,8 +264,9 @@ class _Details extends ConsumerWidget {
               ),
             )
           else ...[
-            if (booking.workerStage == WorkerStage.onTheWay ||
-                booking.workerStage == WorkerStage.arrived) ...[
+            if (!_isCare &&
+                (booking.workerStage == WorkerStage.onTheWay ||
+                    booking.workerStage == WorkerStage.arrived)) ...[
               _WorkerStageNote(stage: booking.workerStage),
               const SizedBox(height: AppSpacing.m),
             ],
@@ -269,7 +297,9 @@ class _Details extends ConsumerWidget {
                   ),
                 if (booking.notes != null && booking.notes!.isNotEmpty)
                   row(
-                    service?.category == 'farm'
+                    _isCare
+                        ? l10n.bookingNotes
+                        : service?.category == 'farm'
                         ? l10n.farmAddress
                         : l10n.serviceAddress,
                     text(booking.notes!),
@@ -299,9 +329,18 @@ class _Details extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.xxl),
 
-          SectionHeader(title: l10n.assignedWorker),
+          SectionHeader(
+            title: switch (_careKind) {
+              CareKind.doctor => l10n.yourDoctor,
+              CareKind.caregiver => l10n.yourCaregiver,
+              CareKind.other => l10n.kayloCare,
+              null => l10n.assignedWorker,
+            },
+          ),
           const SizedBox(height: AppSpacing.m),
-          if (booking.workerId == null)
+          if (_careKind != null)
+            _CareProviderSection(booking: booking, kind: _careKind!)
+          else if (booking.workerId == null)
             KayloCard(
               child: Row(
                 children: [
@@ -347,19 +386,23 @@ class _Details extends ConsumerWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  KayloButton(
-                    text: l10n.reschedule,
-                    icon: Icons.edit_calendar_rounded,
-                    variant: KayloButtonVariant.secondary,
-                    onPressed: () => showModalBottomSheet<void>(
-                      context: context,
-                      useRootNavigator: true,
-                      isScrollControlled: true,
-                      useSafeArea: true,
-                      builder: (_) => _RescheduleSheet(booking: booking),
+                  // A doctor's slots and a caregiver's hours are theirs to
+                  // set; moving a Care booking means booking again.
+                  if (!_isCare) ...[
+                    KayloButton(
+                      text: l10n.reschedule,
+                      icon: Icons.edit_calendar_rounded,
+                      variant: KayloButtonVariant.secondary,
+                      onPressed: () => showModalBottomSheet<void>(
+                        context: context,
+                        useRootNavigator: true,
+                        isScrollControlled: true,
+                        useSafeArea: true,
+                        builder: (_) => _RescheduleSheet(booking: booking),
+                      ),
                     ),
-                  ),
-                  const SizedBox(height: AppSpacing.xs),
+                    const SizedBox(height: AppSpacing.xs),
+                  ],
                   TextButton(
                     onPressed: () => _cancel(context, ref),
                     style: TextButton.styleFrom(
@@ -757,6 +800,247 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
           TextButton(
             onPressed: () => Navigator.of(context).pop(),
             child: Text(l10n.cancel),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// The doctor or caregiver behind a Care booking, or a note that Kaylo
+/// Care is still confirming them. Never a worker.
+class _CareProviderSection extends ConsumerWidget {
+  final Booking booking;
+  final CareKind kind;
+
+  const _CareProviderSection({required this.booking, required this.kind});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final info = ref.watch(careBookingInfoProvider(booking.id));
+    return info.when(
+      loading: () => const KayloCard(
+        child: SizedBox(
+          height: 48,
+          child: Center(child: KayloLoader(size: 28)),
+        ),
+      ),
+      error: (_, _) => _CarePendingCard(kind: kind),
+      data: (info) {
+        if (info.appointment != null) {
+          return _DoctorCard(appointment: info.appointment!);
+        }
+        if (info.caregiverBooking != null) {
+          return _CaregiverCard(record: info.caregiverBooking!);
+        }
+        return _CarePendingCard(kind: kind);
+      },
+    );
+  }
+}
+
+class _CarePendingCard extends StatelessWidget {
+  final CareKind kind;
+
+  const _CarePendingCard({required this.kind});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return KayloCard(
+      child: Row(
+        children: [
+          const Icon(Icons.support_agent_rounded, color: AppColors.careAccent),
+          const SizedBox(width: AppSpacing.m),
+          Expanded(
+            child: Text(switch (kind) {
+              CareKind.doctor => l10n.doctorPending,
+              CareKind.caregiver => l10n.caregiverPending,
+              CareKind.other => l10n.careRequestHandled,
+            }, style: Theme.of(context).textTheme.bodyMedium),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+/// Name and place on top, then the facts a patient checks before the
+/// visit: when, how (at home or on video) and for whom.
+class _DoctorCard extends StatelessWidget {
+  final DoctorAppointment appointment;
+
+  const _DoctorCard({required this.appointment});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final teleconsult = appointment.consultationType == 'teleconsult';
+    return KayloCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CareProviderHeader(
+            name: appointment.doctorName,
+            detail: [
+              appointment.specialty,
+              if (appointment.hospital.isNotEmpty) appointment.hospital,
+            ].join(' · '),
+          ),
+          const _CareDivider(),
+          _CareFact(
+            icon: Icons.schedule_rounded,
+            label: l10n.appointmentTime,
+            value: appointment.timeSlot,
+          ),
+          _CareFact(
+            icon: teleconsult ? Icons.videocam_rounded : Icons.home_rounded,
+            label: l10n.consultationType,
+            value: teleconsult ? l10n.teleconsult : l10n.homeVisit,
+          ),
+          _CareFact(
+            icon: Icons.person_rounded,
+            label: l10n.patientLabel,
+            value: appointment.patientName,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CaregiverCard extends StatelessWidget {
+  final CaregiverBookingRecord record;
+
+  const _CaregiverCard({required this.record});
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    return KayloCard(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          _CareProviderHeader(
+            name: record.caregiverName,
+            detail: record.careType,
+          ),
+          const _CareDivider(),
+          _CareFact(
+            icon: Icons.schedule_rounded,
+            label: l10n.startsAt,
+            value: '${record.startTime} · ${l10n.hoursCount(record.hours)}',
+          ),
+          _CareFact(
+            icon: Icons.payments_rounded,
+            label: l10n.hourlyRate,
+            value: '${formatRupees(record.hourlyRate)} ${l10n.perHour}',
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _CareProviderHeader extends StatelessWidget {
+  final String name;
+  final String detail;
+
+  const _CareProviderHeader({required this.name, required this.detail});
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    return Row(
+      children: [
+        Container(
+          width: 52,
+          height: 52,
+          decoration: BoxDecoration(
+            color: AppColors.careAccent.withValues(alpha: isDark ? 0.22 : 0.12),
+            shape: BoxShape.circle,
+          ),
+          child: Center(child: AvatarCircle(fallbackText: name, radius: 22)),
+        ),
+        const SizedBox(width: AppSpacing.l),
+        Expanded(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                name,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(
+                  context,
+                ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w700),
+              ),
+              const SizedBox(height: 2),
+              Text(
+                detail,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: Theme.of(context).textTheme.bodySmall?.copyWith(
+                  color: isDark
+                      ? AppColors.textSecondaryDark
+                      : AppColors.textSecondary,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CareDivider extends StatelessWidget {
+  const _CareDivider();
+
+  @override
+  Widget build(BuildContext context) => const Padding(
+    padding: EdgeInsets.symmetric(vertical: AppSpacing.m),
+    child: Divider(height: 1),
+  );
+}
+
+class _CareFact extends StatelessWidget {
+  final IconData icon;
+  final String label;
+  final String value;
+
+  const _CareFact({
+    required this.icon,
+    required this.label,
+    required this.value,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+    final secondary = isDark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: AppSpacing.xs),
+      child: Row(
+        children: [
+          Icon(icon, size: 18, color: AppColors.careAccent),
+          const SizedBox(width: AppSpacing.s),
+          Expanded(
+            child: Text(
+              label,
+              style: Theme.of(
+                context,
+              ).textTheme.bodyMedium?.copyWith(color: secondary),
+            ),
+          ),
+          Text(
+            value,
+            textAlign: TextAlign.end,
+            style: Theme.of(
+              context,
+            ).textTheme.bodyMedium?.copyWith(fontWeight: FontWeight.w600),
           ),
         ],
       ),

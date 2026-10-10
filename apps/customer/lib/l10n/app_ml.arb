@@ -887,5 +887,54 @@
       "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "ഇത് Kaylo Partner അക്കൗണ്ടാണ്. ദയവായി Kaylo Partner ആപ്പ് ഉപയോഗിക്കുക.",
-  "customerProfileUnavailable": "നിങ്ങളുടെ ഉപഭോക്തൃ പ്രൊഫൈൽ സ്ഥിരീകരിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക."
+  "customerProfileUnavailable": "നിങ്ങളുടെ ഉപഭോക്തൃ പ്രൊഫൈൽ സ്ഥിരീകരിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക.",
+  "yourDoctor": "നിങ്ങളുടെ ഡോക്ടർ",
+  "@yourDoctor": {
+    "description": "Section header on a doctor appointment booking"
+  },
+  "yourCaregiver": "നിങ്ങളുടെ പരിചാരകൻ",
+  "@yourCaregiver": {
+    "description": "Section header on a caregiver booking"
+  },
+  "doctorPending": "Kaylo Care നിങ്ങളുടെ ഡോക്ടറെ ഉറപ്പാക്കുന്നു. പൂർത്തിയായാലുടൻ അറിയിക്കാം.",
+  "@doctorPending": {
+    "description": "Doctor booking whose appointment record is not available yet"
+  },
+  "caregiverPending": "Kaylo Care നിങ്ങളുടെ പരിചാരകനെ ഉറപ്പാക്കുന്നു. പൂർത്തിയായാലുടൻ അറിയിക്കാം.",
+  "@caregiverPending": {
+    "description": "Caregiver booking whose record is not available yet"
+  },
+  "careRequestHandled": "Kaylo Care ടീം ഈ അഭ്യർത്ഥന കൈകാര്യം ചെയ്യുന്നു.",
+  "@careRequestHandled": {
+    "description": "Other Care bookings, such as medicine delivery, which have no provider card"
+  },
+  "patientLabel": "രോഗി",
+  "@patientLabel": {
+    "description": "Label before the patient name on a doctor appointment"
+  },
+  "appointmentTime": "അപ്പോയിന്റ്മെന്റ് സമയം",
+  "@appointmentTime": {
+    "description": "Label before the time slot on a doctor appointment"
+  },
+  "startsAt": "ആരംഭിക്കുന്നത്",
+  "@startsAt": {
+    "description": "Label before the start time of a caregiver visit"
+  },
+  "hoursCount": "{count, plural, =1{1 മണിക്കൂർ} other{{count} മണിക്കൂർ}}",
+  "@hoursCount": {
+    "description": "Length of a caregiver visit",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "cancelCareBookingMessage": "ഈ Care ബുക്കിംഗ് റദ്ദാക്കും. എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ബുക്ക് ചെയ്യാം.",
+  "@cancelCareBookingMessage": {
+    "description": "Cancel dialog body for a Care booking, which has no worker to release"
+  },
+  "bookingNotes": "കുറിപ്പുകൾ",
+  "@bookingNotes": {
+    "description": "Label for the notes line of a Care booking"
+  }
 }

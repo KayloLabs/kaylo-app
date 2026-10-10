@@ -2441,4 +2441,49 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get customerProfileUnavailable =>
       'നിങ്ങളുടെ ഉപഭോക്തൃ പ്രൊഫൈൽ സ്ഥിരീകരിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക.';
+
+  @override
+  String get yourDoctor => 'നിങ്ങളുടെ ഡോക്ടർ';
+
+  @override
+  String get yourCaregiver => 'നിങ്ങളുടെ പരിചാരകൻ';
+
+  @override
+  String get doctorPending =>
+      'Kaylo Care നിങ്ങളുടെ ഡോക്ടറെ ഉറപ്പാക്കുന്നു. പൂർത്തിയായാലുടൻ അറിയിക്കാം.';
+
+  @override
+  String get caregiverPending =>
+      'Kaylo Care നിങ്ങളുടെ പരിചാരകനെ ഉറപ്പാക്കുന്നു. പൂർത്തിയായാലുടൻ അറിയിക്കാം.';
+
+  @override
+  String get careRequestHandled =>
+      'Kaylo Care ടീം ഈ അഭ്യർത്ഥന കൈകാര്യം ചെയ്യുന്നു.';
+
+  @override
+  String get patientLabel => 'രോഗി';
+
+  @override
+  String get appointmentTime => 'അപ്പോയിന്റ്മെന്റ് സമയം';
+
+  @override
+  String get startsAt => 'ആരംഭിക്കുന്നത്';
+
+  @override
+  String hoursCount(int count) {
+    String _temp0 = intl.Intl.pluralLogic(
+      count,
+      locale: localeName,
+      other: '$count മണിക്കൂർ',
+      one: '1 മണിക്കൂർ',
+    );
+    return '$_temp0';
+  }
+
+  @override
+  String get cancelCareBookingMessage =>
+      'ഈ Care ബുക്കിംഗ് റദ്ദാക്കും. എപ്പോൾ വേണമെങ്കിലും വീണ്ടും ബുക്ക് ചെയ്യാം.';
+
+  @override
+  String get bookingNotes => 'കുറിപ്പുകൾ';
 }

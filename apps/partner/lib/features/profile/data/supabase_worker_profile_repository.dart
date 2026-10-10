@@ -26,7 +26,7 @@ class SupabaseWorkerProfileRepository implements WorkerProfileRepository {
     try {
       final row = await _client.rpc('my_worker_profile');
       if (row == null) return null;
-      return _withPhoto(
+      return await _withPhoto(
         WorkerProfile.fromJson(Map<String, dynamic>.from(row as Map)),
       );
     } catch (e) {
@@ -45,7 +45,7 @@ class SupabaseWorkerProfileRepository implements WorkerProfileRepository {
         Map<String, dynamic>.from(row as Map),
       );
       if (!_refresh.isClosed) _refresh.add(null);
-      return _withPhoto(profile);
+      return await _withPhoto(profile);
     } catch (e) {
       throw mapSupabaseError(e);
     }

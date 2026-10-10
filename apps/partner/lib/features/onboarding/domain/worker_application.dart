@@ -192,7 +192,13 @@ class ApplicationReceipt {
       );
 }
 
-enum WorkerApplicationStage { submitted, underReview, approved, rejected }
+enum WorkerApplicationStage {
+  submitted,
+  underReview,
+  changesRequested,
+  approved,
+  rejected,
+}
 
 class ApplicationStatus {
   const ApplicationStatus({
@@ -210,6 +216,7 @@ class ApplicationStatus {
     final stage = switch (json['status']) {
       'submitted' => WorkerApplicationStage.submitted,
       'under_review' => WorkerApplicationStage.underReview,
+      'changes_requested' => WorkerApplicationStage.changesRequested,
       'approved' => WorkerApplicationStage.approved,
       'rejected' => WorkerApplicationStage.rejected,
       _ => throw const WorkerApplicationFailure(

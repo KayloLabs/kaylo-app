@@ -203,6 +203,11 @@ class _WorkerApplicationStatusScreenState
         l.applicationUnderReviewHint,
         Icons.fact_check_outlined,
       ),
+      WorkerApplicationStage.changesRequested => (
+        l.applicationChangesRequested,
+        l.applicationChangesRequestedHint,
+        Icons.edit_document,
+      ),
       WorkerApplicationStage.approved => (
         l.applicationApproved,
         l.applicationApprovedHint,
@@ -216,6 +221,7 @@ class _WorkerApplicationStatusScreenState
     };
     final submission = ref.read(applicationSubmissionProvider);
     final canResume =
+        status.stage == WorkerApplicationStage.submitted &&
         !submission.isComplete &&
         submission.hasStarted &&
         submission.receipt?.reference == status.reference;

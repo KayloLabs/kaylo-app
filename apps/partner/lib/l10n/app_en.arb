@@ -701,5 +701,7 @@
     }
   },
   "applicationIdentityInUse": "This phone or email is already used by a Kaylo account. Contact support before applying with this identity.",
-  "liveJobsPending": "Live job requests and earnings are not available yet. Your profile and availability are ready to use."
+  "liveJobsPending": "Live job requests and earnings are not available yet. Your profile and availability are ready to use.",
+  "applicationChangesRequested": "Changes requested",
+  "applicationChangesRequestedHint": "Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements."
 }

@@ -735,4 +735,11 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get liveJobsPending =>
       'நேரடி வேலைக் கோரிக்கைகளும் வருமானமும் இன்னும் கிடைக்கவில்லை. உங்கள் சுயவிவரத்தையும் கிடைக்கும் நேரங்களையும் பயன்படுத்தலாம்.';
+
+  @override
+  String get applicationChangesRequested => 'மாற்றங்கள் கோரப்பட்டுள்ளன';
+
+  @override
+  String get applicationChangesRequestedHint =>
+      'உங்கள் விண்ணப்பத்தை மீண்டும் மதிப்பாய்வு செய்ய Kaylo-க்கு புதுப்பிக்கப்பட்ட ஆவணங்கள் தேவை. வழிமுறைகளைப் பார்க்கவும் மாற்று ஆவணங்களைச் சமர்ப்பிக்கவும் உங்கள் மின்னஞ்சலில் அனுப்பப்பட்ட பாதுகாப்பான இணைப்பைத் திறக்கவும்.';
 }

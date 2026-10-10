@@ -155,7 +155,7 @@ class _PartnerSplashScreenState extends ConsumerState<PartnerSplashScreen>
                                   opacity: _dot.value.clamp(0.0, 1.0),
                                   child: const _Mark(
                                     'assets_kaylo/logo_dot.svg',
-                                    ink,
+                                    AppColors.secondaryAccent,
                                   ),
                                 ),
                               ),
@@ -175,31 +175,28 @@ class _PartnerSplashScreenState extends ConsumerState<PartnerSplashScreen>
                       ),
                     ),
                   ),
-                  // PARTNER, letterspaced, between two hairlines.
+                  // PARTNER on a mustard pill, the partner logo's badge.
                   AnimatedBuilder(
                     animation: _badge,
                     builder: (context, _) => Opacity(
                       opacity: _badge.value,
                       child: Transform.translate(
                         offset: Offset(0, 10 * (1 - _badge.value)),
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            _hairline(),
-                            const Padding(
-                              padding: EdgeInsets.symmetric(horizontal: 14),
-                              child: Text(
-                                'PARTNER',
-                                style: TextStyle(
-                                  color: Colors.white,
-                                  fontSize: 13,
-                                  fontWeight: FontWeight.w700,
-                                  letterSpacing: 6,
-                                ),
-                              ),
+                        child: Container(
+                          padding: const EdgeInsets.fromLTRB(18, 7, 14, 7),
+                          decoration: BoxDecoration(
+                            color: AppColors.secondaryAccent,
+                            borderRadius: BorderRadius.circular(999),
+                          ),
+                          child: const Text(
+                            'PARTNER',
+                            style: TextStyle(
+                              color: AppColors.brandPrimaryDark,
+                              fontSize: 12,
+                              fontWeight: FontWeight.w700,
+                              letterSpacing: 4,
                             ),
-                            _hairline(),
-                          ],
+                          ),
                         ),
                       ),
                     ),
@@ -264,11 +261,6 @@ class _PartnerSplashScreenState extends ConsumerState<PartnerSplashScreen>
     );
   }
 
-  Widget _hairline() => Container(
-    width: 28,
-    height: 1,
-    color: Colors.white.withValues(alpha: 0.35),
-  );
 }
 
 class _Mark extends StatelessWidget {

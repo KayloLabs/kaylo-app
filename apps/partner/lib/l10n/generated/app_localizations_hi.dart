@@ -720,4 +720,11 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get liveJobsPending =>
       'लाइव काम के अनुरोध और कमाई अभी उपलब्ध नहीं हैं। आपकी प्रोफ़ाइल और उपलब्धता उपयोग के लिए तैयार हैं।';
+
+  @override
+  String get applicationChangesRequested => 'बदलाव का अनुरोध किया गया';
+
+  @override
+  String get applicationChangesRequestedHint =>
+      'आपके आवेदन की दोबारा समीक्षा के लिए Kaylo को अपडेट किए गए दस्तावेज़ चाहिए। निर्देश देखने और नए दस्तावेज़ जमा करने के लिए अपने ईमेल में भेजा गया सुरक्षित लिंक खोलें।';
 }

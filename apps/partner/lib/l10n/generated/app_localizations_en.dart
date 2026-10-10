@@ -727,4 +727,11 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get liveJobsPending =>
       'Live job requests and earnings are not available yet. Your profile and availability are ready to use.';
+
+  @override
+  String get applicationChangesRequested => 'Changes requested';
+
+  @override
+  String get applicationChangesRequestedHint =>
+      'Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements.';
 }

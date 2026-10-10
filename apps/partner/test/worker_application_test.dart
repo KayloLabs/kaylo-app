@@ -72,6 +72,16 @@ class InterruptedRepository extends MockWorkerApplicationRepository {
 }
 
 void main() {
+  test('correction request is a distinct application state', () {
+    final status = ApplicationStatus.fromJson({
+      'reference': 'KA-TEST',
+      'status': 'changes_requested',
+      'documents_received': 5,
+    });
+    expect(status.stage, WorkerApplicationStage.changesRequested);
+    expect(status.stage, isNot(WorkerApplicationStage.approved));
+  });
+
   test('normalizes local phone and requires real delivery email', () {
     expect(details.isValid, isTrue);
     expect(details.toJson()['phone'], '+919847012345');

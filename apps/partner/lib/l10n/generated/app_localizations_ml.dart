@@ -730,4 +730,11 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get liveJobsPending =>
       'തത്സമയ ജോലി അഭ്യർത്ഥനകളും വരുമാനവും ഇതുവരെ ലഭ്യമല്ല. നിങ്ങളുടെ പ്രൊഫൈലും ലഭ്യതയും ഉപയോഗിക്കാം.';
+
+  @override
+  String get applicationChangesRequested => 'മാറ്റങ്ങൾ ആവശ്യപ്പെട്ടു';
+
+  @override
+  String get applicationChangesRequestedHint =>
+      'അപേക്ഷ വീണ്ടും പരിശോധിക്കാൻ Kaylo-യ്ക്ക് പുതുക്കിയ രേഖകൾ ആവശ്യമാണ്. നിർദ്ദേശങ്ങൾ കാണാനും പുതിയ രേഖകൾ നൽകാനും ഇമെയിലിൽ ലഭിച്ച സുരക്ഷിത ലിങ്ക് തുറക്കുക.';
 }

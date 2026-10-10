@@ -48,9 +48,29 @@ dev_dependencies:
     sdk: flutter
   flutter_lints: ^6.0.0
   firebase_auth_mocks: ^0.15.2
+  flutter_launcher_icons: ^0.14.4
 
 flutter:
   uses-material-design: true
   generate: true
   assets:
     - assets_kaylo/
+
+# Launcher icons for Android, iOS and web are generated from the files in
+# assets_kaylo/launcher (the mark in white with a mustard dot on brand
+# green). Regenerate after changing them:
+#   dart run flutter_launcher_icons
+flutter_launcher_icons:
+  image_path: "assets_kaylo/launcher/icon.png"
+  android: true
+  ios: true
+  remove_alpha_ios: true
+  min_sdk_android: 21
+  adaptive_icon_background: "assets_kaylo/launcher/icon_background.png"
+  adaptive_icon_foreground: "assets_kaylo/launcher/icon_foreground.png"
+  adaptive_icon_monochrome: "assets_kaylo/launcher/icon_monochrome.png"
+  web:
+    generate: true
+    image_path: "assets_kaylo/launcher/icon.png"
+    background_color: "#1F5638"
+    theme_color: "#1F5638"

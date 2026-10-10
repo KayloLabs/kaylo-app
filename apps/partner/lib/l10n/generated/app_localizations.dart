@@ -1391,6 +1391,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Live job requests and earnings are not available yet. Your profile and availability are ready to use.'**
   String get liveJobsPending;
+
+  /// No description provided for @applicationChangesRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Changes requested'**
+  String get applicationChangesRequested;
+
+  /// No description provided for @applicationChangesRequestedHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements.'**
+  String get applicationChangesRequestedHint;
 }
 
 class _AppLocalizationsDelegate

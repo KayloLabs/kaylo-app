@@ -1,3 +1,5 @@
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_ui/theme/app_spacing.dart';
@@ -17,8 +19,13 @@ class JobHistoryScreen extends ConsumerWidget {
       appBar: AppBar(title: const Text('Job History')),
       body: history.when(
         loading: () => const Center(child: KayloLoader()),
-        error: (error, _) =>
-            Center(child: Text('Unable to load history: $error')),
+        error: (error, _) => Center(
+          child: Text(
+            error is LiveJobsPending
+                ? AppLocalizations.of(context)!.liveJobsPending
+                : 'Unable to load history: $error',
+          ),
+        ),
         data: (jobs) => jobs.isEmpty
             ? const EmptyState(
                 title: 'No past jobs yet',

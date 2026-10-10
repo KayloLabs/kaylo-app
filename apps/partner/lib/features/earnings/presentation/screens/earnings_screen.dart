@@ -1,3 +1,6 @@
+import '../../../../l10n/generated/app_localizations.dart';
+import '../../../jobs/data/pending_jobs_repository.dart';
+import '../../../jobs/application/jobs_providers.dart';
 import 'dart:math';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,6 +21,18 @@ class EarningsScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    if (ref.watch(jobsRepositoryProvider) is PendingJobsRepository) {
+      final l10n = AppLocalizations.of(context)!;
+      return Scaffold(
+        appBar: AppBar(title: Text(l10n.tabEarnings)),
+        body: Center(
+          child: Padding(
+            padding: const EdgeInsets.all(AppSpacing.l),
+            child: Text(l10n.liveJobsPending, textAlign: TextAlign.center),
+          ),
+        ),
+      );
+    }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final summary = ref.watch(earningsSummaryProvider);
 

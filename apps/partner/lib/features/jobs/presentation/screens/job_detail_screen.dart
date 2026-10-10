@@ -1,3 +1,4 @@
+import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -79,7 +80,13 @@ class JobDetailScreen extends ConsumerWidget {
           return _JobDetailContent(job: job, isDark: isDark);
         },
         loading: () => const Center(child: KayloLoader()),
-        error: (err, _) => Center(child: Text(err.toString())),
+        error: (err, _) => Center(
+          child: Text(
+            err is LiveJobsPending
+                ? AppLocalizations.of(context)!.liveJobsPending
+                : err.toString(),
+          ),
+        ),
       ),
       bottomNavigationBar: jobAsync.whenOrNull(
         data: (job) {

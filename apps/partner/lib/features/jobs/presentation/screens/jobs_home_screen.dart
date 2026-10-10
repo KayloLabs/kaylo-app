@@ -1,3 +1,4 @@
+import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
@@ -27,6 +28,8 @@ class JobsHomeScreen extends ConsumerWidget {
     final profile = ref.watch(workerProfileProvider).asData?.value;
     final district = profile?.district;
     final isOnline = ref.watch(dutyStatusProvider).asData?.value ?? true;
+    final pendingLive =
+        ref.watch(jobsRepositoryProvider) is PendingJobsRepository;
     final earnings = ref.watch(earningsSummaryProvider);
     final activeJobAsync = ref.watch(activeJobProvider);
     final requestsAsync = ref.watch(incomingRequestsProvider);
@@ -91,13 +94,17 @@ class JobsHomeScreen extends ConsumerWidget {
           ),
           const SizedBox(height: AppSpacing.m),
 
+          if (pendingLive && !isOnline) ...[
+            Text(l10n.liveJobsPending),
+            const SizedBox(height: AppSpacing.m),
+          ],
           // Today's Summary Strip
           Row(
             children: [
               Expanded(
                 child: _SummaryBox(
                   label: l10n.todaysPay,
-                  value: formatRupees(earnings.todayTotal),
+                  value: pendingLive ? '—' : formatRupees(earnings.todayTotal),
                   color: AppColors.brandPrimary,
                 ),
               ),
@@ -105,7 +112,7 @@ class JobsHomeScreen extends ConsumerWidget {
               Expanded(
                 child: _SummaryBox(
                   label: l10n.jobsToday,
-                  value: '${earnings.todayJobsCount}',
+                  value: pendingLive ? '—' : '${earnings.todayJobsCount}',
                 ),
               ),
               const SizedBox(width: AppSpacing.s),
@@ -201,7 +208,9 @@ class JobsHomeScreen extends ConsumerWidget {
                 );
               },
               loading: () => const Center(child: KayloLoader()),
-              error: (err, _) => Text('Error: $err'),
+              error: (err, _) => Text(
+                err is LiveJobsPending ? l10n.liveJobsPending : 'Error: $err',
+              ),
             ),
           ],
         ],

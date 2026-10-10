@@ -27,3 +27,7 @@ verify_jwt = false
 
 [functions.delete-account]
 verify_jwt = false
+
+# Public application uploads verify a per-application expiring bearer token.
+[functions.worker-application-documents]
+verify_jwt = false

@@ -4,6 +4,7 @@
 /// nested route is a *relative* name that the parent GoRoute composes.
 class Routes {
   // Auth
+  static const String splash = '/splash';
   static const String login = '/login';
 
   // Bottom-nav shell tabs

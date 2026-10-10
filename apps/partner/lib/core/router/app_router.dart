@@ -5,6 +5,7 @@ import 'package:kaylo_ui/theme/app_colors.dart';
 
 import '../../../features/auth/application/partner_session.dart';
 import '../../../features/auth/presentation/screens/login_screen.dart';
+import '../../../features/splash/presentation/screens/partner_splash_screen.dart';
 import '../../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../../features/jobs/presentation/screens/job_detail_screen.dart';
 import '../../../features/jobs/presentation/screens/jobs_home_screen.dart';
@@ -22,9 +23,11 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
   });
 
   return GoRouter(
-    initialLocation: Routes.jobs,
+    initialLocation: Routes.splash,
     refreshListenable: listenable,
     redirect: (context, state) async {
+      // The splash decides where to go once it has checked the session.
+      if (state.matchedLocation == Routes.splash) return null;
       final isLoggedIn = await ref
           .read(partnerAuthRepositoryProvider)
           .isAuthenticated();
@@ -35,6 +38,10 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: Routes.splash,
+        builder: (_, _) => const PartnerSplashScreen(),
+      ),
       GoRoute(
         path: Routes.login,
         builder: (_, _) => const PartnerLoginScreen(),

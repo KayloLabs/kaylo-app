@@ -9,13 +9,13 @@ class AppLocalizationsHi extends AppLocalizations {
   AppLocalizationsHi([String locale = 'hi']) : super(locale);
 
   @override
-  String get appTitle => 'कायलो पार्टनर';
+  String get appTitle => 'Kaylo Partner';
 
   @override
-  String get refreshJobsTooltip => 'नौकरियां रीफ्रेश करें';
+  String get refreshJobsTooltip => 'नौकरियों को रिफ्रेश करें';
 
   @override
-  String get tabJobs => 'काम';
+  String get tabJobs => 'नौकरियां';
 
   @override
   String get tabEarnings => 'कमाई';
@@ -41,20 +41,20 @@ class AppLocalizationsHi extends AppLocalizations {
   String get todaysPay => 'आज की कमाई';
 
   @override
-  String get jobsToday => 'आज के काम';
+  String get jobsToday => 'आज की नौकरियां';
 
   @override
   String get rating => 'रेटिंग';
 
   @override
-  String get activeJob => 'सक्रिय काम';
+  String get activeJob => 'सक्रिय नौकरी';
 
   @override
   String get offlineTitle => 'आप ऑफ़लाइन हैं';
 
   @override
   String get offlineDescription =>
-      'ग्राहकों से आस-पास के काम के अनुरोध प्राप्त करने के लिए ऊपर अपनी ड्यूटी स्थिति को ऑनलाइन करें।';
+      'आस-पास के ग्राहकों से नौकरी के अनुरोध प्राप्त करने के लिए अपनी ड्यूटी स्थिति को ऑनलाइन में बदलें।';
 
   @override
   String newRequests(int count) {
@@ -62,7 +62,7 @@ class AppLocalizationsHi extends AppLocalizations {
   }
 
   @override
-  String get searchingForRequests => 'अनुरोध खोजे जा रहे हैं...';
+  String get searchingForRequests => 'अनुरोधों की खोज कर रहे हैं...';
 
   @override
   String get searchingForRequestsSubtitle =>
@@ -75,7 +75,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get decline => 'अस्वीकार करें';
 
   @override
-  String get acceptJob => 'काम स्वीकार करें';
+  String get acceptJob => 'नौकरी स्वीकार करें';
 
   @override
   String get stageRequested => 'अनुरोध किया गया';
@@ -108,10 +108,10 @@ class AppLocalizationsHi extends AppLocalizations {
   String get actionArrived => 'मैं पहुंच गया हूं';
 
   @override
-  String get actionStartJob => 'काम शुरू करें';
+  String get actionStartJob => 'नौकरी शुरू करें';
 
   @override
-  String get actionCompleteJob => 'काम पूरा करें';
+  String get actionCompleteJob => 'नौकरी पूरी करें';
 
   @override
   String get languageSettings => 'भाषा सेटिंग्स';

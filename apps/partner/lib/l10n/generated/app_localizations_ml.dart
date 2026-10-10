@@ -31,7 +31,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String dutyTakingOrders(String district) {
-    return '$district ജില്ലയിൽ ഓർഡറുകൾ സ്വീകരിക്കുന്നു';
+    return '$district ഓർഡറുകൾ എടുക്കുന്നു';
   }
 
   @override
@@ -54,7 +54,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get offlineDescription =>
-      'ഉപഭോക്താക്കളിൽ നിന്ന് ജോലി അഭ്യർത്ഥനകൾ ലഭിക്കുന്നതിന് ദയവായി നിങ്ങളുടെ ഡ്യൂട്ടി ഓൺലൈൻ ആക്കുക.';
+      'സമീപത്തുള്ള ഉപഭോക്താക്കളിൽ നിന്ന് ജോലി അഭ്യർത്ഥനകൾ ലഭിക്കുന്നതിന് നിങ്ങളുടെ ഡ്യൂട്ടി സ്റ്റാറ്റസ് ഓൺലൈനിലേക്ക് മാറ്റുക.';
 
   @override
   String newRequests(int count) {
@@ -66,7 +66,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get searchingForRequestsSubtitle =>
-      'ഒരു ഉപഭോക്താവ് ബുക്ക് ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു ശബ്ദം കേൾക്കാം.';
+      'സമീപത്തുള്ള ഉപഭോക്താവ് ബുക്ക് ചെയ്യുമ്പോൾ നിങ്ങൾക്ക് ഒരു പിംഗ് കേൾക്കാം.';
 
   @override
   String get payout => 'പേഔട്ട്';
@@ -84,7 +84,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get stageAccepted => 'സ്വീകരിച്ചു';
 
   @override
-  String get stageOnTheWay => 'വഴിയിലാണ്';
+  String get stageOnTheWay => 'യാത്രയിലാണ്';
 
   @override
   String get stageArrived => 'എത്തിച്ചേർന്നു';
@@ -105,7 +105,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get actionStartTravel => 'യാത്ര തുടങ്ങുക';
 
   @override
-  String get actionArrived => 'ഞാൻ എത്തി';
+  String get actionArrived => 'ഞാൻ എത്തിച്ചേർന്നു';
 
   @override
   String get actionStartJob => 'ജോലി തുടങ്ങുക';
@@ -120,5 +120,5 @@ class AppLocalizationsMl extends AppLocalizations {
   String get profileLanguageTile => 'ഭാഷ';
 
   @override
-  String get appSettingsHeader => 'ആപ്പ് സജ്ജീകരണങ്ങൾ';
+  String get appSettingsHeader => 'ആപ്പ് ക്രമീകരണങ്ങൾ';
 }

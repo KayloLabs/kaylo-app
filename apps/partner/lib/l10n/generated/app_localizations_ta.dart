@@ -12,13 +12,13 @@ class AppLocalizationsTa extends AppLocalizations {
   String get appTitle => 'கெய்லோ பார்ட்னர்';
 
   @override
-  String get refreshJobsTooltip => 'வேலைகளைப் புதுப்பி';
+  String get refreshJobsTooltip => 'வேலைகளைப் புதுப்பிக்கவும்';
 
   @override
   String get tabJobs => 'வேலைகள்';
 
   @override
-  String get tabEarnings => 'வருவாய்';
+  String get tabEarnings => 'வருமானம்';
 
   @override
   String get tabProfile => 'சுயவிவரம்';
@@ -31,14 +31,14 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String dutyTakingOrders(String district) {
-    return '$district இல் ஆர்டர்களைப் பெறுகிறீர்கள்';
+    return '$district இல் ஆர்டர்களை எடுக்கிறீர்கள்';
   }
 
   @override
   String get dutyNotReceivingRequests => 'கோரிக்கைகளைப் பெறவில்லை';
 
   @override
-  String get todaysPay => 'இன்றைய வருவாய்';
+  String get todaysPay => 'இன்றைய வருமானம்';
 
   @override
   String get jobsToday => 'இன்றைய வேலைகள்';
@@ -47,14 +47,14 @@ class AppLocalizationsTa extends AppLocalizations {
   String get rating => 'மதிப்பீடு';
 
   @override
-  String get activeJob => 'நடப்பு வேலை';
+  String get activeJob => 'செயலில் உள்ள வேலை';
 
   @override
   String get offlineTitle => 'நீங்கள் ஆஃப்லைனில் உள்ளீர்கள்';
 
   @override
   String get offlineDescription =>
-      'வாடிக்கையாளர்களிடமிருந்து வேலை கோரிக்கைகளைப் பெற உங்கள் நிலையை ஆன்லைனுக்கு மாற்றவும்.';
+      'அருகிலுள்ள வாடிக்கையாளர்களிடமிருந்து வேலை கோரிக்கைகளைப் பெற உங்கள் கடமை நிலையை ஆன்லைனுக்கு மாற்றவும்.';
 
   @override
   String newRequests(int count) {
@@ -66,10 +66,10 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get searchingForRequestsSubtitle =>
-      'வாடிக்கையாளர் முன்பதிவு செய்யும்போது ஒலி கேட்கும்.';
+      'அருகிலுள்ள வாடிக்கையாளர் முன்பதிவு செய்யும்போது ஒரு பிங் சத்தம் கேட்கும்.';
 
   @override
-  String get payout => 'பணம் செலுத்துதல்';
+  String get payout => 'பேஅவுட்';
 
   @override
   String get decline => 'நிராகரி';
@@ -87,10 +87,10 @@ class AppLocalizationsTa extends AppLocalizations {
   String get stageOnTheWay => 'வழியில்';
 
   @override
-  String get stageArrived => 'வந்தடைந்தது';
+  String get stageArrived => 'வந்துவிட்டது';
 
   @override
-  String get stageInProgress => 'செயல்பாட்டில் உள்ளது';
+  String get stageInProgress => 'செயல்பாட்டில்';
 
   @override
   String get stageCompleted => 'முடிந்தது';

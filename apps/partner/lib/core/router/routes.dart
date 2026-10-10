@@ -12,6 +12,7 @@ class Routes {
   static const String earnings = '/earnings';
   static const String profile = '/profile';
   static const String history = '/history';
+  static const String availability = '/availability';
 
   // Job detail – pushed over the shell
   static String jobDetail(String id) => '/jobs/$id';

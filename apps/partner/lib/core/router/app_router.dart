@@ -5,6 +5,7 @@ import 'package:kaylo_ui/theme/app_colors.dart';
 
 import '../../../features/auth/application/partner_session.dart';
 import '../../../features/auth/presentation/screens/login_screen.dart';
+import '../../../features/availability/presentation/screens/availability_screen.dart';
 import '../../../features/splash/presentation/screens/partner_splash_screen.dart';
 import '../../../features/earnings/presentation/screens/earnings_screen.dart';
 import '../../../features/jobs/presentation/screens/job_detail_screen.dart';
@@ -57,6 +58,10 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
       GoRoute(
         path: Routes.history,
         builder: (_, _) => const JobHistoryScreen(),
+      ),
+      GoRoute(
+        path: Routes.availability,
+        builder: (_, _) => const AvailabilityScreen(),
       ),
       StatefulShellRoute.indexedStack(
         builder: (context, state, shell) => _PartnerShell(shell: shell),

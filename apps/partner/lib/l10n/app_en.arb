@@ -153,5 +153,318 @@
   "appSettingsHeader": "App Settings",
   "@appSettingsHeader": {
     "description": "Header for the App Settings section in the profile screen"
+  },
+  "profileTitle": "Partner profile",
+  "@profileTitle": {
+    "description": "App bar title of the profile tab"
+  },
+  "editProfile": "Edit profile",
+  "@editProfile": {
+    "description": "Action that opens the edit sheet"
+  },
+  "verifiedPartner": "Verified partner",
+  "@verifiedPartner": {
+    "description": "Chip on a verified worker"
+  },
+  "verificationUnderReview": "Verification in progress",
+  "@verificationUnderReview": {
+    "description": "Chip while the Trust Team reviews the worker"
+  },
+  "verificationRejected": "Verification rejected",
+  "@verificationRejected": {
+    "description": "Chip when verification was refused"
+  },
+  "verificationNotStarted": "Not verified yet",
+  "@verificationNotStarted": {
+    "description": "Chip before any verification"
+  },
+  "performanceHeader": "Performance & ratings",
+  "@performanceHeader": {
+    "description": "Section header for rating and job counts"
+  },
+  "totalJobs": "Total jobs",
+  "@totalJobs": {
+    "description": "Metric label: completed jobs"
+  },
+  "reviewsCount": "{count} reviews",
+  "@reviewsCount": {
+    "description": "How many reviews the rating is based on",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "memberSince": "Since {date}",
+  "@memberSince": {
+    "description": "When the worker joined, month and year",
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  },
+  "offeredServicesHeader": "Services you offer",
+  "@offeredServicesHeader": {
+    "description": "Section header for the service chips"
+  },
+  "noServicesYet": "No services listed yet",
+  "@noServicesYet": {
+    "description": "Shown when the worker offers no service"
+  },
+  "payoutHeader": "Payout account",
+  "@payoutHeader": {
+    "description": "Section header for UPI and bank details"
+  },
+  "upiLabel": "UPI ID: {upi}",
+  "@upiLabel": {
+    "description": "The UPI handle line",
+    "placeholders": {
+      "upi": {
+        "type": "String"
+      }
+    }
+  },
+  "noPayoutYet": "No payout account yet",
+  "@noPayoutYet": {
+    "description": "Shown when neither UPI nor bank account is set"
+  },
+  "bankChangeNote": "Bank account changes go through support",
+  "@bankChangeNote": {
+    "description": "Note under the payout card"
+  },
+  "verificationHeader": "KYC & verification",
+  "@verificationHeader": {
+    "description": "Section header for document states"
+  },
+  "documentAadhaar": "Aadhaar card",
+  "@documentAadhaar": {
+    "description": "Document row title"
+  },
+  "documentPoliceCertificate": "Police clearance certificate",
+  "@documentPoliceCertificate": {
+    "description": "Document row title"
+  },
+  "statusVerified": "Verified",
+  "@statusVerified": {
+    "description": "Document state chip"
+  },
+  "statusPending": "Pending",
+  "@statusPending": {
+    "description": "Document state chip"
+  },
+  "statusRejected": "Rejected",
+  "@statusRejected": {
+    "description": "Document state chip"
+  },
+  "statusNotSubmitted": "Not submitted",
+  "@statusNotSubmitted": {
+    "description": "Document state chip when nothing was uploaded"
+  },
+  "areaScheduleHeader": "Service area & schedule",
+  "@areaScheduleHeader": {
+    "description": "Section header for district, radius and hours"
+  },
+  "travelRadius": "{km} km radius",
+  "@travelRadius": {
+    "description": "How far the worker travels",
+    "placeholders": {
+      "km": {
+        "type": "String"
+      }
+    }
+  },
+  "noDistrictYet": "Service area not set",
+  "@noDistrictYet": {
+    "description": "Shown when no district is saved"
+  },
+  "hoursNotSet": "Working hours not set",
+  "@hoursNotSet": {
+    "description": "Shown when no weekly hours are saved"
+  },
+  "customHours": "Different hours on different days",
+  "@customHours": {
+    "description": "Schedule summary when the days differ"
+  },
+  "manageAvailability": "Manage availability",
+  "@manageAvailability": {
+    "description": "Button to the availability screen"
+  },
+  "logOut": "Log out",
+  "@logOut": {
+    "description": "Log out button and dialog confirm"
+  },
+  "logOutTitle": "Log out?",
+  "@logOutTitle": {
+    "description": "Log out dialog title"
+  },
+  "logOutBody": "You will need to sign in again with your phone number to receive jobs.",
+  "@logOutBody": {
+    "description": "Log out dialog body"
+  },
+  "cancel": "Cancel",
+  "@cancel": {
+    "description": "Dialog dismiss button"
+  },
+  "notRegisteredTitle": "Finish your registration",
+  "@notRegisteredTitle": {
+    "description": "Profile tab when the person has no worker row"
+  },
+  "notRegisteredBody": "Your worker profile is not set up yet. Complete registration to start receiving jobs.",
+  "@notRegisteredBody": {
+    "description": "Explanation under notRegisteredTitle"
+  },
+  "profileLoadFailed": "Could not load your profile",
+  "@profileLoadFailed": {
+    "description": "Error state title"
+  },
+  "retry": "Retry",
+  "@retry": {
+    "description": "Error state button"
+  },
+  "editProfileTitle": "Edit profile",
+  "@editProfileTitle": {
+    "description": "Edit sheet title"
+  },
+  "fullNameLabel": "Full name",
+  "@fullNameLabel": {
+    "description": "Edit sheet field"
+  },
+  "districtLabel": "District",
+  "@districtLabel": {
+    "description": "Edit sheet field"
+  },
+  "travelRadiusLabel": "Travel radius (km)",
+  "@travelRadiusLabel": {
+    "description": "Edit sheet field"
+  },
+  "upiIdLabel": "UPI ID",
+  "@upiIdLabel": {
+    "description": "Edit sheet field"
+  },
+  "servicesLabel": "Services you offer",
+  "@servicesLabel": {
+    "description": "Edit sheet: label above the service chips"
+  },
+  "save": "Save",
+  "@save": {
+    "description": "Save button"
+  },
+  "profileSaved": "Profile updated",
+  "@profileSaved": {
+    "description": "Snackbar after a successful save"
+  },
+  "nameRequired": "Enter your name",
+  "@nameRequired": {
+    "description": "Validation message"
+  },
+  "chooseOneService": "Choose at least one service",
+  "@chooseOneService": {
+    "description": "Validation message"
+  },
+  "invalidUpi": "Enter a valid UPI ID, like name@bank",
+  "@invalidUpi": {
+    "description": "Validation message"
+  },
+  "radiusRange": "Enter a radius between 1 and 100 km",
+  "@radiusRange": {
+    "description": "Validation message"
+  },
+  "dutyUpdateFailed": "Could not update your availability",
+  "@dutyUpdateFailed": {
+    "description": "Snackbar when the duty switch could not be saved"
+  },
+  "dutyTakingOrdersAnywhere": "Taking job requests",
+  "@dutyTakingOrdersAnywhere": {
+    "description": "Duty pill subtitle when no district is set"
+  },
+  "availabilityTitle": "My availability",
+  "@availabilityTitle": {
+    "description": "Availability screen title"
+  },
+  "workingHoursHeader": "Working hours",
+  "@workingHoursHeader": {
+    "description": "Section header"
+  },
+  "workingHoursHint": "Customers can only book you inside these hours.",
+  "@workingHoursHint": {
+    "description": "Hint under the working hours header"
+  },
+  "dayOff": "Day off",
+  "@dayOff": {
+    "description": "Shown on a weekday the worker does not work"
+  },
+  "saveHours": "Save hours",
+  "@saveHours": {
+    "description": "Button that saves the weekly hours"
+  },
+  "hoursSaved": "Working hours saved",
+  "@hoursSaved": {
+    "description": "Snackbar after saving hours"
+  },
+  "endAfterStart": "The end time must be after the start",
+  "@endAfterStart": {
+    "description": "Validation message for a day window"
+  },
+  "daysOffHeader": "Days off",
+  "@daysOffHeader": {
+    "description": "Section header"
+  },
+  "daysOffHint": "Customers cannot book these days.",
+  "@daysOffHint": {
+    "description": "Hint under the days off header"
+  },
+  "addDaysOff": "Add days off",
+  "@addDaysOff": {
+    "description": "Button that opens the date range picker"
+  },
+  "noDaysOff": "No days off planned",
+  "@noDaysOff": {
+    "description": "Empty state for days off"
+  },
+  "reasonLabel": "Reason (optional)",
+  "@reasonLabel": {
+    "description": "Field label in the add days off dialog"
+  },
+  "reasonHint": "Festival, travel, family…",
+  "@reasonHint": {
+    "description": "Hint text for the reason field"
+  },
+  "timeOffAdded": "Days off added",
+  "@timeOffAdded": {
+    "description": "Snackbar after adding days off"
+  },
+  "timeOffRemoved": "Days off removed",
+  "@timeOffRemoved": {
+    "description": "Snackbar after removing days off"
+  },
+  "remove": "Remove",
+  "@remove": {
+    "description": "Tooltip of the remove button"
+  },
+  "add": "Add",
+  "@add": {
+    "description": "Dialog confirm button"
+  },
+  "dayCount": "{count, plural, =1{1 day} other{{count} days}}",
+  "@dayCount": {
+    "description": "How many days a time off covers",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "dateRange": "{from} to {to}",
+  "@dateRange": {
+    "description": "A date range, first day to last day",
+    "placeholders": {
+      "from": {
+        "type": "String"
+      },
+      "to": {
+        "type": "String"
+      }
+    }
   }
 }

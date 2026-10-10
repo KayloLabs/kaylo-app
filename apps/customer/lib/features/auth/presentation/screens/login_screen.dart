@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../auth_error_text.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
@@ -10,6 +11,7 @@ import 'package:kaylo_ui/widgets/kaylo_liquid_glass.dart';
 import 'package:kaylo_ui/widgets/kaylo_logo.dart';
 import 'package:kaylo_ui/widgets/kaylo_text_field.dart';
 import '../../application/current_user_provider.dart';
+import '../../application/session_controller.dart';
 import '../../domain/auth_repository.dart';
 import 'otp_verify_screen.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
@@ -121,7 +123,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
         context.push(Routes.loginOtp, extra: target);
       }
     } catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.toString());
+      if (mounted) {
+        KayloSnackbar.showError(context, customerAuthErrorText(context, e));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -135,7 +139,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
       await awaitSignedInUser(ref);
       if (mounted) context.go(Routes.location);
     } catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.toString());
+      if (mounted) {
+        KayloSnackbar.showError(context, customerAuthErrorText(context, e));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }
@@ -218,6 +224,22 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                     ),
                     const SizedBox(height: AppSpacing.xxxl),
 
+                    if (ref.watch(sessionControllerProvider).hasError) ...[
+                      Semantics(
+                        liveRegion: true,
+                        child: Text(
+                          customerAuthErrorText(
+                            context,
+                            ref.watch(sessionControllerProvider).error!,
+                          ),
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Theme.of(context).colorScheme.error,
+                          ),
+                        ),
+                      ),
+                      const SizedBox(height: AppSpacing.m),
+                    ],
                     // Glassmorphic Auth Card
                     KayloLiquidGlass(
                       borderRadius: 32,
@@ -363,7 +385,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                                       hintText: 'e.g. 98470 12345',
                                       controller: _phoneController,
                                       keyboardType: TextInputType.phone,
-                                      prefixIcon: const Icon(Icons.phone_outlined),
+                                      prefixIcon: const Icon(
+                                        Icons.phone_outlined,
+                                      ),
                                     ),
                                     const SizedBox(height: AppSpacing.l),
                                   ],
@@ -378,7 +402,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               hintText: 'e.g. 98470 12345',
                               controller: _phoneController,
                               keyboardType: TextInputType.phone,
-                              autofillHints: const [AutofillHints.telephoneNumber],
+                              autofillHints: const [
+                                AutofillHints.telephoneNumber,
+                              ],
                               textInputAction: TextInputAction.done,
                               onSubmitted: (_) => _handleCodeSubmit(),
                               prefixIcon: const Icon(Icons.phone_outlined),
@@ -392,7 +418,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen>
                               autofillHints: const [AutofillHints.email],
                               textInputAction: TextInputAction.done,
                               onSubmitted: (_) => _handleCodeSubmit(),
-                              prefixIcon: const Icon(Icons.mail_outline_rounded),
+                              prefixIcon: const Icon(
+                                Icons.mail_outline_rounded,
+                              ),
                             ),
                           const SizedBox(height: AppSpacing.xl),
                           KayloButton(

@@ -2407,4 +2407,12 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get slotTakenMessage =>
       'That time is already booked for this worker. Pick another slot.';
+
+  @override
+  String get partnerAccountNotAllowed =>
+      'This is a Kaylo Partner account. Please use the Kaylo Partner app.';
+
+  @override
+  String get customerProfileUnavailable =>
+      'We could not verify your customer profile. Check your connection and sign in again.';
 }

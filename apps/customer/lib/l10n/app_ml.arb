@@ -885,5 +885,7 @@
   "slotTakenMessage": "ഈ സമയം ഈ തൊഴിലാളിക്ക് ഇതിനകം ബുക്ക് ചെയ്തിട്ടുണ്ട്. മറ്റൊരു സമയം തിരഞ്ഞെടുക്കുക.",
   "@slotTakenMessage": {
       "description": "Error when continuing with a slot the worker already holds"
-  }
+  },
+  "partnerAccountNotAllowed": "ഇത് Kaylo Partner അക്കൗണ്ടാണ്. ദയവായി Kaylo Partner ആപ്പ് ഉപയോഗിക്കുക.",
+  "customerProfileUnavailable": "നിങ്ങളുടെ ഉപഭോക്തൃ പ്രൊഫൈൽ സ്ഥിരീകരിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക."
 }

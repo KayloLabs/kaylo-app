@@ -25,11 +25,13 @@ class FirebaseAuthRepository implements AuthRepository {
   final _controller = StreamController<AppUser?>.broadcast();
   StreamSubscription<User?>? _subscription;
   AppUser? _currentUser;
+  Object? _sessionFailure;
+  int _sessionGeneration = 0;
 
   /// Calls the email-otp Edge Function with a JSON body and returns its
   /// JSON reply. Injected so tests can bypass the network.
   final Future<Map<String, dynamic>> Function(Map<String, dynamic> body)
-      _emailCodes;
+  _emailCodes;
 
   /// Name and phone typed on the sign-up form, used when the person row
   /// is created (an email sign-in carries no phone of its own).
@@ -47,48 +49,70 @@ class FirebaseAuthRepository implements AuthRepository {
     ProfileStore? profiles,
     Future<String?> Function()? googleIdToken,
     Future<Map<String, dynamic>> Function(Map<String, dynamic> body)?
-        emailCodes,
-  })  : _auth = auth ?? FirebaseAuth.instance,
-        _profiles = ProfileSync(
-          profiles ?? SupabaseProfileStore(supabase.Supabase.instance.client),
-        ),
-        _googleIdToken = googleIdToken ?? _googleIdTokenFromPlugin,
-        _emailCodes = emailCodes ?? _invokeEmailOtp {
+    emailCodes,
+  }) : _auth = auth ?? FirebaseAuth.instance,
+       _profiles = ProfileSync(
+         profiles ?? SupabaseProfileStore(supabase.Supabase.instance.client),
+       ),
+       _googleIdToken = googleIdToken ?? _googleIdTokenFromPlugin,
+       _emailCodes = emailCodes ?? _invokeEmailOtp {
     _subscription = _auth.authStateChanges().listen((user) async {
-      _currentUser = user == null ? null : await _profileFor(user);
-      _controller.add(_currentUser);
+      if (_controller.isClosed) return;
+      final generation = ++_sessionGeneration;
+      if (user == null) {
+        _currentUser = null;
+        if (_sessionFailure != null) {
+          _controller.addError(_sessionFailure!);
+        } else {
+          _controller.add(null);
+        }
+        return;
+      }
+      try {
+        final profile = await _profileFor(user);
+        if (generation != _sessionGeneration || _controller.isClosed) return;
+        _currentUser = profile;
+        _sessionFailure = null;
+        _controller.add(profile);
+      } catch (error) {
+        if (generation != _sessionGeneration || _controller.isClosed) return;
+        _currentUser = null;
+        _sessionFailure = error is PartnerAccountNotAllowed
+            ? error
+            : const CustomerProfileUnavailable();
+        await _auth.signOut();
+      }
     });
   }
 
   SignInIdentity _identityOf(User user) => SignInIdentity(
-        authUserId: user.uid,
-        displayName: user.displayName,
-        email: user.email,
-        phone: user.phoneNumber ?? _pendingPhone,
-        photoUrl: user.photoURL,
-      );
+    authUserId: user.uid,
+    displayName: user.displayName,
+    email: user.email,
+    phone: user.phoneNumber ?? _pendingPhone,
+    photoUrl: user.photoURL,
+  );
 
   Future<AppUser> _profileFor(User user) async {
     final identity = _identityOf(user);
     for (var attempt = 1; attempt <= 2; attempt++) {
       try {
-        return await _profiles.resolve(identity, preferredName: _pendingDisplayName);
+        return await _profiles.resolve(
+          identity,
+          preferredName: _pendingDisplayName,
+        );
+      } on PartnerAccountNotAllowed {
+        rethrow;
       } catch (e) {
-        debugPrint('Kaylo: profile sync attempt $attempt failed: $e');
+        debugPrint(
+          'Kaylo: profile sync attempt $attempt failed (${e.runtimeType})',
+        );
         if (attempt == 1) {
           await Future<void>.delayed(const Duration(milliseconds: 800));
         }
       }
     }
-    // Offline: the session still works and the screens show what the
-    // provider knows. Per-user data waits for the next sign-in.
-    return AppUser.fromFullName(
-      id: user.uid,
-      fullName: _pendingDisplayName ?? identity.displayName ?? placeholderName,
-      phone: identity.phone ?? '',
-      email: identity.email,
-      profileImageUrl: identity.photoUrl,
-    );
+    throw const CustomerProfileUnavailable();
   }
 
   @override
@@ -104,6 +128,8 @@ class FirebaseAuthRepository implements AuthRepository {
     String? displayName,
     String? phone,
   }) async {
+    _sessionFailure = null;
+    if (isPartnerLoginEmail(email)) throw const PartnerAccountNotAllowed();
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
     }
@@ -119,6 +145,8 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> verifyEmailCode(String email, String code) async {
+    _sessionFailure = null;
+    if (isPartnerLoginEmail(email)) throw const PartnerAccountNotAllowed();
     final reply = await _emailCodes({
       'action': 'verify',
       'email': email.trim().toLowerCase(),
@@ -141,6 +169,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
+    _sessionFailure = null;
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
     }
@@ -162,7 +191,9 @@ class FirebaseAuthRepository implements AuthRepository {
           if (!sent.isCompleted) sent.complete();
         },
         verificationFailed: (e) {
-          if (!sent.isCompleted) sent.completeError(AuthMessage(describeFirebaseAuthError(e)));
+          if (!sent.isCompleted) {
+            sent.completeError(AuthMessage(describeFirebaseAuthError(e)));
+          }
         },
         codeSent: (verificationId, _) {
           _verificationId = verificationId;
@@ -183,12 +214,16 @@ class FirebaseAuthRepository implements AuthRepository {
     try {
       if (kIsWeb) {
         final confirmation = _webConfirmation;
-        if (confirmation == null) throw AuthMessage('Request a new code first.');
+        if (confirmation == null) {
+          throw AuthMessage('Request a new code first.');
+        }
         await confirmation.confirm(otp);
         return;
       }
       final verificationId = _verificationId;
-      if (verificationId == null) throw AuthMessage('Request a new code first.');
+      if (verificationId == null) {
+        throw AuthMessage('Request a new code first.');
+      }
       await _auth.signInWithCredential(
         PhoneAuthProvider.credential(
           verificationId: verificationId,
@@ -202,6 +237,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithGoogle() async {
+    _sessionFailure = null;
     try {
       if (kIsWeb) {
         await _auth.signInWithPopup(GoogleAuthProvider()..addScope('email'));
@@ -226,7 +262,9 @@ class FirebaseAuthRepository implements AuthRepository {
   static Future<String?> _googleIdTokenFromPlugin() async {
     try {
       _googleInit ??= GoogleSignIn.instance.initialize(
-        serverClientId: googleServerClientId.isEmpty ? null : googleServerClientId,
+        serverClientId: googleServerClientId.isEmpty
+            ? null
+            : googleServerClientId,
       );
       await _googleInit;
       final account = await GoogleSignIn.instance.authenticate();
@@ -241,6 +279,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithApple() async {
+    _sessionFailure = null;
     if (!kIsWeb) {
       throw AuthMessage(
         'Apple sign-in needs the Apple developer setup; use phone or Google for now.',
@@ -273,6 +312,7 @@ class FirebaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
+    _sessionFailure = null;
     _verificationId = null;
     _webConfirmation = null;
     _pendingDisplayName = null;
@@ -293,29 +333,25 @@ class FirebaseAuthRepository implements AuthRepository {
 
 /// Firebase error codes in words the sign-in screens can show as they are.
 String describeFirebaseAuthError(FirebaseAuthException e) => switch (e.code) {
-        'invalid-phone-number' => 'That phone number does not look right.',
-        'invalid-verification-code' =>
-          'That code is not right. Check the SMS and try again.',
-        'session-expired' ||
-        'code-expired' =>
-          'That code has expired. Request a new one.',
-        'too-many-requests' =>
-          'Too many attempts. Please wait a while and try again.',
-        'network-request-failed' =>
-          'No connection. Check your network and try again.',
-        'quota-exceeded' =>
-          'SMS limit reached for today. Please try again later.',
-        'popup-closed-by-user' ||
-        'cancelled-popup-request' =>
-          'Sign-in cancelled.',
-        'popup-blocked' =>
-          'The browser blocked the sign-in window. Allow pop-ups and try again.',
-        'operation-not-allowed' =>
-          'This sign-in method is not enabled for Kaylo yet.',
-        'account-exists-with-different-credential' =>
-          'This email is already used with another sign-in method.',
-        _ => e.message ?? 'Sign-in failed. Please try again.',
-      };
+  'invalid-phone-number' => 'That phone number does not look right.',
+  'invalid-verification-code' =>
+    'That code is not right. Check the SMS and try again.',
+  'session-expired' ||
+  'code-expired' => 'That code has expired. Request a new one.',
+  'too-many-requests' =>
+    'Too many attempts. Please wait a while and try again.',
+  'network-request-failed' =>
+    'No connection. Check your network and try again.',
+  'quota-exceeded' => 'SMS limit reached for today. Please try again later.',
+  'popup-closed-by-user' || 'cancelled-popup-request' => 'Sign-in cancelled.',
+  'popup-blocked' =>
+    'The browser blocked the sign-in window. Allow pop-ups and try again.',
+  'operation-not-allowed' =>
+    'This sign-in method is not enabled for Kaylo yet.',
+  'account-exists-with-different-credential' =>
+    'This email is already used with another sign-in method.',
+  _ => e.message ?? 'Sign-in failed. Please try again.',
+};
 
 /// A sign-in problem in words the screen can show as it is.
 /// The email-otp Edge Function through the Supabase client. Its error

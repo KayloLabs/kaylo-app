@@ -4343,6 +4343,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'That time is already booked for this worker. Pick another slot.'**
   String get slotTakenMessage;
+
+  /// No description provided for @partnerAccountNotAllowed.
+  ///
+  /// In en, this message translates to:
+  /// **'This is a Kaylo Partner account. Please use the Kaylo Partner app.'**
+  String get partnerAccountNotAllowed;
+
+  /// No description provided for @customerProfileUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'We could not verify your customer profile. Check your connection and sign in again.'**
+  String get customerProfileUnavailable;
 }
 
 class _AppLocalizationsDelegate

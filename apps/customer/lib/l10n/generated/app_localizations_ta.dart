@@ -2450,4 +2450,12 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get slotTakenMessage =>
       'இந்த நேரம் இந்தப் பணியாளருக்கு ஏற்கனவே முன்பதிவு செய்யப்பட்டுள்ளது. வேறு நேரத்தைத் தேர்வு செய்யுங்கள்.';
+
+  @override
+  String get partnerAccountNotAllowed =>
+      'இது Kaylo Partner கணக்கு. Kaylo Partner செயலியைப் பயன்படுத்தவும்.';
+
+  @override
+  String get customerProfileUnavailable =>
+      'உங்கள் வாடிக்கையாளர் சுயவிவரத்தைச் சரிபார்க்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் உள்நுழையவும்.';
 }

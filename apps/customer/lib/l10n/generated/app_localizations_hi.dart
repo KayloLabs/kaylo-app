@@ -2411,4 +2411,12 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get slotTakenMessage =>
       'यह समय इस कामगार के लिए पहले से बुक है। दूसरा समय चुनें।';
+
+  @override
+  String get partnerAccountNotAllowed =>
+      'यह Kaylo Partner खाता है। कृपया Kaylo Partner ऐप का उपयोग करें।';
+
+  @override
+  String get customerProfileUnavailable =>
+      'हम आपकी ग्राहक प्रोफ़ाइल सत्यापित नहीं कर सके। अपना कनेक्शन जाँचें और फिर से साइन इन करें।';
 }

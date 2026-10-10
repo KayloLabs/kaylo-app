@@ -9,17 +9,20 @@ import 'package:kaylo_core/auth/profile_store.dart';
 /// the Firebase repository through ProfileSync.
 class SupabaseAuthRepository implements AuthRepository {
   final supabase.SupabaseClient _client = supabase.Supabase.instance.client;
-  late final ProfileSync _profiles =
-      ProfileSync(SupabaseProfileStore(_client));
+  late final ProfileSync _profiles = ProfileSync(SupabaseProfileStore(_client));
   final _authStateController = StreamController<AppUser?>.broadcast();
   StreamSubscription<supabase.AuthState>? _authStateSubscription;
   AppUser? _currentUser;
+  Object? _sessionFailure;
+  int _sessionGeneration = 0;
   String? _pendingDisplayName;
 
   SupabaseAuthRepository() {
     _authStateSubscription = _client.auth.onAuthStateChange.listen((
       data,
     ) async {
+      if (_authStateController.isClosed) return;
+      final generation = ++_sessionGeneration;
       final session = data.session;
       if (session != null) {
         final user = session.user;
@@ -31,22 +34,34 @@ class SupabaseAuthRepository implements AuthRepository {
           photoUrl: user.userMetadata?['avatar_url'] as String?,
         );
         try {
-          _currentUser = await _profiles.resolve(
+          final profile = await _profiles.resolve(
             identity,
             preferredName: _pendingDisplayName,
           );
-        } catch (_) {
-          _currentUser = AppUser.fromFullName(
-            id: user.id,
-            fullName: _pendingDisplayName ?? identity.displayName ?? placeholderName,
-            phone: user.phone ?? '',
-            email: user.email,
-          );
+          if (generation != _sessionGeneration || _authStateController.isClosed) {
+            return;
+          }
+          _currentUser = profile;
+          _sessionFailure = null;
+        } catch (error) {
+          if (generation != _sessionGeneration || _authStateController.isClosed) {
+            return;
+          }
+          _currentUser = null;
+          _sessionFailure = error is PartnerAccountNotAllowed
+              ? error
+              : const CustomerProfileUnavailable();
+          await _client.auth.signOut();
+          return;
         }
       } else {
         _currentUser = null;
       }
-      _authStateController.add(_currentUser);
+      if (_sessionFailure != null) {
+        _authStateController.addError(_sessionFailure!);
+      } else {
+        _authStateController.add(_currentUser);
+      }
     });
   }
 
@@ -63,6 +78,8 @@ class SupabaseAuthRepository implements AuthRepository {
     String? displayName,
     String? phone,
   }) async {
+    _sessionFailure = null;
+    if (isPartnerLoginEmail(email)) throw const PartnerAccountNotAllowed();
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
     }
@@ -75,6 +92,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithPhone(String phone, {String? displayName}) async {
+    _sessionFailure = null;
     if (displayName != null && displayName.trim().isNotEmpty) {
       _pendingDisplayName = displayName.trim();
     }
@@ -92,6 +110,8 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> verifyEmailCode(String email, String code) async {
+    _sessionFailure = null;
+    if (isPartnerLoginEmail(email)) throw const PartnerAccountNotAllowed();
     await _client.auth.verifyOTP(
       email: email,
       token: code,
@@ -101,12 +121,14 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signInWithGoogle() async {
+    _sessionFailure = null;
     // Requires configuration in Supabase Dashboard
     await _client.auth.signInWithOAuth(supabase.OAuthProvider.google);
   }
 
   @override
   Future<void> signInWithApple() async {
+    _sessionFailure = null;
     await _client.auth.signInWithOAuth(supabase.OAuthProvider.apple);
   }
 
@@ -126,6 +148,7 @@ class SupabaseAuthRepository implements AuthRepository {
 
   @override
   Future<void> signOut() async {
+    _sessionFailure = null;
     _pendingDisplayName = null;
     await _client.auth.signOut();
   }

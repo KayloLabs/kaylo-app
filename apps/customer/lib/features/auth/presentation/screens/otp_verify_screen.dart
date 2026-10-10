@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import '../auth_error_text.dart';
 import 'package:flutter/services.dart';
 import 'package:kaylo_core/config/app_env.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -108,7 +109,7 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
       _leaveTo(Routes.location);
     } catch (e) {
       if (mounted) {
-        KayloSnackbar.showError(context, e.toString());
+        KayloSnackbar.showError(context, customerAuthErrorText(context, e));
       }
     } finally {
       if (mounted) setState(() => _isLoading = false);
@@ -130,7 +131,9 @@ class _OtpVerifyScreenState extends ConsumerState<OtpVerifyScreen> {
       _startTimer();
       if (mounted) KayloSnackbar.showInfo(context, 'OTP resent successfully');
     } catch (e) {
-      if (mounted) KayloSnackbar.showError(context, e.toString());
+      if (mounted) {
+        KayloSnackbar.showError(context, customerAuthErrorText(context, e));
+      }
     } finally {
       if (mounted) setState(() => _isLoading = false);
     }

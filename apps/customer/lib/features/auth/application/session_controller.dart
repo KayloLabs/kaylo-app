@@ -16,9 +16,14 @@ class SessionController extends _$SessionController {
     _authRepo = ref.watch(authRepositoryProvider);
 
     // Listen to changes in auth state and update this provider's state
-    _subscription = _authRepo.authStateChanges.listen((user) {
-      state = AsyncData(user);
-    });
+    _subscription = _authRepo.authStateChanges.listen(
+      (user) {
+        state = AsyncData(user);
+      },
+      onError: (Object error, StackTrace stack) {
+        state = AsyncError(error, stack);
+      },
+    );
     ref.onDispose(() => _subscription?.cancel());
 
     // Return current user initially

@@ -2,6 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:kaylo_core/models/app_user.dart';
 import 'session_controller.dart';
+import 'package:kaylo_core/auth/profile_store.dart';
 
 /// The signed-in user, or null while the session is loading or absent.
 final currentUserProvider = Provider<AppUser?>((ref) {
@@ -12,7 +13,7 @@ final currentUserProvider = Provider<AppUser?>((ref) {
 /// accepts the code the profile still takes a few round trips to load,
 /// longer on a phone, and a screen that navigates before it arrives is
 /// sent back to login by the router. Gives up after about [timeout].
-Future<AppUser?> awaitSignedInUser(
+Future<AppUser> awaitSignedInUser(
   WidgetRef ref, {
   Duration timeout = const Duration(seconds: 10),
 }) async {
@@ -20,9 +21,12 @@ Future<AppUser?> awaitSignedInUser(
   var tries = timeout.inMilliseconds ~/ step.inMilliseconds;
   var user = ref.read(currentUserProvider);
   while (user == null && tries-- > 0) {
+    final state = ref.read(sessionControllerProvider);
+    if (state.hasError) throw state.error!;
     await Future<void>.delayed(step);
     user = ref.read(currentUserProvider);
   }
+  if (user == null) throw const CustomerProfileUnavailable();
   return user;
 }
 

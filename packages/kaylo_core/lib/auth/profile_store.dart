@@ -19,6 +19,23 @@ abstract class ProfileStore {
   Future<void> ensureCustomer(String personId);
 }
 
+/// A partner identity cannot acquire customer access.
+class PartnerAccountNotAllowed implements Exception {
+  const PartnerAccountNotAllowed();
+  @override
+  String toString() => 'PARTNER_ACCOUNT_NOT_ALLOWED';
+}
+
+/// No customer session is exposed until its database identity is resolved.
+class CustomerProfileUnavailable implements Exception {
+  const CustomerProfileUnavailable();
+  @override
+  String toString() => 'CUSTOMER_PROFILE_UNAVAILABLE';
+}
+
+bool isPartnerLoginEmail(String? email) =>
+    email?.trim().toLowerCase().endsWith('@partners.kaylo.app') ?? false;
+
 /// What a sign-in provider tells us about the account.
 class SignInIdentity {
   final String authUserId;
@@ -49,7 +66,13 @@ class ProfileSync {
 
   const ProfileSync(this.store);
 
-  Future<AppUser> resolve(SignInIdentity identity, {String? preferredName}) async {
+  Future<AppUser> resolve(
+    SignInIdentity identity, {
+    String? preferredName,
+  }) async {
+    if (isPartnerLoginEmail(identity.email)) {
+      throw const PartnerAccountNotAllowed();
+    }
     final providedName = _firstNonEmpty([preferredName, identity.displayName]);
     final existing = await store.findByAuthId(identity.authUserId);
 
@@ -145,11 +168,16 @@ class SupabaseProfileStore implements ProfileStore {
   @override
   Future<void> ensureCustomer(String personId) async {
     if (!createsCustomer) return;
-    await _db.from('customers').upsert(
-      {'person_id': personId},
-      onConflict: 'person_id',
-      ignoreDuplicates: true,
-    );
+    try {
+      // One server-side transaction checks the Firebase subject, refuses a
+      // worker role and creates the customer role and row together.
+      await _db.rpc('ensure_customer_profile');
+    } on PostgrestException catch (error) {
+      if (error.message.contains('PARTNER_ACCOUNT_NOT_ALLOWED')) {
+        throw const PartnerAccountNotAllowed();
+      }
+      rethrow;
+    }
   }
 
   @override
@@ -169,12 +197,12 @@ class SupabaseProfileStore implements ProfileStore {
   }
 
   AppUser _fromRow(Map<String, dynamic> row) => AppUser.fromFullName(
-        id: row['person_id'] as String,
-        fullName: (row['full_name'] as String?) ?? '',
-        phone: (row['phone_number'] as String?) ?? '',
-        email: row['email'] as String?,
-        profileImageUrl: row['profile_photo'] as String?,
-      );
+    id: row['person_id'] as String,
+    fullName: (row['full_name'] as String?) ?? '',
+    phone: (row['phone_number'] as String?) ?? '',
+    email: row['email'] as String?,
+    profileImageUrl: row['profile_photo'] as String?,
+  );
 }
 
 /// Keeps profiles in a map; for tests and for the mock repository.
@@ -186,10 +214,14 @@ class InMemoryProfileStore implements ProfileStore {
   /// Person ids that have a customer row.
   final Set<String> customerIds = {};
 
+  /// Test equivalent of the database worker role guard.
+  final Set<String> workerIds = {};
+
   InMemoryProfileStore({this.createsCustomer = true});
 
   @override
-  Future<AppUser?> findByAuthId(String authUserId) async => _byAuthId[authUserId];
+  Future<AppUser?> findByAuthId(String authUserId) async =>
+      _byAuthId[authUserId];
 
   @override
   Future<AppUser> create(AppUser draft, {required String authUserId}) async {
@@ -201,7 +233,9 @@ class InMemoryProfileStore implements ProfileStore {
 
   @override
   Future<void> ensureCustomer(String personId) async {
-    if (createsCustomer) customerIds.add(personId);
+    if (!createsCustomer) return;
+    if (workerIds.contains(personId)) throw const PartnerAccountNotAllowed();
+    customerIds.add(personId);
   }
 
   @override

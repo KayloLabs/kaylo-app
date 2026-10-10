@@ -142,3 +142,38 @@ export async function sendCareCallPush(token: string, callId: string, name: stri
 }
 
 export function firebaseProjectId(): string { return serviceAccount().project_id; }
+
+// Partner identities use deterministic admin-owned UIDs, never an existing
+// customer account found only by an email address.
+export interface FirebaseAccountRecord {
+  localId: string; email?: string; disabled?: boolean;
+  passwordUpdatedAt?: number; validSince?: string; customAttributes?: string;
+}
+export async function lookupFirebaseAccount(uid: string): Promise<FirebaseAccountRecord | null> {
+  const res = await fetch(`${accountsBase()}/accounts:lookup`, {
+    method: "POST", headers: await adminHeaders(), body: JSON.stringify({ localId: [uid] }),
+  });
+  if (!res.ok) throw new Error(`Firebase account lookup failed (${res.status})`);
+  return ((await res.json()).users ?? [])[0] ?? null;
+}
+export async function issueFirebasePartnerPassword(uid: string, partnerId: string, password: string, name: string, issuanceId: string): Promise<number> {
+  const email = `${partnerId.toLowerCase()}@partners.kaylo.app`;
+  const existing = await lookupFirebaseAccount(uid);
+  const emailOwner = await findUserByEmail(email);
+  if (emailOwner && emailOwner !== uid) throw new Error("PARTNER_EMAIL_ALREADY_CLAIMED");
+  if (existing && existing.email !== email) throw new Error("PARTNER_IDENTITY_MISMATCH");
+  const res = await fetch(`${accountsBase()}/${existing ? "accounts:update" : "accounts"}`, {
+    method: "POST", headers: await adminHeaders(),
+    body: JSON.stringify({localId: uid, email, password, displayName: name,
+      emailVerified: true, disableUser: false,
+      customAttributes: JSON.stringify({kaylo_role: "worker", kaylo_partner_id: partnerId, kaylo_issuance_id: issuanceId}),
+      ...(existing ? {validSince: String(Math.floor(Date.now()/1000))} : {}),
+    }),
+  });
+  // Never echo Firebase's response: it can contain authentication material.
+  if (!res.ok) throw new Error(`Firebase partner update failed (${res.status})`);
+  const account = await lookupFirebaseAccount(uid);
+  const changed = Number(account?.passwordUpdatedAt);
+  if (!Number.isFinite(changed) || changed <= 0) throw new Error("PASSWORD_TIMESTAMP_UNAVAILABLE");
+  return changed;
+}

@@ -54,6 +54,10 @@ Deno.serve(async (request) => {
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
     return fail(400, "bad-email", "Enter a valid email address");
   }
+  // Issued worker identities must never receive a customer custom-token bypass.
+  if (email.endsWith("@partners.kaylo.app")) {
+    return fail(403, "partner-only", "Use your Kaylo Partner ID and password");
+  }
   const purpose: Purpose = body.purpose === "signup" ? "signup" : "signin";
   const name = body.name?.trim() || undefined;
 

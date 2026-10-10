@@ -4,6 +4,27 @@
 -- Only synthetic accounts, a service and bookings are created.
 begin;
 
+-- Test-only fixture: emulate an admin-issued password session for a synthetic
+-- worker. Temporary function and rows disappear at ROLLBACK; never deployed.
+create function pg_temp.use_issued_worker_fixture()
+returns void language plpgsql security definer set search_path=public as $$
+declare w workers; uid text:=current_auth_subject(); claims jsonb:=auth.jwt();
+begin
+  select wk.* into w from workers wk join persons p using(person_id) where p.auth_user_id=uid;
+  if not found then return;end if;
+  if w.partner_id is null then
+    update workers set partner_id='KP-'||lpad(nextval('kaylo_partner_id_seq')::text,6,'0')
+      where worker_id=w.worker_id returning * into w;
+  end if;
+  update workers set must_change_password=false,verification_status='verified' where worker_id=w.worker_id;
+  insert into partner_credentials(worker_id,issuance_id,firebase_uid,state,password_updated_at_ms,issued_at)
+    values(w.worker_id,gen_random_uuid(),uid,'delivered',1,now()) on conflict(worker_id) do nothing;
+  perform set_config('request.jwt.claims',(claims||jsonb_build_object('auth_time',extract(epoch from now())::bigint,
+    'kaylo_role','worker','kaylo_partner_id',w.partner_id,
+    'kaylo_issuance_id',(select issuance_id from partner_credentials where worker_id=w.worker_id),'firebase',jsonb_build_object('sign_in_provider','password')))::text,true);
+end $$;
+
+
 do $$
 declare
   person_a uuid := gen_random_uuid();
@@ -33,6 +54,7 @@ begin
   insert into bookings (booking_id, customer_id, worker_id, service_id, booking_date, booking_time, estimated_cost)
     values (first_booking, cust_a, worker, svc, day, '08:00', 300);
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_b)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   select count(*) into n from worker_taken_slots(worker, day) t where t = '08:00';
   if n <> 1 then raise exception 'customer B cannot see that 08:00 is taken'; end if;
@@ -62,6 +84,7 @@ begin
   select count(*) into n from worker_taken_slots(worker, day) t where t = '08:00';
   if n <> 0 then raise exception 'a cancelled booking still holds its slot'; end if;
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_b)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   update bookings set booking_time = '08:00' where booking_id = other_time;
   execute 'reset role';

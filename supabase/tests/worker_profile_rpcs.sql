@@ -4,6 +4,27 @@
 -- Only synthetic persons, workers and services are created.
 begin;
 
+-- Test-only fixture: emulate an admin-issued password session for a synthetic
+-- worker. Temporary function and rows disappear at ROLLBACK; never deployed.
+create function pg_temp.use_issued_worker_fixture()
+returns void language plpgsql security definer set search_path=public as $$
+declare w workers; uid text:=current_auth_subject(); claims jsonb:=auth.jwt();
+begin
+  select wk.* into w from workers wk join persons p using(person_id) where p.auth_user_id=uid;
+  if not found then return;end if;
+  if w.partner_id is null then
+    update workers set partner_id='KP-'||lpad(nextval('kaylo_partner_id_seq')::text,6,'0')
+      where worker_id=w.worker_id returning * into w;
+  end if;
+  update workers set must_change_password=false,verification_status='verified' where worker_id=w.worker_id;
+  insert into partner_credentials(worker_id,issuance_id,firebase_uid,state,password_updated_at_ms,issued_at)
+    values(w.worker_id,gen_random_uuid(),uid,'delivered',1,now()) on conflict(worker_id) do nothing;
+  perform set_config('request.jwt.claims',(claims||jsonb_build_object('auth_time',extract(epoch from now())::bigint,
+    'kaylo_role','worker','kaylo_partner_id',w.partner_id,
+    'kaylo_issuance_id',(select issuance_id from partner_credentials where worker_id=w.worker_id),'firebase',jsonb_build_object('sign_in_provider','password')))::text,true);
+end $$;
+
+
 do $$
 declare
   person_w uuid := gen_random_uuid();
@@ -33,6 +54,7 @@ begin
 
   -- 1. The worker reads their own profile, and only their own.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_w)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   prof := my_worker_profile();
   if prof->>'worker_id' <> worker_w::text then raise exception 'profile is not mine'; end if;
@@ -79,6 +101,7 @@ begin
 
   -- 5. Someone who is not a worker gets nothing and cannot edit.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_c)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   if my_worker_profile() is not null then raise exception 'a customer got a worker profile'; end if;
   denied := false;

@@ -408,3 +408,193 @@ The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are s
 `supabase/tests/booking_offers.sql` contains rollback-only SQL checks using synthetic accounts. Run it after the migration; it does not keep test bookings. Customer tests cover eligible amounts, failed-payment retry totals, search relevance, saved-address switching, and booking coordinate handoff.
 
 The worker verification screen displays the existing Kaylo verification status. There are no uploaded qualification documents, verification dates, or independent check records in the current schema; the UI does not invent them.
+
+
+## Issued Kaylo Partner accounts (0024 and 0025)
+
+Partner registration is now a public **application**, never a Firebase sign-up.
+Apply `0024_worker_applications.sql`, then `0025_issued_partner_identities.sql` in
+Supabase's SQL editor. They are idempotent and appended verbatim to `setup_all.sql`.
+The rollout is not complete until these SQL changes, the three new edge functions,
+and the updated `email-otp` function are deployed together. The mobile changes alone
+cannot issue credentials. No production data or Firebase configuration is changed
+by committing these files.
+
+### Enable and deploy
+
+1. In **Firebase Console > Authentication > Sign-in method**, enable **Email/Password**
+   (not email-link sign-in). Keep customer Google/phone providers enabled. Partner
+   users must use the password provider and server-issued worker custom claims.
+2. Keep existing `FIREBASE_SERVICE_ACCOUNT_B64`, `GMAIL_USER`, `GMAIL_APP_PASSWORD`
+   secrets configured. Generate a new random `KAYLO_PARTNER_ADMIN_SECRET` with at
+   least 32 characters, keep it in the admin password manager, and add it under
+   **Supabase > Edge Functions > Secrets**. Never put it in Flutter or source control.
+   The Firebase service account needs user-management permissions; SMTP needs a
+   Gmail app password. No password is stored in Postgres or logged by these functions.
+3. Deploy:
+
+   ```sh
+   supabase functions deploy worker-application-documents --no-verify-jwt
+   supabase functions deploy issue-partner-credentials --no-verify-jwt
+   supabase functions deploy partner-password-changed --no-verify-jwt
+   supabase functions deploy email-otp --no-verify-jwt
+   ```
+
+   Gateway JWT verification is disabled deliberately: application upload uses an
+   expiring application bearer token; issuance requires the admin-only secret;
+   password completion verifies Google's Firebase signature/project/expiry itself.
+4. Optional SMS uses **Twilio**, a paid external service subject to sender and local
+   messaging registration rules. Configure `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`,
+   `TWILIO_FROM_NUMBER` only after setting up an eligible sender. Without these,
+   credentials arrive at the applicant's required delivery **email**. Email success
+   is mandatory; optional SMS failure does not invalidate successful email delivery.
+
+### Applicant contract
+
+`submit_worker_application(p_details jsonb)` is callable with the public API key
+without a session. Required details: `full_name`, E.164 `phone`, delivery `email`,
+`profession`, active service UUIDs in `services`, `experience_years` (0-70), `district`,
+`travel_radius_km` (1-100), `consent: true`, and a UPI ID or a `bank_account` object
+containing `account_number`, `account_holder`, `bank_name`, `ifsc`. Include a fresh
+cryptographically random 32-byte hex `client_request_token` per application.
+
+Response: `{application_id, reference, status, upload_token, upload_expires_at}`.
+The reference is `KA-` plus 24 random uppercase hexadecimal characters. Only
+SHA-256 of the token is stored; it is stripped from application details. Retrying
+with the same phone and token within its 24-hour lifetime recovers the same
+application after a lost response. Retrying does not edit the application.
+There is one open/approved application per normalized phone; rejected applicants
+must wait 24 hours after submission before reapplying. Existing person email/phone
+identities cannot be repurposed as new partners.
+
+Upload each document using multipart POST to `worker-application-documents`:
+`application_id`, `upload_token`, `doc_type`, `file`. The five types are `photo`,
+`aadhaar_front`, `aadhaar_back`, `police_certificate`, `selfie`. JPEG/PNG/PDF files
+must be nonempty and at most 10 MiB; photo and selfie must be images. The edge
+checks file signatures, an unexpired matching bearer, uploads into the private
+`worker-documents/applications/<id>/<type>/<random>.<extension>` path, then records
+the actual stored object under a database lock. Approved/rejected evidence cannot
+be replaced. New uploads never overwrite an existing object. A raced/rejected
+upload is removed. Superseded draft uploads may be removed by an admin later.
+The fifth recorded document changes the state to `under_review`.
+
+`worker_application_status(p_reference)` returns **only** reference, status and
+`documents_received` count (or null). References are high-entropy bearer identifiers;
+there is no phone/email search or public applicant table access. If an upload token
+is lost/expired, support must reject that incomplete application and ask the person
+to reapply after the cooldown. Do not expose private document links publicly.
+
+### Review, approve, issue and reset (admin only)
+
+1. In the dashboard, open `worker_applications`, review the submitted details, and
+   open all five paths from `worker_application_documents` using the private Storage
+   bucket viewer. Verify their authenticity using your actual team process before
+   making the approval decision. File presence alone is not identity verification.
+2. In the SQL editor, use the UUID from that row:
+
+   ```sql
+   select approve_worker_application('APPLICATION_UUID'::uuid, 'Admin review note');
+   -- Or, instead of approval:
+   select reject_worker_application('APPLICATION_UUID'::uuid, 'Reason for rejection');
+   ```
+
+   Approval requires all five objects to exist, creates a separate person, worker,
+   worker role, services, service area and payout account, and assigns `KP-000001`
+   style ID. It never reuses a customer person/Firebase user. It cannot run twice.
+   **Only call approval after reviewing all five supplied documents.** The call is
+   your explicit attestation that the documents were reviewed. It sets the worker
+   and the five document records to `verified`, stores the review timestamp and
+   your actual admin note. No automated Aadhaar, police or qualification checks
+   are claimed. Do not approve on file presence alone. To record a subsequent
+   individual document decision, use the existing service-only review RPC:
+
+   ```sql
+   select review_worker_document('DOCUMENT_UUID'::uuid, 'verified', 'Actual review performed');
+   ```
+
+3. Send a POST using the Supabase function dashboard invoke tool or a trusted admin
+   REST client to `/functions/v1/issue-partner-credentials`. Headers:
+   `Content-Type: application/json`, `x-kaylo-admin-secret: <your admin secret>`.
+   Body: `{"worker_id":"APPROVED_WORKER_UUID","action":"issue"}`.
+   The admin response contains ID and delivery status, **never the password**.
+   The password is delivered directly to the application's delivery email and
+   optionally phone. The Firebase login email is synthesized as
+   `kp-000001@partners.kaylo.app`; this domain is a login namespace, not an inbox.
+4. For a forgotten password, verify the worker's identity through support first,
+   then use the same endpoint/body with `"action":"reset"`. Reset immediately
+   closes worker access, rotates the Firebase password, and again requires a new
+   password. The app provides no phone-OTP or self-service reset route.
+5. If a request times out, repeat `issue`. A delivered issuance returns
+   `already_issued: true`; failures are recoverable by rotating a fresh password.
+   An in-progress lease lasts 10 minutes and covers SMTP delivery as well as account
+   creation. Never run a simultaneous reset to recover an in-flight send.
+   Inspect `partner_credentials.state` (`issuing`, `ready`, `delivered`, `failed`)
+   and the function's error code. If SMTP delivery succeeded but its database
+   acknowledgement failed, the next admin retry may rotate and send new credentials;
+   tell the worker to use the newest email. This is recoverable delivery, not an
+   exactly-once promise across Firebase, SMTP and Postgres.
+
+### First-password and role boundaries
+
+Partner sign-in maps ID to the synthesized email and calls Firebase
+`signInWithEmailAndPassword`. `partner_login_state()` supplies the forced-change
+flag even while private worker APIs are locked. After Firebase `updatePassword`,
+refresh the ID token and POST `{}` to `partner-password-changed` using that token.
+The edge verifies a password-provider worker token, retrieves Firebase's actual
+`passwordUpdatedAt`, and clears the flag only if it is newer than the issued
+password baseline. `mark_password_changed(worker_id, issuance_id, timestamp)` is
+**service-role only**; the client cannot simply call it, overwrite the flag, or
+make up a timestamp. A raced reset invalidates the old issuance ID. A fresh sign-in
+may be required if Firebase expired the session during the change.
+
+`current_worker_id()` requires an issued, verified, password-changed session with
+matching admin-set role/ID claims. Old Google, phone and custom-token sessions get
+no worker access, and pre-reset tokens fail the issuance timestamp and random issuance-ID claim checks,
+even when reset and sign-in occur within the same second. Each admin issuance sets
+`kaylo_issuance_id` in Firebase custom claims; the database and password-completion
+edge require its exact match with the active `partner_credentials.issuance_id`. The
+legacy `register_worker` grant and direct worker/verification writes are revoked.
+`ensure_customer_profile()` atomically creates the customer role and row only for
+a nonworker caller. Triggers enforce role exclusivity even on direct table writes;
+reserved partner emails/custom claims cannot self-insert a customer person.
+Account deletion also refuses a gated worker session: a missing accessible person
+is not mistaken for a previously deleted account. A deletion retry requires the
+existing deletion journal after the original person has actually been removed.
+`email-otp` refuses the reserved partner domain before sending or minting tokens.
+
+Legacy seeded marketplace workers remain visible but cannot sign in until migrated
+through an approved application and issued credentials. Existing dual-role persons
+are suspended rather than deleting customer rows, jobs or payment history; an
+admin must reconcile them into separate identities before restoring access. A
+worker's old nonissued Firebase UID is never automatically overwritten by issuance.
+
+### Local verification
+
+`supabase/tests/worker_applications.sql` owns a transaction and rolls back. It proves
+anonymous apply/retry, private applicant data, upload existence, required documents,
+immutable approval, rejected applicant exclusion, no duplicate approval, both role
+boundaries, blocked legacy registration, temporary-password gates and forbidden
+client flag updates. Deno tests in `_shared/partner_security_test.ts` cover admin
+secret matching, file signatures, credential entropy and timestamp checks; existing
+`firebase_verify_test.ts` covers signature/project/expiry verification. `worker_registration.sql` now proves the retired self-registration path stays
+closed. The worker profile, availability, payout, cash-flow and slot tests create
+transaction-local issued-session fixtures so they exercise the same stricter
+worker access rules as the app. Those temporary fixture functions are never part
+of a migration or deployment.
+
+External service reference: Firebase's [account management API](https://firebase.google.com/docs/auth/admin/manage-users)
+and [Identity Platform REST API](https://docs.cloud.google.com/identity-platform/docs/use-rest-api)
+document admin-created accounts and the server-only password update timestamp.
+These local checks do not send real credentials or replace a Firebase/SMTP live
+smoke test after an administrator deploys and configures the backend.
+
+
+### Remaining partner integration dependencies
+
+Live jobs/stages/earnings repository wiring remains conditional on Abhay's model
+PRs #28, #29 and #30 being merged. Ruthwik's live chat/alerts/reviews wiring waits
+for those screens to land. These migrations do not rewrite teammates' mock areas.
+Device-token registration and foreground local notifications are separate app
+integration work; background new-job pushes also require a trusted backend event
+sender. The guarded APK build script must pass its free-disk/memory checks before
+release builds; a skipped build due to low disk is not a successful release test.

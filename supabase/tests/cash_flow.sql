@@ -5,6 +5,27 @@
 -- No payment gateway or external service is called.
 begin;
 
+-- Test-only fixture: emulate an admin-issued password session for a synthetic
+-- worker. Temporary function and rows disappear at ROLLBACK; never deployed.
+create function pg_temp.use_issued_worker_fixture()
+returns void language plpgsql security definer set search_path=public as $$
+declare w workers; uid text:=current_auth_subject(); claims jsonb:=auth.jwt();
+begin
+  select wk.* into w from workers wk join persons p using(person_id) where p.auth_user_id=uid;
+  if not found then return;end if;
+  if w.partner_id is null then
+    update workers set partner_id='KP-'||lpad(nextval('kaylo_partner_id_seq')::text,6,'0')
+      where worker_id=w.worker_id returning * into w;
+  end if;
+  update workers set must_change_password=false,verification_status='verified' where worker_id=w.worker_id;
+  insert into partner_credentials(worker_id,issuance_id,firebase_uid,state,password_updated_at_ms,issued_at)
+    values(w.worker_id,gen_random_uuid(),uid,'delivered',1,now()) on conflict(worker_id) do nothing;
+  perform set_config('request.jwt.claims',(claims||jsonb_build_object('auth_time',extract(epoch from now())::bigint,
+    'kaylo_role','worker','kaylo_partner_id',w.partner_id,
+    'kaylo_issuance_id',(select issuance_id from partner_credentials where worker_id=w.worker_id),'firebase',jsonb_build_object('sign_in_provider','password')))::text,true);
+end $$;
+
+
 do $$
 declare
   person_c uuid := gen_random_uuid();
@@ -51,6 +72,7 @@ begin
 
   -- 2. Worker B cannot touch worker A's job.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_b)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   denied := false;
   begin perform worker_advance_booking(cash_booking, 'accepted'); exception when others then denied := true; end;
@@ -58,6 +80,7 @@ begin
 
   -- 3. Worker A walks the job, in order only.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_a)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   r := worker_advance_booking(cash_booking, 'accepted');
   if (r->>'status') <> 'confirmed' then raise exception 'accepting did not confirm the booking: %', r; end if;
   denied := false;
@@ -79,6 +102,7 @@ begin
 
   -- 5. Cash collected: payment done, job completed, ledger updated, once.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_a)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   r := confirm_cash_collected(cash_booking);
   if (r->>'amount')::numeric <> 1000 or (r->>'commission')::numeric <> 150 then
@@ -116,6 +140,7 @@ begin
   insert into bookings (booking_id, customer_id, worker_id, service_id, booking_date, booking_time, estimated_cost, payment_mode)
     values (second_cash, customer, worker_a, svc, current_date + 2, '09:00', 500, 'cash');
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_a)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   denied := false;
   begin perform worker_advance_booking(second_cash, 'accepted'); exception when others then denied := true; end;
@@ -137,6 +162,7 @@ begin
 
   -- 8. The customer reviews the finished job, only that one, and may edit it.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_c)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   r := submit_review(cash_booking, 4, '  Good work  ');
   denied := false;

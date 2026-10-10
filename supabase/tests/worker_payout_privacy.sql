@@ -4,6 +4,27 @@
 -- Only synthetic persons and workers are created. No external service is called.
 begin;
 
+-- Test-only fixture: emulate an admin-issued password session for a synthetic
+-- worker. Temporary function and rows disappear at ROLLBACK; never deployed.
+create function pg_temp.use_issued_worker_fixture()
+returns void language plpgsql security definer set search_path=public as $$
+declare w workers; uid text:=current_auth_subject(); claims jsonb:=auth.jwt();
+begin
+  select wk.* into w from workers wk join persons p using(person_id) where p.auth_user_id=uid;
+  if not found then return;end if;
+  if w.partner_id is null then
+    update workers set partner_id='KP-'||lpad(nextval('kaylo_partner_id_seq')::text,6,'0')
+      where worker_id=w.worker_id returning * into w;
+  end if;
+  update workers set must_change_password=false,verification_status='verified' where worker_id=w.worker_id;
+  insert into partner_credentials(worker_id,issuance_id,firebase_uid,state,password_updated_at_ms,issued_at)
+    values(w.worker_id,gen_random_uuid(),uid,'delivered',1,now()) on conflict(worker_id) do nothing;
+  perform set_config('request.jwt.claims',(claims||jsonb_build_object('auth_time',extract(epoch from now())::bigint,
+    'kaylo_role','worker','kaylo_partner_id',w.partner_id,
+    'kaylo_issuance_id',(select issuance_id from partner_credentials where worker_id=w.worker_id),'firebase',jsonb_build_object('sign_in_provider','password')))::text,true);
+end $$;
+
+
 do $$
 declare
   person_a uuid := gen_random_uuid();
@@ -31,6 +52,7 @@ begin
 
   -- 2. Worker A writes and reads their own payout account.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_a)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
   insert into worker_payout_accounts (worker_id, upi_id) values (worker_a, 'a@okbank');
   select count(*) into n from worker_payout_accounts;
@@ -40,6 +62,7 @@ begin
 
   -- 3. Worker B sees nothing of A's, and cannot write a row for A.
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_b)::text, true);
+  perform pg_temp.use_issued_worker_fixture();
   select count(*) into n from worker_payout_accounts;
   if n <> 0 then
     raise exception 'worker B can read another worker''s payout row';

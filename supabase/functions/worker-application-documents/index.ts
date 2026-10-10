@@ -1,5 +1,6 @@
 import { corsHeaders, fail, json } from "../_shared/cors.ts";
 import { serviceClient } from "../_shared/clients.ts";
+import { deliverApplicationNotifications } from "../_shared/partner_delivery.ts";
 import {
   documentMime,
   partnerDocumentTypes,
@@ -89,7 +90,11 @@ Deno.serve(async (request) => {
       await db.storage.from("worker-documents").remove([path]);
       return fail(409, "upload-not-allowed", "UPLOAD_NOT_ALLOWED");
     }
-    return json({ ok: true, doc_type: type });
+    // Application and uploads are committed before mail delivery. The durable
+    // outbox is visible to admins and retryable without the applicant's token.
+    const delivery = await deliverApplicationNotifications(db, appId, "")
+      .catch(() => ({ state: "pending", sent: 0, pending: 1 }));
+    return json({ ok: true, doc_type: type, delivery });
   } catch {
     return fail(400, "invalid-document", "INVALID_DOCUMENT");
   }

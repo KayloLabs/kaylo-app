@@ -50,3 +50,6 @@ TEAM_OVERVIEW.md
 
 # Supabase CLI scratch
 supabase/.temp/
+
+# Generated certificate PDFs and other local scratch output
+tmp/

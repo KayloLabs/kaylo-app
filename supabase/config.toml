@@ -39,3 +39,11 @@ verify_jwt = false
 
 [functions.partner-password-changed]
 verify_jwt = false
+
+# Admin requests verify Google's Firebase signature, revocation state and the
+# active admin allowlist. Corrections verify a signed, expiring application token.
+[functions.admin-applications]
+verify_jwt = false
+
+[functions.application-corrections]
+verify_jwt = false

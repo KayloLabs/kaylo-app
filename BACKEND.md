@@ -594,7 +594,9 @@ smoke test after an administrator deploys and configures the backend.
 Live jobs/stages/earnings repository wiring remains conditional on Abhay's model
 PRs #28, #29 and #30 being merged. Ruthwik's live chat/alerts/reviews wiring waits
 for those screens to land. These migrations do not rewrite teammates' mock areas.
-Device-token registration and foreground local notifications are separate app
-integration work; background new-job pushes also require a trusted backend event
-sender. The guarded APK build script must pass its free-disk/memory checks before
-release builds; a skipped build due to low disk is not a successful release test.
+The partner app registers device tokens with `app = 'partner'`, handles foreground
+job-request notifications, and revokes its FCM token on sign-out. Background
+new-job pushes still require a trusted backend event sender. See
+`apps/partner/README.md` for the payload contract and build commands.
+`tools/build_release_apps.py` checks free disk and memory before sequential release
+builds; a skipped build due to low disk is not a successful release test.

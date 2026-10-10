@@ -56,8 +56,12 @@ jobs:
 
       - name: Test customer app
         working-directory: apps/customer
-        run: flutter test
+        run: |
+          TZ=Asia/Kolkata flutter test
+          TZ=UTC flutter test
 
       - name: Test partner app
         working-directory: apps/partner
-        run: flutter test
+        run: |
+          TZ=Asia/Kolkata flutter test
+          TZ=UTC flutter test

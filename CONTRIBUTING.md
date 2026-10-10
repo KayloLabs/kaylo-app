@@ -14,27 +14,33 @@ database, see BACKEND.md.
 
 ## 2. Daily workflow
 
-Only the lead can push to `KayloLabs/kaylo-app`. Everyone else works in
-their own fork and sends pull requests from it. Set up once:
+Everyone works on branches inside `KayloLabs/kaylo-app` itself; there are no
+forks. `main` is protected: only the lead can push to it, and every change
+reaches it through a pull request whose CI `check` job is green.
 
-```
-gh repo fork KayloLabs/kaylo-app --clone        # or press Fork on GitHub, then clone your copy
-cd kaylo-app
-git remote -v                                   # origin = your fork, upstream = KayloLabs/kaylo-app
-```
+For every task:
 
-Then, for every task:
-
-1. `git checkout main` and `git pull upstream main` (keep your fork's main a copy of the real one)
+1. `git checkout main` and `git pull origin main`
 2. `git checkout -b feat/short-task-name` (never work directly on main)
 3. Write your code
-4. Run `flutter analyze` and `flutter test` until both pass
-5. Commit in small steps: `git commit -m "feat(booking): add date picker"`, with your own git identity as the author
-6. `git push -u origin feat/short-task-name` and open a Pull Request against `KayloLabs/kaylo-app` `main`
-7. CI runs automatically. A green check is required; the lead reviews and merges
+4. Run `flutter analyze` and `flutter test` inside the app or package you
+   changed until both pass
+5. Commit in small steps: `git commit -m "feat(booking): add date picker"`,
+   with your own git identity as the author
+6. `git push -u origin feat/short-task-name` and open a Pull Request against
+   `main`
+7. CI runs automatically on the PR. A green check is required; the lead
+   reviews and merges
 
-If `git push` to `KayloLabs/kaylo-app` says you do not have permission, you are
-pushing to the real repo instead of your fork: push to your fork and open a PR.
+If `git push` is refused with a protected-branch message, you are on `main`
+instead of a task branch: `git checkout -b feat/short-task-name` and push
+that. If you still have a clone of an old fork, point it at the real repo
+once and drop the extra remote:
+
+```
+git remote set-url origin https://github.com/KayloLabs/kaylo-app.git
+git remote remove upstream
+```
 
 ## 3. Where to add your code
 

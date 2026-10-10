@@ -6,6 +6,7 @@ import 'package:go_router/go_router.dart';
 import 'package:kaylo_core/models/booking.dart';
 import 'package:kaylo_core/models/service_item.dart';
 import 'package:kaylo_core/models/worker.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import '../../../../core/router/routes.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
@@ -259,7 +260,9 @@ class _Details extends ConsumerWidget {
                     ),
                   ),
                 ),
-                if (wholeQuantity != null && info != null)
+                if (wholeQuantity != null &&
+                    info != null &&
+                    info.unit != FarmUnit.visit)
                   row(
                     l10n.quantity,
                     text(farmUnitCount(l10n, info.unit, wholeQuantity)),
@@ -622,10 +625,13 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
       KayloFeedback.press();
       Navigator.of(context).pop();
       KayloSnackbar.showSuccess(context, l10n.bookingRescheduled);
-    } catch (_) {
+    } catch (error) {
       if (mounted) {
         setState(() => _saving = false);
-        KayloSnackbar.showError(context, l10n.somethingWentWrong);
+        KayloSnackbar.showError(
+          context,
+          error is AppFailure ? error.message : l10n.somethingWentWrong,
+        );
       }
     }
   }
@@ -635,6 +641,25 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
     final l10n = AppLocalizations.of(context)!;
     final loc = MaterialLocalizations.of(context);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    // Slots the worker holds that day, minus this booking's own.
+    final workerId = widget.booking.workerId;
+    final own = widget.booking.scheduledAt;
+    final sameDay =
+        own.year == _date.year &&
+        own.month == _date.month &&
+        own.day == _date.day;
+    final taken =
+        workerId == null
+              ? const <int>{}
+              : {
+                  ...?ref
+                      .watch(
+                        takenSlotsProvider((workerId: workerId, date: _date)),
+                      )
+                      .asData
+                      ?.value,
+                }
+          ..removeWhere((m) => sameDay && m == own.hour * 60 + own.minute);
 
     return Padding(
       padding: EdgeInsets.fromLTRB(
@@ -697,7 +722,11 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
             children: [
               for (final slot in FarmTimeSlot.all)
                 ChoiceChip(
-                  label: Text(formatTimeSlot(context, slot)),
+                  label: Text(
+                    slot.isTakenBy(taken)
+                        ? '${formatTimeSlot(context, slot)} · ${l10n.slotBooked}'
+                        : formatTimeSlot(context, slot),
+                  ),
                   selected: identical(slot, _slot),
                   showCheckmark: false,
                   selectedColor: AppColors.brandPrimary,
@@ -713,10 +742,12 @@ class _RescheduleSheetState extends ConsumerState<_RescheduleSheet> {
                   side: BorderSide(
                     color: isDark ? AppColors.borderDark : AppColors.border,
                   ),
-                  onSelected: (_) {
-                    KayloFeedback.tap();
-                    setState(() => _slot = slot);
-                  },
+                  onSelected: slot.isTakenBy(taken)
+                      ? null
+                      : (_) {
+                          KayloFeedback.tap();
+                          setState(() => _slot = slot);
+                        },
                 ),
             ],
           ),

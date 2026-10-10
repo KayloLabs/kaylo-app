@@ -2400,4 +2400,11 @@ class AppLocalizationsEn extends AppLocalizations {
   String addOnsIncluded(String list) {
     return 'Add-ons: $list';
   }
+
+  @override
+  String get slotBooked => 'Booked';
+
+  @override
+  String get slotTakenMessage =>
+      'That time is already booked for this worker. Pick another slot.';
 }

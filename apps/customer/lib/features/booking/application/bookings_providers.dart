@@ -63,6 +63,20 @@ final bookingWorkerProvider = FutureProvider.autoDispose.family<Worker, String>(
   },
 );
 
+/// A worker and a day, the key for [takenSlotsProvider].
+typedef WorkerDay = ({String workerId, DateTime date});
+
+/// The slot start times (minutes) a worker already holds on a day. The
+/// schedule and reschedule screens grey those slots out; the database
+/// refuses them anyway if two people race.
+final takenSlotsProvider = FutureProvider.autoDispose
+    .family<Set<int>, WorkerDay>((ref, key) {
+      final day = DateTime(key.date.year, key.date.month, key.date.day);
+      return ref
+          .watch(bookingsRepositoryProvider)
+          .takenSlotMinutes(key.workerId, day);
+    });
+
 final bookingsControllerProvider = Provider<BookingsController>((ref) {
   return BookingsController(ref);
 });

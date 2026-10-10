@@ -2426,4 +2426,11 @@ class AppLocalizationsMl extends AppLocalizations {
   String addOnsIncluded(String list) {
     return 'ആഡ്-ഓണുകൾ: $list';
   }
+
+  @override
+  String get slotBooked => 'ബുക്ക് ചെയ്തു';
+
+  @override
+  String get slotTakenMessage =>
+      'ഈ സമയം ഈ തൊഴിലാളിക്ക് ഇതിനകം ബുക്ക് ചെയ്തിട്ടുണ്ട്. മറ്റൊരു സമയം തിരഞ്ഞെടുക്കുക.';
 }

@@ -877,5 +877,13 @@
               "type": "String"
           }
       }
+  },
+  "slotBooked": "ബുക്ക് ചെയ്തു",
+  "@slotBooked": {
+      "description": "Suffix on a time slot chip the worker already holds"
+  },
+  "slotTakenMessage": "ഈ സമയം ഈ തൊഴിലാളിക്ക് ഇതിനകം ബുക്ക് ചെയ്തിട്ടുണ്ട്. മറ്റൊരു സമയം തിരഞ്ഞെടുക്കുക.",
+  "@slotTakenMessage": {
+      "description": "Error when continuing with a slot the worker already holds"
   }
 }

@@ -114,4 +114,20 @@ class MockBookingsRepository implements BookingsRepository {
       offerCode: old.offerCode,
     );
   }
+
+  @override
+  Future<Set<int>> takenSlotMinutes(String workerId, DateTime date) async {
+    await Future.delayed(const Duration(milliseconds: 150));
+    return {
+      for (final b in _mockBookings)
+        if (b.workerId == workerId &&
+            b.scheduledAt.year == date.year &&
+            b.scheduledAt.month == date.month &&
+            b.scheduledAt.day == date.day &&
+            (b.status == BookingStatus.pending ||
+                b.status == BookingStatus.confirmed ||
+                b.status == BookingStatus.inProgress))
+          b.scheduledAt.hour * 60 + b.scheduledAt.minute,
+    };
+  }
 }

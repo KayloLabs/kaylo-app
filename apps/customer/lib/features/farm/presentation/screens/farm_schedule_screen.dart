@@ -25,6 +25,7 @@ import '../../domain/farm_booking_draft.dart';
 import '../../domain/farm_service_info.dart';
 import '../widgets/farm_labels.dart';
 import '../widgets/quantity_stepper.dart';
+import '../../../booking/application/bookings_providers.dart';
 import '../../../home/domain/sub_service.dart';
 import '../../../home/presentation/widgets/sub_service_labels.dart';
 
@@ -151,8 +152,23 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
     if (picked != null) setState(() => _draft = _draft.copyWith(date: picked));
   }
 
+  WorkerDay? get _workerDay => _draft.workerId == null
+      ? null
+      : (workerId: _draft.workerId!, date: _draft.date);
+
+  Set<int> get _takenNow => _workerDay == null
+      ? const {}
+      : ref.read(takenSlotsProvider(_workerDay!)).asData?.value ?? const {};
+
   void _continue() {
     final address = _addressController.text.trim();
+    if (_draft.slot.isTakenBy(_takenNow)) {
+      KayloSnackbar.showError(
+        context,
+        AppLocalizations.of(context)!.slotTakenMessage,
+      );
+      return;
+    }
     if (address.isEmpty) {
       final l10n = AppLocalizations.of(context)!;
       KayloSnackbar.showError(
@@ -180,6 +196,21 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
   @override
   Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
+    final workerDay = _workerDay;
+    final taken = workerDay == null
+        ? const <int>{}
+        : ref.watch(takenSlotsProvider(workerDay)).asData?.value ??
+              const <int>{};
+    if (workerDay != null) {
+      // When the held slots arrive and the chosen one is among them, move
+      // to the first free slot instead of letting the customer continue.
+      ref.listen(takenSlotsProvider(workerDay), (_, next) {
+        final held = next.asData?.value;
+        if (held == null || !_draft.slot.isTakenBy(held)) return;
+        final free = FarmTimeSlot.firstFree(held);
+        if (free != null) setState(() => _draft = _draft.copyWith(slot: free));
+      });
+    }
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final loc = MaterialLocalizations.of(context);
     final secondary = isDark
@@ -268,7 +299,11 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
             children: [
               for (final slot in FarmTimeSlot.all)
                 ChoiceChip(
-                  label: Text(formatTimeSlot(context, slot)),
+                  label: Text(
+                    slot.isTakenBy(taken)
+                        ? '${formatTimeSlot(context, slot)} · ${l10n.slotBooked}'
+                        : formatTimeSlot(context, slot),
+                  ),
                   selected: identical(slot, _draft.slot),
                   showCheckmark: false,
                   selectedColor: AppColors.brandPrimary,
@@ -284,46 +319,56 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                   side: BorderSide(
                     color: isDark ? AppColors.borderDark : AppColors.border,
                   ),
-                  onSelected: (_) {
-                    KayloFeedback.tap();
-                    setState(() => _draft = _draft.copyWith(slot: slot));
-                  },
+                  // A slot the worker already holds cannot be picked.
+                  onSelected: slot.isTakenBy(taken)
+                      ? null
+                      : (_) {
+                          KayloFeedback.tap();
+                          setState(() => _draft = _draft.copyWith(slot: slot));
+                        },
                 ),
             ],
           ),
           const SizedBox(height: AppSpacing.xl),
 
-          Text(l10n.quantity, style: labelStyle),
+          // A tradesperson's callout is one visit: nothing to count, so the
+          // card shows the rate and the add-ons only.
+          Text(
+            unit == FarmUnit.visit ? l10n.rate : l10n.quantity,
+            style: labelStyle,
+          ),
           const SizedBox(height: AppSpacing.s),
           KayloCard(
             child: Column(
               children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      farmUnitCount(l10n, unit, _draft.quantity),
-                      style: Theme.of(context).textTheme.titleMedium?.copyWith(
-                        fontWeight: FontWeight.w700,
+                if (unit != FarmUnit.visit) ...[
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        farmUnitCount(l10n, unit, _draft.quantity),
+                        style: Theme.of(context).textTheme.titleMedium
+                            ?.copyWith(fontWeight: FontWeight.w700),
                       ),
+                      Text(
+                        l10n.priceEach(formatRupees(widget.service.basePrice)),
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: secondary),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  QuantityStepper(
+                    value: _draft.quantity,
+                    onChanged: (value) => setState(
+                      () => _draft = _draft.copyWith(quantity: value),
                     ),
-                    Text(
-                      l10n.priceEach(formatRupees(widget.service.basePrice)),
-                      style: Theme.of(
-                        context,
-                      ).textTheme.bodySmall?.copyWith(color: secondary),
-                    ),
-                  ],
-                ),
-                const SizedBox(height: AppSpacing.l),
-                QuantityStepper(
-                  value: _draft.quantity,
-                  onChanged: (value) =>
-                      setState(() => _draft = _draft.copyWith(quantity: value)),
-                ),
-                const SizedBox(height: AppSpacing.l),
-                const Divider(height: 1),
-                const SizedBox(height: AppSpacing.m),
+                  ),
+                  const SizedBox(height: AppSpacing.l),
+                  const Divider(height: 1),
+                  const SizedBox(height: AppSpacing.m),
+                ],
                 Row(
                   children: [
                     Expanded(
@@ -337,10 +382,13 @@ class _ScheduleFormState extends ConsumerState<_ScheduleForm> {
                             ).textTheme.bodySmall?.copyWith(color: secondary),
                           ),
                           Text(
-                            l10n.breakdown(
-                              formatRupees(widget.service.basePrice),
-                              farmUnitCount(l10n, unit, _draft.quantity),
-                            ),
+                            unit == FarmUnit.visit
+                                ? '${formatRupees(widget.service.basePrice)} '
+                                      '${l10n.perUnit(farmUnitLabel(l10n, unit))}'
+                                : l10n.breakdown(
+                                    formatRupees(widget.service.basePrice),
+                                    farmUnitCount(l10n, unit, _draft.quantity),
+                                  ),
                             style: Theme.of(context).textTheme.bodyMedium
                                 ?.copyWith(fontWeight: FontWeight.w600),
                           ),

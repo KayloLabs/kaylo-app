@@ -85,6 +85,30 @@ class SupabaseBookingsRepository implements BookingsRepository {
     }
   }
 
+  @override
+  Future<Set<int>> takenSlotMinutes(String workerId, DateTime date) async {
+    try {
+      // worker_taken_slots (migration 0021) returns the held times only,
+      // so a customer learns nothing about another customer's booking.
+      final rows = await _client.rpc(
+        'worker_taken_slots',
+        params: {'p_worker_id': workerId, 'p_date': _dateString(date)},
+      );
+      return {
+        for (final value in (rows as List<dynamic>))
+          _minutesOf(value is Map ? value.values.first : value),
+      };
+    } catch (e) {
+      throw mapSupabaseError(e);
+    }
+  }
+
+  /// '08:00:00' -> 480.
+  static int _minutesOf(Object? time) {
+    final parts = time.toString().split(':');
+    return int.parse(parts[0]) * 60 + int.parse(parts[1]);
+  }
+
   Booking _bookingFromRow(Map<String, dynamic> row) {
     return Booking(
       id: row['booking_id'] as String,

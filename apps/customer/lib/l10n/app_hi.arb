@@ -877,5 +877,13 @@
               "type": "String"
           }
       }
+  },
+  "slotBooked": "बुक हो चुका",
+  "@slotBooked": {
+      "description": "Suffix on a time slot chip the worker already holds"
+  },
+  "slotTakenMessage": "यह समय इस कामगार के लिए पहले से बुक है। दूसरा समय चुनें।",
+  "@slotTakenMessage": {
+      "description": "Error when continuing with a slot the worker already holds"
   }
 }

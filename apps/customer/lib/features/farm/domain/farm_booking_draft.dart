@@ -18,6 +18,19 @@ class FarmTimeSlot {
     FarmTimeSlot(16 * 60 + 30, 18 * 60 + 30),
   ];
 
+  /// True when any held booking time (minutes from midnight) falls inside
+  /// this slot's window.
+  bool isTakenBy(Set<int> heldMinutes) =>
+      heldMinutes.any((m) => m >= startMinutes && m < endMinutes);
+
+  /// The first slot of the day nobody holds, or null when the day is full.
+  static FarmTimeSlot? firstFree(Set<int> heldMinutes) {
+    for (final slot in all) {
+      if (!slot.isTakenBy(heldMinutes)) return slot;
+    }
+    return null;
+  }
+
   /// The slot whose start is nearest to [dateTime]'s time of day, so a
   /// reschedule sheet opens on the booking's current slot.
   static FarmTimeSlot closestTo(DateTime dateTime) {

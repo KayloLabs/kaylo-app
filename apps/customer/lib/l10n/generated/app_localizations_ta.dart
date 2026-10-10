@@ -2443,4 +2443,11 @@ class AppLocalizationsTa extends AppLocalizations {
   String addOnsIncluded(String list) {
     return 'கூடுதல் சேவைகள்: $list';
   }
+
+  @override
+  String get slotBooked => 'முன்பதிவு செய்யப்பட்டது';
+
+  @override
+  String get slotTakenMessage =>
+      'இந்த நேரம் இந்தப் பணியாளருக்கு ஏற்கனவே முன்பதிவு செய்யப்பட்டுள்ளது. வேறு நேரத்தைத் தேர்வு செய்யுங்கள்.';
 }

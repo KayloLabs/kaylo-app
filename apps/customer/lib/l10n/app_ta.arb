@@ -877,5 +877,13 @@
               "type": "String"
           }
       }
+  },
+  "slotBooked": "முன்பதிவு செய்யப்பட்டது",
+  "@slotBooked": {
+      "description": "Suffix on a time slot chip the worker already holds"
+  },
+  "slotTakenMessage": "இந்த நேரம் இந்தப் பணியாளருக்கு ஏற்கனவே முன்பதிவு செய்யப்பட்டுள்ளது. வேறு நேரத்தைத் தேர்வு செய்யுங்கள்.",
+  "@slotTakenMessage": {
+      "description": "Error when continuing with a slot the worker already holds"
   }
 }

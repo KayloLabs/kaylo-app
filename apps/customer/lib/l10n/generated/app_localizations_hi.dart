@@ -2404,4 +2404,11 @@ class AppLocalizationsHi extends AppLocalizations {
   String addOnsIncluded(String list) {
     return 'ऐड-ऑन: $list';
   }
+
+  @override
+  String get slotBooked => 'बुक हो चुका';
+
+  @override
+  String get slotTakenMessage =>
+      'यह समय इस कामगार के लिए पहले से बुक है। दूसरा समय चुनें।';
 }

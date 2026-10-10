@@ -4331,6 +4331,18 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Add-ons: {list}'**
   String addOnsIncluded(String list);
+
+  /// Suffix on a time slot chip the worker already holds
+  ///
+  /// In en, this message translates to:
+  /// **'Booked'**
+  String get slotBooked;
+
+  /// Error when continuing with a slot the worker already holds
+  ///
+  /// In en, this message translates to:
+  /// **'That time is already booked for this worker. Pick another slot.'**
+  String get slotTakenMessage;
 }
 
 class _AppLocalizationsDelegate

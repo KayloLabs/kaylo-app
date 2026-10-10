@@ -410,15 +410,16 @@ The short sounds (logo chime, the five notes, coupon stamp, reward reveal) are s
 The worker verification screen displays the existing Kaylo verification status. There are no uploaded qualification documents, verification dates, or independent check records in the current schema; the UI does not invent them.
 
 
-## Issued Kaylo Partner accounts (0024 and 0025)
+## Issued Kaylo Partner accounts and admin review (0024 through 0027)
 
 Partner registration is now a public **application**, never a Firebase sign-up.
-Apply `0024_worker_applications.sql`, then `0025_issued_partner_identities.sql` in
-Supabase's SQL editor. They are idempotent and appended verbatim to `setup_all.sql`.
-The rollout is not complete until these SQL changes, the three new edge functions,
-and the updated `email-otp` function are deployed together. The mobile changes alone
-cannot issue credentials. No production data or Firebase configuration is changed
-by committing these files.
+Apply `0024_worker_applications.sql`, `0025_issued_partner_identities.sql`,
+`0026_worker_application_notifications.sql`, then `0027_partner_admin_review.sql`
+in order after the earlier migrations. They are idempotent and appended verbatim
+to `setup_all.sql`. Deploy the matching edge functions with the schema; the mobile
+changes alone cannot issue credentials. No production data or Firebase configuration
+is changed by committing these files. The complete operator guide, admin allowlist,
+portal setup and correction workflow are in [docs/PARTNER_ADMIN.md](docs/PARTNER_ADMIN.md).
 
 ### Enable and deploy
 
@@ -429,25 +430,65 @@ by committing these files.
    secrets configured. Generate a new random `KAYLO_PARTNER_ADMIN_SECRET` with at
    least 32 characters, keep it in the admin password manager, and add it under
    **Supabase > Edge Functions > Secrets**. Never put it in Flutter or source control.
-   The Firebase service account needs user-management permissions; SMTP needs a
-   Gmail app password. No password is stored in Postgres or logged by these functions.
+   Also set `APPLICATION_CORRECTION_SECRET` to an independent random secret of at
+   least 32 characters and `KAYLO_PORTAL_URL` to the HTTPS origin serving the admin
+   and correction pages. The Firebase service account needs user-management
+   permissions; SMTP needs a Gmail app password. No password is stored in Postgres
+   or logged by these functions. External correction emails require a publicly
+   accessible correction page; the current private preview is not sufficient.
 3. Deploy:
 
    ```sh
    supabase functions deploy worker-application-documents --no-verify-jwt
    supabase functions deploy issue-partner-credentials --no-verify-jwt
    supabase functions deploy partner-password-changed --no-verify-jwt
+   supabase functions deploy admin-applications --no-verify-jwt
+   supabase functions deploy application-corrections --no-verify-jwt
    supabase functions deploy email-otp --no-verify-jwt
    ```
 
    Gateway JWT verification is disabled deliberately: application upload uses an
-   expiring application bearer token; issuance requires the admin-only secret;
+   expiring application bearer token; support issuance requires the admin-only
+   secret; admin review verifies Firebase tokens and an active UID allowlist;
+   correction uploads verify a signed, expiring application/version capability;
    password completion verifies Google's Firebase signature/project/expiry itself.
 4. Optional SMS uses **Twilio**, a paid external service subject to sender and local
    messaging registration rules. Configure `TWILIO_ACCOUNT_SID`, `TWILIO_AUTH_TOKEN`,
    `TWILIO_FROM_NUMBER` only after setting up an eligible sender. Without these,
    credentials arrive at the applicant's required delivery **email**. Email success
    is mandatory; optional SMS failure does not invalidate successful email delivery.
+
+### Application emails and durable delivery (0027)
+
+Migration 0027 supersedes the 0026 upload-triggered notification sender with
+`application_mail_outbox`. Keep 0026 applied for compatibility, and deploy the
+updated `worker-application-documents` together with `admin-applications` and
+`application-corrections`. Do not run the old and new senders concurrently.
+
+Once all five documents exist and the application is `under_review`, the database
+queues a review notice addressed to **kayloapp@gmail.com**. The existing
+`GMAIL_USER` and `GMAIL_APP_PASSWORD` send it. The current outbox stores this
+recipient directly; the old `WORKER_APPLICATION_REVIEW_EMAIL` environment override
+is not used. The notice contains the reference and admin portal link, without
+identity documents, bank details, phone numbers or passwords.
+
+An accepted approval, rejection or correction request queues its own applicant
+email in the same database transaction. Upload or review success remains valid
+when email fails. The response reports `delivery.state: "pending"` rather than
+pretending the saved application or decision failed. Admins inspect the delivery
+history and use **Retry delivery**; the endpoint also accepts
+`{"action":"retry_delivery","application_id":"APPLICATION_UUID"}` with an
+allowlisted admin's Firebase bearer token.
+
+Each current message has a five-minute delivery lease, attempt count and
+`pending`/`sending`/`sent`/`failed` state. Obsolete messages are retained for history
+and excluded from retry. **There is no scheduled retry worker.** Upload completion
+and review actions attempt delivery immediately; an admin must retry unresolved
+failures. SMTP acceptance followed by a lost database acknowledgement may cause a
+duplicate email. A sent state records acceptance, not guaranteed inbox placement.
+Approval retries do not reset a successfully delivered worker password; when
+credentials already exist, the retry sends the certificate using that identity.
+The Chrome `USE_MOCK=true` partner preview does not submit real applications.
 
 ### Applicant contract
 
@@ -475,64 +516,68 @@ checks file signatures, an unexpired matching bearer, uploads into the private
 `worker-documents/applications/<id>/<type>/<random>.<extension>` path, then records
 the actual stored object under a database lock. Approved/rejected evidence cannot
 be replaced. New uploads never overwrite an existing object. A raced/rejected
-upload is removed. Superseded draft uploads may be removed by an admin later.
+upload is removed. Migration 0027 retains document versions and their private
+paths for review history; do not delete historical objects as routine cleanup.
 The fifth recorded document changes the state to `under_review`.
 
 `worker_application_status(p_reference)` returns **only** reference, status and
 `documents_received` count (or null). References are high-entropy bearer identifiers;
 there is no phone/email search or public applicant table access. If an upload token
-is lost/expired, support must reject that incomplete application and ask the person
-to reapply after the cooldown. Do not expose private document links publicly.
+is lost or expired, an admin can request the missing or replacement documents
+through the correction workflow. A request for an incomplete application must
+include every missing document. Do not expose private document links publicly.
 
-### Review, approve, issue and reset (admin only)
+### Review, corrections and credentials (admin only)
 
-1. In the dashboard, open `worker_applications`, review the submitted details, and
-   open all five paths from `worker_application_documents` using the private Storage
-   bucket viewer. Verify their authenticity using your actual team process before
-   making the approval decision. File presence alone is not identity verification.
-2. In the SQL editor, use the UUID from that row:
+Use the admin portal backed by `admin-applications`; ordinary reviewers can inspect
+applications and request corrections, while `admin` users can also approve,
+reject and retry delivery. Firebase sign-in alone grants no access: the exact
+Firebase UID must have an active `admin_users` row.
 
-   ```sql
-   select approve_worker_application('APPLICATION_UUID'::uuid, 'Admin review note');
-   -- Or, instead of approval:
-   select reject_worker_application('APPLICATION_UUID'::uuid, 'Reason for rejection');
-   ```
+Review the submitted details and all five private documents before approval.
+Select all five document checks and record what the team actually reviewed.
+The versioned `admin_review_application` transaction creates the worker, issued
+partner ID, immutable certificate snapshot, audit event and applicant email job.
+Concurrent document changes invalidate a decision made from an older preview.
+The approval email delivers temporary credentials with the PDF review certificate;
+the worker must change that password before accessing the partner app.
 
-   Approval requires all five objects to exist, creates a separate person, worker,
-   worker role, services, service area and payout account, and assigns `KP-000001`
-   style ID. It never reuses a customer person/Firebase user. It cannot run twice.
-   **Only call approval after reviewing all five supplied documents.** The call is
-   your explicit attestation that the documents were reviewed. It sets the worker
-   and the five document records to `verified`, stores the review timestamp and
-   your actual admin note. No automated Aadhaar, police or qualification checks
-   are claimed. Do not approve on file presence alone. To record a subsequent
-   individual document decision, use the existing service-only review RPC:
+Request corrections with a reason and specific document types. The seven-day
+signed link permits replacement of only those documents and preserves old versions.
+When every requested document is received, the application returns to review and
+queues a fresh admin notice. **Update change request** renews an expired request
+and invalidates the previous link. Rejection requires a reason and sends that
+reason to the applicant. File presence alone is not identity verification, and
+the certificate does not claim automated Aadhaar, police or qualification checks.
 
-   ```sql
-   select review_worker_document('DOCUMENT_UUID'::uuid, 'verified', 'Actual review performed');
-   ```
+Do not use the legacy `approve_worker_application` or `reject_worker_application`
+RPC directly for routine reviews after 0027: doing so bypasses the portal's actor
+audit, certificate and applicant outbox workflow. The new transaction calls the
+underlying approval function after its role, evidence and version checks.
 
-3. Send a POST using the Supabase function dashboard invoke tool or a trusted admin
-   REST client to `/functions/v1/issue-partner-credentials`. Headers:
-   `Content-Type: application/json`, `x-kaylo-admin-secret: <your admin secret>`.
-   Body: `{"worker_id":"APPROVED_WORKER_UUID","action":"issue"}`.
-   The admin response contains ID and delivery status, **never the password**.
-   The password is delivered directly to the application's delivery email and
-   optionally phone. The Firebase login email is synthesized as
-   `kp-000001@partners.kaylo.app`; this domain is a login namespace, not an inbox.
-4. For a forgotten password, verify the worker's identity through support first,
-   then use the same endpoint/body with `"action":"reset"`. Reset immediately
-   closes worker access, rotates the Firebase password, and again requires a new
-   password. The app provides no phone-OTP or self-service reset route.
-5. If a request times out, repeat `issue`. A delivered issuance returns
-   `already_issued: true`; failures are recoverable by rotating a fresh password.
-   An in-progress lease lasts 10 minutes and covers SMTP delivery as well as account
-   creation. Never run a simultaneous reset to recover an in-flight send.
-   Inspect `partner_credentials.state` (`issuing`, `ready`, `delivered`, `failed`)
-   and the function's error code. If SMTP delivery succeeded but its database
-   acknowledgement failed, the next admin retry may rotate and send new credentials;
-   tell the worker to use the newest email. This is recoverable delivery, not an
-   exactly-once promise across Firebase, SMTP and Postgres.
+### Support password reset and recovery
+
+The server-only `issue-partner-credentials` endpoint remains available for support.
+Use a trusted server REST client, with `Content-Type: application/json` and
+`x-kaylo-admin-secret: <your admin secret>`. Never place this secret in the portal.
+
+- To recover an undelivered approved identity, POST
+  `{"worker_id":"APPROVED_WORKER_UUID","action":"issue"}`.
+- For a forgotten password, first verify the worker's identity through support,
+  then POST the same body with `"action":"reset"`. Reset closes worker access,
+  rotates the Firebase password and requires another password change.
+- An in-progress issuance lease lasts ten minutes and covers SMTP delivery.
+  Inspect `partner_credentials.state` and wait for an active lease before retrying;
+  do not run a simultaneous reset to recover an in-flight send.
+
+The response contains the partner ID and delivery result, never a password.
+Passwords are delivered to the application email and optionally phone. The
+`kp-000001@partners.kaylo.app` address is a synthetic Firebase login namespace,
+not an inbox. A delivered issuance returns `already_issued: true`.
+An uncertain SMTP acknowledgement may require a later fresh issuance; the worker
+must use the newest credentials. Firebase, SMTP and Postgres do not form one
+exactly-once transaction. Prefer the portal's **Retry delivery** for its pending
+approval email so certificate delivery is tracked as well.
 
 ### First-password and role boundaries
 
@@ -569,6 +614,13 @@ admin must reconcile them into separate identities before restoring access. A
 worker's old nonissued Firebase UID is never automatically overwritten by issuance.
 
 ### Local verification
+
+`supabase/tests/partner_admin_review.sql` covers admin/reviewer permissions,
+private evidence, optimistic review versions, correction scope and expiry,
+renewal with old-link refusal, immutable certificates/audits, and outbox leases,
+retries and deduplication. `worker_application_notifications.sql` retains coverage
+for 0026 compatibility. Migration 0027 and the complete setup bundle have been
+checked both fresh and on rerun in an isolated local PostgreSQL database.
 
 `supabase/tests/worker_applications.sql` owns a transaction and rolls back. It proves
 anonymous apply/retry, private applicant data, upload existence, required documents,

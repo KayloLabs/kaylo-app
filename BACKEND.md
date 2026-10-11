@@ -652,3 +652,29 @@ new-job pushes still require a trusted backend event sender. See
 `apps/partner/README.md` for the payload contract and build commands.
 `tools/build_release_apps.py` checks free disk and memory before sequential release
 builds; a skipped build due to low disk is not a successful release test.
+
+
+### Booking chat and partner activity (0030 and 0031)
+
+Apply `0030_booking_chat_and_partner_activity.sql`, then
+`0031_chat_read_boundaries.sql` after the existing partner onboarding migrations.
+Both are included in `setup_all.sql`. They use the existing Firebase-backed
+person, customer and issued-worker authorization helpers.
+
+Booking participants can open a conversation after a worker accepts the job.
+Completed or cancelled conversations remain readable but cannot send messages
+or typing updates. Client message IDs make retries idempotent. Private realtime
+subscriptions update messages, read receipts and short-lived typing indicators;
+reconnects and periodic snapshots catch up missed events.
+
+Both apps request messages oldest first. A read receipt calls
+`chat_mark_read_through` with the last displayed incoming message while the
+conversation is active and scrolled to the latest messages. The server limits
+the update to that snapshot and never marks the sender's own messages read.
+The older `chat_mark_read` endpoint remains for existing clients.
+
+0030 also provides the assigned-job and worker-review projections, partner
+notification preferences, booking/payment alerts, and participant-only access.
+Run `supabase/tests/booking_chat.sql` as the database owner after applying both
+migrations. Its synthetic data, authorization checks and read-receipt tests run
+inside a transaction that is rolled back.

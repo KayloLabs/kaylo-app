@@ -29,3 +29,5 @@ export 'widgets/section_header.dart';
 export 'widgets/service_tile.dart';
 export 'widgets/shimmer_box.dart';
 export 'widgets/worker_card.dart';
+
+export 'widgets/chat_typing_indicator.dart';

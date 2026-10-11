@@ -23,7 +23,8 @@ class _SwitchableAuth extends MockPartnerAuthRepository {
     workerId: 'worker-a',
   );
   @override
-  Future<PartnerAccess> checkAccess() async => access;
+  Future<PartnerAccess> checkAccess({bool forceRefresh = false}) async =>
+      access;
   @override
   Stream<PartnerAccess> watchAccess() =>
       watchPartnerAccess(changes: changes.stream, initial: () => access);

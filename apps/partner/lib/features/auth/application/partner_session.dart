@@ -24,7 +24,8 @@ final partnerAuthStateProvider = StreamProvider<PartnerAccess>((ref) {
 class _UnavailablePartnerAuthRepository implements PartnerAuthRepository {
   static const access = PartnerAccess(PartnerAccessStatus.unavailable);
   @override
-  Future<PartnerAccess> checkAccess() async => access;
+  Future<PartnerAccess> checkAccess({bool forceRefresh = false}) async =>
+      access;
   @override
   Future<bool> isAuthenticated() async => false;
   @override

@@ -31,7 +31,8 @@ class MockPartnerAuthRepository implements PartnerAuthRepository {
   }
 
   @override
-  Future<PartnerAccess> checkAccess() async => _access;
+  Future<PartnerAccess> checkAccess({bool forceRefresh = false}) async =>
+      _access;
   @override
   Future<bool> isAuthenticated() async => _access.signedIn;
   @override

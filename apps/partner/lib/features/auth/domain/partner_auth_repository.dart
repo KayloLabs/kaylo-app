@@ -67,7 +67,10 @@ String partnerEmail(String partnerId) {
 abstract class PartnerAuthRepository {
   Future<PartnerAccess> signIn(String partnerId, String password);
   Future<PartnerAccess> changePassword(String password);
-  Future<PartnerAccess> checkAccess();
+
+  /// Navigation may reuse a recent check; explicit retries and security changes
+  /// must request fresh server state.
+  Future<PartnerAccess> checkAccess({bool forceRefresh = false});
   Future<bool> isAuthenticated();
   Future<void> signOut();
   Stream<PartnerAccess> watchAccess();

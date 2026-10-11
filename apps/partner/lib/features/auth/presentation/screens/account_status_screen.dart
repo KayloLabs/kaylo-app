@@ -54,7 +54,7 @@ class PartnerAccountStatusScreen extends ConsumerWidget {
                     onPressed: () async {
                       await ref
                           .read(partnerAuthRepositoryProvider)
-                          .checkAccess();
+                          .checkAccess(forceRefresh: true);
                       if (context.mounted) context.go(Routes.jobs);
                     },
                     child: Text(l10n.retry),

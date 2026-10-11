@@ -259,7 +259,7 @@ void main() {
       await repo.signIn('KP-000123', 'temporaryPassword123');
       await Future<void>.delayed(Duration.zero);
       pending = Completer();
-      final loading = repo.checkAccess();
+      final loading = repo.checkAccess(forceRefresh: true);
       await repo.signOut();
       pending.complete(_state(mustChange: false));
       expect((await loading).status, PartnerAccessStatus.signedOut);
@@ -283,8 +283,8 @@ void main() {
       final old = Completer<Map<String, dynamic>?>();
       final recent = Completer<Map<String, dynamic>?>();
       pending.addAll([old, recent]);
-      final first = repo.checkAccess();
-      final second = repo.checkAccess();
+      final first = repo.checkAccess(forceRefresh: true);
+      final second = repo.checkAccess(forceRefresh: true);
       recent.complete(_state(mustChange: false, verification: 'rejected'));
       expect((await second).status, PartnerAccessStatus.verification);
       old.complete(_state(mustChange: false));
@@ -317,6 +317,97 @@ void main() {
       ),
     );
     expect(auth.currentUser, isNull);
+  });
+
+  test(
+    'navigation reuses a recent access result and shares expired lookups',
+    () async {
+      final auth = MockFirebaseAuth(mockUser: _worker());
+      var now = DateTime(2026, 10, 10);
+      var loads = 0;
+      Completer<Map<String, dynamic>?>? pending;
+      final repo = FirebasePartnerAuthRepository(
+        auth: auth,
+        now: () => now,
+        loadState: () async {
+          loads++;
+          return pending == null
+              ? _state(mustChange: false)
+              : await pending.future;
+        },
+      );
+      addTearDown(repo.dispose);
+      await repo.signIn('KP-000123', 'temporaryPassword123');
+      await Future<void>.delayed(Duration.zero);
+      final initialLoads = loads;
+      final cached = await Future.wait([
+        repo.checkAccess(),
+        repo.checkAccess(),
+      ]);
+      expect(cached.every((access) => access.canWork), isTrue);
+      expect(loads, initialLoads);
+      now = now.add(const Duration(seconds: 15));
+      pending = Completer();
+      final first = repo.checkAccess();
+      final second = repo.checkAccess();
+      expect(loads, initialLoads + 1);
+      pending.complete(_state(mustChange: false, verification: 'rejected'));
+      expect((await first).status, PartnerAccessStatus.verification);
+      expect((await second).status, PartnerAccessStatus.verification);
+    },
+  );
+
+  test(
+    'forced access refresh bypasses cached permissions and password gate',
+    () async {
+      final auth = MockFirebaseAuth(mockUser: _worker());
+      var current = _state(mustChange: false);
+      var loads = 0;
+      final repo = FirebasePartnerAuthRepository(
+        auth: auth,
+        loadState: () async {
+          loads++;
+          return current;
+        },
+      );
+      addTearDown(repo.dispose);
+      await repo.signIn('KP-000123', 'temporaryPassword123');
+      await Future<void>.delayed(Duration.zero);
+      final initialLoads = loads;
+      current = _state(mustChange: true);
+      expect(
+        (await repo.checkAccess(forceRefresh: true)).status,
+        PartnerAccessStatus.passwordChange,
+      );
+      expect(loads, initialLoads + 1);
+      expect((await repo.checkAccess()).canWork, isFalse);
+    },
+  );
+
+  test('a failed refresh fails closed and is immediately retryable', () async {
+    final auth = MockFirebaseAuth(mockUser: _worker());
+    var offline = false;
+    var loads = 0;
+    final repo = FirebasePartnerAuthRepository(
+      auth: auth,
+      loadState: () async {
+        loads++;
+        if (offline) throw StateError('offline');
+        return _state(mustChange: false);
+      },
+    );
+    addTearDown(repo.dispose);
+    await repo.signIn('KP-000123', 'temporaryPassword123');
+    await Future<void>.delayed(Duration.zero);
+    offline = true;
+    expect(
+      (await repo.checkAccess(forceRefresh: true)).status,
+      PartnerAccessStatus.unavailable,
+    );
+    final failedLoads = loads;
+    offline = false;
+    expect((await repo.checkAccess()).canWork, isTrue);
+    expect(loads, failedLoads + 1);
   });
 
   test('unknown Firebase messages map to a safe localized error code', () {

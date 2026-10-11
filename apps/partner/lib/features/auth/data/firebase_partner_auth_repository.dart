@@ -17,6 +17,7 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   final PartnerStateLoader _loadState;
   final PasswordChangeVerifier _verifyPasswordChange;
   final Future<void> Function() _clearPushToken;
+  final DateTime Function() _now;
   final _state = StreamController<PartnerAccess>.broadcast();
   StreamSubscription<User?>? _subscription;
   PartnerAccess _access = const PartnerAccess(PartnerAccessStatus.signedOut);
@@ -25,20 +26,28 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   bool _signingIn = false;
   int _generation = 0;
   int _accessCheck = 0;
+  Future<PartnerAccess>? _pendingCheck;
+  String? _pendingUid;
+  String? _checkedUid;
+  DateTime? _checkedAt;
+  static const _navigationCacheLifetime = Duration(seconds: 15);
 
   FirebasePartnerAuthRepository({
     FirebaseAuth? auth,
     PartnerStateLoader? loadState,
     PasswordChangeVerifier? verifyPasswordChange,
     Future<void> Function()? clearPushToken,
+    DateTime Function()? now,
   }) : _auth = auth ?? FirebaseAuth.instance,
        _loadState = loadState ?? _loadFromSupabase,
        _verifyPasswordChange = verifyPasswordChange ?? _verifyWithBackend,
-       _clearPushToken = clearPushToken ?? clearPartnerPushToken {
+       _clearPushToken = clearPushToken ?? clearPartnerPushToken,
+       _now = now ?? DateTime.now {
     _subscription = _auth.idTokenChanges().listen((user) {
       if (_signingIn) return;
       if (user == null) {
         _generation++;
+        _invalidateAccess();
         // Covers SDK-driven expiry/sign-out, where the UI did not call signOut.
         // Explicit signOut already cleared the binding before publishing null.
         if (_access.signedIn) {
@@ -46,7 +55,8 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
         }
         _publish(const PartnerAccess(PartnerAccessStatus.signedOut));
       } else {
-        unawaited(checkAccess());
+        // A new ID token may carry a changed issuance or revoked permission.
+        unawaited(checkAccess(forceRefresh: true));
       }
     });
   }
@@ -82,8 +92,42 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   }
 
   @override
-  Future<PartnerAccess> checkAccess() async {
+  Future<PartnerAccess> checkAccess({bool forceRefresh = false}) {
     final user = _auth.currentUser;
+    if (forceRefresh || user == null || _checkedUid != user.uid) {
+      _checkedAt = null;
+      _checkedUid = null;
+    }
+    if (!forceRefresh && user != null) {
+      final pending = _pendingCheck;
+      if (pending != null && _pendingUid == user.uid) return pending;
+      final age = _checkedAt == null ? null : _now().difference(_checkedAt!);
+      if (_checkedUid == user.uid &&
+          age != null &&
+          !age.isNegative &&
+          age < _navigationCacheLifetime) {
+        return Future.value(_access);
+      }
+    }
+    final pending = _checkAccessFromBackend(user);
+    _pendingCheck = pending;
+    _pendingUid = user?.uid;
+    return pending.whenComplete(() {
+      if (identical(_pendingCheck, pending)) {
+        _pendingCheck = null;
+        _pendingUid = null;
+      }
+    });
+  }
+
+  void _invalidateAccess() {
+    _checkedUid = null;
+    _checkedAt = null;
+    _pendingCheck = null;
+    _pendingUid = null;
+  }
+
+  Future<PartnerAccess> _checkAccessFromBackend(User? user) async {
     final generation = _generation;
     final accessCheck = ++_accessCheck;
     if (user == null) {
@@ -130,6 +174,10 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
           ),
         );
       }
+      if (_access.status != PartnerAccessStatus.unavailable) {
+        _checkedUid = user.uid;
+        _checkedAt = _now();
+      }
     } catch (error) {
       if (_generation != generation || accessCheck != _accessCheck) {
         return _access;
@@ -162,12 +210,13 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
       throw const PartnerAuthException(PartnerAuthError.invalidCredentials);
     }
     _generation++;
+    _invalidateAccess();
     _signingIn = true;
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
       _signedInPassword = password;
       _passwordAwaitingConfirmation = false;
-      final access = await checkAccess();
+      final access = await checkAccess(forceRefresh: true);
       if (access.status == PartnerAccessStatus.signedOut) {
         throw const PartnerAuthException(PartnerAuthError.identityNotAllowed);
       }
@@ -202,7 +251,7 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
         throw const PartnerAuthException(PartnerAuthError.sessionExpired);
       }
       await _verifyPasswordChange(token).timeout(const Duration(seconds: 20));
-      final access = await checkAccess();
+      final access = await checkAccess(forceRefresh: true);
       if (access.status == PartnerAccessStatus.passwordChange ||
           access.status == PartnerAccessStatus.unavailable) {
         throw const PartnerAuthException(PartnerAuthError.passwordConfirmation);
@@ -237,6 +286,7 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
   @override
   Future<void> signOut() async {
     _generation++;
+    _invalidateAccess();
     _signedInPassword = null;
     _passwordAwaitingConfirmation = false;
     try {
@@ -248,6 +298,8 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
 
   @override
   void dispose() {
+    _generation++;
+    _invalidateAccess();
     _subscription?.cancel();
     _state.close();
   }

@@ -3,6 +3,7 @@
 // Firebase user for an email address. Needs the project's service
 // account key, stored base64-encoded as FIREBASE_SERVICE_ACCOUNT_B64.
 import { importPKCS8, SignJWT } from "npm:jose@5";
+import { createOAuthTokenCache } from "./oauth_token_cache.ts";
 
 interface ServiceAccount {
   project_id: string;
@@ -46,7 +47,7 @@ export async function mintCustomToken(uid: string): Promise<string> {
 }
 
 /// An OAuth access token for the Identity Toolkit admin API.
-async function adminAccessToken(): Promise<string> {
+const adminAccessToken = createOAuthTokenCache(async () => {
   const sa = serviceAccount();
   const assertion = await new SignJWT({
     scope:
@@ -67,8 +68,9 @@ async function adminAccessToken(): Promise<string> {
     }),
   });
   if (!res.ok) throw new Error(`Google token exchange failed (${res.status})`);
-  return (await res.json()).access_token as string;
-}
+  const body = await res.json();
+  return { accessToken: body.access_token as string, expiresIn: Number(body.expires_in) };
+});
 
 async function adminHeaders() {
   const token = await adminAccessToken();
@@ -166,14 +168,40 @@ export async function issueFirebasePartnerPassword(uid: string, partnerId: strin
     method: "POST", headers: await adminHeaders(),
     body: JSON.stringify({localId: uid, email, password, displayName: name,
       emailVerified: true, disableUser: false,
-      customAttributes: JSON.stringify({kaylo_role: "worker", kaylo_partner_id: partnerId, kaylo_issuance_id: issuanceId}),
-      ...(existing ? {validSince: String(Math.floor(Date.now()/1000))} : {}),
+      ...(existing ? {
+        customAttributes: JSON.stringify({kaylo_role: "worker", kaylo_partner_id: partnerId, kaylo_issuance_id: issuanceId}),
+        validSince: String(Math.floor(Date.now()/1000)),
+      } : {}),
     }),
   });
   // Never echo Firebase's response: it can contain authentication material.
   if (!res.ok) throw new Error(`Firebase partner update failed (${res.status})`);
+  if (!existing) {
+    // The create-account endpoint does not support customAttributes. Set the
+    // issued identity through accounts:update before linking or emailing it.
+    const claimsResponse = await fetch(`${accountsBase()}/accounts:update`, {
+      method: "POST", headers: await adminHeaders(),
+      body: JSON.stringify({localId: uid, customAttributes: JSON.stringify({
+        kaylo_role: "worker", kaylo_partner_id: partnerId, kaylo_issuance_id: issuanceId,
+      })}),
+    });
+    if (!claimsResponse.ok) {
+      throw new Error(`Firebase partner claims update failed (${claimsResponse.status})`);
+    }
+  }
   const account = await lookupFirebaseAccount(uid);
-  const changed = Number(account?.passwordUpdatedAt);
+  let claims: Record<string, unknown> = {};
+  try { claims = JSON.parse(account?.customAttributes ?? "{}"); } catch {
+    throw new Error("PARTNER_CLAIMS_NOT_CONFIRMED");
+  }
+  if (!account || account.localId !== uid || account.email !== email || account.disabled) {
+    throw new Error("PARTNER_IDENTITY_MISMATCH");
+  }
+  if (!claims || claims.kaylo_role !== "worker" || claims.kaylo_partner_id !== partnerId ||
+    claims.kaylo_issuance_id !== issuanceId) {
+    throw new Error("PARTNER_CLAIMS_NOT_CONFIRMED");
+  }
+  const changed = Number(account.passwordUpdatedAt);
   if (!Number.isFinite(changed) || changed <= 0) throw new Error("PASSWORD_TIMESTAMP_UNAVAILABLE");
   return changed;
 }

@@ -800,91 +800,91 @@
   },
   "payCashAmount": "வேலை முடிந்ததும் பணியாளரிடம் {amount} பணமாகக் கொடுங்கள்",
   "@payCashAmount": {
-      "description": "Cash line on confirmation and details while the job is open",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on confirmation and details while the job is open",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "paidCashAmount": "{amount} பணமாகச் செலுத்தப்பட்டது",
   "@paidCashAmount": {
-      "description": "Cash line on details once the job is completed",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on details once the job is completed",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "workerOnTheWay": "உங்கள் பணியாளர் வழியில் உள்ளார்",
   "@workerOnTheWay": {
-      "description": "Banner on booking details while the worker travels"
+    "description": "Banner on booking details while the worker travels"
   },
   "workerArrived": "உங்கள் பணியாளர் வந்துவிட்டார்",
   "@workerArrived": {
-      "description": "Banner on booking details when the worker has arrived"
+    "description": "Banner on booking details when the worker has arrived"
   },
   "rateYourWorker": "பணியாளரை மதிப்பிடுங்கள்",
   "@rateYourWorker": {
-      "description": "Title and button of the review card after a completed booking"
+    "description": "Title and button of the review card after a completed booking"
   },
   "rateWorkerHint": "எப்படி இருந்தது? ஒன்றிரண்டு வரிகள் மற்ற வாடிக்கையாளர்களுக்கு உதவும்.",
   "@rateWorkerHint": {
-      "description": "Helper line under the review card title"
+    "description": "Helper line under the review card title"
   },
   "reviewTextHint": "வேலை பற்றி சிறிது எழுதுங்கள் (விருப்பத்திற்குரியது)",
   "@reviewTextHint": {
-      "description": "Hint of the optional review text field"
+    "description": "Hint of the optional review text field"
   },
   "submitReview": "மதிப்புரையை அனுப்பு",
   "@submitReview": {
-      "description": "Submit button of the review sheet"
+    "description": "Submit button of the review sheet"
   },
   "reviewSubmitted": "நன்றி, உங்கள் மதிப்புரை கிடைத்தது",
   "@reviewSubmitted": {
-      "description": "Snackbar after a review is saved"
+    "description": "Snackbar after a review is saved"
   },
   "yourReview": "உங்கள் மதிப்புரை",
   "@yourReview": {
-      "description": "Title of the review card once a review exists"
+    "description": "Title of the review card once a review exists"
   },
   "editReview": "மாற்று",
   "@editReview": {
-      "description": "Action to change an existing review"
+    "description": "Action to change an existing review"
   },
   "ratingRequired": "முதலில் நட்சத்திர மதிப்பீட்டைத் தேர்வு செய்யுங்கள்",
   "@ratingRequired": {
-      "description": "Error when submitting without picking stars"
+    "description": "Error when submitting without picking stars"
   },
   "starLabel": "5-இல் {count} நட்சத்திரம்",
   "@starLabel": {
-      "description": "Accessibility label of each star in the review sheet",
-      "placeholders": {
-          "count": {
-              "type": "int"
-          }
+    "description": "Accessibility label of each star in the review sheet",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
+    }
   },
   "addOns": "கூடுதல் சேவைகள்",
   "@addOns": {
-      "description": "Heading for priced add-ons ticked on a service page"
+    "description": "Heading for priced add-ons ticked on a service page"
   },
   "addOnsIncluded": "கூடுதல் சேவைகள்: {list}",
   "@addOnsIncluded": {
-      "description": "Line in the worker instructions listing the ticked add-ons",
-      "placeholders": {
-          "list": {
-              "type": "String"
-          }
+    "description": "Line in the worker instructions listing the ticked add-ons",
+    "placeholders": {
+      "list": {
+        "type": "String"
       }
+    }
   },
   "slotBooked": "முன்பதிவு செய்யப்பட்டது",
   "@slotBooked": {
-      "description": "Suffix on a time slot chip the worker already holds"
+    "description": "Suffix on a time slot chip the worker already holds"
   },
   "slotTakenMessage": "இந்த நேரம் இந்தப் பணியாளருக்கு ஏற்கனவே முன்பதிவு செய்யப்பட்டுள்ளது. வேறு நேரத்தைத் தேர்வு செய்யுங்கள்.",
   "@slotTakenMessage": {
-      "description": "Error when continuing with a slot the worker already holds"
+    "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "இது Kaylo Partner கணக்கு. Kaylo Partner செயலியைப் பயன்படுத்தவும்.",
   "customerProfileUnavailable": "உங்கள் வாடிக்கையாளர் சுயவிவரத்தைச் சரிபார்க்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் உள்நுழையவும்.",
@@ -936,5 +936,10 @@
   "bookingNotes": "குறிப்புகள்",
   "@bookingNotes": {
     "description": "Label for the notes line of a Care booking"
-  }
+  },
+  "chatTyping": "தட்டச்சு செய்கிறார்...",
+  "chatSendFailed": "செய்தியை அனுப்ப முடியவில்லை. இங்கே சேமிக்கப்பட்டுள்ளது. மீண்டும் அனுப்பத் தட்டவும்.",
+  "chatReadOnly": "இந்த முன்பதிவு முடிந்துவிட்டது. பழைய செய்திகளைப் படிக்கலாம்.",
+  "sendMessage": "செய்தி அனுப்பு",
+  "chatLoadFailed": "இந்த உரையாடலை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
 }

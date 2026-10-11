@@ -1,3 +1,4 @@
+import '../../../reviews/presentation/widgets/review_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -182,6 +183,9 @@ class PartnerProfileScreen extends ConsumerWidget {
           ],
         ),
       ),
+      const SizedBox(height: AppSpacing.l),
+
+      const ProfileReviewsSection(),
       const SizedBox(height: AppSpacing.l),
 
       // Services

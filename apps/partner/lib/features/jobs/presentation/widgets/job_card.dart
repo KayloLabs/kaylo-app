@@ -26,6 +26,9 @@ class JobCard extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final supportsActions = ref
+        .watch(jobsRepositoryProvider)
+        .supportsJobActions;
 
     final IconData serviceIcon;
     switch (job.serviceIcon) {
@@ -83,23 +86,25 @@ class JobCard extends ConsumerWidget {
                     const SizedBox(height: 2),
                     Row(
                       children: [
-                        const Icon(
-                          Icons.navigation_rounded,
-                          size: 13,
-                          color: AppColors.farmAccent,
-                        ),
-                        const SizedBox(width: 4),
+                        if (job.distanceKm != null) ...[
+                          const Icon(
+                            Icons.navigation_rounded,
+                            size: 13,
+                            color: AppColors.farmAccent,
+                          ),
+                          const SizedBox(width: 4),
+                          Text(
+                            '${job.distanceKm} km away',
+                            style: Theme.of(context).textTheme.bodySmall
+                                ?.copyWith(
+                                  fontWeight: FontWeight.w600,
+                                  color: AppColors.farmAccent,
+                                ),
+                          ),
+                          const SizedBox(width: 8),
+                        ],
                         Text(
-                          '${job.distanceKm} km away',
-                          style: Theme.of(context).textTheme.bodySmall
-                              ?.copyWith(
-                                fontWeight: FontWeight.w600,
-                                color: AppColors.farmAccent,
-                              ),
-                        ),
-                        const SizedBox(width: 8),
-                        Text(
-                          '• ${DateFormat.jm().format(job.scheduledAt)}',
+                          '${job.distanceKm != null ? '• ' : ''}${DateFormat.jm().format(job.scheduledAt)}',
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: isDark
@@ -185,7 +190,7 @@ class JobCard extends ConsumerWidget {
           ],
 
           // Action buttons for requested stage
-          if (job.isRequested) ...[
+          if (job.isRequested && supportsActions) ...[
             const SizedBox(height: AppSpacing.m),
             Row(
               children: [
@@ -226,16 +231,17 @@ class JobCard extends ConsumerWidget {
                   variant: KayloChipVariant.brand,
                 ),
                 const Spacer(),
-                SizedBox(
-                  width: 140,
-                  child: KayloButton(
-                    text: job.stage.actionText(l10n),
-                    onPressed: () {
-                      KayloFeedback.press();
-                      ref.read(jobsRepositoryProvider).advanceJob(job.id);
-                    },
+                if (supportsActions)
+                  SizedBox(
+                    width: 140,
+                    child: KayloButton(
+                      text: job.stage.actionText(l10n),
+                      onPressed: () {
+                        KayloFeedback.press();
+                        ref.read(jobsRepositoryProvider).advanceJob(job.id);
+                      },
+                    ),
                   ),
-                ),
               ],
             ),
           ],

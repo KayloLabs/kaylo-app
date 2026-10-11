@@ -1,6 +1,7 @@
 import 'job.dart';
 
 abstract class JobsRepository {
+  bool get supportsJobActions;
   Future<List<Job>> getJobs();
   Stream<List<Job>> watchJobs();
   Stream<List<Job>> watchIncomingRequests();

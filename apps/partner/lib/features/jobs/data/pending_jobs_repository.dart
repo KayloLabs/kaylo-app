@@ -9,6 +9,8 @@ class LiveJobsPending implements Exception {
 }
 
 class PendingJobsRepository implements JobsRepository {
+  @override
+  bool get supportsJobActions => false;
   PendingJobsRepository({required bool initiallyOnline})
     : _online = initiallyOnline;
   bool _online;

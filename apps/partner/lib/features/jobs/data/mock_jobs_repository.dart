@@ -7,6 +7,8 @@ import '../domain/job.dart';
 import '../domain/jobs_repository.dart';
 
 class MockJobsRepository implements JobsRepository {
+  @override
+  bool get supportsJobActions => true;
   final SharedPreferences? _prefs;
 
   static const _jobsKey = 'kaylo_partner_jobs_v1';

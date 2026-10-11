@@ -2460,4 +2460,22 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get bookingNotes => 'Notes';
+
+  @override
+  String get chatTyping => 'typing...';
+
+  @override
+  String get chatSendFailed =>
+      'Could not send. Your message is saved here. Tap send to retry.';
+
+  @override
+  String get chatReadOnly =>
+      'This booking has ended. You can still read your messages.';
+
+  @override
+  String get sendMessage => 'Send message';
+
+  @override
+  String get chatLoadFailed =>
+      'Could not load this conversation. Please retry.';
 }

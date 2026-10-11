@@ -2463,4 +2463,21 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get bookingNotes => 'नोट्स';
+
+  @override
+  String get chatTyping => 'लिख रहे हैं...';
+
+  @override
+  String get chatSendFailed =>
+      'संदेश नहीं भेजा गया। आपका संदेश यहाँ सुरक्षित है। फिर भेजने के लिए दबाएँ।';
+
+  @override
+  String get chatReadOnly =>
+      'यह बुकिंग समाप्त हो गई है। आप पुराने संदेश पढ़ सकते हैं।';
+
+  @override
+  String get sendMessage => 'संदेश भेजें';
+
+  @override
+  String get chatLoadFailed => 'यह बातचीत लोड नहीं हुई। फिर कोशिश करें।';
 }

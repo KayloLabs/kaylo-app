@@ -800,91 +800,91 @@
   },
   "payCashAmount": "ജോലി കഴിഞ്ഞ് തൊഴിലാളിക്ക് {amount} പണമായി നൽകുക",
   "@payCashAmount": {
-      "description": "Cash line on confirmation and details while the job is open",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on confirmation and details while the job is open",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "paidCashAmount": "{amount} പണമായി നൽകി",
   "@paidCashAmount": {
-      "description": "Cash line on details once the job is completed",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on details once the job is completed",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "workerOnTheWay": "നിങ്ങളുടെ തൊഴിലാളി വഴിയിലാണ്",
   "@workerOnTheWay": {
-      "description": "Banner on booking details while the worker travels"
+    "description": "Banner on booking details while the worker travels"
   },
   "workerArrived": "നിങ്ങളുടെ തൊഴിലാളി എത്തി",
   "@workerArrived": {
-      "description": "Banner on booking details when the worker has arrived"
+    "description": "Banner on booking details when the worker has arrived"
   },
   "rateYourWorker": "തൊഴിലാളിയെ റേറ്റ് ചെയ്യുക",
   "@rateYourWorker": {
-      "description": "Title and button of the review card after a completed booking"
+    "description": "Title and button of the review card after a completed booking"
   },
   "rateWorkerHint": "എങ്ങനെയുണ്ടായിരുന്നു? ഒന്നോ രണ്ടോ വരി മറ്റ് ഉപഭോക്താക്കൾക്ക് സഹായകമാകും.",
   "@rateWorkerHint": {
-      "description": "Helper line under the review card title"
+    "description": "Helper line under the review card title"
   },
   "reviewTextHint": "ജോലിയെക്കുറിച്ച് അൽപ്പം എഴുതുക (നിർബന്ധമില്ല)",
   "@reviewTextHint": {
-      "description": "Hint of the optional review text field"
+    "description": "Hint of the optional review text field"
   },
   "submitReview": "റിവ്യൂ അയയ്ക്കുക",
   "@submitReview": {
-      "description": "Submit button of the review sheet"
+    "description": "Submit button of the review sheet"
   },
   "reviewSubmitted": "നന്ദി, നിങ്ങളുടെ റിവ്യൂ ലഭിച്ചു",
   "@reviewSubmitted": {
-      "description": "Snackbar after a review is saved"
+    "description": "Snackbar after a review is saved"
   },
   "yourReview": "നിങ്ങളുടെ റിവ്യൂ",
   "@yourReview": {
-      "description": "Title of the review card once a review exists"
+    "description": "Title of the review card once a review exists"
   },
   "editReview": "മാറ്റുക",
   "@editReview": {
-      "description": "Action to change an existing review"
+    "description": "Action to change an existing review"
   },
   "ratingRequired": "ആദ്യം സ്റ്റാർ റേറ്റിംഗ് തിരഞ്ഞെടുക്കുക",
   "@ratingRequired": {
-      "description": "Error when submitting without picking stars"
+    "description": "Error when submitting without picking stars"
   },
   "starLabel": "5-ൽ {count} സ്റ്റാർ",
   "@starLabel": {
-      "description": "Accessibility label of each star in the review sheet",
-      "placeholders": {
-          "count": {
-              "type": "int"
-          }
+    "description": "Accessibility label of each star in the review sheet",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
+    }
   },
   "addOns": "ആഡ്-ഓണുകൾ",
   "@addOns": {
-      "description": "Heading for priced add-ons ticked on a service page"
+    "description": "Heading for priced add-ons ticked on a service page"
   },
   "addOnsIncluded": "ആഡ്-ഓണുകൾ: {list}",
   "@addOnsIncluded": {
-      "description": "Line in the worker instructions listing the ticked add-ons",
-      "placeholders": {
-          "list": {
-              "type": "String"
-          }
+    "description": "Line in the worker instructions listing the ticked add-ons",
+    "placeholders": {
+      "list": {
+        "type": "String"
       }
+    }
   },
   "slotBooked": "ബുക്ക് ചെയ്തു",
   "@slotBooked": {
-      "description": "Suffix on a time slot chip the worker already holds"
+    "description": "Suffix on a time slot chip the worker already holds"
   },
   "slotTakenMessage": "ഈ സമയം ഈ തൊഴിലാളിക്ക് ഇതിനകം ബുക്ക് ചെയ്തിട്ടുണ്ട്. മറ്റൊരു സമയം തിരഞ്ഞെടുക്കുക.",
   "@slotTakenMessage": {
-      "description": "Error when continuing with a slot the worker already holds"
+    "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "ഇത് Kaylo Partner അക്കൗണ്ടാണ്. ദയവായി Kaylo Partner ആപ്പ് ഉപയോഗിക്കുക.",
   "customerProfileUnavailable": "നിങ്ങളുടെ ഉപഭോക്തൃ പ്രൊഫൈൽ സ്ഥിരീകരിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും സൈൻ ഇൻ ചെയ്യുക.",
@@ -936,5 +936,10 @@
   "bookingNotes": "കുറിപ്പുകൾ",
   "@bookingNotes": {
     "description": "Label for the notes line of a Care booking"
-  }
+  },
+  "chatTyping": "ടൈപ്പ് ചെയ്യുന്നു...",
+  "chatSendFailed": "സന്ദേശം അയയ്ക്കാനായില്ല. ഇവിടെ സൂക്ഷിച്ചിട്ടുണ്ട്. വീണ്ടും അയയ്ക്കാൻ അമർത്തുക.",
+  "chatReadOnly": "ഈ ബുക്കിംഗ് അവസാനിച്ചു. പഴയ സന്ദേശങ്ങൾ വായിക്കാം.",
+  "sendMessage": "സന്ദേശം അയയ്ക്കുക",
+  "chatLoadFailed": "ഈ സംഭാഷണം ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക."
 }

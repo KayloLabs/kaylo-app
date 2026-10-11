@@ -117,7 +117,7 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
             ),
           ),
           Text(
-            'Guaranteed Partner Payout',
+            'Partner payout',
             style: TextStyle(
               fontSize: 12,
               color: isDark
@@ -149,13 +149,14 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
                       style: const TextStyle(fontWeight: FontWeight.w700),
                     ),
                     const Spacer(),
-                    Text(
-                      '${widget.job.distanceKm} km away',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        color: AppColors.farmAccent,
+                    if (widget.job.distanceKm != null)
+                      Text(
+                        '${widget.job.distanceKm} km away',
+                        style: const TextStyle(
+                          fontWeight: FontWeight.w600,
+                          color: AppColors.farmAccent,
+                        ),
                       ),
-                    ),
                   ],
                 ),
                 const Divider(height: AppSpacing.l),
@@ -184,33 +185,34 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
           const SizedBox(height: AppSpacing.xl),
 
           // Accept / Decline Buttons
-          Row(
-            children: [
-              Expanded(
-                child: KayloButton(
-                  text: 'Decline',
-                  variant: KayloButtonVariant.secondary,
-                  onPressed: () {
-                    KayloFeedback.tap();
-                    ref.read(jobsRepositoryProvider).rejectJob(widget.job.id);
-                    Navigator.of(context).pop();
-                  },
+          if (ref.watch(jobsRepositoryProvider).supportsJobActions)
+            Row(
+              children: [
+                Expanded(
+                  child: KayloButton(
+                    text: 'Decline',
+                    variant: KayloButtonVariant.secondary,
+                    onPressed: () {
+                      KayloFeedback.tap();
+                      ref.read(jobsRepositoryProvider).rejectJob(widget.job.id);
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                flex: 2,
-                child: KayloButton(
-                  text: 'Accept Job Now',
-                  onPressed: () {
-                    KayloFeedback.press();
-                    ref.read(jobsRepositoryProvider).acceptJob(widget.job.id);
-                    Navigator.of(context).pop();
-                  },
+                const SizedBox(width: AppSpacing.m),
+                Expanded(
+                  flex: 2,
+                  child: KayloButton(
+                    text: 'Accept Job Now',
+                    onPressed: () {
+                      KayloFeedback.press();
+                      ref.read(jobsRepositoryProvider).acceptJob(widget.job.id);
+                      Navigator.of(context).pop();
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
         ],
       ),
     );

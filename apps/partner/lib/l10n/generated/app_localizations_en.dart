@@ -734,4 +734,227 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get applicationChangesRequestedHint =>
       'Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements.';
+
+  @override
+  String get chatMessages => 'Messages';
+
+  @override
+  String get chatTitle => 'Chat';
+
+  @override
+  String chatUnread(int count) {
+    return 'Chat ($count)';
+  }
+
+  @override
+  String get chatViewConversation => 'View conversation';
+
+  @override
+  String get chatNoMessages => 'Your conversations start here';
+
+  @override
+  String get chatNoMessagesBody =>
+      'Accept a job, then open Chat to message your customer.';
+
+  @override
+  String get chatStartConversation => 'Send a message about this booking.';
+
+  @override
+  String get chatLoadFailed =>
+      'We couldn’t load this conversation. Please try again.';
+
+  @override
+  String get chatMessageHint => 'Message your customer';
+
+  @override
+  String get chatSend => 'Send message';
+
+  @override
+  String get chatSendFailed =>
+      'Your message wasn’t sent. Try sending it again.';
+
+  @override
+  String get chatTyping => 'Customer is typing…';
+
+  @override
+  String get chatRead => 'Read';
+
+  @override
+  String get chatSent => 'Sent';
+
+  @override
+  String get chatReadOnly =>
+      'This booking has ended. You can still read its conversation.';
+
+  @override
+  String get chatOnMyWay => 'On my way';
+
+  @override
+  String get chatReached => 'I’ve reached';
+
+  @override
+  String get chatLate => 'Running 10 min late';
+
+  @override
+  String get chatExactLocation => 'Please share the exact location';
+
+  @override
+  String get chatMockBackGate => 'Please come to the back gate.';
+
+  @override
+  String get chatMockWaiting => 'Okay, waiting.';
+
+  @override
+  String get chatMockCall => 'Call when you reach.';
+
+  @override
+  String get chatMockTenMinutes => 'Is 10 minutes fine?';
+
+  @override
+  String get chatMockThanks => 'Thank you!';
+
+  @override
+  String get chatMockDog => 'The dog is friendly, don’t worry.';
+
+  @override
+  String get alertsTitle => 'Alerts';
+
+  @override
+  String get alertsMarkAllRead => 'Mark all read';
+
+  @override
+  String get alertsToday => 'Today';
+
+  @override
+  String get alertsEarlier => 'Earlier';
+
+  @override
+  String get alertsEmpty => 'You’re all caught up';
+
+  @override
+  String get alertsEmptyBody =>
+      'New requests and job updates will appear here.';
+
+  @override
+  String get alertsLoadFailed =>
+      'We couldn’t load your alerts. Please try again.';
+
+  @override
+  String get alertsUpdateFailed =>
+      'We couldn’t update this alert. Please try again.';
+
+  @override
+  String get alertNewRequest => 'New job request';
+
+  @override
+  String get alertAccepted => 'Job accepted';
+
+  @override
+  String get alertOnTheWay => 'Your customer knows you’re on the way';
+
+  @override
+  String get alertArrived => 'Arrival confirmed';
+
+  @override
+  String get alertInProgress => 'Work has started';
+
+  @override
+  String get alertCompleted => 'Job completed';
+
+  @override
+  String get alertCancelled => 'Job cancelled';
+
+  @override
+  String alertRequestBody(String service, String distance) {
+    return '$service · $distance km away';
+  }
+
+  @override
+  String alertJobBody(String service) {
+    return '$service · Open for booking details';
+  }
+
+  @override
+  String get reviewsTitle => 'Reviews';
+
+  @override
+  String get reviewsSeeAll => 'See all';
+
+  @override
+  String get reviewsCustomerRating => 'Customer rating';
+
+  @override
+  String reviewsDistribution(int stars, int count) {
+    return '$stars stars: $count reviews';
+  }
+
+  @override
+  String get reviewsAll => 'All';
+
+  @override
+  String get reviewsFive => '5 stars';
+
+  @override
+  String get reviewsFour => '4 stars';
+
+  @override
+  String get reviewsThreeBelow => '3 stars & below';
+
+  @override
+  String get reviewsEmpty => 'No reviews here yet';
+
+  @override
+  String get reviewsEmptyBody =>
+      'Customer reviews appear here after completed jobs.';
+
+  @override
+  String get reviewsLoadFailed =>
+      'We couldn’t load your reviews. Please try again.';
+
+  @override
+  String get reviewSample1 =>
+      'Fixed the leaking tap neatly and explained the repair.';
+
+  @override
+  String get reviewSample2 => 'On time and very helpful.';
+
+  @override
+  String get reviewSample3 => 'Good work. Left the place clean.';
+
+  @override
+  String get reviewSample4 =>
+      'Careful work and clear communication throughout.';
+
+  @override
+  String get reviewSample5 =>
+      'The repair was good, but arrived half an hour late without an update.';
+
+  @override
+  String get reviewSample6 => 'Would happily book again.';
+
+  @override
+  String get reviewSample7 =>
+      'Solved the problem and answered all our questions.';
+
+  @override
+  String get reviewSample8 => 'Patient, polite, and thorough. Thank you.';
+
+  @override
+  String get chatCallCustomer => 'Call customer';
+
+  @override
+  String get chatNavigate => 'Directions';
+
+  @override
+  String get partnerJobReadOnly =>
+      'You can view this job and contact the customer. Job status updates are not available yet.';
+
+  @override
+  String get alertCashCollected => 'Cash collected';
+
+  @override
+  String get alertPaymentReceived => 'Payment received';
+
+  @override
+  String get alertSettlement => 'Settlement recorded';
 }

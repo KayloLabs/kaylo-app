@@ -1062,91 +1062,91 @@
   },
   "payCashAmount": "Pay the worker {amount} in cash when the job is done",
   "@payCashAmount": {
-      "description": "Cash line on confirmation and details while the job is open",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on confirmation and details while the job is open",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "paidCashAmount": "Paid {amount} in cash",
   "@paidCashAmount": {
-      "description": "Cash line on details once the job is completed",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on details once the job is completed",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "workerOnTheWay": "Your worker is on the way",
   "@workerOnTheWay": {
-      "description": "Banner on booking details while the worker travels"
+    "description": "Banner on booking details while the worker travels"
   },
   "workerArrived": "Your worker has arrived",
   "@workerArrived": {
-      "description": "Banner on booking details when the worker has arrived"
+    "description": "Banner on booking details when the worker has arrived"
   },
   "rateYourWorker": "Rate your worker",
   "@rateYourWorker": {
-      "description": "Title and button of the review card after a completed booking"
+    "description": "Title and button of the review card after a completed booking"
   },
   "rateWorkerHint": "How did it go? A line or two helps other customers.",
   "@rateWorkerHint": {
-      "description": "Helper line under the review card title"
+    "description": "Helper line under the review card title"
   },
   "reviewTextHint": "Say a little about the work (optional)",
   "@reviewTextHint": {
-      "description": "Hint of the optional review text field"
+    "description": "Hint of the optional review text field"
   },
   "submitReview": "Submit review",
   "@submitReview": {
-      "description": "Submit button of the review sheet"
+    "description": "Submit button of the review sheet"
   },
   "reviewSubmitted": "Thanks, your review is in",
   "@reviewSubmitted": {
-      "description": "Snackbar after a review is saved"
+    "description": "Snackbar after a review is saved"
   },
   "yourReview": "Your review",
   "@yourReview": {
-      "description": "Title of the review card once a review exists"
+    "description": "Title of the review card once a review exists"
   },
   "editReview": "Edit",
   "@editReview": {
-      "description": "Action to change an existing review"
+    "description": "Action to change an existing review"
   },
   "ratingRequired": "Pick a star rating first",
   "@ratingRequired": {
-      "description": "Error when submitting without picking stars"
+    "description": "Error when submitting without picking stars"
   },
   "starLabel": "{count} of 5 stars",
   "@starLabel": {
-      "description": "Accessibility label of each star in the review sheet",
-      "placeholders": {
-          "count": {
-              "type": "int"
-          }
+    "description": "Accessibility label of each star in the review sheet",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
+    }
   },
   "addOns": "Add-ons",
   "@addOns": {
-      "description": "Heading for priced add-ons ticked on a service page"
+    "description": "Heading for priced add-ons ticked on a service page"
   },
   "addOnsIncluded": "Add-ons: {list}",
   "@addOnsIncluded": {
-      "description": "Line in the worker instructions listing the ticked add-ons",
-      "placeholders": {
-          "list": {
-              "type": "String"
-          }
+    "description": "Line in the worker instructions listing the ticked add-ons",
+    "placeholders": {
+      "list": {
+        "type": "String"
       }
+    }
   },
   "slotBooked": "Booked",
   "@slotBooked": {
-      "description": "Suffix on a time slot chip the worker already holds"
+    "description": "Suffix on a time slot chip the worker already holds"
   },
   "slotTakenMessage": "That time is already booked for this worker. Pick another slot.",
   "@slotTakenMessage": {
-      "description": "Error when continuing with a slot the worker already holds"
+    "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "This is a Kaylo Partner account. Please use the Kaylo Partner app.",
   "customerProfileUnavailable": "We could not verify your customer profile. Check your connection and sign in again.",
@@ -1198,5 +1198,10 @@
   "bookingNotes": "Notes",
   "@bookingNotes": {
     "description": "Label for the notes line of a Care booking"
-  }
+  },
+  "chatTyping": "typing...",
+  "chatSendFailed": "Could not send. Your message is saved here. Tap send to retry.",
+  "chatReadOnly": "This booking has ended. You can still read your messages.",
+  "sendMessage": "Send message",
+  "chatLoadFailed": "Could not load this conversation. Please retry."
 }

@@ -1,8 +1,10 @@
 /// One conversation between the customer and a worker. Lives per booking
-/// on the backend (`chat_rooms`), but the UI keys it by the worker.
+/// on the backend (`chat_rooms`), and is linked to that exact booking.
 class ChatThread {
   final String id;
   final String workerId;
+  final String? bookingId;
+  final bool canSend;
   final String workerName;
   final String workerRole;
   final bool isOnline;
@@ -13,6 +15,8 @@ class ChatThread {
   const ChatThread({
     required this.id,
     required this.workerId,
+    this.bookingId,
+    this.canSend = true,
     required this.workerName,
     required this.workerRole,
     this.isOnline = false,
@@ -29,6 +33,8 @@ class ChatThread {
     return ChatThread(
       id: id,
       workerId: workerId,
+      bookingId: bookingId,
+      canSend: canSend,
       workerName: workerName,
       workerRole: workerRole,
       isOnline: isOnline,
@@ -47,8 +53,7 @@ class ChatMessage {
   final DateTime sentAt;
   final bool isMine;
 
-  /// Read receipts exist in the mock only until the schema carries them;
-  /// live messages report false and render a single tick.
+  /// True once the other participant has opened this message.
   final bool isRead;
 
   const ChatMessage({

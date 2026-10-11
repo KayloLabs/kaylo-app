@@ -742,4 +742,229 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get applicationChangesRequestedHint =>
       'உங்கள் விண்ணப்பத்தை மீண்டும் மதிப்பாய்வு செய்ய Kaylo-க்கு புதுப்பிக்கப்பட்ட ஆவணங்கள் தேவை. வழிமுறைகளைப் பார்க்கவும் மாற்று ஆவணங்களைச் சமர்ப்பிக்கவும் உங்கள் மின்னஞ்சலில் அனுப்பப்பட்ட பாதுகாப்பான இணைப்பைத் திறக்கவும்.';
+
+  @override
+  String get chatMessages => 'செய்திகள்';
+
+  @override
+  String get chatTitle => 'அரட்டை';
+
+  @override
+  String chatUnread(int count) {
+    return 'அரட்டை ($count)';
+  }
+
+  @override
+  String get chatViewConversation => 'உரையாடலைக் காண்க';
+
+  @override
+  String get chatNoMessages => 'உங்கள் உரையாடல்கள் இங்கே தொடங்கும்';
+
+  @override
+  String get chatNoMessagesBody =>
+      'வேலையை ஏற்ற பிறகு, வாடிக்கையாளருக்குச் செய்தி அனுப்ப அரட்டையைத் திறக்கவும்.';
+
+  @override
+  String get chatStartConversation =>
+      'இந்த முன்பதிவைப் பற்றிச் செய்தி அனுப்பவும்.';
+
+  @override
+  String get chatLoadFailed =>
+      'உரையாடலை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get chatMessageHint => 'வாடிக்கையாளருக்குச் செய்தி';
+
+  @override
+  String get chatSend => 'செய்தி அனுப்பவும்';
+
+  @override
+  String get chatSendFailed => 'செய்தி அனுப்பப்படவில்லை. மீண்டும் அனுப்பவும்.';
+
+  @override
+  String get chatTyping => 'வாடிக்கையாளர் தட்டச்சு செய்கிறார்…';
+
+  @override
+  String get chatRead => 'படிக்கப்பட்டது';
+
+  @override
+  String get chatSent => 'அனுப்பப்பட்டது';
+
+  @override
+  String get chatReadOnly =>
+      'இந்த முன்பதிவு முடிந்துவிட்டது. உரையாடலைத் தொடர்ந்து படிக்கலாம்.';
+
+  @override
+  String get chatOnMyWay => 'வழியில் வருகிறேன்';
+
+  @override
+  String get chatReached => 'வந்துவிட்டேன்';
+
+  @override
+  String get chatLate => '10 நிமிடம் தாமதமாகும்';
+
+  @override
+  String get chatExactLocation => 'சரியான இடத்தைப் பகிரவும்';
+
+  @override
+  String get chatMockBackGate => 'பின்புற வாசலுக்கு வாருங்கள்.';
+
+  @override
+  String get chatMockWaiting => 'சரி, காத்திருக்கிறேன்.';
+
+  @override
+  String get chatMockCall => 'வந்ததும் அழைக்கவும்.';
+
+  @override
+  String get chatMockTenMinutes => '10 நிமிடம் சரியா?';
+
+  @override
+  String get chatMockThanks => 'நன்றி!';
+
+  @override
+  String get chatMockDog => 'நாய் சாதுவானது, கவலை வேண்டாம்.';
+
+  @override
+  String get alertsTitle => 'அறிவிப்புகள்';
+
+  @override
+  String get alertsMarkAllRead => 'அனைத்தையும் படித்ததாகக் குறிக்கவும்';
+
+  @override
+  String get alertsToday => 'இன்று';
+
+  @override
+  String get alertsEarlier => 'முந்தையவை';
+
+  @override
+  String get alertsEmpty => 'புதிய அறிவிப்புகள் இல்லை';
+
+  @override
+  String get alertsEmptyBody =>
+      'புதிய கோரிக்கைகளும் வேலை விவரங்களும் இங்கே தோன்றும்.';
+
+  @override
+  String get alertsLoadFailed =>
+      'அறிவிப்புகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get alertsUpdateFailed =>
+      'அறிவிப்பைப் புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get alertNewRequest => 'புதிய வேலைக் கோரிக்கை';
+
+  @override
+  String get alertAccepted => 'வேலை ஏற்கப்பட்டது';
+
+  @override
+  String get alertOnTheWay =>
+      'நீங்கள் வரும் தகவல் வாடிக்கையாளருக்குத் தெரிவிக்கப்பட்டது';
+
+  @override
+  String get alertArrived => 'வருகை உறுதிசெய்யப்பட்டது';
+
+  @override
+  String get alertInProgress => 'வேலை தொடங்கியது';
+
+  @override
+  String get alertCompleted => 'வேலை முடிந்தது';
+
+  @override
+  String get alertCancelled => 'வேலை ரத்தானது';
+
+  @override
+  String alertRequestBody(String service, String distance) {
+    return '$service · $distance கி.மீ. தொலைவில்';
+  }
+
+  @override
+  String alertJobBody(String service) {
+    return '$service · முன்பதிவு விவரங்களைக் காண்க';
+  }
+
+  @override
+  String get reviewsTitle => 'மதிப்புரைகள்';
+
+  @override
+  String get reviewsSeeAll => 'அனைத்தையும் காண்க';
+
+  @override
+  String get reviewsCustomerRating => 'வாடிக்கையாளர் மதிப்பீடு';
+
+  @override
+  String reviewsDistribution(int stars, int count) {
+    return '$stars நட்சத்திரங்கள்: $count மதிப்புரைகள்';
+  }
+
+  @override
+  String get reviewsAll => 'அனைத்தும்';
+
+  @override
+  String get reviewsFive => '5 நட்சத்திரங்கள்';
+
+  @override
+  String get reviewsFour => '4 நட்சத்திரங்கள்';
+
+  @override
+  String get reviewsThreeBelow => '3 நட்சத்திரங்கள் மற்றும் கீழ்';
+
+  @override
+  String get reviewsEmpty => 'இன்னும் மதிப்புரைகள் இல்லை';
+
+  @override
+  String get reviewsEmptyBody =>
+      'வேலை முடிந்த பிறகு வாடிக்கையாளர் மதிப்புரைகள் இங்கே தோன்றும்.';
+
+  @override
+  String get reviewsLoadFailed =>
+      'மதிப்புரைகளை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get reviewSample1 =>
+      'கசிந்த குழாயை நன்றாகச் சரிசெய்து, பழுது நீக்கியதை விளக்கினார்.';
+
+  @override
+  String get reviewSample2 => 'நேரத்திற்கு வந்து மிகவும் உதவினார்.';
+
+  @override
+  String get reviewSample3 => 'நல்ல வேலை. இடத்தைச் சுத்தமாக விட்டுச் சென்றார்.';
+
+  @override
+  String get reviewSample4 =>
+      'கவனமாக வேலை செய்து, அனைத்தையும் தெளிவாகத் தெரிவித்தார்.';
+
+  @override
+  String get reviewSample5 =>
+      'பழுது நன்றாகச் சரியானது, ஆனால் தகவல் தெரிவிக்காமல் அரை மணி நேரம் தாமதமாக வந்தார்.';
+
+  @override
+  String get reviewSample6 => 'மீண்டும் முன்பதிவு செய்வேன்.';
+
+  @override
+  String get reviewSample7 =>
+      'பிரச்சினையைத் தீர்த்து, எங்கள் கேள்விகளுக்குப் பதிலளித்தார்.';
+
+  @override
+  String get reviewSample8 =>
+      'பொறுமையாகவும் மரியாதையாகவும் முழுமையாகவும் செய்தார். நன்றி.';
+
+  @override
+  String get chatCallCustomer => 'வாடிக்கையாளரை அழைக்கவும்';
+
+  @override
+  String get chatNavigate => 'வழிகாட்டல்';
+
+  @override
+  String get partnerJobReadOnly =>
+      'வேலையைப் பார்த்து வாடிக்கையாளரைத் தொடர்புகொள்ளலாம். வேலை நிலையைப் புதுப்பிக்கும் வசதி இன்னும் இல்லை.';
+
+  @override
+  String get alertCashCollected => 'பணம் பெறப்பட்டது';
+
+  @override
+  String get alertPaymentReceived => 'கட்டணம் பெறப்பட்டது';
+
+  @override
+  String get alertSettlement => 'தீர்வுத் தொகை பதிவானது';
 }

@@ -1,3 +1,4 @@
+import '../../../messages/application/messages_providers.dart';
 import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -205,11 +206,12 @@ class _JobDetailContent extends StatelessWidget {
                 multiLine: true,
               ),
               _divider(isDark),
-              _DetailRow(
-                icon: Icons.near_me_outlined,
-                label: 'Distance',
-                value: '${job.distanceKm} km',
-              ),
+              if (job.distanceKm != null)
+                _DetailRow(
+                  icon: Icons.near_me_outlined,
+                  label: 'Distance',
+                  value: '${job.distanceKm} km',
+                ),
               _divider(isDark),
               _DetailRow(
                 icon: Icons.schedule_rounded,
@@ -470,6 +472,12 @@ class _ActionBar extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.s),
             KayloButton(
+              text: l10n.chatViewConversation,
+              variant: KayloButtonVariant.outline,
+              onPressed: () => context.push(Routes.conversation(job.id)),
+            ),
+            const SizedBox(height: AppSpacing.s),
+            KayloButton(
               text: 'Back to Jobs',
               onPressed: () => context.go(Routes.jobs),
             ),
@@ -492,7 +500,8 @@ class _ActionBar extends ConsumerWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           // Advance stage primary button
-          if (job.stage.next != null) ...[
+          if (ref.watch(jobsRepositoryProvider).supportsJobActions &&
+              job.stage.next != null) ...[
             KayloButton(
               text: job.stage.actionText(l10n),
               onPressed: () async {
@@ -515,40 +524,68 @@ class _ActionBar extends ConsumerWidget {
             ),
             const SizedBox(height: AppSpacing.s),
           ],
-          // Call customer button
-          Row(
-            children: [
-              Expanded(
-                child: KayloButton(
-                  text: 'Call Customer',
-                  icon: Icons.call_rounded,
-                  variant: KayloButtonVariant.secondary,
-                  onPressed: () => onCall(context, job.customerPhone),
-                ),
-              ),
-              Expanded(
-                child: KayloButton(
-                  text: 'Chat',
-                  icon: Icons.chat_bubble_outline_rounded,
-                  variant: KayloButtonVariant.secondary,
-                  onPressed: () => KayloSnackbar.showInfo(
-                    context,
-                    'Chat support will be available here soon',
+          if (!ref.watch(jobsRepositoryProvider).supportsJobActions) ...[
+            Text(
+              l10n.partnerJobReadOnly,
+              textAlign: TextAlign.center,
+              style: Theme.of(context).textTheme.bodySmall,
+            ),
+            const SizedBox(height: AppSpacing.s),
+          ],
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final compact = constraints.maxWidth < 400;
+              final width = compact
+                  ? (constraints.maxWidth - 8) / 2
+                  : (constraints.maxWidth - 16) / 3;
+              final unread = ref.watch(partnerThreadUnreadProvider(job.id));
+              return Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: [
+                  SizedBox(
+                    width: width,
+                    child: KayloButton(
+                      text: l10n.chatCallCustomer,
+                      icon: Icons.call_rounded,
+                      variant: KayloButtonVariant.secondary,
+                      onPressed: job.customerPhone.trim().isEmpty
+                          ? null
+                          : () => onCall(context, job.customerPhone),
+                    ),
                   ),
-                ),
-              ),
-              const SizedBox(width: AppSpacing.m),
-              Expanded(
-                child: KayloButton(
-                  text: 'Navigate',
-                  icon: Icons.navigation_rounded,
-                  variant: KayloButtonVariant.secondary,
-                  onPressed: () => onNavigate(context, job.addressLine),
-                ),
-              ),
-            ],
+                  SizedBox(
+                    width: width,
+                    child: Badge.count(
+                      count: unread,
+                      isLabelVisible: unread > 0,
+                      child: KayloButton(
+                        text: l10n.chatTitle,
+                        icon: Icons.chat_bubble_outline_rounded,
+                        variant: KayloButtonVariant.secondary,
+                        onPressed: job.isRequested
+                            ? null
+                            : () => context.push(Routes.conversation(job.id)),
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: compact ? constraints.maxWidth : width,
+                    child: KayloButton(
+                      text: l10n.chatNavigate,
+                      icon: Icons.navigation_rounded,
+                      variant: KayloButtonVariant.secondary,
+                      onPressed: job.addressLine.trim().isEmpty
+                          ? null
+                          : () => onNavigate(context, job.addressLine),
+                    ),
+                  ),
+                ],
+              );
+            },
           ),
-          if (job.stage != JobStage.inProgress &&
+          if (ref.watch(jobsRepositoryProvider).supportsJobActions &&
+              job.stage != JobStage.inProgress &&
               job.stage != JobStage.cancelled) ...[
             const SizedBox(height: AppSpacing.s),
             KayloButton(

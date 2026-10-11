@@ -16,6 +16,11 @@ class Routes {
   static const String earnings = '/earnings';
   static const String profile = '/profile';
   static const String history = '/history';
+  static const String alerts = '/alerts';
+  static const String messages = '/messages';
+  static const String reviews = '/reviews';
+  static String conversation(String jobId) =>
+      '/messages/${Uri.encodeComponent(jobId)}';
   static const String availability = '/availability';
 
   // Job detail – pushed over the shell

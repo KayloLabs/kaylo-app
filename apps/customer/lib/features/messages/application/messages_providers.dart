@@ -15,31 +15,47 @@ final messagesRepositoryProvider = Provider<MessagesRepository>((ref) {
     ref.onDispose(repo.dispose);
     return repo;
   }
-  return SupabaseMessagesRepository(ref.watch(supabaseClientProvider));
+  ref.watch(currentUserIdProvider);
+  final repo = SupabaseMessagesRepository(ref.watch(supabaseClientProvider));
+  ref.onDispose(repo.dispose);
+  return repo;
 });
 
-final chatThreadsProvider = FutureProvider.autoDispose<List<ChatThread>>((
-  ref,
-) async {
+final chatThreadsProvider = StreamProvider.autoDispose<List<ChatThread>>((ref) {
   final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return const [];
-  return ref.watch(messagesRepositoryProvider).getThreads(userId);
+  if (userId == null) return Stream.value(const []);
+  return ref.watch(messagesRepositoryProvider).watchThreads(userId);
 });
 
-final chatThreadProvider = FutureProvider.autoDispose
-    .family<ChatThread, String>((ref, id) async {
-      final threads = await ref.watch(chatThreadsProvider.future);
-      return threads.firstWhere(
-        (t) => t.id == id,
-        orElse: () =>
-            throw ServerFailure('Conversation not found', code: 'not-found'),
-      );
+final chatThreadProvider = Provider.autoDispose
+    .family<AsyncValue<ChatThread>, String>((ref, id) {
+      return ref
+          .watch(chatThreadsProvider)
+          .whenData(
+            (threads) => threads.firstWhere(
+              (thread) => thread.id == id,
+              orElse: () => throw ServerFailure(
+                'Conversation not found',
+                code: 'not-found',
+              ),
+            ),
+          );
     });
 
 final chatMessagesProvider = StreamProvider.autoDispose
     .family<List<ChatMessage>, String>((ref, threadId) {
-      final userId = ref.watch(currentUserIdProvider) ?? '';
+      final userId = ref.watch(currentUserIdProvider);
+      if (userId == null) return Stream.value(const []);
       return ref
           .watch(messagesRepositoryProvider)
           .watchMessages(threadId, userId);
     });
+
+final chatTypingProvider = StreamProvider.autoDispose.family<bool, String>((
+  ref,
+  threadId,
+) {
+  final userId = ref.watch(currentUserIdProvider);
+  if (userId == null) return Stream.value(false);
+  return ref.watch(messagesRepositoryProvider).watchTyping(threadId, userId);
+});

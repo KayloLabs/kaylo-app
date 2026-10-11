@@ -2503,4 +2503,22 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get bookingNotes => 'குறிப்புகள்';
+
+  @override
+  String get chatTyping => 'தட்டச்சு செய்கிறார்...';
+
+  @override
+  String get chatSendFailed =>
+      'செய்தியை அனுப்ப முடியவில்லை. இங்கே சேமிக்கப்பட்டுள்ளது. மீண்டும் அனுப்பத் தட்டவும்.';
+
+  @override
+  String get chatReadOnly =>
+      'இந்த முன்பதிவு முடிந்துவிட்டது. பழைய செய்திகளைப் படிக்கலாம்.';
+
+  @override
+  String get sendMessage => 'செய்தி அனுப்பு';
+
+  @override
+  String get chatLoadFailed =>
+      'இந்த உரையாடலை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
 }

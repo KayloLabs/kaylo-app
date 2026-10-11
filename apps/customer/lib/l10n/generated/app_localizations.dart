@@ -4421,6 +4421,36 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Notes'**
   String get bookingNotes;
+
+  /// No description provided for @chatTyping.
+  ///
+  /// In en, this message translates to:
+  /// **'typing...'**
+  String get chatTyping;
+
+  /// No description provided for @chatSendFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not send. Your message is saved here. Tap send to retry.'**
+  String get chatSendFailed;
+
+  /// No description provided for @chatReadOnly.
+  ///
+  /// In en, this message translates to:
+  /// **'This booking has ended. You can still read your messages.'**
+  String get chatReadOnly;
+
+  /// No description provided for @sendMessage.
+  ///
+  /// In en, this message translates to:
+  /// **'Send message'**
+  String get sendMessage;
+
+  /// No description provided for @chatLoadFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load this conversation. Please retry.'**
+  String get chatLoadFailed;
 }
 
 class _AppLocalizationsDelegate

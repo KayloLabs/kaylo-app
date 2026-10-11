@@ -800,91 +800,91 @@
   },
   "payCashAmount": "काम पूरा होने पर कामगार को {amount} नकद दें",
   "@payCashAmount": {
-      "description": "Cash line on confirmation and details while the job is open",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on confirmation and details while the job is open",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "paidCashAmount": "{amount} नकद में भुगतान किया",
   "@paidCashAmount": {
-      "description": "Cash line on details once the job is completed",
-      "placeholders": {
-          "amount": {
-              "type": "String"
-          }
+    "description": "Cash line on details once the job is completed",
+    "placeholders": {
+      "amount": {
+        "type": "String"
       }
+    }
   },
   "workerOnTheWay": "आपका कामगार रास्ते में है",
   "@workerOnTheWay": {
-      "description": "Banner on booking details while the worker travels"
+    "description": "Banner on booking details while the worker travels"
   },
   "workerArrived": "आपका कामगार पहुँच गया है",
   "@workerArrived": {
-      "description": "Banner on booking details when the worker has arrived"
+    "description": "Banner on booking details when the worker has arrived"
   },
   "rateYourWorker": "अपने कामगार को रेट करें",
   "@rateYourWorker": {
-      "description": "Title and button of the review card after a completed booking"
+    "description": "Title and button of the review card after a completed booking"
   },
   "rateWorkerHint": "कैसा रहा? एक-दो पंक्तियाँ दूसरे ग्राहकों की मदद करती हैं।",
   "@rateWorkerHint": {
-      "description": "Helper line under the review card title"
+    "description": "Helper line under the review card title"
   },
   "reviewTextHint": "काम के बारे में थोड़ा लिखें (वैकल्पिक)",
   "@reviewTextHint": {
-      "description": "Hint of the optional review text field"
+    "description": "Hint of the optional review text field"
   },
   "submitReview": "समीक्षा भेजें",
   "@submitReview": {
-      "description": "Submit button of the review sheet"
+    "description": "Submit button of the review sheet"
   },
   "reviewSubmitted": "धन्यवाद, आपकी समीक्षा मिल गई",
   "@reviewSubmitted": {
-      "description": "Snackbar after a review is saved"
+    "description": "Snackbar after a review is saved"
   },
   "yourReview": "आपकी समीक्षा",
   "@yourReview": {
-      "description": "Title of the review card once a review exists"
+    "description": "Title of the review card once a review exists"
   },
   "editReview": "बदलें",
   "@editReview": {
-      "description": "Action to change an existing review"
+    "description": "Action to change an existing review"
   },
   "ratingRequired": "पहले स्टार रेटिंग चुनें",
   "@ratingRequired": {
-      "description": "Error when submitting without picking stars"
+    "description": "Error when submitting without picking stars"
   },
   "starLabel": "5 में से {count} स्टार",
   "@starLabel": {
-      "description": "Accessibility label of each star in the review sheet",
-      "placeholders": {
-          "count": {
-              "type": "int"
-          }
+    "description": "Accessibility label of each star in the review sheet",
+    "placeholders": {
+      "count": {
+        "type": "int"
       }
+    }
   },
   "addOns": "ऐड-ऑन",
   "@addOns": {
-      "description": "Heading for priced add-ons ticked on a service page"
+    "description": "Heading for priced add-ons ticked on a service page"
   },
   "addOnsIncluded": "ऐड-ऑन: {list}",
   "@addOnsIncluded": {
-      "description": "Line in the worker instructions listing the ticked add-ons",
-      "placeholders": {
-          "list": {
-              "type": "String"
-          }
+    "description": "Line in the worker instructions listing the ticked add-ons",
+    "placeholders": {
+      "list": {
+        "type": "String"
       }
+    }
   },
   "slotBooked": "बुक हो चुका",
   "@slotBooked": {
-      "description": "Suffix on a time slot chip the worker already holds"
+    "description": "Suffix on a time slot chip the worker already holds"
   },
   "slotTakenMessage": "यह समय इस कामगार के लिए पहले से बुक है। दूसरा समय चुनें।",
   "@slotTakenMessage": {
-      "description": "Error when continuing with a slot the worker already holds"
+    "description": "Error when continuing with a slot the worker already holds"
   },
   "partnerAccountNotAllowed": "यह Kaylo Partner खाता है। कृपया Kaylo Partner ऐप का उपयोग करें।",
   "customerProfileUnavailable": "हम आपकी ग्राहक प्रोफ़ाइल सत्यापित नहीं कर सके। अपना कनेक्शन जाँचें और फिर से साइन इन करें।",
@@ -936,5 +936,10 @@
   "bookingNotes": "नोट्स",
   "@bookingNotes": {
     "description": "Label for the notes line of a Care booking"
-  }
+  },
+  "chatTyping": "लिख रहे हैं...",
+  "chatSendFailed": "संदेश नहीं भेजा गया। आपका संदेश यहाँ सुरक्षित है। फिर भेजने के लिए दबाएँ।",
+  "chatReadOnly": "यह बुकिंग समाप्त हो गई है। आप पुराने संदेश पढ़ सकते हैं।",
+  "sendMessage": "संदेश भेजें",
+  "chatLoadFailed": "यह बातचीत लोड नहीं हुई। फिर कोशिश करें।"
 }

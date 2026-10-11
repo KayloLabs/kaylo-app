@@ -1,3 +1,6 @@
+import 'package:go_router/go_router.dart';
+import '../../../../core/router/routes.dart';
+import '../../../messages/application/messages_providers.dart';
 import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -60,11 +63,26 @@ class JobsHomeScreen extends ConsumerWidget {
         ),
         actions: [
           IconButton(
+            tooltip: l10n.chatMessages,
+            icon: Badge.count(
+              count: ref.watch(partnerMessageUnreadProvider),
+              isLabelVisible: ref.watch(partnerMessageUnreadProvider) > 0,
+              child: const Icon(Icons.mail_outline_rounded),
+            ),
+            onPressed: () => context.push(Routes.messages),
+          ),
+          IconButton(
             icon: const Icon(Icons.refresh_rounded),
             tooltip: l10n.refreshJobsTooltip,
-            onPressed: () {
+            onPressed: () async {
               KayloFeedback.tap();
-              ref.invalidate(jobsStreamProvider);
+              try {
+                await ref.read(jobsRepositoryProvider).getJobs();
+              } catch (_) {
+                if (context.mounted) {
+                  KayloSnackbar.showError(context, l10n.chatLoadFailed);
+                }
+              }
             },
           ),
         ],

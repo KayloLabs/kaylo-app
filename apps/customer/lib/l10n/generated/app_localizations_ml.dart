@@ -2486,4 +2486,22 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get bookingNotes => 'കുറിപ്പുകൾ';
+
+  @override
+  String get chatTyping => 'ടൈപ്പ് ചെയ്യുന്നു...';
+
+  @override
+  String get chatSendFailed =>
+      'സന്ദേശം അയയ്ക്കാനായില്ല. ഇവിടെ സൂക്ഷിച്ചിട്ടുണ്ട്. വീണ്ടും അയയ്ക്കാൻ അമർത്തുക.';
+
+  @override
+  String get chatReadOnly =>
+      'ഈ ബുക്കിംഗ് അവസാനിച്ചു. പഴയ സന്ദേശങ്ങൾ വായിക്കാം.';
+
+  @override
+  String get sendMessage => 'സന്ദേശം അയയ്ക്കുക';
+
+  @override
+  String get chatLoadFailed =>
+      'ഈ സംഭാഷണം ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
 }

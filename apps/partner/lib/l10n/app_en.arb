@@ -703,5 +703,299 @@
   "applicationIdentityInUse": "This phone or email is already used by a Kaylo account. Contact support before applying with this identity.",
   "liveJobsPending": "Live job requests and earnings are not available yet. Your profile and availability are ready to use.",
   "applicationChangesRequested": "Changes requested",
-  "applicationChangesRequestedHint": "Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements."
+  "applicationChangesRequestedHint": "Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements.",
+  "chatMessages": "Messages",
+  "@chatMessages": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatTitle": "Chat",
+  "@chatTitle": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatUnread": "Chat ({count})",
+  "@chatUnread": {
+    "description": "Partner messages, alerts and reviews",
+    "placeholders": {
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "chatViewConversation": "View conversation",
+  "@chatViewConversation": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatNoMessages": "Your conversations start here",
+  "@chatNoMessages": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatNoMessagesBody": "Accept a job, then open Chat to message your customer.",
+  "@chatNoMessagesBody": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatStartConversation": "Send a message about this booking.",
+  "@chatStartConversation": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatLoadFailed": "We couldn’t load this conversation. Please try again.",
+  "@chatLoadFailed": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMessageHint": "Message your customer",
+  "@chatMessageHint": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatSend": "Send message",
+  "@chatSend": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatSendFailed": "Your message wasn’t sent. Try sending it again.",
+  "@chatSendFailed": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatTyping": "Customer is typing…",
+  "@chatTyping": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatRead": "Read",
+  "@chatRead": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatSent": "Sent",
+  "@chatSent": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatReadOnly": "This booking has ended. You can still read its conversation.",
+  "@chatReadOnly": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatOnMyWay": "On my way",
+  "@chatOnMyWay": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatReached": "I’ve reached",
+  "@chatReached": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatLate": "Running 10 min late",
+  "@chatLate": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatExactLocation": "Please share the exact location",
+  "@chatExactLocation": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockBackGate": "Please come to the back gate.",
+  "@chatMockBackGate": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockWaiting": "Okay, waiting.",
+  "@chatMockWaiting": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockCall": "Call when you reach.",
+  "@chatMockCall": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockTenMinutes": "Is 10 minutes fine?",
+  "@chatMockTenMinutes": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockThanks": "Thank you!",
+  "@chatMockThanks": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatMockDog": "The dog is friendly, don’t worry.",
+  "@chatMockDog": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsTitle": "Alerts",
+  "@alertsTitle": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsMarkAllRead": "Mark all read",
+  "@alertsMarkAllRead": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsToday": "Today",
+  "@alertsToday": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsEarlier": "Earlier",
+  "@alertsEarlier": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsEmpty": "You’re all caught up",
+  "@alertsEmpty": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsEmptyBody": "New requests and job updates will appear here.",
+  "@alertsEmptyBody": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsLoadFailed": "We couldn’t load your alerts. Please try again.",
+  "@alertsLoadFailed": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertsUpdateFailed": "We couldn’t update this alert. Please try again.",
+  "@alertsUpdateFailed": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertNewRequest": "New job request",
+  "@alertNewRequest": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertAccepted": "Job accepted",
+  "@alertAccepted": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertOnTheWay": "Your customer knows you’re on the way",
+  "@alertOnTheWay": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertArrived": "Arrival confirmed",
+  "@alertArrived": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertInProgress": "Work has started",
+  "@alertInProgress": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertCompleted": "Job completed",
+  "@alertCompleted": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertCancelled": "Job cancelled",
+  "@alertCancelled": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "alertRequestBody": "{service} · {distance} km away",
+  "@alertRequestBody": {
+    "description": "Partner messages, alerts and reviews",
+    "placeholders": {
+      "service": {
+        "type": "String"
+      },
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "alertJobBody": "{service} · Open for booking details",
+  "@alertJobBody": {
+    "description": "Partner messages, alerts and reviews",
+    "placeholders": {
+      "service": {
+        "type": "String"
+      }
+    }
+  },
+  "reviewsTitle": "Reviews",
+  "@reviewsTitle": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsSeeAll": "See all",
+  "@reviewsSeeAll": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsCustomerRating": "Customer rating",
+  "@reviewsCustomerRating": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsDistribution": "{stars} stars: {count} reviews",
+  "@reviewsDistribution": {
+    "description": "Partner messages, alerts and reviews",
+    "placeholders": {
+      "stars": {
+        "type": "int"
+      },
+      "count": {
+        "type": "int"
+      }
+    }
+  },
+  "reviewsAll": "All",
+  "@reviewsAll": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsFive": "5 stars",
+  "@reviewsFive": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsFour": "4 stars",
+  "@reviewsFour": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsThreeBelow": "3 stars & below",
+  "@reviewsThreeBelow": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsEmpty": "No reviews here yet",
+  "@reviewsEmpty": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsEmptyBody": "Customer reviews appear here after completed jobs.",
+  "@reviewsEmptyBody": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewsLoadFailed": "We couldn’t load your reviews. Please try again.",
+  "@reviewsLoadFailed": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample1": "Fixed the leaking tap neatly and explained the repair.",
+  "@reviewSample1": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample2": "On time and very helpful.",
+  "@reviewSample2": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample3": "Good work. Left the place clean.",
+  "@reviewSample3": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample4": "Careful work and clear communication throughout.",
+  "@reviewSample4": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample5": "The repair was good, but arrived half an hour late without an update.",
+  "@reviewSample5": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample6": "Would happily book again.",
+  "@reviewSample6": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample7": "Solved the problem and answered all our questions.",
+  "@reviewSample7": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "reviewSample8": "Patient, polite, and thorough. Thank you.",
+  "@reviewSample8": {
+    "description": "Partner messages, alerts and reviews"
+  },
+  "chatCallCustomer": "Call customer",
+  "@chatCallCustomer": {
+    "description": "Partner communication and alert labels"
+  },
+  "chatNavigate": "Directions",
+  "@chatNavigate": {
+    "description": "Partner communication and alert labels"
+  },
+  "partnerJobReadOnly": "You can view this job and contact the customer. Job status updates are not available yet.",
+  "@partnerJobReadOnly": {
+    "description": "Partner communication and alert labels"
+  },
+  "alertCashCollected": "Cash collected",
+  "@alertCashCollected": {
+    "description": "Partner communication and alert labels"
+  },
+  "alertPaymentReceived": "Payment received",
+  "@alertPaymentReceived": {
+    "description": "Partner communication and alert labels"
+  },
+  "alertSettlement": "Settlement recorded",
+  "@alertSettlement": {
+    "description": "Partner communication and alert labels"
+  }
 }

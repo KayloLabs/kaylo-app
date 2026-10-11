@@ -1,3 +1,4 @@
+import '../../../auth/application/current_user_provider.dart';
 import '../../../../core/config/service_artwork.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -359,7 +360,8 @@ class _DetailsBody extends ConsumerWidget {
             ref
                 .watch(bookingWorkerProvider(booking.workerId!))
                 .when(
-                  data: (worker) => _WorkerCard(worker: worker),
+                  data: (worker) =>
+                      _WorkerCard(worker: worker, booking: booking),
                   loading: () => const KayloCard(
                     child: SizedBox(
                       height: 48,
@@ -554,7 +556,9 @@ class _StatusTimeline extends StatelessWidget {
 class _WorkerCard extends ConsumerWidget {
   final Worker worker;
 
-  const _WorkerCard({required this.worker});
+  final Booking booking;
+
+  const _WorkerCard({required this.worker, required this.booking});
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -563,7 +567,7 @@ class _WorkerCard extends ConsumerWidget {
     final thread = ref
         .watch(chatThreadsProvider)
         .whenOrNull(
-          data: (t) => t.where((x) => x.workerId == worker.id).firstOrNull,
+          data: (t) => t.where((x) => x.bookingId == booking.id).firstOrNull,
         );
 
     return KayloCard(
@@ -613,12 +617,30 @@ class _WorkerCard extends ConsumerWidget {
               ],
             ),
           ),
-          if (thread != null)
+          if (thread != null ||
+              booking.status == BookingStatus.confirmed ||
+              booking.status == BookingStatus.inProgress)
             IconButton.filledTonal(
               tooltip: l10n.messageWorker,
-              onPressed: () {
+              onPressed: () async {
                 KayloFeedback.tap();
-                context.push(Routes.chat(thread.id));
+                try {
+                  final userId = ref.read(currentUserIdProvider);
+                  if (userId == null) return;
+                  final roomId =
+                      thread?.id ??
+                      await ref
+                          .read(messagesRepositoryProvider)
+                          .openBooking(booking.id, userId);
+                  ref.invalidate(chatThreadsProvider);
+                  if (context.mounted) context.push(Routes.chat(roomId));
+                } catch (_) {
+                  if (context.mounted) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text(l10n.somethingWentWrong)),
+                    );
+                  }
+                }
               },
               icon: const Icon(Icons.chat_bubble_rounded),
             ),

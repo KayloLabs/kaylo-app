@@ -1,3 +1,4 @@
+import '../../../reviews/presentation/widgets/review_widgets.dart';
 import '../../../../l10n/generated/app_localizations.dart';
 import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
@@ -37,7 +38,14 @@ class JobHistoryScreen extends ConsumerWidget {
                 itemCount: jobs.length,
                 separatorBuilder: (_, _) =>
                     const SizedBox(height: AppSpacing.m),
-                itemBuilder: (context, index) => JobCard(job: jobs[index]),
+                itemBuilder: (context, index) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    JobCard(job: jobs[index]),
+                    if (jobs[index].isCompleted)
+                      JobReviewStars(jobId: jobs[index].id),
+                  ],
+                ),
               ),
       ),
     );

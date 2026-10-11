@@ -44,7 +44,7 @@ class Job {
   final String customerName; // "Anjali Menon"
   final String customerPhone; // for the call button
   final String addressLine; // "Kadavil House, Thottada, Kannur"
-  final double distanceKm; // 2.4 (mock)
+  final double? distanceKm; // Unknown until a route distance is available.
   final DateTime scheduledAt;
   final double payout; // what the worker earns
   final String notes; // customer instructions
@@ -124,7 +124,7 @@ class Job {
       customerName: json['customerName'] as String,
       customerPhone: json['customerPhone'] as String,
       addressLine: json['addressLine'] as String,
-      distanceKm: (json['distanceKm'] as num).toDouble(),
+      distanceKm: (json['distanceKm'] as num?)?.toDouble(),
       scheduledAt: DateTime.parse(json['scheduledAt'] as String),
       payout: (json['payout'] as num).toDouble(),
       notes: json['notes'] as String? ?? '',

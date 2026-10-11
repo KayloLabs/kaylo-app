@@ -1403,6 +1403,408 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Kaylo needs updated documents before reviewing your application again. Open the secure link sent to your email to see the instructions and submit replacements.'**
   String get applicationChangesRequestedHint;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Messages'**
+  String get chatMessages;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Chat'**
+  String get chatTitle;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Chat ({count})'**
+  String chatUnread(int count);
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'View conversation'**
+  String get chatViewConversation;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Your conversations start here'**
+  String get chatNoMessages;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Accept a job, then open Chat to message your customer.'**
+  String get chatNoMessagesBody;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Send a message about this booking.'**
+  String get chatStartConversation;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t load this conversation. Please try again.'**
+  String get chatLoadFailed;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Message your customer'**
+  String get chatMessageHint;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Send message'**
+  String get chatSend;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Your message wasn’t sent. Try sending it again.'**
+  String get chatSendFailed;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Customer is typing…'**
+  String get chatTyping;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Read'**
+  String get chatRead;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Sent'**
+  String get chatSent;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'This booking has ended. You can still read its conversation.'**
+  String get chatReadOnly;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'On my way'**
+  String get chatOnMyWay;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'I’ve reached'**
+  String get chatReached;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Running 10 min late'**
+  String get chatLate;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Please share the exact location'**
+  String get chatExactLocation;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Please come to the back gate.'**
+  String get chatMockBackGate;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Okay, waiting.'**
+  String get chatMockWaiting;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Call when you reach.'**
+  String get chatMockCall;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Is 10 minutes fine?'**
+  String get chatMockTenMinutes;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Thank you!'**
+  String get chatMockThanks;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'The dog is friendly, don’t worry.'**
+  String get chatMockDog;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Alerts'**
+  String get alertsTitle;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Mark all read'**
+  String get alertsMarkAllRead;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Today'**
+  String get alertsToday;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Earlier'**
+  String get alertsEarlier;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'You’re all caught up'**
+  String get alertsEmpty;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'New requests and job updates will appear here.'**
+  String get alertsEmptyBody;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t load your alerts. Please try again.'**
+  String get alertsLoadFailed;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t update this alert. Please try again.'**
+  String get alertsUpdateFailed;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'New job request'**
+  String get alertNewRequest;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Job accepted'**
+  String get alertAccepted;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Your customer knows you’re on the way'**
+  String get alertOnTheWay;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Arrival confirmed'**
+  String get alertArrived;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Work has started'**
+  String get alertInProgress;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Job completed'**
+  String get alertCompleted;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Job cancelled'**
+  String get alertCancelled;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'{service} · {distance} km away'**
+  String alertRequestBody(String service, String distance);
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'{service} · Open for booking details'**
+  String alertJobBody(String service);
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Reviews'**
+  String get reviewsTitle;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'See all'**
+  String get reviewsSeeAll;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Customer rating'**
+  String get reviewsCustomerRating;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'{stars} stars: {count} reviews'**
+  String reviewsDistribution(int stars, int count);
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'All'**
+  String get reviewsAll;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'5 stars'**
+  String get reviewsFive;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'4 stars'**
+  String get reviewsFour;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'3 stars & below'**
+  String get reviewsThreeBelow;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'No reviews here yet'**
+  String get reviewsEmpty;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Customer reviews appear here after completed jobs.'**
+  String get reviewsEmptyBody;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t load your reviews. Please try again.'**
+  String get reviewsLoadFailed;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Fixed the leaking tap neatly and explained the repair.'**
+  String get reviewSample1;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'On time and very helpful.'**
+  String get reviewSample2;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Good work. Left the place clean.'**
+  String get reviewSample3;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Careful work and clear communication throughout.'**
+  String get reviewSample4;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'The repair was good, but arrived half an hour late without an update.'**
+  String get reviewSample5;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Would happily book again.'**
+  String get reviewSample6;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Solved the problem and answered all our questions.'**
+  String get reviewSample7;
+
+  /// Partner messages, alerts and reviews
+  ///
+  /// In en, this message translates to:
+  /// **'Patient, polite, and thorough. Thank you.'**
+  String get reviewSample8;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'Call customer'**
+  String get chatCallCustomer;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'Directions'**
+  String get chatNavigate;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'You can view this job and contact the customer. Job status updates are not available yet.'**
+  String get partnerJobReadOnly;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'Cash collected'**
+  String get alertCashCollected;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'Payment received'**
+  String get alertPaymentReceived;
+
+  /// Partner communication and alert labels
+  ///
+  /// In en, this message translates to:
+  /// **'Settlement recorded'**
+  String get alertSettlement;
 }
 
 class _AppLocalizationsDelegate

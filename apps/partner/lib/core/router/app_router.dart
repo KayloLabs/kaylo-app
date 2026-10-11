@@ -1,24 +1,30 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
 
-import '../../../features/auth/application/partner_session.dart';
-import '../../../features/auth/domain/partner_auth_repository.dart';
-import '../../../features/auth/presentation/screens/change_password_screen.dart';
-import '../../../features/auth/presentation/screens/account_status_screen.dart';
-import '../../../features/onboarding/presentation/screens/worker_application_screen.dart';
-import '../../../features/onboarding/presentation/screens/worker_application_status_screen.dart';
-import '../../../features/auth/presentation/screens/login_screen.dart';
-import '../../../features/availability/presentation/screens/availability_screen.dart';
-import '../../../features/splash/presentation/screens/partner_splash_screen.dart';
-import '../../../features/earnings/presentation/screens/earnings_screen.dart';
-import '../../../features/jobs/presentation/screens/job_detail_screen.dart';
-import '../../../features/jobs/presentation/screens/jobs_home_screen.dart';
-import '../../../features/jobs/presentation/screens/job_history_screen.dart';
-import '../../../features/profile/presentation/screens/partner_profile_screen.dart';
+import '../../features/auth/application/partner_session.dart';
+import '../../features/auth/domain/partner_auth_repository.dart';
+import '../../features/auth/presentation/screens/change_password_screen.dart';
+import '../../features/auth/presentation/screens/account_status_screen.dart';
+import '../../features/onboarding/presentation/screens/worker_application_screen.dart';
+import '../../features/onboarding/presentation/screens/worker_application_status_screen.dart';
+import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/availability/presentation/screens/availability_screen.dart';
+import '../../features/splash/presentation/screens/partner_splash_screen.dart';
+import '../../features/earnings/presentation/screens/earnings_screen.dart';
+import '../../features/jobs/presentation/screens/job_detail_screen.dart';
+import '../../features/jobs/presentation/screens/jobs_home_screen.dart';
+import '../../features/jobs/presentation/screens/job_history_screen.dart';
+import '../../features/profile/presentation/screens/partner_profile_screen.dart';
 import '../../l10n/generated/app_localizations.dart';
 import 'routes.dart';
+import '../../features/messages/presentation/screens/messages_screen.dart';
+import '../../features/messages/presentation/screens/conversation_screen.dart';
+import '../../features/notifications/presentation/screens/alerts_screen.dart';
+import '../../features/notifications/application/alerts_providers.dart';
+import '../../features/reviews/presentation/screens/reviews_screen.dart';
 
 final partnerRouterProvider = Provider<GoRouter>((ref) {
   final listenable = ValueNotifier<bool>(false);
@@ -65,6 +71,19 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
         path: Routes.accountStatus,
         builder: (_, _) => const PartnerAccountStatusScreen(),
       ),
+      GoRoute(
+        path: Routes.messages,
+        builder: (_, _) => const PartnerMessagesScreen(),
+      ),
+      GoRoute(
+        path: '${Routes.messages}/:jobId',
+        builder: (_, state) =>
+            PartnerConversationScreen(jobId: state.pathParameters['jobId']!),
+      ),
+      GoRoute(
+        path: Routes.reviews,
+        builder: (_, _) => const PartnerReviewsScreen(),
+      ),
       // Job detail – full-screen over the shell
       GoRoute(
         path: '/jobs/:id',
@@ -105,6 +124,14 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
               GoRoute(
                 path: Routes.profile,
                 builder: (_, _) => const PartnerProfileScreen(),
+              ),
+            ],
+          ),
+          StatefulShellBranch(
+            routes: [
+              GoRoute(
+                path: Routes.alerts,
+                builder: (_, _) => const PartnerAlertsScreen(),
               ),
             ],
           ),
@@ -164,13 +191,42 @@ String? partnerRedirect(PartnerAccess access, String location) {
 // Shell scaffold – bottom navigation bar for the partner app
 // ---------------------------------------------------------------------------
 
-class _PartnerShell extends StatelessWidget {
+class _PartnerShell extends ConsumerStatefulWidget {
   final StatefulNavigationShell shell;
 
   const _PartnerShell({required this.shell});
 
   @override
+  ConsumerState<_PartnerShell> createState() => _PartnerShellState();
+}
+
+class _PartnerShellState extends ConsumerState<_PartnerShell>
+    with WidgetsBindingObserver {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addObserver(this);
+  }
+
+  @override
+  void dispose() {
+    WidgetsBinding.instance.removeObserver(this);
+    super.dispose();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      unawaited(
+        ref.read(partnerAuthRepositoryProvider).checkAccess(forceRefresh: true),
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final shell = widget.shell;
+    final unread = ref.watch(partnerAlertUnreadProvider);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
       body: shell,
@@ -202,6 +258,22 @@ class _PartnerShell extends StatelessWidget {
               color: AppColors.brandPrimary,
             ),
             label: l10n.tabProfile,
+          ),
+          NavigationDestination(
+            icon: Badge.count(
+              count: unread,
+              isLabelVisible: unread > 0,
+              child: const Icon(Icons.notifications_none_rounded),
+            ),
+            selectedIcon: Badge.count(
+              count: unread,
+              isLabelVisible: unread > 0,
+              child: const Icon(
+                Icons.notifications_rounded,
+                color: AppColors.brandPrimary,
+              ),
+            ),
+            label: l10n.alertsTitle,
           ),
         ],
       ),

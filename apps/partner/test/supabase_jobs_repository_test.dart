@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kaylo_partner/features/jobs/data/pending_jobs_repository.dart';
 import 'package:kaylo_partner/features/jobs/data/supabase_jobs_repository.dart';
+import 'package:kaylo_partner/features/jobs/domain/cash_position.dart';
 import 'package:kaylo_partner/features/jobs/domain/job.dart';
 
 Map<String, dynamic> row({
@@ -134,4 +135,110 @@ void main() {
       expect((await repo.getJobs()).single.id, 'booking-1');
     },
   );
+
+  test('actions call the stage RPCs and re-read the feed', () async {
+    final calls = <(String, Map<String, dynamic>?)>[];
+    var status = 'requested';
+    var loads = 0;
+    final repo = SupabaseJobsRepository(
+      initiallyOnline: true,
+      loadRows: () async {
+        loads++;
+        return [row(status: status)];
+      },
+      rpc: (function, {params}) async {
+        calls.add((function, params));
+        if (function == 'worker_advance_booking') {
+          status = params!['p_stage'] as String;
+        }
+        return null;
+      },
+    );
+    addTearDown(repo.dispose);
+    expect(repo.supportsJobActions, isTrue);
+    await repo.acceptJob('booking-1');
+    expect(calls.single.$1, 'worker_advance_booking');
+    expect(calls.single.$2, {
+      'p_booking_id': 'booking-1',
+      'p_stage': 'accepted',
+    });
+    expect(loads, 1);
+    expect((await repo.getJobs()).single.stage, JobStage.accepted);
+    await repo.advanceJob('booking-1');
+    expect(calls.last.$2!['p_stage'], 'on_the_way');
+    await repo.advanceJob('booking-1');
+    expect(calls.last.$2!['p_stage'], 'arrived');
+    await repo.cancelJob('booking-1');
+    expect(calls.last.$2!['p_stage'], 'cancelled');
+    await repo.advanceJob('booking-1');
+    expect(calls.length, 4, reason: 'a finished job has no next stage');
+  });
+
+  test('cash collection and settlement reach the backend ledger', () async {
+    final calls = <(String, Map<String, dynamic>?)>[];
+    var due = 0;
+    final repo = SupabaseJobsRepository(
+      initiallyOnline: true,
+      loadRows: () async => [row(status: 'in_progress')],
+      rpc: (function, {params}) async {
+        calls.add((function, params));
+        switch (function) {
+          case 'confirm_cash_collected':
+            due = 150;
+          case 'settle_cash_due':
+            due = 0;
+          case 'my_cash_position':
+            return {
+              'cash_in_hand': due == 0 ? 0 : 1000,
+              'commission_due': due,
+              'limit': 2000,
+              'rate': '0.15',
+            };
+        }
+        return null;
+      },
+    );
+    addTearDown(repo.dispose);
+    final positions = <CashPosition>[];
+    final sub = repo.watchCashPosition().listen(positions.add);
+    addTearDown(sub.cancel);
+    await Future<void>.delayed(Duration.zero);
+    expect(positions.single, CashPosition.none);
+    await repo.markCashCollected('booking-1', amount: 1000);
+    await Future<void>.delayed(Duration.zero);
+    expect(
+      calls.map((c) => c.$1).where((f) => f != 'my_cash_position'),
+      ['confirm_cash_collected'],
+    );
+    expect(calls[1].$2, {'p_booking_id': 'booking-1', 'p_amount': 1000});
+    expect(positions.last.dueToKaylo, 150);
+    expect(positions.last.cashInHand, 1000);
+    expect(positions.last.canAcceptCash, isTrue);
+    await repo.settleCashDue(reference: 'upi-1');
+    await Future<void>.delayed(Duration.zero);
+    expect(calls.map((c) => c.$1), contains('settle_cash_due'));
+    expect(positions.last, CashPosition.none);
+    expect(
+      () => CashPosition.fromJson({'cash_in_hand': -1}),
+      throwsFormatException,
+    );
+  });
+
+  test('without an rpc every action still reports live jobs pending', () async {
+    final repo = SupabaseJobsRepository(
+      initiallyOnline: true,
+      loadRows: () async => [row()],
+    );
+    addTearDown(repo.dispose);
+    expect(repo.supportsJobActions, isFalse);
+    await expectLater(
+      repo.markCashCollected('booking-1'),
+      throwsA(isA<LiveJobsPending>()),
+    );
+    await expectLater(repo.settleCashDue(), throwsA(isA<LiveJobsPending>()));
+    await expectLater(
+      repo.watchCashPosition().first,
+      throwsA(isA<LiveJobsPending>()),
+    );
+  });
 }

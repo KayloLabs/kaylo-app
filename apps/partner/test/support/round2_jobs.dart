@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:kaylo_partner/features/jobs/domain/cash_position.dart';
 import 'package:kaylo_partner/features/jobs/domain/job.dart';
 import 'package:kaylo_partner/features/jobs/domain/jobs_repository.dart';
 
@@ -70,6 +71,14 @@ class Round2JobsRepository extends JobsRepository {
   Future<void> acceptJob(String id) async => setStage(id, JobStage.accepted);
   @override
   Future<void> rejectJob(String id) async => setStage(id, JobStage.cancelled);
+  @override
+  Future<void> markCashCollected(String id, {double? amount}) async {}
+  @override
+  Future<void> settleCashDue({String? reference}) async {}
+  @override
+  Future<CashPosition> getCashPosition() async => CashPosition.none;
+  @override
+  Stream<CashPosition> watchCashPosition() => Stream.value(CashPosition.none);
   @override
   Future<void> advanceJob(String id) async {
     final job = await getJobById(id);

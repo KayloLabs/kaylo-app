@@ -1,3 +1,4 @@
+import 'cash_position.dart';
 import 'job.dart';
 
 abstract class JobsRepository {
@@ -13,6 +14,15 @@ abstract class JobsRepository {
   Future<void> rejectJob(String id);
   Future<void> advanceJob(String id);
   Future<void> cancelJob(String id);
+
+  /// Confirms the cash collected for [id]. The backend marks the payment,
+  /// completes the job and books Kaylo's commission against the worker.
+  Future<void> markCashCollected(String id, {double? amount});
+
+  /// Records that the commission due has been paid to Kaylo.
+  Future<void> settleCashDue({String? reference});
+  Future<CashPosition> getCashPosition();
+  Stream<CashPosition> watchCashPosition();
 
   bool get isOnline;
   Stream<bool> watchDutyStatus();

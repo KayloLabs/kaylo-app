@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/mock/partner_seed.dart';
+import '../domain/cash_position.dart';
 import '../domain/job.dart';
 import '../domain/jobs_repository.dart';
 
@@ -13,9 +14,12 @@ class MockJobsRepository implements JobsRepository {
 
   static const _jobsKey = 'kaylo_partner_jobs_v1';
   static const _dutyKey = 'kaylo_partner_duty_status';
+  static const _cashKey = 'kaylo_partner_cash_v1';
 
   final _jobsController = StreamController<List<Job>>.broadcast();
   final _dutyController = StreamController<bool>.broadcast();
+  final _cashController = StreamController<CashPosition>.broadcast();
+  CashPosition _cash = CashPosition.none;
 
   List<Job>? _jobs;
   bool _isOnline = true;
@@ -28,6 +32,16 @@ class MockJobsRepository implements JobsRepository {
 
   void _init() {
     _isOnline = _prefs?.getBool(_dutyKey) ?? true;
+    final storedCash = _prefs?.getString(_cashKey);
+    if (storedCash != null && storedCash.isNotEmpty) {
+      try {
+        _cash = CashPosition.fromJson(
+          jsonDecode(storedCash) as Map<String, dynamic>,
+        );
+      } catch (_) {
+        _cash = CashPosition.none;
+      }
+    }
     _ensureLoaded().then((_) {
       if (_isOnline) {
         _startLiveSimulation();
@@ -224,10 +238,57 @@ class MockJobsRepository implements JobsRepository {
     }
   }
 
+  /// The customer's price for a mock job: the payout grossed up by Kaylo's
+  /// commission and rounded to ten rupees, as the seed prices are.
+  double _customerPrice(Job job) {
+    final gross = job.payout / (1 - _cash.commissionRate);
+    return (gross / 10).round() * 10.0;
+  }
+
+  Future<void> _saveCash(CashPosition next) async {
+    _cash = next;
+    await _prefs?.setString(_cashKey, jsonEncode(next.toJson()));
+    if (!_cashController.isClosed) _cashController.add(next);
+  }
+
+  @override
+  Future<void> markCashCollected(String id, {double? amount}) async {
+    final list = await _ensureLoaded();
+    final index = list.indexWhere((j) => j.id == id);
+    if (index == -1) throw StateError('This job is not yours');
+    final collected = amount ?? _customerPrice(list[index]);
+    if (collected <= 0) throw StateError('Amount must be positive');
+    final fee = double.parse(
+      (collected * _cash.commissionRate).toStringAsFixed(2),
+    );
+    await _saveCash(
+      _cash.copyWith(
+        cashInHand: _cash.cashInHand + collected,
+        dueToKaylo: _cash.dueToKaylo + fee,
+      ),
+    );
+  }
+
+  @override
+  Future<void> settleCashDue({String? reference}) async {
+    if (_cash.dueToKaylo <= 0) throw StateError('Nothing to settle');
+    await _saveCash(_cash.copyWith(cashInHand: 0, dueToKaylo: 0));
+  }
+
+  @override
+  Future<CashPosition> getCashPosition() async => _cash;
+
+  @override
+  Stream<CashPosition> watchCashPosition() async* {
+    yield _cash;
+    yield* _cashController.stream;
+  }
+
   @override
   void dispose() {
     _stopLiveSimulation();
     _jobsController.close();
     _dutyController.close();
+    _cashController.close();
   }
 }

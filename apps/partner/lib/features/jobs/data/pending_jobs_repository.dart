@@ -1,4 +1,5 @@
 import 'dart:async';
+import '../domain/cash_position.dart';
 import '../domain/job.dart';
 import '../domain/jobs_repository.dart';
 
@@ -37,6 +38,17 @@ class PendingJobsRepository implements JobsRepository {
   Future<void> advanceJob(String id) async => throw const LiveJobsPending();
   @override
   Future<void> cancelJob(String id) async => throw const LiveJobsPending();
+  @override
+  Future<void> markCashCollected(String id, {double? amount}) async =>
+      throw const LiveJobsPending();
+  @override
+  Future<void> settleCashDue({String? reference}) async =>
+      throw const LiveJobsPending();
+  @override
+  Future<CashPosition> getCashPosition() async => throw const LiveJobsPending();
+  @override
+  Stream<CashPosition> watchCashPosition() =>
+      Stream.error(const LiveJobsPending());
   @override
   Stream<bool> watchDutyStatus() async* {
     yield _online;

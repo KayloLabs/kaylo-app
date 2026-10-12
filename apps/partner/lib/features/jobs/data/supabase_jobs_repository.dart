@@ -3,23 +3,29 @@ import 'dart:async';
 import 'package:kaylo_core/network/supabase_providers.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import '../domain/cash_position.dart';
 import '../domain/job.dart';
 import '../domain/jobs_repository.dart';
 import 'pending_jobs_repository.dart';
 
 typedef PartnerJobsLoader = Future<List<Map<String, dynamic>>> Function();
+typedef PartnerRpc =
+    Future<dynamic> Function(String function, {Map<String, dynamic>? params});
 
-/// A single read-only feed of this issued worker's actual assigned bookings.
-/// Status mutations remain unavailable until the separate job workflow lands.
+/// This issued worker's actual assigned bookings, plus the stage, cash and
+/// settlement actions behind them. Without an [rpc] the feed is read-only and
+/// every action reports [LiveJobsPending].
 class SupabaseJobsRepository implements JobsRepository {
   SupabaseJobsRepository({
     required PartnerJobsLoader loadRows,
     required bool initiallyOnline,
     Stream<void>? changes,
+    PartnerRpc? rpc,
     Duration refreshInterval = const Duration(seconds: 30),
   }) : _loadRows = loadRows,
        _online = initiallyOnline,
        _changes = changes,
+       _rpc = rpc,
        _refreshInterval = refreshInterval;
 
   factory SupabaseJobsRepository.live(
@@ -35,12 +41,15 @@ class SupabaseJobsRepository implements JobsRepository {
           .toList();
     },
     changes: _bookingChanges(client, workerId),
+    rpc: (function, {params}) => client.rpc(function, params: params),
   );
 
   final PartnerJobsLoader _loadRows;
   final Stream<void>? _changes;
+  final PartnerRpc? _rpc;
   final Duration _refreshInterval;
   final _updates = StreamController<List<Job>>.broadcast();
+  final _cash = StreamController<CashPosition>.broadcast();
   final _duty = StreamController<bool>.broadcast();
   List<Job>? _snapshot;
   Future<List<Job>>? _pending;
@@ -52,7 +61,7 @@ class SupabaseJobsRepository implements JobsRepository {
   bool _reloadAfterPending = false;
 
   @override
-  bool get supportsJobActions => false;
+  bool get supportsJobActions => _rpc != null;
   @override
   bool get isOnline => _online;
 
@@ -179,23 +188,121 @@ class SupabaseJobsRepository implements JobsRepository {
     if (!_disposed) _duty.add(online);
   }
 
+  Future<dynamic> _call(String function, Map<String, dynamic> params) async {
+    final rpc = _rpc;
+    if (rpc == null) throw const LiveJobsPending();
+    if (_disposed) throw StateError('Job feed is closed');
+    try {
+      return await rpc(
+        function,
+        params: params,
+      ).timeout(const Duration(seconds: 15));
+    } catch (error) {
+      throw mapSupabaseError(error);
+    }
+  }
+
+  /// Moves a booking through `worker_advance_booking`, then re-reads the feed
+  /// so callers see the server's view before realtime catches up.
+  Future<void> _move(String id, JobStage stage) async {
+    await _call('worker_advance_booking', {
+      'p_booking_id': id,
+      'p_stage': backendStage(stage),
+    });
+    await _refresh();
+  }
+
   @override
-  Future<void> acceptJob(String id) async => throw const LiveJobsPending();
+  Future<void> acceptJob(String id) => _move(id, JobStage.accepted);
   @override
-  Future<void> rejectJob(String id) async => throw const LiveJobsPending();
+  Future<void> rejectJob(String id) => _move(id, JobStage.cancelled);
   @override
-  Future<void> advanceJob(String id) async => throw const LiveJobsPending();
+  Future<void> cancelJob(String id) => _move(id, JobStage.cancelled);
   @override
-  Future<void> cancelJob(String id) async => throw const LiveJobsPending();
+  Future<void> advanceJob(String id) async {
+    Job? job;
+    for (final candidate in _snapshot ?? const <Job>[]) {
+      if (candidate.id == id) job = candidate;
+    }
+    job ??= await getJobById(id);
+    final next = job?.stage.next;
+    if (next == null) return;
+    await _move(id, next);
+  }
+
+  @override
+  Future<void> markCashCollected(String id, {double? amount}) async {
+    await _call('confirm_cash_collected', {
+      'p_booking_id': id,
+      'p_amount': ?amount,
+    });
+    await _refresh();
+    await _refreshCash();
+  }
+
+  @override
+  Future<void> settleCashDue({String? reference}) async {
+    await _call('settle_cash_due', {
+      'p_reference': ?reference,
+    });
+    await _refreshCash();
+  }
+
+  @override
+  Future<CashPosition> getCashPosition() async {
+    final result = await _call('my_cash_position', const {});
+    final position = CashPosition.fromJson(
+      Map<String, dynamic>.from(result as Map),
+    );
+    if (!_disposed) _cash.add(position);
+    return position;
+  }
+
+  Future<void> _refreshCash() async {
+    try {
+      await getCashPosition();
+    } catch (error, stack) {
+      if (!_disposed) _cash.addError(error, stack);
+    }
+  }
+
+  @override
+  Stream<CashPosition> watchCashPosition() =>
+      Stream<CashPosition>.multi((controller) {
+        if (_disposed) {
+          controller.close();
+          return;
+        }
+        final subscription = _cash.stream.listen(
+          controller.add,
+          onError: controller.addError,
+          onDone: controller.close,
+        );
+        unawaited(_refreshCash());
+        controller.onCancel = subscription.cancel;
+      });
+
   @override
   void dispose() {
     _disposed = true;
     _stop();
     _updates.close();
     _duty.close();
+    _cash.close();
     _snapshot = null;
   }
 }
+
+/// The stage names `worker_advance_booking` accepts.
+String backendStage(JobStage stage) => switch (stage) {
+  JobStage.requested => 'requested',
+  JobStage.accepted => 'accepted',
+  JobStage.onTheWay => 'on_the_way',
+  JobStage.arrived => 'arrived',
+  JobStage.inProgress => 'in_progress',
+  JobStage.completed => 'completed',
+  JobStage.cancelled => 'cancelled',
+};
 
 Job partnerJobFromRow(Map<String, dynamic> row) {
   final stage = switch (row['status']) {

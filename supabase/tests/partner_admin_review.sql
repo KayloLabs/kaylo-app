@@ -1,6 +1,17 @@
 -- Admin review, evidence versions, correction capabilities and mail delivery.
 -- Synthetic records only, no email or Firebase calls. Owns and rolls back its transaction.
 begin;
+-- Match Supabase even when the local harness installed pgcrypto in public.
+-- Relocation and its test data are rolled back with this test transaction.
+create schema if not exists extensions;
+do $$
+begin
+  if exists(select 1 from pg_extension e join pg_namespace n on n.oid=e.extnamespace
+    where e.extname='pgcrypto' and n.nspname<>'extensions') then
+    alter extension pgcrypto set schema extensions;
+  end if;
+end $$;
+set local search_path=public,extensions;
 create function pg_temp.admin_test_application(p_phone text,p_email text)
 returns uuid language plpgsql as $$
 declare aid uuid; svc uuid; doc text; path text;

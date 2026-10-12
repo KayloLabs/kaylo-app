@@ -39,23 +39,33 @@ class SupabasePartnerNotificationsRepository
     });
   }
 
-  Future<void> _load() async {
+  /// Pushes the local toggles to the server so live alerts respect them. A
+  /// failure here is retried on the next load and never hides the feed.
+  Future<void> _syncPreferences() async {
+    final requests = prefs.getBool('partner.notify_requests') ?? true,
+        jobs = prefs.getBool('partner.notify_jobs') ?? true,
+        payouts = prefs.getBool('partner.notify_payouts') ?? true;
+    final signature = '$requests/$jobs/$payouts';
+    if (_preferences == signature) return;
     try {
-      final requests = prefs.getBool('partner.notify_requests') ?? true,
-          jobs = prefs.getBool('partner.notify_jobs') ?? true,
-          payouts = prefs.getBool('partner.notify_payouts') ?? true;
-      final signature = '$requests/$jobs/$payouts';
-      if (_preferences != signature) {
-        await client.rpc(
-          'set_partner_notification_preferences',
-          params: {
-            'p_requests': requests,
-            'p_jobs': jobs,
-            'p_payouts': payouts,
-          },
-        );
-        _preferences = signature;
-      }
+      await client.rpc(
+        'set_partner_notification_preferences',
+        params: {
+          'p_requests': requests,
+          'p_jobs': jobs,
+          'p_payouts': payouts,
+        },
+      );
+      _preferences = signature;
+    } catch (_) {
+      // The feed still loads; the toggles are sent again next time.
+    }
+  }
+
+  Future<void> _load() async {
+    await _syncPreferences();
+    if (_disposed) return;
+    try {
       final rows = await client
           .from('notifications')
           .select(

@@ -957,4 +957,8 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get alertSettlement => 'Settlement recorded';
+
+  @override
+  String get jobsRefreshFailed =>
+      'We couldn’t refresh your jobs. Please try again.';
 }

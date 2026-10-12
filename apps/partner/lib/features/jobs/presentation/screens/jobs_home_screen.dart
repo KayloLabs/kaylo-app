@@ -80,7 +80,7 @@ class JobsHomeScreen extends ConsumerWidget {
                 await ref.read(jobsRepositoryProvider).getJobs();
               } catch (_) {
                 if (context.mounted) {
-                  KayloSnackbar.showError(context, l10n.chatLoadFailed);
+                  KayloSnackbar.showError(context, l10n.jobsRefreshFailed);
                 }
               }
             },

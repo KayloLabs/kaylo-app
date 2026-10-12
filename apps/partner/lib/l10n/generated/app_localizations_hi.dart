@@ -941,4 +941,8 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get alertSettlement => 'निपटान दर्ज हुआ';
+
+  @override
+  String get jobsRefreshFailed =>
+      'नौकरियां रिफ्रेश नहीं हो सकीं। फिर से कोशिश करें।';
 }

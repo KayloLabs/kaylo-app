@@ -997,5 +997,9 @@
   "alertSettlement": "Settlement recorded",
   "@alertSettlement": {
     "description": "Partner communication and alert labels"
+  },
+  "jobsRefreshFailed": "We couldn’t refresh your jobs. Please try again.",
+  "@jobsRefreshFailed": {
+    "description": "Jobs tab snackbar when a manual refresh fails"
   }
 }

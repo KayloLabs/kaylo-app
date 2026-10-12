@@ -967,4 +967,8 @@ class AppLocalizationsTa extends AppLocalizations {
 
   @override
   String get alertSettlement => 'தீர்வுத் தொகை பதிவானது';
+
+  @override
+  String get jobsRefreshFailed =>
+      'வேலைகளைப் புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
 }

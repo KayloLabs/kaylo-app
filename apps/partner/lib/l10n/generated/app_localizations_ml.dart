@@ -960,4 +960,7 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get alertSettlement => 'കണക്കുതീർപ്പ് രേഖപ്പെടുത്തി';
+
+  @override
+  String get jobsRefreshFailed => 'ജോലികൾ പുതുക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
 }

@@ -1805,6 +1805,12 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Settlement recorded'**
   String get alertSettlement;
+
+  /// Jobs tab snackbar when a manual refresh fails
+  ///
+  /// In en, this message translates to:
+  /// **'We couldn’t refresh your jobs. Please try again.'**
+  String get jobsRefreshFailed;
 }
 
 class _AppLocalizationsDelegate

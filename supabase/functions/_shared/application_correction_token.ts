@@ -59,10 +59,11 @@ export async function verifyCorrectionToken(
   }
   return { applicationId: payload.sub!, version: Number(payload.version) };
 }
-export function correctionLink(
-  token: string,
+/** Treat the configured portal path as a directory, including on GitHub Pages. */
+export function portalPageUrl(
+  page: "admin/" | "application/update/",
   portal = Deno.env.get("KAYLO_PORTAL_URL") ?? "",
-): string {
+): URL {
   const base = new URL(portal);
   if (
     base.protocol !== "https:" || base.username || base.password ||
@@ -70,7 +71,14 @@ export function correctionLink(
   ) {
     throw new Error("PORTAL_URL_NOT_CONFIGURED");
   }
-  const link = new URL("/application/update/", base.origin);
+  base.pathname = `${base.pathname.replace(/\/+$/, "")}/`;
+  return new URL(page, base);
+}
+export function correctionLink(
+  token: string,
+  portal = Deno.env.get("KAYLO_PORTAL_URL") ?? "",
+): string {
+  const link = portalPageUrl("application/update/", portal);
   link.hash = new URLSearchParams({ token }).toString();
   return link.toString();
 }

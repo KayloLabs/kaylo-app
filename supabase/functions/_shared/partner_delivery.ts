@@ -10,6 +10,7 @@ import { generatePartnerCertificate } from "./partner_certificate.ts";
 import { deliverPartnerCredentials } from "./partner_credentials_delivery.ts";
 import {
   correctionLink,
+  portalPageUrl,
   signCorrectionToken,
   uuidPattern,
 } from "./application_correction_token.ts";
@@ -196,10 +197,7 @@ async function sendApplicationMail(
       `A completed Kaylo Partner application is ready for review.\nReference: ${reference}\nOpen the Kaylo admin portal to review the details and private documents.`;
     const portal = Deno.env.get("KAYLO_PORTAL_URL");
     if (portal) {
-      const url = new URL(portal);
-      if (url.protocol === "https:" && !url.username && !url.password) {
-        link = new URL("/admin/", url.origin).toString();
-      }
+      link = portalPageUrl("admin/", portal).toString();
     }
   }
   const html = emailShell(

@@ -1,5 +1,6 @@
 import {
   correctionLink,
+  portalPageUrl,
   signCorrectionToken,
   verifyCorrectionToken,
 } from "./application_correction_token.ts";
@@ -61,6 +62,7 @@ Deno.test("correction URL cannot use insecure, credentialed or query configured 
       "http://example.test",
       "https://user:pass@example.test",
       "https://example.test?next=elsewhere",
+      "https://example.test/kaylo-website/#fragment",
       "",
     ]
   ) {
@@ -71,5 +73,40 @@ Deno.test("correction URL cannot use insecure, credentialed or query configured 
       denied = true;
     }
     assert(denied);
+  }
+});
+
+Deno.test("portal email links preserve GitHub Pages subpaths with or without trailing slash", () => {
+  for (
+    const base of [
+      "https://nimaldanyathk.github.io/kaylo-website",
+      "https://nimaldanyathk.github.io/kaylo-website/",
+    ]
+  ) {
+    assert(
+      portalPageUrl("admin/", base).toString() ===
+        "https://nimaldanyathk.github.io/kaylo-website/admin/",
+    );
+    const link = new URL(correctionLink("test+capability/value", base));
+    assert(
+      link.pathname === "/kaylo-website/application/update/" &&
+        link.search === "" &&
+        new URLSearchParams(link.hash.slice(1)).get("token") ===
+          "test+capability/value",
+    );
+  }
+});
+Deno.test("root-hosted email links keep their existing routes", () => {
+  for (
+    const base of ["https://kaylo.example.test", "https://kaylo.example.test/"]
+  ) {
+    assert(
+      portalPageUrl("admin/", base).toString() ===
+        "https://kaylo.example.test/admin/",
+    );
+    assert(
+      new URL(correctionLink("token", base)).pathname ===
+        "/application/update/",
+    );
   }
 });

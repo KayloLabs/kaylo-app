@@ -654,6 +654,27 @@ new-job pushes still require a trusted backend event sender. See
 builds; a skipped build due to low disk is not a successful release test.
 
 
+### Website enquiries (0028) and the approval search path (0029)
+
+`0028_professional_application_leads.sql` is the backend for the public website's
+"work with Kaylo" form. It is deliberately separate from `worker_applications`: a
+lead is an enquiry, not a reviewed application. The website calls
+`submit_professional_lead(jsonb)` with the publishable key; the function validates
+every field, normalises the phone to `+91`, stores the row and returns only the
+UUID receipt the caller supplied. Retries are insert-only, and neither `anon` nor
+`authenticated` can read, change or delete a lead; the service role sees them in
+the dashboard. `supabase/tests/professional_application_leads.sql` checks the
+receipt, the retry, the role boundaries and every invalid input.
+
+`0029_admin_certificate_extension_path.sql` fixes approval on Supabase, where
+`pgcrypto` lives in the `extensions` schema: `admin_review_application` now
+resolves `gen_random_bytes` through `public, extensions` when it assigns a
+certificate number. `partner_admin_review.sql` relocates `pgcrypto` the same way
+inside its transaction so the local harness matches production.
+
+Apply 0028 and 0029 after 0027 and before 0030. Both are in `setup_all.sql`.
+0028 is already applied to the live project.
+
 ### Booking chat and partner activity (0030 and 0031)
 
 Apply `0030_booking_chat_and_partner_activity.sql`, then

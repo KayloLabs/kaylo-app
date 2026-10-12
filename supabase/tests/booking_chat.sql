@@ -6,10 +6,10 @@ declare
   customer_person uuid:=gen_random_uuid(); outsider_person uuid:=gen_random_uuid(); worker_person uuid:=gen_random_uuid();
   customer uuid; outsider uuid; worker uuid; svc uuid; booking uuid; pending uuid; room uuid; token uuid:=gen_random_uuid();
   sent_message_id uuid; issue uuid:=gen_random_uuid(); result jsonb; denied boolean; n int;
-  worker_claims jsonb;
+  worker_claims jsonb; customer_phone_value text:='+919'||lpad((floor(random()*100000000))::bigint::text,8,'0');
 begin
-  insert into persons(person_id,auth_user_id,full_name) values(customer_person,'chat_test_customer','Chat Customer'),
-    (outsider_person,'chat_test_outsider','Chat Outsider'),(worker_person,'chat_test_worker','Chat Worker');
+  insert into persons(person_id,auth_user_id,full_name,phone_number) values(customer_person,'chat_test_customer','Chat Customer',customer_phone_value),
+    (outsider_person,'chat_test_outsider','Chat Outsider',null),(worker_person,'chat_test_worker','Chat Worker',null);
   insert into customers(person_id) values(customer_person) returning customer_id into customer;
   insert into customers(person_id) values(outsider_person) returning customer_id into outsider;
   insert into workers(person_id,partner_id,verification_status,must_change_password)
@@ -49,6 +49,18 @@ begin
   perform set_config('request.jwt.claims',worker_claims::text,true);
   execute 'set local role anon';
   if not exists(select 1 from my_partner_jobs() where booking_id=booking and customer_name='Chat Customer') then raise exception 'Live assigned-job projection missing';end if;
+  if (select customer_phone from my_partner_jobs() where booking_id=booking) is distinct from customer_phone_value then raise exception 'Active job hides the customer phone';end if;
+  if (select customer_phone from my_partner_jobs() where booking_id=pending) is not null then raise exception 'Requested job exposes the customer phone';end if;
+  select count(*) into n from notifications where person_id=worker_person;
+  perform worker_advance_booking(booking,'on_the_way');
+  if (select count(*) from notifications where person_id=worker_person)<>n then raise exception 'Worker alerted about own stage change';end if;
+  execute 'reset role';
+  perform set_config('request.jwt.claims','{"sub":"chat_test_customer"}',true);
+  update bookings set status='cancelled',worker_stage='cancelled' where booking_id=pending;
+  if (select count(*) from notifications where person_id=worker_person and title='Booking cancelled')<>1 then raise exception 'Worker missed a customer cancellation';end if;
+  perform set_config('request.jwt.claims',worker_claims::text,true);
+  execute 'set local role anon';
+  if (select customer_phone from my_partner_jobs() where booking_id=pending) is not null then raise exception 'Finished job exposes the customer phone';end if;
   select to_jsonb(t) into result from chat_threads() t where t.room_id=room;
   if result->>'last_message'<>'Hello' or (result->>'unread_count')::int<>1 or (result->>'other_person_id')::uuid<>customer_person then raise exception 'Worker aggregate incorrect';end if;
   perform chat_mark_read_through(room,sent_message_id);

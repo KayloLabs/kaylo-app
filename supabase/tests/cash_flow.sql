@@ -74,6 +74,9 @@ begin
   perform set_config('request.jwt.claims', jsonb_build_object('sub', uid_b)::text, true);
   perform pg_temp.use_issued_worker_fixture();
   execute 'set local role anon';
+  if (my_cash_position()->>'cash_in_hand')::numeric <> 0 or (my_cash_position()->>'commission_due')::numeric <> 0 then
+    raise exception 'a worker without a ledger row is not at zero';
+  end if;
   denied := false;
   begin perform worker_advance_booking(cash_booking, 'accepted'); exception when others then denied := true; end;
   if not denied then raise exception 'worker B advanced worker A''s job'; end if;
@@ -108,6 +111,11 @@ begin
   if (r->>'amount')::numeric <> 1000 or (r->>'commission')::numeric <> 150 then
     raise exception 'wrong cash numbers: %', r;
   end if;
+  r := my_cash_position();
+  if (r->>'cash_in_hand')::numeric <> 1000 or (r->>'commission_due')::numeric <> 150
+     or (r->>'limit')::numeric <> kaylo_cash_due_limit() or (r->>'rate')::numeric <> kaylo_commission_rate() then
+    raise exception 'cash position wrong: %', r;
+  end if;
   denied := false;
   begin perform confirm_cash_collected(cash_booking); exception when others then denied := true; end;
   if not denied then raise exception 'cash was confirmed twice'; end if;
@@ -131,8 +139,8 @@ begin
      or not exists (select 1 from notifications where person_id = person_c and title = 'Booking completed') then
     raise exception 'the customer missed a status notification for a worker-driven change';
   end if;
-  if not exists (select 1 from notifications where person_id = person_a and title = 'Job completed') then
-    raise exception 'the worker was not told the job completed';
+  if exists (select 1 from notifications where person_id = person_a and title = 'Job completed') then
+    raise exception 'the worker was alerted about completing their own job';
   end if;
 
   -- 6. At the limit, new cash jobs cannot be accepted; online ones can.
@@ -152,6 +160,7 @@ begin
   if (r->>'amount')::numeric <> kaylo_cash_due_limit() then raise exception 'settled the wrong amount: %', r; end if;
   select count(*) into n from settlements;
   if n <> 1 then raise exception 'the worker cannot see their settlement'; end if;
+  if (my_cash_position()->>'commission_due')::numeric <> 0 then raise exception 'settlement did not clear the live position'; end if;
   perform worker_advance_booking(second_cash, 'accepted');
   denied := false;
   begin perform settle_cash_due(); exception when others then denied := true; end;

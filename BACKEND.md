@@ -371,6 +371,7 @@ Offer wording is translated in the app by code (`offer_copy.dart`), with the dat
 | `worker_advance_booking(booking_id, stage)` | worker | moves a job one step; refuses cash jobs when `commission_due` is at the limit, and completion of a cash job before the cash is confirmed |
 | `confirm_cash_collected(booking_id, amount?)` | worker | marks the cash payment paid, completes the job, adds the amount to `worker_payout_accounts.cash_in_hand` and 15% to `commission_due` |
 | `settle_cash_due(reference?)` | worker | writes a `settlements` row and clears the due |
+| `my_cash_position()` | worker | cash in hand, commission due, the limit and the rate (0032); zero until the first cash job |
 | `kaylo_commission_rate()`, `kaylo_cash_due_limit()` | both apps | 0.15 and 2,000 |
 | `submit_review(booking_id, rating, text?)` | customer | one review per completed booking, editable; the worker's average refreshes by trigger |
 | `register_worker(details jsonb)` | worker | profile, services, service area, payout account in one call; sets `verification_status = under_review` |
@@ -643,9 +644,11 @@ smoke test after an administrator deploys and configures the backend.
 
 ### Remaining partner integration dependencies
 
-Live jobs/stages/earnings repository wiring remains conditional on Abhay's model
-PRs #28, #29 and #30 being merged. Ruthwik's live chat/alerts/reviews wiring waits
-for those screens to land. These migrations do not rewrite teammates' mock areas.
+The partner app's live jobs feed now also drives the stage, cash and settlement
+actions (`worker_advance_booking`, `confirm_cash_collected`, `settle_cash_due`,
+`my_cash_position`). Coordinates and the cash fields on the job model still
+arrive with Abhay's and Sandeep's PRs; the live repository tolerates their
+absence. Chat, alerts and reviews are live since 0030.
 The partner app registers device tokens with `app = 'partner'`, handles foreground
 job-request notifications, and revokes its FCM token on sign-out. Background
 new-job pushes still require a trusted backend event sender. See
@@ -699,3 +702,26 @@ notification preferences, booking/payment alerts, and participant-only access.
 Run `supabase/tests/booking_chat.sql` as the database owner after applying both
 migrations. Its synthetic data, authorization checks and read-receipt tests run
 inside a transaction that is rolled back.
+
+
+### Job privacy, quiet self-alerts and the cash position (0032)
+
+Apply `0032_partner_job_privacy_and_cash_position.sql` after 0031; it is in
+`setup_all.sql`.
+
+`my_partner_jobs()` now follows the job: the customer's phone, house and exact
+coordinates are returned only while the booking is accepted, on the way, arrived
+or in progress. A request carries the district, pincode and coordinates rounded
+to two decimals (about a kilometre) so the distance estimate still works before
+the worker accepts. Finished jobs keep the district and pincode only. The partner
+app already treats a missing phone or address as empty.
+
+`notify_worker_about_booking` skips updates the assigned worker made themselves,
+so accepting, moving through the stages, completing or cancelling a job no longer
+raises an alert on the worker's own phone. New requests, reassignments and
+customer or admin changes still do. Payout alerts (`Cash collected`,
+`Settlement recorded`) are receipts and stay.
+
+`my_cash_position()` returns `cash_in_hand`, `commission_due`, `limit` and `rate`
+for the signed-in worker, zero before the first cash job. `cash_flow.sql` and
+`booking_chat.sql` cover all three changes.

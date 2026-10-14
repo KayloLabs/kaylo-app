@@ -242,9 +242,7 @@ class SupabaseJobsRepository implements JobsRepository {
 
   @override
   Future<void> settleCashDue({String? reference}) async {
-    await _call('settle_cash_due', {
-      'p_reference': ?reference,
-    });
+    await _call('settle_cash_due', {'p_reference': ?reference});
     await _refreshCash();
   }
 
@@ -326,6 +324,8 @@ Job partnerJobFromRow(Map<String, dynamic> row) {
     customerName: row['customer_name'] as String,
     customerPhone: row['customer_phone'] as String? ?? '',
     addressLine: row['address'] as String? ?? '',
+    latitude: (row['latitude'] as num?)?.toDouble(),
+    longitude: (row['longitude'] as num?)?.toDouble(),
     distanceKm: null,
     scheduledAt: DateTime.parse(row['scheduled_at'] as String).toLocal(),
     payout: payout,

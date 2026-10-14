@@ -2,7 +2,9 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:kaylo_ui/theme/app_colors.dart';
+import 'package:kaylo_core/services/feedback_service.dart';
+import '../widgets/partner_tab_bar.dart';
+import '../../features/jobs/presentation/screens/job_map_screen.dart';
 
 import '../../features/auth/application/partner_session.dart';
 import '../../features/auth/domain/partner_auth_repository.dart';
@@ -91,6 +93,10 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
           final id = state.pathParameters['id']!;
           return JobDetailScreen(jobId: id);
         },
+      ),
+      GoRoute(
+        path: '/jobs/:id/map',
+        builder: (_, state) => JobMapScreen(jobId: state.pathParameters['id']!),
       ),
       GoRoute(
         path: Routes.history,
@@ -229,53 +235,46 @@ class _PartnerShellState extends ConsumerState<_PartnerShell>
     final unread = ref.watch(partnerAlertUnreadProvider);
     final l10n = AppLocalizations.of(context)!;
     return Scaffold(
+      extendBody: true,
       body: shell,
-      bottomNavigationBar: NavigationBar(
-        selectedIndex: shell.currentIndex,
-        onDestinationSelected: (index) =>
-            shell.goBranch(index, initialLocation: index == shell.currentIndex),
-        destinations: [
-          NavigationDestination(
-            icon: const Icon(Icons.work_outline_rounded),
-            selectedIcon: const Icon(
-              Icons.work_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            label: l10n.tabJobs,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.bar_chart_outlined),
-            selectedIcon: const Icon(
-              Icons.bar_chart_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            label: l10n.tabEarnings,
-          ),
-          NavigationDestination(
-            icon: const Icon(Icons.person_outline_rounded),
-            selectedIcon: const Icon(
-              Icons.person_rounded,
-              color: AppColors.brandPrimary,
-            ),
-            label: l10n.tabProfile,
-          ),
-          NavigationDestination(
-            icon: Badge.count(
-              count: unread,
-              isLabelVisible: unread > 0,
-              child: const Icon(Icons.notifications_none_rounded),
-            ),
-            selectedIcon: Badge.count(
-              count: unread,
-              isLabelVisible: unread > 0,
-              child: const Icon(
-                Icons.notifications_rounded,
-                color: AppColors.brandPrimary,
+      bottomNavigationBar: Padding(
+        padding: const EdgeInsets.fromLTRB(16, 0, 16, 4),
+        child: SafeArea(
+          top: false,
+          child: PartnerTabBar(
+            currentIndex: shell.currentIndex,
+            onSelected: (index) {
+              KayloFeedback.tap();
+              shell.goBranch(
+                index,
+                initialLocation: index == shell.currentIndex,
+              );
+            },
+            items: [
+              PartnerTabItem(
+                icon: Icons.work_outline_rounded,
+                selectedIcon: Icons.work_rounded,
+                label: l10n.tabJobs,
               ),
-            ),
-            label: l10n.alertsTitle,
+              PartnerTabItem(
+                icon: Icons.bar_chart_outlined,
+                selectedIcon: Icons.bar_chart_rounded,
+                label: l10n.tabEarnings,
+              ),
+              PartnerTabItem(
+                icon: Icons.person_outline_rounded,
+                selectedIcon: Icons.person_rounded,
+                label: l10n.tabProfile,
+              ),
+              PartnerTabItem(
+                icon: Icons.notifications_none_rounded,
+                selectedIcon: Icons.notifications_rounded,
+                label: l10n.alertsTitle,
+                badgeCount: unread,
+              ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

@@ -9,6 +9,7 @@ uniform vec2 uSize;
 uniform float uPosition;
 uniform float uStretch;
 uniform float uPress;
+uniform float uCount;
 out vec4 fragColor;
 
 float capsule(vec2 p, vec2 halfSize) {
@@ -44,7 +45,7 @@ void main() {
   // Light bends most at the thick rim and remains clear in the centre.
   vec2 displacement = -outerNormal * edge * edge * 7.0;
 
-  float cell = (uSize.x - 14.0) / 5.0;
+  float cell = (uSize.x - 14.0) / uCount;
   vec2 lensCenter = vec2(7.0 + cell * (uPosition + 0.5), halfSize.y);
   vec2 lensHalf = vec2(cell * 0.5 * (1.0 + uStretch), 25.0);
   lensHalf *= 1.0 + uPress * 0.07;

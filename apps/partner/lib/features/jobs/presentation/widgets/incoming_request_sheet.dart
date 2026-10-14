@@ -10,6 +10,7 @@ import 'package:kaylo_ui/widgets/kaylo_button.dart';
 
 import '../../application/jobs_providers.dart';
 import '../../domain/job.dart';
+import 'job_map.dart';
 
 class IncomingRequestSheet extends ConsumerStatefulWidget {
   final Job job;
@@ -19,6 +20,7 @@ class IncomingRequestSheet extends ConsumerStatefulWidget {
   static Future<void> show(BuildContext context, Job job) {
     return showModalBottomSheet(
       context: context,
+      useRootNavigator: true,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (_) => IncomingRequestSheet(job: job),
@@ -178,6 +180,16 @@ class _IncomingRequestSheetState extends ConsumerState<IncomingRequestSheet> {
                       ),
                     ),
                   ],
+                ),
+                const SizedBox(height: AppSpacing.m),
+                ClipRRect(
+                  borderRadius: BorderRadius.circular(12),
+                  child: JobMap(
+                    job: widget.job,
+                    height: 120,
+                    interactive: false,
+                    showExpandButton: false,
+                  ),
                 ),
               ],
             ),

@@ -725,3 +725,6 @@ customer or admin changes still do. Payout alerts (`Cash collected`,
 `my_cash_position()` returns `cash_in_hand`, `commission_due`, `limit` and `rate`
 for the signed-in worker, zero before the first cash job. `cash_flow.sql` and
 `booking_chat.sql` cover all three changes.
+
+Migration 0032 was applied to the live project on 14 October 2026. Its rollback
+preflight and the `cash_flow.sql` and `booking_chat.sql` regression suites passed.

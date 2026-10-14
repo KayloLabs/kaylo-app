@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../../../data/mock/partner_seed.dart';
 import '../domain/cash_position.dart';
+import '../domain/geo.dart';
 import '../domain/job.dart';
 import '../domain/jobs_repository.dart';
 
@@ -96,6 +97,19 @@ class MockJobsRepository implements JobsRepository {
       final template = pool[_poolIndex % pool.length];
       _poolIndex++;
 
+      final lat = (template['latitude'] as num?)?.toDouble() ?? 11.8745;
+      final lng = (template['longitude'] as num?)?.toDouble() ?? 75.3704;
+      final dist =
+          (distanceKm(
+                    PartnerSeed.workerLatitude,
+                    PartnerSeed.workerLongitude,
+                    lat,
+                    lng,
+                  ) *
+                  10)
+              .roundToDouble() /
+          10.0;
+
       final newJob = Job(
         id: 'job-live-${DateTime.now().millisecondsSinceEpoch}',
         serviceName: template['serviceName'] as String,
@@ -103,7 +117,9 @@ class MockJobsRepository implements JobsRepository {
         customerName: template['customerName'] as String,
         customerPhone: template['customerPhone'] as String,
         addressLine: template['addressLine'] as String,
-        distanceKm: (template['distanceKm'] as num).toDouble(),
+        latitude: lat,
+        longitude: lng,
+        distanceKm: dist,
         scheduledAt: DateTime.now().add(const Duration(minutes: 45)),
         payout: (template['payout'] as num).toDouble(),
         notes: template['notes'] as String,

@@ -1,3 +1,4 @@
+import '../../application/jobs_sort.dart';
 import 'package:go_router/go_router.dart';
 import '../../../../core/router/routes.dart';
 import '../../../messages/application/messages_providers.dart';
@@ -35,7 +36,7 @@ class JobsHomeScreen extends ConsumerWidget {
         ref.watch(jobsRepositoryProvider) is PendingJobsRepository;
     final earnings = ref.watch(earningsSummaryProvider);
     final activeJobAsync = ref.watch(activeJobProvider);
-    final requestsAsync = ref.watch(incomingRequestsProvider);
+    final requestsAsync = ref.watch(sortedIncomingRequestsProvider);
 
     return Scaffold(
       appBar: AppBar(
@@ -163,6 +164,7 @@ class JobsHomeScreen extends ConsumerWidget {
             error: (_, _) => const SizedBox.shrink(),
           ),
 
+          if (isOnline) const _SortAndFilterChipsRow(),
           // Incoming Requests (Only when Online)
           if (!isOnline) ...[
             const SizedBox(height: AppSpacing.l),
@@ -227,7 +229,9 @@ class JobsHomeScreen extends ConsumerWidget {
               },
               loading: () => const Center(child: KayloLoader()),
               error: (err, _) => Text(
-                err is LiveJobsPending ? l10n.liveJobsPending : 'Error: $err',
+                err is LiveJobsPending
+                    ? l10n.liveJobsPending
+                    : l10n.jobsRefreshFailed,
               ),
             ),
           ],
@@ -366,6 +370,73 @@ class _SummaryBox extends StatelessWidget {
                         : AppColors.textPrimary),
               ),
             ),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SortAndFilterChipsRow extends ConsumerWidget {
+  const _SortAndFilterChipsRow();
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    final l10n = AppLocalizations.of(context)!;
+    final sort = ref.watch(jobSortProvider);
+    final filters = ref.watch(jobServiceFilterProvider);
+    final jobs = ref.watch(incomingRequestsProvider).asData?.value ?? [];
+    final services = {
+      for (final job in jobs) jobServiceKey(job): job.serviceName,
+    };
+    String label(String key) => switch (key) {
+      'plumbing' => l10n.servicePlumbing,
+      'electrical' => l10n.serviceElectrical,
+      'appliances' => l10n.serviceAppliances,
+      'carpentry' => l10n.serviceCarpentry,
+      _ => services[key] ?? key,
+    };
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final value in JobSort.values)
+                ChoiceChip(
+                  label: Text(switch (value) {
+                    JobSort.nearest => l10n.sortNearest,
+                    JobSort.highestPayout => l10n.sortHighestPayout,
+                    JobSort.soonest => l10n.sortSoonest,
+                  }),
+                  selected: sort == value,
+                  onSelected: (_) {
+                    KayloFeedback.selection();
+                    ref.read(jobSortProvider.notifier).setSort(value);
+                  },
+                ),
+            ],
+          ),
+          Wrap(
+            spacing: 8,
+            children: [
+              for (final key in services.keys)
+                FilterChip(
+                  label: Text(label(key)),
+                  selected: filters.contains(key),
+                  onSelected: (_) {
+                    KayloFeedback.selection();
+                    ref.read(jobServiceFilterProvider.notifier).toggle(key);
+                  },
+                ),
+              if (filters.isNotEmpty)
+                ActionChip(
+                  label: Text(l10n.clearFilters),
+                  onPressed: () =>
+                      ref.read(jobServiceFilterProvider.notifier).clear(),
+                ),
+            ],
           ),
         ],
       ),

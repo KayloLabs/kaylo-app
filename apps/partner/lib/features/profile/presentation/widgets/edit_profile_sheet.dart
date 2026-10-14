@@ -18,6 +18,7 @@ import '../../domain/worker_profile.dart';
 Future<bool> showEditProfileSheet(BuildContext context, WorkerProfile profile) {
   return showModalBottomSheet<bool>(
     context: context,
+    useRootNavigator: true,
     isScrollControlled: true,
     useSafeArea: true,
     backgroundColor: Colors.transparent,

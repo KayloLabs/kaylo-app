@@ -1,9 +1,12 @@
+import '../../features/jobs/domain/geo.dart';
 import '../../features/jobs/domain/job.dart';
 import '../../features/profile/domain/worker_profile.dart';
 
 /// The sample worker (Sunil, a plumber and electrician in Kannur) and the
 /// catalogue he can pick services from.
 class PartnerSeed {
+  static const workerLatitude = 11.8745;
+  static const workerLongitude = 75.3704;
   static const serviceOptions = [
     ServiceOption(id: 'svc-plumbing', name: 'Plumbing Repair'),
     ServiceOption(id: 'svc-electrical', name: 'Electrical Services'),
@@ -43,6 +46,11 @@ class PartnerSeed {
     ],
   );
 
+  static double _calcDistance(double lat, double lng) =>
+      (distanceKm(workerLatitude, workerLongitude, lat, lng) * 10)
+          .roundToDouble() /
+      10.0;
+
   static List<Job> initialJobs() {
     final now = DateTime.now();
 
@@ -55,7 +63,9 @@ class PartnerSeed {
         customerName: 'Anjali Menon',
         customerPhone: '+91 94471 23456',
         addressLine: 'Kadavil House, Thottada Beach Rd, Kannur',
-        distanceKm: 2.4,
+        latitude: 11.8392,
+        longitude: 75.4003,
+        distanceKm: _calcDistance(11.8392, 75.4003),
         scheduledAt: now.subtract(const Duration(minutes: 25)),
         payout: 450.0,
         notes: 'Water leaking under kitchen sink. Main valve is shut off.',
@@ -70,7 +80,9 @@ class PartnerSeed {
         customerName: 'Dr. Vivek Nair',
         customerPhone: '+91 94472 88990',
         addressLine: 'Green Valley Villa 4B, Mele Chovva, Kannur',
-        distanceKm: 4.1,
+        latitude: 11.8544,
+        longitude: 75.3858,
+        distanceKm: _calcDistance(11.8544, 75.3858),
         scheduledAt: now.add(const Duration(hours: 1)),
         payout: 650.0,
         notes: 'Ceiling fan regulator sparking and needs replacement.',
@@ -83,7 +95,9 @@ class PartnerSeed {
         customerName: 'Fathima Rafeeq',
         customerPhone: '+91 98950 44321',
         addressLine: 'Al-Huda, South Bazaar, Kannur',
-        distanceKm: 1.8,
+        latitude: 11.8679,
+        longitude: 75.3648,
+        distanceKm: _calcDistance(11.8679, 75.3648),
         scheduledAt: now.add(const Duration(hours: 2)),
         payout: 380.0,
         notes: 'Two bathroom mixer taps need installation. Parts purchased.',
@@ -98,7 +112,9 @@ class PartnerSeed {
         customerName: 'K. P. Ramachandran',
         customerPhone: '+91 94460 11223',
         addressLine: 'Hill View, Pallikunnu, Kannur',
-        distanceKm: 3.2,
+        latitude: 11.8891,
+        longitude: 75.3744,
+        distanceKm: _calcDistance(11.8891, 75.3744),
         scheduledAt: DateTime(now.year, now.month, now.day, 9, 30),
         payout: 520.0,
         notes: 'Drain hose clogged and fixed.',
@@ -111,7 +127,9 @@ class PartnerSeed {
         customerName: 'Sneha George',
         customerPhone: '+91 94473 33445',
         addressLine: 'Rose Villa, Kaloor, Kannur',
-        distanceKm: 2.1,
+        latitude: 11.8610,
+        longitude: 75.3936,
+        distanceKm: _calcDistance(11.8610, 75.3936),
         scheduledAt: now.subtract(const Duration(days: 1)),
         payout: 750.0,
         notes: 'Replaced MCB and rewiring checked.',
@@ -124,7 +142,9 @@ class PartnerSeed {
         customerName: 'Rajeev V.',
         customerPhone: '+91 98951 55667',
         addressLine: 'Thalap, Kannur',
-        distanceKm: 1.5,
+        latitude: 11.8795,
+        longitude: 75.3621,
+        distanceKm: _calcDistance(11.8795, 75.3621),
         scheduledAt: now.subtract(const Duration(days: 1, hours: 4)),
         payout: 400.0,
         notes: 'Washer replaced.',
@@ -137,7 +157,9 @@ class PartnerSeed {
         customerName: 'Devika Nambiar',
         customerPhone: '+91 94477 77889',
         addressLine: 'Payyambalam Rd, Kannur',
-        distanceKm: 2.8,
+        latitude: 11.8651,
+        longitude: 75.3545,
+        distanceKm: _calcDistance(11.8651, 75.3545),
         scheduledAt: now.subtract(const Duration(days: 2)),
         payout: 450.0,
         notes: 'New PVC bottle trap installed.',
@@ -150,7 +172,9 @@ class PartnerSeed {
         customerName: 'Muhammed Shafi',
         customerPhone: '+91 98952 99001',
         addressLine: 'City Centre, Kannur',
-        distanceKm: 2.0,
+        latitude: 11.8745,
+        longitude: 75.3704,
+        distanceKm: _calcDistance(11.8745, 75.3704),
         scheduledAt: now.subtract(const Duration(days: 3)),
         payout: 850.0,
         notes: 'Thermostat and heating element replaced.',
@@ -163,7 +187,9 @@ class PartnerSeed {
         customerName: 'Anoop Kurian',
         customerPhone: '+91 94461 44556',
         addressLine: 'Puzhathi, Kannur',
-        distanceKm: 3.5,
+        latitude: 11.8820,
+        longitude: 75.3660,
+        distanceKm: _calcDistance(11.8820, 75.3660),
         scheduledAt: now.subtract(const Duration(days: 3, hours: 5)),
         payout: 380.0,
         notes: 'Gate valve replaced.',
@@ -176,7 +202,9 @@ class PartnerSeed {
         customerName: 'Priya Mohan',
         customerPhone: '+91 94470 66778',
         addressLine: 'Chovva, Kannur',
-        distanceKm: 4.0,
+        latitude: 11.8550,
+        longitude: 75.3900,
+        distanceKm: _calcDistance(11.8550, 75.3900),
         scheduledAt: now.subtract(const Duration(days: 4)),
         payout: 600.0,
         notes: 'Two fans assembled and mounted.',
@@ -189,7 +217,9 @@ class PartnerSeed {
         customerName: 'Balan Master',
         customerPhone: '+91 98953 22334',
         addressLine: 'Edakkad, Kannur',
-        distanceKm: 6.2,
+        latitude: 11.7850,
+        longitude: 75.4600,
+        distanceKm: _calcDistance(11.7850, 75.4600),
         scheduledAt: now.subtract(const Duration(days: 5)),
         payout: 900.0,
         notes: 'Starter panel rewiring and testing.',
@@ -206,7 +236,8 @@ class PartnerSeed {
       'customerName': 'Haridasan K.',
       'customerPhone': '+91 94474 11229',
       'addressLine': 'Near AKG Hospital, Talap, Kannur',
-      'distanceKm': 2.2,
+      'latitude': 11.8795,
+      'longitude': 75.3621,
       'payout': 420.0,
       'notes': 'Water overflowing from roof tank. Need ball valve check.',
     },
@@ -216,7 +247,8 @@ class PartnerSeed {
       'customerName': 'Meera Krishnan',
       'customerPhone': '+91 98955 77881',
       'addressLine': 'Govt Hospital Rd, Kannur',
-      'distanceKm': 1.9,
+      'latitude': 11.8690,
+      'longitude': 75.3680,
       'payout': 550.0,
       'notes': 'Inverter beeping continuously on power cut.',
     },
@@ -226,7 +258,8 @@ class PartnerSeed {
       'customerName': 'Abdul Rasheed',
       'customerPhone': '+91 94462 88992',
       'addressLine': 'Fort Road, Kannur',
-      'distanceKm': 2.7,
+      'latitude': 11.8660,
+      'longitude': 75.3690,
       'payout': 480.0,
       'notes': 'Water draining very slowly. Snaking required.',
     },
@@ -236,7 +269,8 @@ class PartnerSeed {
       'customerName': 'Sindhu Manoj',
       'customerPhone': '+91 98956 33441',
       'addressLine': 'Chalad, Kannur',
-      'distanceKm': 3.1,
+      'latitude': 11.8840,
+      'longitude': 75.3550,
       'payout': 500.0,
       'notes': 'Fit two batten lights and one wall bracket.',
     },

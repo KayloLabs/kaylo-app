@@ -227,7 +227,7 @@ void main() {
     await tester.pumpWidget(app);
     await signIn(tester);
 
-    await tester.tap(find.text('Profile'));
+    await tester.tap(find.byTooltip('Profile'));
     await tester.pumpAndSettle();
 
     expect(find.text('Sunil Kumar'), findsOneWidget);

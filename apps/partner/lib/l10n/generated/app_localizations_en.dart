@@ -961,4 +961,100 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get jobsRefreshFailed =>
       'We couldn’t refresh your jobs. Please try again.';
+
+  @override
+  String timeInMinutes(int minutes) {
+    return 'in $minutes min';
+  }
+
+  @override
+  String timeInHours(int hours) {
+    return 'in $hours hr';
+  }
+
+  @override
+  String timeTomorrow(String time) {
+    return 'tomorrow $time';
+  }
+
+  @override
+  String timeToday(String time) {
+    return 'today $time';
+  }
+
+  @override
+  String timeMinutesAgo(int minutes) {
+    return '$minutes min ago';
+  }
+
+  @override
+  String get sortNearest => 'Nearest';
+
+  @override
+  String get sortHighestPayout => 'Highest payout';
+
+  @override
+  String get sortSoonest => 'Soonest';
+
+  @override
+  String get filterEmptyTitle => 'No jobs match your filter';
+
+  @override
+  String get filterEmptySubtitle =>
+      'Try adjusting your filter options or clear them to see all jobs.';
+
+  @override
+  String get clearFilters => 'Clear filters';
+
+  @override
+  String get expand => 'Expand';
+
+  @override
+  String get openInGoogleMaps => 'Open in Google Maps';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'about $minutes min';
+  }
+
+  @override
+  String get jobLocationMap => 'Job Location Map';
+
+  @override
+  String get servicePlumbing => 'Plumbing';
+
+  @override
+  String get serviceElectrical => 'Electrical';
+
+  @override
+  String get serviceAppliances => 'Appliances';
+
+  @override
+  String get serviceCarpentry => 'Carpentry';
+
+  @override
+  String get mapJobNotFound => 'Job not found';
+
+  @override
+  String get mapJobMissing => 'This job could not be located.';
+
+  @override
+  String get mapNavigationUnavailable =>
+      'Navigation is unavailable on this device';
+
+  @override
+  String get mapLocationUnavailable => 'Location is unavailable for this job';
+
+  @override
+  String mapDistanceEstimate(String distance, int minutes) {
+    return '$distance km away · about $minutes min';
+  }
+
+  @override
+  String jobDistanceAway(String distance) {
+    return '$distance km away';
+  }
+
+  @override
+  String get mapApproximateArea => 'Approximate area';
 }

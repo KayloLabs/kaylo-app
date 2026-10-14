@@ -99,7 +99,7 @@ void main() {
     }
     await tester.pumpAndSettle();
 
-    await tester.tap(find.text('Earnings'));
+    await tester.tap(find.byTooltip('Earnings'));
     await tester.pumpAndSettle();
 
     expect(find.byType(EarningsScreen), findsOneWidget);

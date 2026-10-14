@@ -181,7 +181,7 @@ void main() {
     // instance the screen edits, rather than the disposed pre-login fixture.
     repo = container.read(availabilityRepositoryProvider);
 
-    await tester.tap(find.text('Profile'));
+    await tester.tap(find.byTooltip('Profile'));
     await tester.pumpAndSettle();
     await tester.tap(find.text('Manage availability'));
     await tester.pumpAndSettle();

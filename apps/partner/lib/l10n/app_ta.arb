@@ -311,5 +311,48 @@
   "alertCashCollected": "பணம் பெறப்பட்டது",
   "alertPaymentReceived": "கட்டணம் பெறப்பட்டது",
   "alertSettlement": "தீர்வுத் தொகை பதிவானது",
-  "jobsRefreshFailed": "வேலைகளைப் புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்."
+  "jobsRefreshFailed": "வேலைகளைப் புதுப்பிக்க முடியவில்லை. மீண்டும் முயற்சிக்கவும்.",
+  "timeInMinutes": "{minutes} நிமிடங்களில்",
+  "timeInHours": "{hours} மணிநேரத்தில்",
+  "timeTomorrow": "நாளை {time}",
+  "timeToday": "இன்று {time}",
+  "timeMinutesAgo": "{minutes} நிமிடங்களுக்கு முன்பு",
+  "sortNearest": "மிக அருகில்",
+  "sortHighestPayout": "அதிக வருமானம்",
+  "sortSoonest": "விரைவில்",
+  "filterEmptyTitle": "வடிகட்டலுக்கு பொருந்தும் பணிகள் இல்லை",
+  "filterEmptySubtitle": "மற்ற வடிகட்டிகளைத் தேர்வு செய்யவும் அல்லது வடிகட்டிகளை அழிக்கவும்.",
+  "clearFilters": "வடிகட்டிகளை அழிக்கவும்",
+  "expand": "பெரிதாக்கு",
+  "openInGoogleMaps": "கூகிள் வரைபடத்தில் திற",
+  "aboutMinutes": "சுமார் {minutes} நிமிடம்",
+  "jobLocationMap": "பணி இருப்பிட வரைபடம்",
+  "servicePlumbing": "குழாய் வேலை",
+  "serviceElectrical": "மின் வேலை",
+  "serviceAppliances": "வீட்டு உபகரணங்கள்",
+  "serviceCarpentry": "தச்சு வேலை",
+  "mapJobNotFound": "வேலை கிடைக்கவில்லை",
+  "mapJobMissing": "இந்த வேலையைக் கண்டறிய முடியவில்லை.",
+  "mapNavigationUnavailable": "இந்தச் சாதனத்தில் வழிகாட்டல் கிடைக்கவில்லை",
+  "mapLocationUnavailable": "இந்த வேலைக்கான இடம் கிடைக்கவில்லை",
+  "mapDistanceEstimate": "{distance} கி.மீ. தொலைவில் · சுமார் {minutes} நிமிடம்",
+  "@mapDistanceEstimate": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobDistanceAway": "{distance} கி.மீ. தொலைவில்",
+  "@jobDistanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "mapApproximateArea": "தோராயமான பகுதி"
 }

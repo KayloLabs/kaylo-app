@@ -35,6 +35,6 @@ void main() {
     await tester.pumpAndSettle();
 
     // The Jobs tab should show the Malayalam label from the ARB file (jobsTabLabel)
-    expect(find.text('ജോലികൾ'), findsOneWidget);
+    expect(find.byTooltip('ജോലികൾ'), findsOneWidget);
   });
 }

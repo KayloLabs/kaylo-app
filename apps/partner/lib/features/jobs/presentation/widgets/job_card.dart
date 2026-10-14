@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
-import 'package:intl/intl.dart';
+import '../../domain/relative_time.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
@@ -84,7 +84,8 @@ class JobCard extends ConsumerWidget {
                       overflow: TextOverflow.ellipsis,
                     ),
                     const SizedBox(height: 2),
-                    Row(
+                    Wrap(
+                      crossAxisAlignment: WrapCrossAlignment.center,
                       children: [
                         if (job.distanceKm != null) ...[
                           const Icon(
@@ -94,7 +95,9 @@ class JobCard extends ConsumerWidget {
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            '${job.distanceKm} km away',
+                            l10n.jobDistanceAway(
+                              job.distanceKm!.toStringAsFixed(1),
+                            ),
                             style: Theme.of(context).textTheme.bodySmall
                                 ?.copyWith(
                                   fontWeight: FontWeight.w600,
@@ -104,7 +107,7 @@ class JobCard extends ConsumerWidget {
                           const SizedBox(width: 8),
                         ],
                         Text(
-                          '${job.distanceKm != null ? '• ' : ''}${DateFormat.jm().format(job.scheduledAt)}',
+                          formatRelativeScheduled(job.scheduledAt, l10n),
                           style: Theme.of(context).textTheme.bodySmall
                               ?.copyWith(
                                 color: isDark

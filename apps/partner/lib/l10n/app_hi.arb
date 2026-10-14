@@ -311,5 +311,48 @@
   "alertCashCollected": "नकद प्राप्त हुआ",
   "alertPaymentReceived": "भुगतान प्राप्त हुआ",
   "alertSettlement": "निपटान दर्ज हुआ",
-  "jobsRefreshFailed": "नौकरियां रिफ्रेश नहीं हो सकीं। फिर से कोशिश करें।"
+  "jobsRefreshFailed": "नौकरियां रिफ्रेश नहीं हो सकीं। फिर से कोशिश करें।",
+  "timeInMinutes": "{minutes} मिनट में",
+  "timeInHours": "{hours} घंटे में",
+  "timeTomorrow": "कल {time}",
+  "timeToday": "आज {time}",
+  "timeMinutesAgo": "{minutes} मिनट पहले",
+  "sortNearest": "सबसे नज़दीक",
+  "sortHighestPayout": "सबसे ज़्यादा कमाई",
+  "sortSoonest": "सबसे पहले",
+  "filterEmptyTitle": "कोई काम इस फ़िल्टर से मेल नहीं खाता",
+  "filterEmptySubtitle": "अपने फ़िल्टर बदलें या सभी काम देखने के लिए उन्हें साफ़ करें।",
+  "clearFilters": "फ़िल्टर हटाएं",
+  "expand": "बड़ा करें",
+  "openInGoogleMaps": "Google Maps में खोलें",
+  "aboutMinutes": "लगभग {minutes} मिनट",
+  "jobLocationMap": "काम के स्थान का नक्शा",
+  "servicePlumbing": "प्लंबिंग",
+  "serviceElectrical": "बिजली",
+  "serviceAppliances": "उपकरण",
+  "serviceCarpentry": "बढ़ईगीरी",
+  "mapJobNotFound": "काम नहीं मिला",
+  "mapJobMissing": "यह काम नहीं मिल सका।",
+  "mapNavigationUnavailable": "इस डिवाइस पर नेविगेशन उपलब्ध नहीं है",
+  "mapLocationUnavailable": "इस काम का स्थान उपलब्ध नहीं है",
+  "mapDistanceEstimate": "{distance} किमी दूर · लगभग {minutes} मिनट",
+  "@mapDistanceEstimate": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobDistanceAway": "{distance} किमी दूर",
+  "@jobDistanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "mapApproximateArea": "अनुमानित क्षेत्र"
 }

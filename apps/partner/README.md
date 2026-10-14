@@ -21,7 +21,16 @@ flutter run --dart-define=USE_MOCK=true
 
 Use `KP-000123` and `kaylo123`. The demo requires a new password on first sign-in. Applications and status lookups use an in-memory repository in mock mode.
 
-Live mode uses the issued Firebase identity and Supabase worker profile, duty switch and availability. It deliberately shows an unavailable state for jobs and earnings while the shared job model PRs are still open. Mock mode retains the team's sample jobs and earnings. Live chat, alerts and reviews await the corresponding teammate screens.
+Live mode uses the issued Firebase identity for jobs, stage actions, chat,
+alerts, reviews, profile, duty and availability. Sorting uses device location
+when permission is granted; unknown distances stay last. Maps show only the
+coordinates returned by the backend: requests show an approximate area, active
+jobs may show the exact location, and finished jobs have no location pin.
+The worker marker is omitted when device location is unavailable. External
+navigation opens Google Maps; the inline map does not invent a road route.
+
+Both apps use the same shared liquid-glass renderer and drag-to-select tab bar.
+The partner bar retains Jobs, Earnings, Profile and Alerts with its unread badge.
 
 Partner push registration uses `device_tokens.app = 'partner'`. A configured sender must send `type: booking_request` (or `new_job_request`) and `booking_id`. Android displays foreground job alerts using the packaged notification icon; the recipient must have granted notifications. Registering devices does not by itself send booking pushes.
 

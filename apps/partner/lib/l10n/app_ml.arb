@@ -311,5 +311,48 @@
   "alertCashCollected": "പണം കൈപ്പറ്റി",
   "alertPaymentReceived": "പണമടവ് ലഭിച്ചു",
   "alertSettlement": "കണക്കുതീർപ്പ് രേഖപ്പെടുത്തി",
-  "jobsRefreshFailed": "ജോലികൾ പുതുക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക."
+  "jobsRefreshFailed": "ജോലികൾ പുതുക്കാനായില്ല. വീണ്ടും ശ്രമിക്കുക.",
+  "timeInMinutes": "{minutes} മിനിറ്റിൽ",
+  "timeInHours": "{hours} മണിക്കൂറിൽ",
+  "timeTomorrow": "നാളെ {time}",
+  "timeToday": "ഇന്ന് {time}",
+  "timeMinutesAgo": "{minutes} മിനിറ്റ് മുൻപ്",
+  "sortNearest": "ഏറ്റവും അടുത്ത്",
+  "sortHighestPayout": "കൂടിയ വരുമാനം",
+  "sortSoonest": "ഉടൻ തന്നെ",
+  "filterEmptyTitle": "ഫിൽട്ടറുമായി പൊരുത്തപ്പെടുന്ന ജോലികളില്ല",
+  "filterEmptySubtitle": "മറ്റ് ഫിൽട്ടറുകൾ തിരഞ്ഞെടുക്കുക അല്ലെങ്കിൽ ഫിൽട്ടറുകൾ നീക്കം ചെയ്യുക.",
+  "clearFilters": "ഫിൽട്ടറുകൾ നീക്കുക",
+  "expand": "വലുതാക്കുക",
+  "openInGoogleMaps": "ഗൂഗിൾ മാപ്പിൽ തുറക്കുക",
+  "aboutMinutes": "ഏകദേശം {minutes} മിനിറ്റ്",
+  "jobLocationMap": "ജോലി സ്ഥലത്തിന്റെ മാപ്പ്",
+  "servicePlumbing": "പ്ലംബിംഗ്",
+  "serviceElectrical": "ഇലക്ട്രിക്കൽ",
+  "serviceAppliances": "വീട്ടുപകരണങ്ങൾ",
+  "serviceCarpentry": "മരപ്പണി",
+  "mapJobNotFound": "ജോലി കണ്ടെത്തിയില്ല",
+  "mapJobMissing": "ഈ ജോലി കണ്ടെത്താനായില്ല.",
+  "mapNavigationUnavailable": "ഈ ഉപകരണത്തിൽ നാവിഗേഷൻ ലഭ്യമല്ല",
+  "mapLocationUnavailable": "ഈ ജോലിയുടെ സ്ഥലം ലഭ്യമല്ല",
+  "mapDistanceEstimate": "{distance} കി.മീ. അകലെ · ഏകദേശം {minutes} മിനിറ്റ്",
+  "@mapDistanceEstimate": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobDistanceAway": "{distance} കി.മീ. അകലെ",
+  "@jobDistanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "mapApproximateArea": "ഏകദേശ സ്ഥലം"
 }

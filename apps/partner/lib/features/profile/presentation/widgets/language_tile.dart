@@ -12,25 +12,34 @@ class LanguageTile extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final currentLocale = ref.watch(partnerLocaleProvider);
-    
+
     String languageName = 'English';
     switch (currentLocale.languageCode) {
-      case 'ml': languageName = 'Malayalam'; break;
-      case 'hi': languageName = 'Hindi'; break;
-      case 'ta': languageName = 'Tamil'; break;
+      case 'ml':
+        languageName = 'Malayalam';
+        break;
+      case 'hi':
+        languageName = 'Hindi';
+        break;
+      case 'ta':
+        languageName = 'Tamil';
+        break;
     }
 
     return KayloCard(
       child: ListTile(
         contentPadding: EdgeInsets.zero,
         leading: const Icon(Icons.language),
-        title: Text(AppLocalizations.of(context)?.profileLanguageTile ?? 'Language'),
+        title: Text(
+          AppLocalizations.of(context)?.profileLanguageTile ?? 'Language',
+        ),
         subtitle: Text(languageName),
         trailing: const Icon(Icons.chevron_right),
         onTap: () {
           KayloFeedback.tap();
           showModalBottomSheet(
             context: context,
+            useRootNavigator: true,
             isScrollControlled: true,
             backgroundColor: Colors.transparent,
             builder: (context) => const LanguageSelectorSheet(),

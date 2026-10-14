@@ -1,3 +1,5 @@
+import '../widgets/job_map.dart';
+import '../open_in_maps.dart';
 import '../../../messages/application/messages_providers.dart';
 import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
@@ -36,21 +38,6 @@ class JobDetailScreen extends ConsumerWidget {
       if (context.mounted) {
         KayloSnackbar.showError(context, 'Unable to open dialler');
       }
-    }
-  }
-
-  Future<void> _navigate(BuildContext context, String address) async {
-    final uri = Uri.https('www.google.com', '/maps/search/', {
-      'api': '1',
-      'query': address,
-    });
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri, mode: LaunchMode.externalApplication);
-    } else if (context.mounted) {
-      KayloSnackbar.showInfo(
-        context,
-        'Navigation is unavailable on this device',
-      );
     }
   }
 
@@ -95,7 +82,7 @@ class JobDetailScreen extends ConsumerWidget {
           return _ActionBar(
             job: job,
             onCall: _callCustomer,
-            onNavigate: _navigate,
+            onNavigate: openJobInMaps,
           );
         },
       ),
@@ -129,6 +116,10 @@ class _JobDetailContent extends StatelessWidget {
         120,
       ),
       children: [
+        if (job.latitude != null && job.longitude != null) ...[
+          JobMap(job: job, height: 200),
+          const SizedBox(height: AppSpacing.m),
+        ],
         // Hero payout + status card
         KayloCard(
           child: Column(

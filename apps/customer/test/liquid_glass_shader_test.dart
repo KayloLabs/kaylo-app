@@ -13,7 +13,7 @@ void main() {
   ) async {
     await tester.runAsync(() async {
       final program = await ui.FragmentProgram.fromAsset(
-        'shaders/navigation_glass.frag',
+        'packages/kaylo_ui/shaders/navigation_glass.frag',
       );
       for (final scale in [1.0, 2.0]) {
         final width = (440 * scale).round();
@@ -152,6 +152,7 @@ Future<ui.Image> _render(
     position,
     .06,
     .6,
+    5.0,
   ];
   for (var i = 0; i < values.length; i++) {
     shader.setFloat(i, values[i]);

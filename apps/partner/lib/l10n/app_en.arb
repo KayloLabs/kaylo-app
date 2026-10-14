@@ -1001,5 +1001,123 @@
   "jobsRefreshFailed": "We couldn’t refresh your jobs. Please try again.",
   "@jobsRefreshFailed": {
     "description": "Jobs tab snackbar when a manual refresh fails"
-  }
+  },
+  "timeInMinutes": "in {minutes} min",
+  "@timeInMinutes": {
+    "description": "Relative scheduled time: in X minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "timeInHours": "in {hours} hr",
+  "@timeInHours": {
+    "description": "Relative scheduled time: in X hours",
+    "placeholders": {
+      "hours": {
+        "type": "int"
+      }
+    }
+  },
+  "timeTomorrow": "tomorrow {time}",
+  "@timeTomorrow": {
+    "description": "Relative scheduled time: tomorrow at time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timeToday": "today {time}",
+  "@timeToday": {
+    "description": "Relative scheduled time: today at time",
+    "placeholders": {
+      "time": {
+        "type": "String"
+      }
+    }
+  },
+  "timeMinutesAgo": "{minutes} min ago",
+  "@timeMinutesAgo": {
+    "description": "Relative scheduled time: X minutes ago",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "sortNearest": "Nearest",
+  "@sortNearest": {
+    "description": "Job sort option: nearest distance"
+  },
+  "sortHighestPayout": "Highest payout",
+  "@sortHighestPayout": {
+    "description": "Job sort option: highest payout"
+  },
+  "sortSoonest": "Soonest",
+  "@sortSoonest": {
+    "description": "Job sort option: soonest scheduled time"
+  },
+  "filterEmptyTitle": "No jobs match your filter",
+  "@filterEmptyTitle": {
+    "description": "Empty state title when active filters return no jobs"
+  },
+  "filterEmptySubtitle": "Try adjusting your filter options or clear them to see all jobs.",
+  "@filterEmptySubtitle": {
+    "description": "Empty state subtitle when active filters return no jobs"
+  },
+  "clearFilters": "Clear filters",
+  "@clearFilters": {
+    "description": "Action button to clear active filters"
+  },
+  "expand": "Expand",
+  "@expand": {
+    "description": "Button to expand map to full screen"
+  },
+  "openInGoogleMaps": "Open in Google Maps",
+  "@openInGoogleMaps": {
+    "description": "Button to open coordinates in external Google Maps application"
+  },
+  "aboutMinutes": "about {minutes} min",
+  "@aboutMinutes": {
+    "description": "Estimated travel duration in minutes",
+    "placeholders": {
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobLocationMap": "Job Location Map",
+  "@jobLocationMap": {
+    "description": "Title for full screen map route"
+  },
+  "servicePlumbing": "Plumbing",
+  "serviceElectrical": "Electrical",
+  "serviceAppliances": "Appliances",
+  "serviceCarpentry": "Carpentry",
+  "mapJobNotFound": "Job not found",
+  "mapJobMissing": "This job could not be located.",
+  "mapNavigationUnavailable": "Navigation is unavailable on this device",
+  "mapLocationUnavailable": "Location is unavailable for this job",
+  "mapDistanceEstimate": "{distance} km away · about {minutes} min",
+  "@mapDistanceEstimate": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      },
+      "minutes": {
+        "type": "int"
+      }
+    }
+  },
+  "jobDistanceAway": "{distance} km away",
+  "@jobDistanceAway": {
+    "placeholders": {
+      "distance": {
+        "type": "String"
+      }
+    }
+  },
+  "mapApproximateArea": "Approximate area"
 }

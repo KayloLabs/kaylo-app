@@ -1811,6 +1811,162 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'We couldn’t refresh your jobs. Please try again.'**
   String get jobsRefreshFailed;
+
+  /// Relative scheduled time: in X minutes
+  ///
+  /// In en, this message translates to:
+  /// **'in {minutes} min'**
+  String timeInMinutes(int minutes);
+
+  /// Relative scheduled time: in X hours
+  ///
+  /// In en, this message translates to:
+  /// **'in {hours} hr'**
+  String timeInHours(int hours);
+
+  /// Relative scheduled time: tomorrow at time
+  ///
+  /// In en, this message translates to:
+  /// **'tomorrow {time}'**
+  String timeTomorrow(String time);
+
+  /// Relative scheduled time: today at time
+  ///
+  /// In en, this message translates to:
+  /// **'today {time}'**
+  String timeToday(String time);
+
+  /// Relative scheduled time: X minutes ago
+  ///
+  /// In en, this message translates to:
+  /// **'{minutes} min ago'**
+  String timeMinutesAgo(int minutes);
+
+  /// Job sort option: nearest distance
+  ///
+  /// In en, this message translates to:
+  /// **'Nearest'**
+  String get sortNearest;
+
+  /// Job sort option: highest payout
+  ///
+  /// In en, this message translates to:
+  /// **'Highest payout'**
+  String get sortHighestPayout;
+
+  /// Job sort option: soonest scheduled time
+  ///
+  /// In en, this message translates to:
+  /// **'Soonest'**
+  String get sortSoonest;
+
+  /// Empty state title when active filters return no jobs
+  ///
+  /// In en, this message translates to:
+  /// **'No jobs match your filter'**
+  String get filterEmptyTitle;
+
+  /// Empty state subtitle when active filters return no jobs
+  ///
+  /// In en, this message translates to:
+  /// **'Try adjusting your filter options or clear them to see all jobs.'**
+  String get filterEmptySubtitle;
+
+  /// Action button to clear active filters
+  ///
+  /// In en, this message translates to:
+  /// **'Clear filters'**
+  String get clearFilters;
+
+  /// Button to expand map to full screen
+  ///
+  /// In en, this message translates to:
+  /// **'Expand'**
+  String get expand;
+
+  /// Button to open coordinates in external Google Maps application
+  ///
+  /// In en, this message translates to:
+  /// **'Open in Google Maps'**
+  String get openInGoogleMaps;
+
+  /// Estimated travel duration in minutes
+  ///
+  /// In en, this message translates to:
+  /// **'about {minutes} min'**
+  String aboutMinutes(int minutes);
+
+  /// Title for full screen map route
+  ///
+  /// In en, this message translates to:
+  /// **'Job Location Map'**
+  String get jobLocationMap;
+
+  /// No description provided for @servicePlumbing.
+  ///
+  /// In en, this message translates to:
+  /// **'Plumbing'**
+  String get servicePlumbing;
+
+  /// No description provided for @serviceElectrical.
+  ///
+  /// In en, this message translates to:
+  /// **'Electrical'**
+  String get serviceElectrical;
+
+  /// No description provided for @serviceAppliances.
+  ///
+  /// In en, this message translates to:
+  /// **'Appliances'**
+  String get serviceAppliances;
+
+  /// No description provided for @serviceCarpentry.
+  ///
+  /// In en, this message translates to:
+  /// **'Carpentry'**
+  String get serviceCarpentry;
+
+  /// No description provided for @mapJobNotFound.
+  ///
+  /// In en, this message translates to:
+  /// **'Job not found'**
+  String get mapJobNotFound;
+
+  /// No description provided for @mapJobMissing.
+  ///
+  /// In en, this message translates to:
+  /// **'This job could not be located.'**
+  String get mapJobMissing;
+
+  /// No description provided for @mapNavigationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Navigation is unavailable on this device'**
+  String get mapNavigationUnavailable;
+
+  /// No description provided for @mapLocationUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'Location is unavailable for this job'**
+  String get mapLocationUnavailable;
+
+  /// No description provided for @mapDistanceEstimate.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away · about {minutes} min'**
+  String mapDistanceEstimate(String distance, int minutes);
+
+  /// No description provided for @jobDistanceAway.
+  ///
+  /// In en, this message translates to:
+  /// **'{distance} km away'**
+  String jobDistanceAway(String distance);
+
+  /// No description provided for @mapApproximateArea.
+  ///
+  /// In en, this message translates to:
+  /// **'Approximate area'**
+  String get mapApproximateArea;
 }
 
 class _AppLocalizationsDelegate

@@ -945,4 +945,99 @@ class AppLocalizationsHi extends AppLocalizations {
   @override
   String get jobsRefreshFailed =>
       'नौकरियां रिफ्रेश नहीं हो सकीं। फिर से कोशिश करें।';
+
+  @override
+  String timeInMinutes(int minutes) {
+    return '$minutes मिनट में';
+  }
+
+  @override
+  String timeInHours(int hours) {
+    return '$hours घंटे में';
+  }
+
+  @override
+  String timeTomorrow(String time) {
+    return 'कल $time';
+  }
+
+  @override
+  String timeToday(String time) {
+    return 'आज $time';
+  }
+
+  @override
+  String timeMinutesAgo(int minutes) {
+    return '$minutes मिनट पहले';
+  }
+
+  @override
+  String get sortNearest => 'सबसे नज़दीक';
+
+  @override
+  String get sortHighestPayout => 'सबसे ज़्यादा कमाई';
+
+  @override
+  String get sortSoonest => 'सबसे पहले';
+
+  @override
+  String get filterEmptyTitle => 'कोई काम इस फ़िल्टर से मेल नहीं खाता';
+
+  @override
+  String get filterEmptySubtitle =>
+      'अपने फ़िल्टर बदलें या सभी काम देखने के लिए उन्हें साफ़ करें।';
+
+  @override
+  String get clearFilters => 'फ़िल्टर हटाएं';
+
+  @override
+  String get expand => 'बड़ा करें';
+
+  @override
+  String get openInGoogleMaps => 'Google Maps में खोलें';
+
+  @override
+  String aboutMinutes(int minutes) {
+    return 'लगभग $minutes मिनट';
+  }
+
+  @override
+  String get jobLocationMap => 'काम के स्थान का नक्शा';
+
+  @override
+  String get servicePlumbing => 'प्लंबिंग';
+
+  @override
+  String get serviceElectrical => 'बिजली';
+
+  @override
+  String get serviceAppliances => 'उपकरण';
+
+  @override
+  String get serviceCarpentry => 'बढ़ईगीरी';
+
+  @override
+  String get mapJobNotFound => 'काम नहीं मिला';
+
+  @override
+  String get mapJobMissing => 'यह काम नहीं मिल सका।';
+
+  @override
+  String get mapNavigationUnavailable => 'इस डिवाइस पर नेविगेशन उपलब्ध नहीं है';
+
+  @override
+  String get mapLocationUnavailable => 'इस काम का स्थान उपलब्ध नहीं है';
+
+  @override
+  String mapDistanceEstimate(String distance, int minutes) {
+    return '$distance किमी दूर · लगभग $minutes मिनट';
+  }
+
+  @override
+  String jobDistanceAway(String distance) {
+    return '$distance किमी दूर';
+  }
+
+  @override
+  String get mapApproximateArea => 'अनुमानित क्षेत्र';
 }

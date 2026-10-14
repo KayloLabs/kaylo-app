@@ -1,3 +1,5 @@
+import 'partner_tab_bar_test.dart' show createHarness, signIn;
+import 'package:kaylo_partner/features/jobs/application/jobs_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:kaylo_partner/core/widgets/partner_tab_bar.dart';
@@ -7,6 +9,26 @@ import 'package:kaylo_ui/widgets/liquid_nav_surface.dart';
 import 'supabase_jobs_repository_test.dart' show row;
 
 void main() {
+  testWidgets(
+    'an unmatched filter explains the empty list and can be cleared',
+    (tester) async {
+      final (container, app) = await createHarness();
+      await tester.pumpWidget(app);
+      await signIn(tester);
+      container.read(jobServiceFilterProvider.notifier).toggle('unmatched');
+      await tester.pumpAndSettle();
+      expect(find.text('No jobs match your filter'), findsOneWidget);
+      await tester.drag(find.byType(ListView).first, const Offset(0, -180));
+      await tester.pumpAndSettle();
+      await tester.tap(find.text('Clear filters'));
+      await tester.pumpAndSettle();
+      expect(find.text('No jobs match your filter'), findsNothing);
+      expect(container.read(jobServiceFilterProvider), isEmpty);
+      await container.read(jobsRepositoryProvider).setDuty(false);
+      await tester.pumpWidget(const SizedBox.shrink());
+      container.dispose();
+    },
+  );
   test('live coordinates remain absent when the server hides them', () {
     final hidden = partnerJobFromRow(row());
     expect(hidden.latitude, isNull);

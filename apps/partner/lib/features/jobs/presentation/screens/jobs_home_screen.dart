@@ -181,7 +181,14 @@ class JobsHomeScreen extends ConsumerWidget {
                   children: [
                     SectionHeader(title: l10n.newRequests(requests.length)),
                     const SizedBox(height: AppSpacing.m),
-                    if (requests.isEmpty)
+                    if (requests.isEmpty &&
+                        ref.watch(jobServiceFilterProvider).isNotEmpty)
+                      EmptyState(
+                        title: l10n.filterEmptyTitle,
+                        description: l10n.filterEmptySubtitle,
+                        icon: Icons.filter_alt_off_outlined,
+                      )
+                    else if (requests.isEmpty)
                       KayloCard(
                         child: Row(
                           children: [

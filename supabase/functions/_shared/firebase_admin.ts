@@ -205,3 +205,30 @@ export async function issueFirebasePartnerPassword(uid: string, partnerId: strin
   if (!Number.isFinite(changed) || changed <= 0) throw new Error("PASSWORD_TIMESTAMP_UNAVAILABLE");
   return changed;
 }
+
+
+/** Generate a Firebase-managed, single-use reset link for the issued alias.
+ * Delivery goes separately to the registered contact email, never to the alias.
+ */
+export async function generatePartnerPasswordResetLink(identity: {
+  firebase_uid: string; partner_id: string; issuance_id: string;
+}): Promise<string | null> {
+  const account = await lookupFirebaseAccount(identity.firebase_uid);
+  const email = `${identity.partner_id.toLowerCase()}@partners.kaylo.app`;
+  let claims: Record<string, unknown> = {};
+  try { claims = JSON.parse(account?.customAttributes ?? "{}"); } catch { return null; }
+  if (!account || account.disabled || account.localId !== identity.firebase_uid ||
+    account.email !== email || claims.kaylo_role !== "worker" ||
+    claims.kaylo_partner_id !== identity.partner_id || claims.kaylo_issuance_id !== identity.issuance_id) return null;
+  const response = await fetch("https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode", {
+    method: "POST", headers: await adminHeaders(),
+    body: JSON.stringify({requestType: "PASSWORD_RESET", email,
+      targetProjectId: firebaseProjectId(), returnOobLink: true}),
+  });
+  if (!response.ok) throw new Error(`Firebase reset link failed (${response.status})`);
+  const data = await response.json();
+  const link = new URL(data.oobLink);
+  if (link.protocol !== "https:" || link.searchParams.get("mode") !== "resetPassword" ||
+      !link.searchParams.get("oobCode")) throw new Error("INVALID_RESET_LINK");
+  return link.toString();
+}

@@ -1,4 +1,4 @@
-import { issueFirebasePartnerPassword } from "./firebase_admin.ts";
+import { generatePartnerPasswordResetLink, issueFirebasePartnerPassword } from "./firebase_admin.ts";
 
 const uid = "kaylo-partner-test";
 const partnerId = "KP-000001";
@@ -274,4 +274,34 @@ Deno.test("partner email ownership conflict performs no account mutation", async
     assert(message === "PARTNER_EMAIL_ALREADY_CLAIMED");
     assert(requests.every((r) => r.endpoint === "accounts:lookup"));
   });
+});
+
+
+Deno.test("recovery links target only the matching issued Firebase alias", async () => {
+  const original = globalThis.fetch;
+  let current: Account | null = {localId:uid,email,customAttributes:JSON.stringify(claims)};
+  let resetRequests = 0;
+  globalThis.fetch = async (input, init) => {
+    const url = String(input);
+    if (url === "https://oauth2.googleapis.com/token") return Response.json({access_token:"test",expires_in:3600});
+    const body = JSON.parse(String(init?.body));
+    if (url.endsWith("accounts:lookup")) return Response.json({users:current?[current]:[]});
+    assert(url === "https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode");
+    assert(body.email===email && body.returnOobLink===true && body.requestType==="PASSWORD_RESET");
+    assert(body.targetProjectId==="kaylo-test");
+    resetRequests++;
+    return Response.json({oobLink:"https://kaylo-test.firebaseapp.com/__/auth/action?mode=resetPassword&oobCode=test-code"});
+  };
+  try {
+    const identity = {firebase_uid:uid, partner_id:partnerId, issuance_id:issuanceId};
+    assert((await generatePartnerPasswordResetLink(identity))?.includes("oobCode=test-code"));
+    assert(resetRequests===1);
+    for (const invalid of [null, {localId:uid,email,disabled:true},
+      {localId:uid,email:"customer@example.com"},
+      {localId:uid,email,customAttributes:JSON.stringify({...claims,kaylo_issuance_id:"stale"})}]) {
+      current=invalid;
+      assert(await generatePartnerPasswordResetLink(identity)===null);
+    }
+    assert(resetRequests===1);
+  } finally { globalThis.fetch=original; }
 });

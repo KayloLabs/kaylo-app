@@ -47,3 +47,8 @@ verify_jwt = false
 
 [functions.application-corrections]
 verify_jwt = false
+
+# Password recovery is public by necessity. The function checks the issued
+# identity and registered email, with atomic account/client/global rate limits.
+[functions.partner-password-reset]
+verify_jwt = false

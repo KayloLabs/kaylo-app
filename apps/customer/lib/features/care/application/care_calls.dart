@@ -25,7 +25,9 @@ final incomingCareCallsProvider =
       final client = ref.watch(supabaseClientProvider);
       return await client
           .from('care_call_members')
-          .select('call_id,care_calls!inner(id,created_at,ended_at,expires_at)')
+          .select(
+            'call_id,care_calls!inner(id,booking_id,created_at,ended_at,expires_at)',
+          )
           .eq('person_id', ref.watch(currentUserIdProvider)!)
           .eq('status', 'invited')
           .isFilter('care_calls.ended_at', null)

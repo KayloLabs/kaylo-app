@@ -1,3 +1,4 @@
+import 'package:kaylo_core/network/supabase_providers.dart';
 import '../../../auth/application/current_user_provider.dart';
 import '../../../../core/config/service_artwork.dart';
 import 'package:flutter/material.dart';
@@ -553,7 +554,7 @@ class _StatusTimeline extends StatelessWidget {
   }
 }
 
-class _WorkerCard extends ConsumerWidget {
+class _WorkerCard extends ConsumerStatefulWidget {
   final Worker worker;
 
   final Booking booking;
@@ -561,7 +562,16 @@ class _WorkerCard extends ConsumerWidget {
   const _WorkerCard({required this.worker, required this.booking});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_WorkerCard> createState() => _WorkerCardState();
+}
+
+class _WorkerCardState extends ConsumerState<_WorkerCard> {
+  bool _calling = false;
+  Worker get worker => widget.worker;
+  Booking get booking => widget.booking;
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final thread = ref
@@ -617,6 +627,38 @@ class _WorkerCard extends ConsumerWidget {
               ],
             ),
           ),
+          if (booking.status == BookingStatus.confirmed ||
+              booking.status == BookingStatus.inProgress)
+            IconButton.filledTonal(
+              tooltip: l10n.bookingCallTitle,
+              icon: const Icon(Icons.call),
+              onPressed: _calling
+                  ? null
+                  : () async {
+                      setState(() => _calling = true);
+                      try {
+                        final id =
+                            await ref
+                                    .read(supabaseClientProvider)
+                                    .rpc(
+                                      'start_booking_call',
+                                      params: {'p_booking_id': booking.id},
+                                    )
+                                as String;
+                        if (context.mounted) {
+                          await context.push('/booking-call/$id');
+                        }
+                      } catch (_) {
+                        if (context.mounted) {
+                          ScaffoldMessenger.of(context).showSnackBar(
+                            SnackBar(content: Text(l10n.bookingCallFailed)),
+                          );
+                        }
+                      } finally {
+                        if (mounted) setState(() => _calling = false);
+                      }
+                    },
+            ),
           if (thread != null ||
               booking.status == BookingStatus.confirmed ||
               booking.status == BookingStatus.inProgress)

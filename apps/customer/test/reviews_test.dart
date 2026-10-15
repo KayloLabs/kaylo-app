@@ -39,6 +39,7 @@ void main() {
       workerId: 'w1',
       rating: 5,
       text: '',
+      hideName: true,
     );
     expect(again.rating, 5);
     expect(again.text, isNull);
@@ -47,6 +48,7 @@ void main() {
       prefs,
     ).getForBooking('KL-done-1');
     expect(reloaded?.rating, 5);
+    expect(reloaded?.hideName, isTrue);
     expect(
       () => repo.submit(bookingId: 'x', workerId: 'w1', rating: 0),
       throwsArgumentError,

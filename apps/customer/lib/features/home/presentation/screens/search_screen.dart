@@ -448,7 +448,7 @@ class _SearchScreenState extends ConsumerState<SearchScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
-                          Text(
+                          if (worker.hourlyRate != null) Text(
                             worker.hourlyRate == null
                                 ? l10n.priceOnVisit
                                 : '${formatRupees(worker.hourlyRate!)}/hr',

@@ -422,7 +422,7 @@
   "certSkillSub": "व्यावहारिक कौशल परीक्षित",
   "hourlyRate": "प्रति घंटा दर",
   "perHour": "प्रति घंटा",
-  "priceOnVisit": "विज़िट पर तय मूल्य",
+  "priceOnVisit": "बुकिंग से पहले कीमत देखें",
   "noReviewsYet": "अभी कोई समीक्षा नहीं",
   "newService": "नया",
   "nearbyFirst": "नज़दीकी पहले",
@@ -941,5 +941,16 @@
   "chatSendFailed": "संदेश नहीं भेजा गया। आपका संदेश यहाँ सुरक्षित है। फिर भेजने के लिए दबाएँ।",
   "chatReadOnly": "यह बुकिंग समाप्त हो गई है। आप पुराने संदेश पढ़ सकते हैं।",
   "sendMessage": "संदेश भेजें",
-  "chatLoadFailed": "यह बातचीत लोड नहीं हुई। फिर कोशिश करें।"
+  "chatLoadFailed": "यह बातचीत लोड नहीं हुई। फिर कोशिश करें।",
+  "partnerOnDuty": "ड्यूटी पर",
+  "partnerOffDuty": "ड्यूटी पर नहीं · बुकिंग शेड्यूल करें",
+  "bookingRequested": "बुकिंग का अनुरोध भेजा गया",
+  "bookingAwaitingPartner": "आपका अनुरोध भेज दिया गया है। बुकिंग के लिए पार्टनर की पुष्टि का इंतज़ार है।",
+  "hideReviewName": "मेरा नाम छिपाएँ",
+  "hideReviewNameHint": "“Verified customer” दिखेगा। पेशेवर फिर भी आपकी बुकिंग पहचान सकते हैं।",
+  "bookingCallTitle": "Kaylo कॉल",
+  "bookingCallConnected": "बुकिंग कॉल",
+  "bookingCallIncoming": "Kaylo कॉल आ रही है",
+  "bookingCallIncomingBody": "बुकिंग से जुड़ा व्यक्ति कॉल कर रहा है।",
+  "bookingCallFailed": "कॉल शुरू नहीं हुई। कनेक्शन जाँचें और दोबारा कोशिश करें।"
 }

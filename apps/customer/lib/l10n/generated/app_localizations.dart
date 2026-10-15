@@ -2637,7 +2637,7 @@ abstract class AppLocalizations {
   /// No description provided for @priceOnVisit.
   ///
   /// In en, this message translates to:
-  /// **'Price shared on visit'**
+  /// **'See price before booking'**
   String get priceOnVisit;
 
   /// No description provided for @noReviewsYet.
@@ -3219,7 +3219,7 @@ abstract class AppLocalizations {
   /// No description provided for @callErrorRoom.
   ///
   /// In en, this message translates to:
-  /// **'This call is unavailable or has ended. Return to SOS to start a new call.'**
+  /// **'This call is unavailable or has ended. Ask the caller to start a new call.'**
   String get callErrorRoom;
 
   /// No description provided for @callErrorSettings.
@@ -3237,7 +3237,7 @@ abstract class AppLocalizations {
   /// No description provided for @callErrorJoin.
   ///
   /// In en, this message translates to:
-  /// **'Could not join this call. Retry, or ask the caller to start a new SOS call.'**
+  /// **'Could not join this call. Retry or ask the caller to start a new call.'**
   String get callErrorJoin;
 
   /// No description provided for @callInterrupted.
@@ -4451,6 +4451,72 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Could not load this conversation. Please retry.'**
   String get chatLoadFailed;
+
+  /// No description provided for @partnerOnDuty.
+  ///
+  /// In en, this message translates to:
+  /// **'On duty'**
+  String get partnerOnDuty;
+
+  /// No description provided for @partnerOffDuty.
+  ///
+  /// In en, this message translates to:
+  /// **'Off duty · Schedule a booking'**
+  String get partnerOffDuty;
+
+  /// No description provided for @bookingRequested.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking requested'**
+  String get bookingRequested;
+
+  /// No description provided for @bookingAwaitingPartner.
+  ///
+  /// In en, this message translates to:
+  /// **'Your request has been sent. Your booking is awaiting the partner’s confirmation.'**
+  String get bookingAwaitingPartner;
+
+  /// No description provided for @hideReviewName.
+  ///
+  /// In en, this message translates to:
+  /// **'Hide my name'**
+  String get hideReviewName;
+
+  /// No description provided for @hideReviewNameHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Shown as “Verified customer”. The professional may still recognise your booking.'**
+  String get hideReviewNameHint;
+
+  /// No description provided for @bookingCallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo call'**
+  String get bookingCallTitle;
+
+  /// No description provided for @bookingCallConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking call'**
+  String get bookingCallConnected;
+
+  /// No description provided for @bookingCallIncoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Kaylo call'**
+  String get bookingCallIncoming;
+
+  /// No description provided for @bookingCallIncomingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A booking participant is calling.'**
+  String get bookingCallIncomingBody;
+
+  /// No description provided for @bookingCallFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start the call. Check your connection and retry.'**
+  String get bookingCallFailed;
 }
 
 class _AppLocalizationsDelegate

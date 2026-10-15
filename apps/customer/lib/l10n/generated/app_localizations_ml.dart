@@ -1466,7 +1466,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get perHour => 'മണിക്കൂറിന്';
 
   @override
-  String get priceOnVisit => 'സന്ദർശന വേളയിൽ വില തീരുമാനിക്കും';
+  String get priceOnVisit => 'ബുക്കിംഗിന് മുമ്പ് വില കാണുക';
 
   @override
   String get noReviewsYet => 'ഇതുവരെ അവലോകനങ്ങളൊന്നുമില്ല';
@@ -2504,4 +2504,40 @@ class AppLocalizationsMl extends AppLocalizations {
   @override
   String get chatLoadFailed =>
       'ഈ സംഭാഷണം ലോഡ് ചെയ്യാനായില്ല. വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get partnerOnDuty => 'ഡ്യൂട്ടിയിലാണ്';
+
+  @override
+  String get partnerOffDuty => 'ഡ്യൂട്ടിയിലല്ല · ബുക്കിംഗ് ഷെഡ്യൂൾ ചെയ്യാം';
+
+  @override
+  String get bookingRequested => 'ബുക്കിംഗ് അഭ്യർത്ഥിച്ചു';
+
+  @override
+  String get bookingAwaitingPartner =>
+      'നിങ്ങളുടെ അഭ്യർത്ഥന അയച്ചു. പങ്കാളിയുടെ സ്ഥിരീകരണത്തിനായി കാത്തിരിക്കുന്നു.';
+
+  @override
+  String get hideReviewName => 'എന്റെ പേര് മറയ്ക്കുക';
+
+  @override
+  String get hideReviewNameHint =>
+      '“Verified customer” എന്ന് കാണിക്കും. സേവനദാതാവിന് ബുക്കിംഗ് തിരിച്ചറിയാൻ കഴിഞ്ഞേക്കാം.';
+
+  @override
+  String get bookingCallTitle => 'Kaylo കോൾ';
+
+  @override
+  String get bookingCallConnected => 'ബുക്കിംഗ് കോൾ';
+
+  @override
+  String get bookingCallIncoming => 'Kaylo കോൾ വരുന്നു';
+
+  @override
+  String get bookingCallIncomingBody => 'ബുക്കിംഗിലെ അംഗം വിളിക്കുന്നു.';
+
+  @override
+  String get bookingCallFailed =>
+      'കോൾ ആരംഭിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
 }

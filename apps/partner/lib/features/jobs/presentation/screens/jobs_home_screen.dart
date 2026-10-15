@@ -1,381 +1,324 @@
-import '../../application/jobs_sort.dart';
-import 'package:go_router/go_router.dart';
-import '../../../../core/router/routes.dart';
-import '../../../messages/application/messages_providers.dart';
-import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:go_router/go_router.dart';
+import 'package:intl/intl.dart';
 import 'package:kaylo_core/services/feedback_service.dart';
 import 'package:kaylo_core/utils/money.dart';
 import 'package:kaylo_ui/theme/app_colors.dart';
-import 'package:kaylo_ui/theme/app_radius.dart';
-import 'package:kaylo_ui/theme/app_spacing.dart';
 import 'package:kaylo_ui/widgets/empty_state.dart';
-import 'package:kaylo_ui/widgets/kaylo_card.dart';
-import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/kaylo_loader.dart';
+import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
 import 'package:kaylo_ui/widgets/section_header.dart';
 
-import '../../../profile/application/profile_providers.dart';
-import '../../../earnings/application/earnings_providers.dart';
+import '../../../../core/router/routes.dart';
 import '../../../../l10n/generated/app_localizations.dart';
+import '../../../earnings/application/earnings_providers.dart';
+import '../../../messages/application/messages_providers.dart';
+import '../../../profile/application/profile_providers.dart';
 import '../../application/jobs_providers.dart';
+import '../../application/jobs_sort.dart';
+import '../../data/pending_jobs_repository.dart';
 import '../widgets/job_card.dart';
+import '../widgets/workday_panel.dart';
 
-class JobsHomeScreen extends ConsumerWidget {
+class JobsHomeScreen extends ConsumerStatefulWidget {
   const JobsHomeScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<JobsHomeScreen> createState() => _JobsHomeScreenState();
+}
+
+class _JobsHomeScreenState extends ConsumerState<JobsHomeScreen> {
+  bool _updatingDuty = false;
+
+  Future<void> _refresh() async {
+    KayloFeedback.tap();
     final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-    final profile = ref.watch(workerProfileProvider).asData?.value;
-    final district = profile?.district;
-    final isOnline = ref.watch(dutyStatusProvider).asData?.value ?? true;
-    final pendingLive =
-        ref.watch(jobsRepositoryProvider) is PendingJobsRepository;
+    ref.invalidate(workerProfileProvider);
+    try {
+      await ref.read(jobsRepositoryProvider).getJobs();
+    } catch (_) {
+      if (mounted) KayloSnackbar.showError(context, l10n.jobsRefreshFailed);
+    }
+  }
+
+  Future<void> _setDuty(bool online) async {
+    if (_updatingDuty) return;
+    setState(() => _updatingDuty = true);
+    KayloFeedback.press();
+    final l10n = AppLocalizations.of(context)!;
+    try {
+      await ref.read(dutySwitchProvider).set(online);
+    } catch (_) {
+      if (mounted) KayloSnackbar.showError(context, l10n.dutyUpdateFailed);
+    } finally {
+      if (mounted) setState(() => _updatingDuty = false);
+    }
+  }
+
+  void _open(String route) {
+    KayloFeedback.selection();
+    context.push(route);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final l10n = AppLocalizations.of(context)!;
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    final secondary = dark
+        ? AppColors.textSecondaryDark
+        : AppColors.textSecondary;
+    final profileState = ref.watch(workerProfileProvider);
+    final profile = profileState.asData?.value;
+    final onlineState = ref.watch(dutyStatusProvider);
+    final online = onlineState.asData?.value ?? profile?.isAvailable ?? false;
+    final pending = ref.watch(jobsRepositoryProvider) is PendingJobsRepository;
+    final jobs = ref.watch(jobsStreamProvider);
     final earnings = ref.watch(earningsSummaryProvider);
-    final activeJobAsync = ref.watch(activeJobProvider);
-    final requestsAsync = ref.watch(sortedIncomingRequestsProvider);
+    final active = ref.watch(activeJobProvider);
+    final requests = ref.watch(sortedIncomingRequestsProvider);
+    final unread = ref.watch(partnerMessageUnreadProvider);
+    final now = DateTime.now();
+    final greeting = now.hour < 12
+        ? l10n.homeMorning
+        : now.hour < 17
+        ? l10n.homeAfternoon
+        : l10n.homeEvening;
+    final name = profile?.name.trim().split(RegExp(r'\s+')).first ?? '';
+    final unavailable = pending || !jobs.hasValue || jobs.hasError;
 
     return Scaffold(
       appBar: AppBar(
-        title: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              l10n.appTitle,
-              style: Theme.of(
-                context,
-              ).textTheme.titleMedium?.copyWith(fontWeight: FontWeight.w800),
-            ),
-            Text(
-              [
-                if ((profile?.name ?? '').isNotEmpty) profile!.name,
-                if ((district ?? '').isNotEmpty) district!,
-              ].join(' • '),
-              style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                color: isDark
-                    ? AppColors.textSecondaryDark
-                    : AppColors.textSecondary,
-              ),
-            ),
-          ],
+        title: Text(
+          l10n.appTitle,
+          style: theme.textTheme.titleMedium?.copyWith(
+            fontWeight: FontWeight.w800,
+          ),
         ),
         actions: [
           IconButton(
             tooltip: l10n.chatMessages,
             icon: Badge.count(
-              count: ref.watch(partnerMessageUnreadProvider),
-              isLabelVisible: ref.watch(partnerMessageUnreadProvider) > 0,
+              count: unread,
+              isLabelVisible: unread > 0,
               child: const Icon(Icons.mail_outline_rounded),
             ),
-            onPressed: () => context.push(Routes.messages),
+            onPressed: () => _open(Routes.messages),
           ),
           IconButton(
-            icon: const Icon(Icons.refresh_rounded),
             tooltip: l10n.refreshJobsTooltip,
-            onPressed: () async {
-              KayloFeedback.tap();
-              try {
-                await ref.read(jobsRepositoryProvider).getJobs();
-              } catch (_) {
-                if (context.mounted) {
-                  KayloSnackbar.showError(context, l10n.jobsRefreshFailed);
-                }
-              }
-            },
+            icon: const Icon(Icons.refresh_rounded),
+            onPressed: _refresh,
           ),
+          const SizedBox(width: 8),
         ],
       ),
-      body: ListView(
-        padding: const EdgeInsets.fromLTRB(
-          AppSpacing.l,
-          AppSpacing.m,
-          AppSpacing.l,
-          100,
-        ),
-        children: [
-          // Duty Toggle Pill
-          _DutyTogglePill(
-            isOnline: isOnline,
-            district: district,
-            onChanged: (online) async {
-              KayloFeedback.press();
-              try {
-                await ref.read(dutySwitchProvider).set(online);
-              } catch (_) {
-                if (context.mounted) {
-                  KayloSnackbar.showError(context, l10n.dutyUpdateFailed);
-                }
-              }
-            },
-          ),
-          const SizedBox(height: AppSpacing.m),
-
-          if (pendingLive && !isOnline) ...[
-            Text(l10n.liveJobsPending),
-            const SizedBox(height: AppSpacing.m),
-          ],
-          // Today's Summary Strip
-          Row(
-            children: [
-              Expanded(
-                child: _SummaryBox(
-                  label: l10n.todaysPay,
-                  value: pendingLive ? '—' : formatRupees(earnings.todayTotal),
-                  color: AppColors.brandPrimary,
-                ),
-              ),
-              const SizedBox(width: AppSpacing.s),
-              Expanded(
-                child: _SummaryBox(
-                  label: l10n.jobsToday,
-                  value: pendingLive ? '—' : '${earnings.todayJobsCount}',
-                ),
-              ),
-              const SizedBox(width: AppSpacing.s),
-              Expanded(
-                child: _SummaryBox(
-                  label: l10n.rating,
-                  value: '${(profile?.rating ?? 0).toStringAsFixed(1)} ★',
-                  color: AppColors.secondaryAccent,
-                ),
-              ),
-            ],
-          ),
-          const SizedBox(height: AppSpacing.l),
-
-          // Active Job in Progress (if any)
-          activeJobAsync.when(
-            data: (activeJob) {
-              if (activeJob == null) return const SizedBox.shrink();
-              return Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SectionHeader(title: l10n.activeJob),
-                  const SizedBox(height: AppSpacing.s),
-                  JobCard(job: activeJob),
-                  const SizedBox(height: AppSpacing.l),
-                ],
-              );
-            },
-            loading: () => const SizedBox.shrink(),
-            error: (_, _) => const SizedBox.shrink(),
-          ),
-
-          if (isOnline) const _SortAndFilterChipsRow(),
-          // Incoming Requests (Only when Online)
-          if (!isOnline) ...[
-            const SizedBox(height: AppSpacing.l),
-            EmptyState(
-              title: l10n.offlineTitle,
-              description: l10n.offlineDescription,
-              icon: Icons.power_settings_new_rounded,
+      body: RefreshIndicator(
+        onRefresh: _refresh,
+        child: ListView(
+          physics: const AlwaysScrollableScrollPhysics(),
+          padding: const EdgeInsets.fromLTRB(20, 10, 20, 120),
+          children: [
+            Text(
+              [
+                DateFormat.MMMEd(l10n.localeName).format(now),
+                if (profile?.district?.isNotEmpty ?? false) profile!.district!,
+              ].join(' · '),
+              style: theme.textTheme.bodySmall?.copyWith(color: secondary),
             ),
-          ] else ...[
-            requestsAsync.when(
-              data: (requests) {
-                return Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SectionHeader(title: l10n.newRequests(requests.length)),
-                    const SizedBox(height: AppSpacing.m),
-                    if (requests.isEmpty &&
-                        ref.watch(jobServiceFilterProvider).isNotEmpty)
-                      EmptyState(
-                        title: l10n.filterEmptyTitle,
-                        description: l10n.filterEmptySubtitle,
-                        icon: Icons.filter_alt_off_outlined,
-                      )
-                    else if (requests.isEmpty)
-                      KayloCard(
-                        child: Row(
-                          children: [
-                            const SizedBox(
-                              width: 24,
-                              height: 24,
-                              child: CircularProgressIndicator(
-                                strokeWidth: 2.5,
-                                color: AppColors.brandPrimary,
-                              ),
-                            ),
-                            const SizedBox(width: AppSpacing.m),
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    l10n.searchingForRequests,
-                                    style: const TextStyle(
-                                      fontWeight: FontWeight.w700,
-                                    ),
-                                  ),
-                                  Text(
-                                    l10n.searchingForRequestsSubtitle,
-                                    style: Theme.of(context).textTheme.bodySmall
-                                        ?.copyWith(
-                                          color: isDark
-                                              ? AppColors.textSecondaryDark
-                                              : AppColors.textSecondary,
-                                        ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      )
-                    else
-                      for (final job in requests) ...[
-                        JobCard(job: job),
-                        const SizedBox(height: AppSpacing.m),
-                      ],
-                  ],
-                );
-              },
-              loading: () => const Center(child: KayloLoader()),
-              error: (err, _) => Text(
-                err is LiveJobsPending
-                    ? l10n.liveJobsPending
-                    : l10n.jobsRefreshFailed,
+            const SizedBox(height: 10),
+            Text(
+              name.isEmpty ? greeting : '$greeting, $name.',
+              style: theme.textTheme.headlineSmall?.copyWith(
+                fontWeight: FontWeight.w700,
+                letterSpacing: -.7,
+                height: 1.2,
               ),
             ),
-          ],
-        ],
-      ),
-    );
-  }
-}
-
-class _DutyTogglePill extends StatelessWidget {
-  final bool isOnline;
-  final String? district;
-  final ValueChanged<bool> onChanged;
-
-  const _DutyTogglePill({
-    required this.isOnline,
-    required this.district,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    final l10n = AppLocalizations.of(context)!;
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    final bgColor = isOnline
-        ? AppColors.brandPrimary.withValues(alpha: isDark ? 0.2 : 0.1)
-        : (isDark ? AppColors.surfaceMutedDark : AppColors.surfaceAlt);
-
-    final borderColor = isOnline
-        ? AppColors.brandPrimary.withValues(alpha: 0.4)
-        : (isDark ? AppColors.borderDark : AppColors.border);
-
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      decoration: BoxDecoration(
-        color: bgColor,
-        borderRadius: BorderRadius.circular(AppRadius.button),
-        border: Border.all(color: borderColor, width: 1.5),
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 12,
-            height: 12,
-            decoration: BoxDecoration(
-              color: isOnline
-                  ? AppColors.brandPrimaryBright
-                  : (isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary),
-              shape: BoxShape.circle,
+            const SizedBox(height: 5),
+            Text(
+              l10n.homeDayOverview,
+              style: theme.textTheme.bodyMedium?.copyWith(color: secondary),
             ),
-          ),
-          const SizedBox(width: AppSpacing.m),
-          Expanded(
-            child: Column(
+            const SizedBox(height: 22),
+            TweenAnimationBuilder<double>(
+              tween: Tween(begin: 0, end: 1),
+              duration: MediaQuery.disableAnimationsOf(context)
+                  ? Duration.zero
+                  : const Duration(milliseconds: 500),
+              curve: Curves.easeOutCubic,
+              builder: (context, value, child) => Opacity(
+                opacity: value,
+                child: Transform.translate(
+                  offset: Offset(0, 8 * (1 - value)),
+                  child: child,
+                ),
+              ),
+              child: WorkdayPanel(
+                earningsLabel: l10n.todaysPay,
+                earnings: unavailable ? '—' : formatRupees(earnings.todayTotal),
+                jobsLabel: l10n.jobsToday,
+                jobs: unavailable ? '—' : '${earnings.todayJobsCount}',
+                ratingLabel: l10n.rating,
+                rating: profile == null || profile.reviewsCount == 0
+                    ? '—'
+                    : '${profile.rating.toStringAsFixed(1)} ★',
+                dutyLabel: online ? l10n.homeOnDuty : l10n.homeOffDuty,
+                dutyDescription: online
+                    ? l10n.homeOnDutyHint
+                    : l10n.homeOffDutyHint,
+                online: online,
+                updating: _updatingDuty || pending || !onlineState.hasValue,
+                onDutyChanged: _setDuty,
+                onEarnings: () => _open(Routes.earnings),
+                onReviews: () => _open(Routes.reviews),
+              ),
+            ),
+            const SizedBox(height: 12),
+            Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(
-                  isOnline ? l10n.dutyOnline : l10n.dutyOffline,
-                  style: Theme.of(context).textTheme.titleSmall?.copyWith(
-                    fontWeight: FontWeight.w700,
-                    color: isOnline
-                        ? AppColors.brandPrimary
-                        : (isDark
-                              ? AppColors.textPrimaryDark
-                              : AppColors.textPrimary),
+                Expanded(
+                  child: WorkdayShortcut(
+                    icon: Icons.calendar_month_outlined,
+                    label: l10n.homeSchedule,
+                    onTap: () => _open(Routes.availability),
                   ),
                 ),
-                Text(
-                  !isOnline
-                      ? l10n.dutyNotReceivingRequests
-                      : (district ?? '').isEmpty
-                      ? l10n.dutyTakingOrdersAnywhere
-                      : l10n.dutyTakingOrders(district!),
-                  style: TextStyle(
-                    fontSize: 11,
-                    color: isDark
-                        ? AppColors.textSecondaryDark
-                        : AppColors.textSecondary,
+                Expanded(
+                  child: WorkdayShortcut(
+                    icon: Icons.history_rounded,
+                    label: l10n.homeHistory,
+                    onTap: () => _open(Routes.history),
+                  ),
+                ),
+                Expanded(
+                  child: WorkdayShortcut(
+                    icon: Icons.star_outline_rounded,
+                    label: l10n.reviewsTitle,
+                    onTap: () => _open(Routes.reviews),
                   ),
                 ),
               ],
             ),
-          ),
-          Switch.adaptive(
-            value: isOnline,
-            onChanged: onChanged,
-            activeTrackColor: AppColors.brandPrimary,
-          ),
-        ],
+            const SizedBox(height: 20),
+            active.when(
+              data: (job) => job == null
+                  ? const SizedBox.shrink()
+                  : Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SectionHeader(title: l10n.activeJob),
+                        const SizedBox(height: 12),
+                        JobCard(job: job),
+                        const SizedBox(height: 24),
+                      ],
+                    ),
+              loading: () => const SizedBox.shrink(),
+              error: (_, _) => const SizedBox.shrink(),
+            ),
+            // Existing scheduled requests must remain actionable off duty.
+            requests.when(
+              data: (items) => Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SectionHeader(title: l10n.newRequests(items.length)),
+                  const SizedBox(height: 14),
+                  if ((ref
+                              .watch(incomingRequestsProvider)
+                              .asData
+                              ?.value
+                              .isNotEmpty ??
+                          false) ||
+                      ref.watch(jobServiceFilterProvider).isNotEmpty)
+                    const _SortAndFilterChipsRow(),
+                  if (items.isEmpty &&
+                      ref.watch(jobServiceFilterProvider).isNotEmpty)
+                    EmptyState(
+                      title: l10n.filterEmptyTitle,
+                      description: l10n.filterEmptySubtitle,
+                      icon: Icons.filter_alt_off_outlined,
+                    )
+                  else if (items.isEmpty)
+                    _QuietWorkday(
+                      title: online ? l10n.homeReadyTitle : l10n.homeRestTitle,
+                      body: pending
+                          ? l10n.liveJobsPending
+                          : online
+                          ? l10n.homeReadyBody
+                          : l10n.homeRestBody,
+                    )
+                  else
+                    for (final job in items) ...[
+                      JobCard(key: ValueKey(job.id), job: job),
+                      const SizedBox(height: 14),
+                    ],
+                ],
+              ),
+              loading: () => const Center(child: KayloLoader()),
+              error: (err, _) => Column(
+                children: [
+                  Text(
+                    err is LiveJobsPending
+                        ? l10n.liveJobsPending
+                        : l10n.jobsRefreshFailed,
+                  ),
+                  TextButton.icon(
+                    onPressed: _refresh,
+                    icon: const Icon(Icons.refresh_rounded),
+                    label: Text(l10n.retry),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
-class _SummaryBox extends StatelessWidget {
-  final String label;
-  final String value;
-  final Color? color;
-
-  const _SummaryBox({required this.label, required this.value, this.color});
+class _QuietWorkday extends StatelessWidget {
+  final String title, body;
+  const _QuietWorkday({required this.title, required this.body});
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    return KayloCard(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
+    final theme = Theme.of(context);
+    final dark = theme.brightness == Brightness.dark;
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: dark ? AppColors.surfaceDark : const Color(0xFFF6F5EC),
+        borderRadius: BorderRadius.circular(22),
+        border: Border.all(
+          color: dark ? AppColors.borderDark : const Color(0xFFE7E7D8),
+        ),
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Icon(
+            Icons.mark_email_read_outlined,
+            size: 28,
+            color: dark ? const Color(0xFFB9D0B6) : AppColors.brandPrimary,
+          ),
+          const SizedBox(height: 14),
           Text(
-            label,
-            style: TextStyle(
-              fontSize: 11,
-              fontWeight: FontWeight.w500,
-              color: isDark
-                  ? AppColors.textSecondaryDark
-                  : AppColors.textSecondary,
+            title,
+            style: theme.textTheme.titleMedium?.copyWith(
+              fontWeight: FontWeight.w700,
             ),
           ),
-          const SizedBox(height: 2),
-          FittedBox(
-            fit: BoxFit.scaleDown,
-            child: Text(
-              value,
-              style: TextStyle(
-                fontSize: 16,
-                fontWeight: FontWeight.w800,
-                color:
-                    color ??
-                    (isDark
-                        ? AppColors.textPrimaryDark
-                        : AppColors.textPrimary),
-              ),
+          const SizedBox(height: 6),
+          Text(
+            body,
+            style: theme.textTheme.bodyMedium?.copyWith(
+              height: 1.5,
+              color: dark
+                  ? AppColors.textSecondaryDark
+                  : AppColors.textSecondary,
             ),
           ),
         ],

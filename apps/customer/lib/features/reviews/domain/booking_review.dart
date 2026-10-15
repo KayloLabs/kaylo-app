@@ -5,6 +5,7 @@ class BookingReview {
   final String workerId;
   final int rating;
   final String? text;
+  final bool hideName;
   final DateTime createdAt;
 
   const BookingReview({
@@ -12,6 +13,7 @@ class BookingReview {
     required this.workerId,
     required this.rating,
     this.text,
+    this.hideName = false,
     required this.createdAt,
   });
 
@@ -20,6 +22,7 @@ class BookingReview {
     'workerId': workerId,
     'rating': rating,
     'text': text,
+    'hideName': hideName,
     'createdAt': createdAt.toIso8601String(),
   };
 
@@ -28,6 +31,7 @@ class BookingReview {
     workerId: json['workerId'] as String,
     rating: json['rating'] as int,
     text: json['text'] as String?,
+    hideName: json['hideName'] as bool? ?? false,
     createdAt: DateTime.parse(json['createdAt'] as String),
   );
 }

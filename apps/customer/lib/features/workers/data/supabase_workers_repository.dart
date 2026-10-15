@@ -20,7 +20,7 @@ class SupabaseWorkersRepository implements WorkersRepository {
           .from('worker_profiles')
           .select()
           .contains('skill_ids', [serviceId])
-          .eq('is_available', true)
+          .eq('is_bookable', true)
           .order('average_rating', ascending: false);
       return rows.map(_workerFromRow).toList();
     } catch (e) {
@@ -59,7 +59,7 @@ class SupabaseWorkersRepository implements WorkersRepository {
           .from('worker_profiles')
           .select()
           .or('full_name.ilike.%$term%,district.ilike.%$term%')
-          .eq('is_available', true)
+          .eq('is_bookable', true)
           .order('average_rating', ascending: false);
       return rows.map(_workerFromRow).toList();
     } catch (e) {
@@ -70,22 +70,10 @@ class SupabaseWorkersRepository implements WorkersRepository {
   @override
   Future<List<WorkerReview>> getReviewsForWorker(String workerId) async {
     try {
-      final rows = await _client
-          .from('reviews')
-          .select(
-            'review_id, worker_id, rating, review, created_at, customers(persons(full_name))',
-          )
-          .eq('worker_id', workerId)
-          .order('created_at', ascending: false);
+      final result = await _client.rpc('public_worker_reviews', params: {'p_worker_id': workerId});
+      final rows = (result as List).cast<Map<String, dynamic>>();
       return rows.map((r) {
-        String customerName = 'Verified Customer';
-        try {
-          final cust = r['customers'] as Map<String, dynamic>?;
-          final person = cust?['persons'] as Map<String, dynamic>?;
-          if (person?['full_name'] != null) {
-            customerName = person!['full_name'] as String;
-          }
-        } catch (_) {}
+        final customerName = r['customer_name'] as String? ?? 'Verified customer';
         return WorkerReview(
           id: r['review_id'] as String,
           workerId: r['worker_id'] as String,
@@ -113,7 +101,7 @@ class SupabaseWorkersRepository implements WorkersRepository {
       location: (row['district'] as String?) ?? '',
       trustScore: ((row['trust_score'] as num?) ?? 0).toDouble(),
       isVerified: (row['is_verified'] as bool?) ?? false,
-      isAvailable: (row['is_available'] as bool?) ?? true,
+      isAvailable: (row['is_available'] as bool?) ?? false,
       hourlyRate: (row['hourly_rate'] as num?)?.toDouble(),
       totalJobs: ((row['total_jobs'] as num?) ?? 0).toInt(),
     );

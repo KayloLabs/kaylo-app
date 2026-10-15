@@ -13,7 +13,7 @@ class WorkerReview {
   }) : assert(rating >= 1 && rating <= 5);
   factory WorkerReview.fromJson(Map<String, dynamic> row) => WorkerReview(
     id: row['review_id'] as String,
-    jobId: row['booking_id'] as String,
+    jobId: row['booking_id'] as String? ?? '',
     customerName: row['customer_name'] as String? ?? '',
     serviceName: row['service_name'] as String? ?? '',
     rating: (row['rating'] as num).toInt(),

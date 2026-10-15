@@ -65,7 +65,27 @@ class FirebasePartnerAuthRepository implements PartnerAuthRepository {
     final result = await supabase.Supabase.instance.client.rpc(
       'partner_login_state',
     );
-    return result == null ? null : Map<String, dynamic>.from(result as Map);
+    final state = result == null
+        ? null
+        : Map<String, dynamic>.from(result as Map);
+    return reconcileRecoveredPassword(
+      state,
+      confirmChange: () async {
+        // Sign-in already supplies a fresh token. Forcing a refresh here would
+        // emit idTokenChanges and recursively start another access check.
+        final token = await FirebaseAuth.instance.currentUser?.getIdToken();
+        if (token == null) {
+          throw const PartnerAuthException(PartnerAuthError.sessionExpired);
+        }
+        await _verifyWithBackend(token);
+      },
+      reload: () async {
+        final fresh = await supabase.Supabase.instance.client.rpc(
+          'partner_login_state',
+        );
+        return fresh == null ? null : Map<String, dynamic>.from(fresh as Map);
+      },
+    );
   }
 
   static Future<void> _verifyWithBackend(String token) async {
@@ -321,3 +341,22 @@ PartnerAuthError partnerAuthError(FirebaseAuthException error) =>
       'user-disabled' => PartnerAuthError.sessionExpired,
       _ => PartnerAuthError.unavailable,
     };
+
+/// A hosted Firebase reset also satisfies the first-password requirement, but
+/// only after the server verifies its timestamp against the current issuance.
+Future<Map<String, dynamic>?> reconcileRecoveredPassword(
+  Map<String, dynamic>? state, {
+  required Future<void> Function() confirmChange,
+  required Future<Map<String, dynamic>?> Function() reload,
+}) async {
+  if (state?['must_change_password'] != true) return state;
+  try {
+    await confirmChange();
+    return await reload();
+  } on supabase.FunctionException catch (error) {
+    if (error.status == 409) {
+      return state; // Still using the issued temporary password.
+    }
+    rethrow;
+  }
+}

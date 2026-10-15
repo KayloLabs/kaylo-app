@@ -17,8 +17,13 @@ void main() {
       await signIn(tester);
       container.read(jobServiceFilterProvider.notifier).toggle('unmatched');
       await tester.pumpAndSettle();
+      await tester.scrollUntilVisible(
+        find.text('No jobs match your filter'),
+        180,
+        scrollable: find.byType(Scrollable).first,
+      );
       expect(find.text('No jobs match your filter'), findsOneWidget);
-      await tester.drag(find.byType(ListView).first, const Offset(0, -180));
+      await tester.ensureVisible(find.text('Clear filters'));
       await tester.pumpAndSettle();
       await tester.tap(find.text('Clear filters'));
       await tester.pumpAndSettle();

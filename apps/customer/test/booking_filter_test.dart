@@ -24,7 +24,7 @@ void main() {
         ],
         overrides: [
           userBookingsProvider.overrideWith(
-            (ref) async => [
+            (ref) => Stream.value([
               for (final status in BookingStatus.values)
                 Booking(
                   id: 'booking-${status.name}',
@@ -34,7 +34,7 @@ void main() {
                   status: status,
                   totalAmount: 100,
                 ),
-            ],
+            ]),
           ),
         ],
       ),
@@ -63,7 +63,9 @@ void main() {
             ),
           ),
         ],
-        overrides: [userBookingsProvider.overrideWith((ref) async => [])],
+        overrides: [
+          userBookingsProvider.overrideWith((ref) => Stream.value([])),
+        ],
       ),
     );
     await settle(tester);

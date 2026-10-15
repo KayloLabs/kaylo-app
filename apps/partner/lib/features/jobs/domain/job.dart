@@ -49,6 +49,9 @@ class Job {
   final double? distanceKm; // Unknown until a route distance is available.
   final DateTime scheduledAt;
   final double payout; // what the worker earns
+  final String paymentMode;
+  final double? customerPrice;
+  final String paymentStatus;
   final String notes; // customer instructions
   final JobStage stage;
 
@@ -64,9 +67,17 @@ class Job {
     required this.distanceKm,
     required this.scheduledAt,
     required this.payout,
+    this.paymentMode = 'online',
+    this.customerPrice,
+    this.paymentStatus = 'pending',
     required this.notes,
     required this.stage,
   });
+
+  bool get needsCashCollection =>
+      paymentMode == 'cash' &&
+      paymentStatus != 'success' &&
+      stage == JobStage.inProgress;
 
   bool get isActive =>
       stage == JobStage.accepted ||
@@ -90,6 +101,9 @@ class Job {
     double? distanceKm,
     DateTime? scheduledAt,
     double? payout,
+    String? paymentMode,
+    double? customerPrice,
+    String? paymentStatus,
     String? notes,
     JobStage? stage,
   }) {
@@ -105,6 +119,9 @@ class Job {
       distanceKm: distanceKm ?? this.distanceKm,
       scheduledAt: scheduledAt ?? this.scheduledAt,
       payout: payout ?? this.payout,
+      paymentMode: paymentMode ?? this.paymentMode,
+      customerPrice: customerPrice ?? this.customerPrice,
+      paymentStatus: paymentStatus ?? this.paymentStatus,
       notes: notes ?? this.notes,
       stage: stage ?? this.stage,
     );
@@ -122,6 +139,9 @@ class Job {
     'distanceKm': distanceKm,
     'scheduledAt': scheduledAt.toIso8601String(),
     'payout': payout,
+    'paymentMode': paymentMode,
+    'customerPrice': customerPrice,
+    'paymentStatus': paymentStatus,
     'notes': notes,
     'stage': stage.name,
   };
@@ -139,6 +159,9 @@ class Job {
       distanceKm: (json['distanceKm'] as num?)?.toDouble(),
       scheduledAt: DateTime.parse(json['scheduledAt'] as String),
       payout: (json['payout'] as num).toDouble(),
+      paymentMode: json['paymentMode'] as String? ?? 'online',
+      customerPrice: (json['customerPrice'] as num?)?.toDouble(),
+      paymentStatus: json['paymentStatus'] as String? ?? 'pending',
       notes: json['notes'] as String? ?? '',
       stage: JobStage.values.firstWhere(
         (e) => e.name == json['stage'],
@@ -147,11 +170,46 @@ class Job {
     );
   }
 
+  // Provider notifications must distinguish newer snapshots of the same job.
+  // Identity-only equality hid stage and contact changes from detail screens.
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is Job && runtimeType == other.runtimeType && id == other.id;
+      other is Job &&
+          id == other.id &&
+          stage == other.stage &&
+          serviceName == other.serviceName &&
+          serviceIcon == other.serviceIcon &&
+          customerName == other.customerName &&
+          customerPhone == other.customerPhone &&
+          addressLine == other.addressLine &&
+          latitude == other.latitude &&
+          longitude == other.longitude &&
+          distanceKm == other.distanceKm &&
+          scheduledAt == other.scheduledAt &&
+          payout == other.payout &&
+          paymentMode == other.paymentMode &&
+          customerPrice == other.customerPrice &&
+          paymentStatus == other.paymentStatus &&
+          notes == other.notes;
 
   @override
-  int get hashCode => id.hashCode;
+  int get hashCode => Object.hash(
+    id,
+    stage,
+    serviceName,
+    serviceIcon,
+    customerName,
+    customerPhone,
+    addressLine,
+    latitude,
+    longitude,
+    distanceKm,
+    scheduledAt,
+    payout,
+    paymentMode,
+    customerPrice,
+    paymentStatus,
+    notes,
+  );
 }

@@ -241,7 +241,7 @@ class JobCard extends ConsumerWidget {
                       text: job.stage.actionText(l10n),
                       onPressed: () {
                         KayloFeedback.press();
-                        ref.read(jobsRepositoryProvider).advanceJob(job.id);
+                        context.push(Routes.jobDetail(job.id));
                       },
                     ),
                   ),

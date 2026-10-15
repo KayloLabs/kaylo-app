@@ -1,3 +1,4 @@
+import '../../features/calls/partner_call_screen.dart';
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -13,6 +14,7 @@ import '../../features/auth/presentation/screens/account_status_screen.dart';
 import '../../features/onboarding/presentation/screens/worker_application_screen.dart';
 import '../../features/onboarding/presentation/screens/worker_application_status_screen.dart';
 import '../../features/auth/presentation/screens/login_screen.dart';
+import '../../features/auth/presentation/screens/forgot_password_screen.dart';
 import '../../features/availability/presentation/screens/availability_screen.dart';
 import '../../features/splash/presentation/screens/partner_splash_screen.dart';
 import '../../features/earnings/presentation/screens/earnings_screen.dart';
@@ -48,12 +50,23 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
     },
     routes: [
       GoRoute(
+        path: '/booking-call/:id',
+        builder: (_, state) =>
+            PartnerCallScreen(callId: state.pathParameters['id']!),
+      ),
+      GoRoute(
         path: Routes.splash,
         builder: (_, _) => const PartnerSplashScreen(),
       ),
       GoRoute(
         path: Routes.login,
         builder: (_, _) => const PartnerLoginScreen(),
+      ),
+      GoRoute(
+        path: Routes.forgotPassword,
+        builder: (_, state) => PartnerForgotPasswordScreen(
+          initialPartnerId: state.extra is String ? state.extra as String : '',
+        ),
       ),
       GoRoute(
         path: Routes.apply,
@@ -151,6 +164,7 @@ final partnerRouterProvider = Provider<GoRouter>((ref) {
 String? partnerRedirect(PartnerAccess access, String location) {
   final public = [
     Routes.login,
+    Routes.forgotPassword,
     Routes.apply,
     Routes.applicationStatus,
   ].contains(location);
@@ -164,6 +178,7 @@ String? partnerRedirect(PartnerAccess access, String location) {
       target =
           [
             Routes.login,
+            Routes.forgotPassword,
             Routes.apply,
             Routes.applicationStatus,
             Routes.accountStatus,

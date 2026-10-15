@@ -1459,7 +1459,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get perHour => 'per hour';
 
   @override
-  String get priceOnVisit => 'Price shared on visit';
+  String get priceOnVisit => 'See price before booking';
 
   @override
   String get noReviewsYet => 'No reviews yet';
@@ -1771,7 +1771,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get callErrorRoom =>
-      'This call is unavailable or has ended. Return to SOS to start a new call.';
+      'This call is unavailable or has ended. Ask the caller to start a new call.';
 
   @override
   String get callErrorSettings =>
@@ -1783,7 +1783,7 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get callErrorJoin =>
-      'Could not join this call. Retry, or ask the caller to start a new SOS call.';
+      'Could not join this call. Retry or ask the caller to start a new call.';
 
   @override
   String get callInterrupted => 'Connection interrupted. Retrying…';
@@ -2478,4 +2478,40 @@ class AppLocalizationsEn extends AppLocalizations {
   @override
   String get chatLoadFailed =>
       'Could not load this conversation. Please retry.';
+
+  @override
+  String get partnerOnDuty => 'On duty';
+
+  @override
+  String get partnerOffDuty => 'Off duty · Schedule a booking';
+
+  @override
+  String get bookingRequested => 'Booking requested';
+
+  @override
+  String get bookingAwaitingPartner =>
+      'Your request has been sent. Your booking is awaiting the partner’s confirmation.';
+
+  @override
+  String get hideReviewName => 'Hide my name';
+
+  @override
+  String get hideReviewNameHint =>
+      'Shown as “Verified customer”. The professional may still recognise your booking.';
+
+  @override
+  String get bookingCallTitle => 'Kaylo call';
+
+  @override
+  String get bookingCallConnected => 'Booking call';
+
+  @override
+  String get bookingCallIncoming => 'Incoming Kaylo call';
+
+  @override
+  String get bookingCallIncomingBody => 'A booking participant is calling.';
+
+  @override
+  String get bookingCallFailed =>
+      'Could not start the call. Check your connection and retry.';
 }

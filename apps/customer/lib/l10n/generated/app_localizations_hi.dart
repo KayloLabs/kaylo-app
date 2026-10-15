@@ -1455,7 +1455,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get perHour => 'प्रति घंटा';
 
   @override
-  String get priceOnVisit => 'विज़िट पर तय मूल्य';
+  String get priceOnVisit => 'बुकिंग से पहले कीमत देखें';
 
   @override
   String get noReviewsYet => 'अभी कोई समीक्षा नहीं';
@@ -2480,4 +2480,41 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get chatLoadFailed => 'यह बातचीत लोड नहीं हुई। फिर कोशिश करें।';
+
+  @override
+  String get partnerOnDuty => 'ड्यूटी पर';
+
+  @override
+  String get partnerOffDuty => 'ड्यूटी पर नहीं · बुकिंग शेड्यूल करें';
+
+  @override
+  String get bookingRequested => 'बुकिंग का अनुरोध भेजा गया';
+
+  @override
+  String get bookingAwaitingPartner =>
+      'आपका अनुरोध भेज दिया गया है। बुकिंग के लिए पार्टनर की पुष्टि का इंतज़ार है।';
+
+  @override
+  String get hideReviewName => 'मेरा नाम छिपाएँ';
+
+  @override
+  String get hideReviewNameHint =>
+      '“Verified customer” दिखेगा। पेशेवर फिर भी आपकी बुकिंग पहचान सकते हैं।';
+
+  @override
+  String get bookingCallTitle => 'Kaylo कॉल';
+
+  @override
+  String get bookingCallConnected => 'बुकिंग कॉल';
+
+  @override
+  String get bookingCallIncoming => 'Kaylo कॉल आ रही है';
+
+  @override
+  String get bookingCallIncomingBody =>
+      'बुकिंग से जुड़ा व्यक्ति कॉल कर रहा है।';
+
+  @override
+  String get bookingCallFailed =>
+      'कॉल शुरू नहीं हुई। कनेक्शन जाँचें और दोबारा कोशिश करें।';
 }

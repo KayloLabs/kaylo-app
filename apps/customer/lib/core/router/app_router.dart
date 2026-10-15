@@ -1,3 +1,4 @@
+import '../../features/care/presentation/screens/care_call_screen.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -92,6 +93,11 @@ final goRouterProvider = Provider<GoRouter>((ref) {
       return null;
     },
     routes: [
+      GoRoute(
+        path: '/booking-call/:id',
+        builder: (_, state) =>
+            CareCallScreen(callId: state.pathParameters['id']!),
+      ),
       GoRoute(
         path: Routes.splash,
         builder: (context, state) => const SplashScreen(),

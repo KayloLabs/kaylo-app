@@ -55,6 +55,9 @@ class _BookingConfirmationScreenState
         ? AppColors.textSecondaryDark
         : AppColors.textSecondary;
     final booking = receipt.booking;
+    final awaitingPartner =
+        booking.workerId != null &&
+        booking.workerStage == WorkerStage.requested;
     final scheduledTime = TimeOfDay.fromDateTime(booking.scheduledAt);
 
     Widget row(String label, Widget value) => Padding(
@@ -107,7 +110,7 @@ class _BookingConfirmationScreenState
               ),
               const SizedBox(height: AppSpacing.xl),
               Text(
-                l10n.bookingConfirmed,
+                awaitingPartner ? l10n.bookingRequested : l10n.bookingConfirmed,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineMedium?.copyWith(
                   fontWeight: FontWeight.w700,
@@ -115,10 +118,12 @@ class _BookingConfirmationScreenState
               ),
               const SizedBox(height: AppSpacing.s),
               Text(
-                l10n.bookingConfirmedSubtitle(
-                  loc.formatFullDate(booking.scheduledAt),
-                  loc.formatTimeOfDay(scheduledTime),
-                ),
+                awaitingPartner
+                    ? l10n.bookingAwaitingPartner
+                    : l10n.bookingConfirmedSubtitle(
+                        loc.formatFullDate(booking.scheduledAt),
+                        loc.formatTimeOfDay(scheduledTime),
+                      ),
                 textAlign: TextAlign.center,
                 style: Theme.of(
                   context,

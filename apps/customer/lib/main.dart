@@ -1,3 +1,4 @@
+import 'features/care/presentation/widgets/incoming_call_overlay.dart';
 import 'dart:async';
 import 'features/booking/application/bookings_providers.dart';
 import 'features/notifications/application/notifications_providers.dart';
@@ -160,7 +161,13 @@ class _KayloAppState extends ConsumerState<KayloApp>
                 systemNavigationBarDividerColor: Colors.transparent,
                 systemNavigationBarContrastEnforced: false,
               ),
-          child: DevicePreview.appBuilder(context, child),
+          child: DevicePreview.appBuilder(
+            context,
+            IncomingCallOverlay(
+              router: router,
+              child: child ?? const SizedBox.shrink(),
+            ),
+          ),
         );
       },
       routerConfig: router,

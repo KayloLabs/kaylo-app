@@ -10,3 +10,8 @@ abstract class BookingsRepository {
   /// already holds on [date], so the schedule can grey those slots out.
   Future<Set<int>> takenSlotMinutes(String workerId, DateTime date);
 }
+
+/// Repositories backed by a live source can keep both booking screens in sync.
+abstract interface class LiveBookingsRepository {
+  Stream<List<Booking>> watchUserBookings(String userId);
+}

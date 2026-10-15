@@ -642,6 +642,17 @@ class _WorkerCardRow extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
+                    Text(
+                      worker.isAvailable
+                          ? l10n.partnerOnDuty
+                          : l10n.partnerOffDuty,
+                      style: Theme.of(context).textTheme.labelSmall?.copyWith(
+                        color: worker.isAvailable
+                            ? AppColors.brandPrimary
+                            : AppColors.textSecondary,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
                     RatingStars(
                       rating: worker.rating,
                       reviewCount: worker.reviewsCount,
@@ -653,7 +664,7 @@ class _WorkerCardRow extends StatelessWidget {
               Column(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
-                  Text(
+                  if (worker.hourlyRate != null) Text(
                     worker.hourlyRate == null
                         ? l10n.priceOnVisit
                         : '₹${worker.hourlyRate!.toInt()}/hr',

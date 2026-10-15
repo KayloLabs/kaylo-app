@@ -774,10 +774,10 @@ abstract class AppLocalizations {
   /// **'Hide password'**
   String get authHidePassword;
 
-  /// Partner issued-account authentication or notification text
+  /// Open self-service password recovery.
   ///
   /// In en, this message translates to:
-  /// **'Forgot password? Contact Kaylo'**
+  /// **'Forgot password?'**
   String get authForgotPassword;
 
   /// Partner issued-account authentication or notification text
@@ -1967,6 +1967,396 @@ abstract class AppLocalizations {
   /// In en, this message translates to:
   /// **'Approximate area'**
   String get mapApproximateArea;
+
+  /// No description provided for @authResetTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Reset password'**
+  String get authResetTitle;
+
+  /// No description provided for @authResetDescription.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your Partner ID and the email address you registered with. We’ll email you a link to choose a new password.'**
+  String get authResetDescription;
+
+  /// No description provided for @authResetEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Registered email'**
+  String get authResetEmail;
+
+  /// No description provided for @authResetInvalidEmail.
+  ///
+  /// In en, this message translates to:
+  /// **'Enter your registered email address.'**
+  String get authResetInvalidEmail;
+
+  /// No description provided for @authResetSend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send reset link'**
+  String get authResetSend;
+
+  /// No description provided for @authResetInbox.
+  ///
+  /// In en, this message translates to:
+  /// **'Check your inbox'**
+  String get authResetInbox;
+
+  /// No description provided for @authResetSent.
+  ///
+  /// In en, this message translates to:
+  /// **'If these details match an active partner account, a reset link will arrive by email. Check your spam folder too. After resetting, sign in with your Partner ID and new password.'**
+  String get authResetSent;
+
+  /// No description provided for @authResetResend.
+  ///
+  /// In en, this message translates to:
+  /// **'Send another link'**
+  String get authResetResend;
+
+  /// No description provided for @authResetResendIn.
+  ///
+  /// In en, this message translates to:
+  /// **'Send again in {seconds}s'**
+  String authResetResendIn(int seconds);
+
+  /// No description provided for @authResetBack.
+  ///
+  /// In en, this message translates to:
+  /// **'Back to sign in'**
+  String get authResetBack;
+
+  /// No description provided for @authResetDemo.
+  ///
+  /// In en, this message translates to:
+  /// **'Demo mode does not send reset emails. Use the live app to reset your password.'**
+  String get authResetDemo;
+
+  /// Confirmation after the server updates and reloads the job
+  ///
+  /// In en, this message translates to:
+  /// **'Status updated to {stage}'**
+  String jobStageUpdated(String stage);
+
+  /// No description provided for @jobStageUpdateFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not confirm the status update. Check the current job status and try again.'**
+  String get jobStageUpdateFailed;
+
+  /// No description provided for @jobCashRequired.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm cash collection before completing this cash booking.'**
+  String get jobCashRequired;
+
+  /// No description provided for @homeMorning.
+  ///
+  /// In en, this message translates to:
+  /// **'Good morning'**
+  String get homeMorning;
+
+  /// No description provided for @homeAfternoon.
+  ///
+  /// In en, this message translates to:
+  /// **'Good afternoon'**
+  String get homeAfternoon;
+
+  /// No description provided for @homeEvening.
+  ///
+  /// In en, this message translates to:
+  /// **'Good evening'**
+  String get homeEvening;
+
+  /// No description provided for @homeDayOverview.
+  ///
+  /// In en, this message translates to:
+  /// **'Your day, at a glance.'**
+  String get homeDayOverview;
+
+  /// No description provided for @homeReadyTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Ready for your next job'**
+  String get homeReadyTitle;
+
+  /// No description provided for @homeReadyBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Your booking requests will appear here. Keep your working hours up to date.'**
+  String get homeReadyBody;
+
+  /// No description provided for @homeRestTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Taking a break'**
+  String get homeRestTitle;
+
+  /// No description provided for @homeRestBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Customers can still request a booking within your working hours.'**
+  String get homeRestBody;
+
+  /// No description provided for @homeOnDuty.
+  ///
+  /// In en, this message translates to:
+  /// **'On duty'**
+  String get homeOnDuty;
+
+  /// No description provided for @homeOffDuty.
+  ///
+  /// In en, this message translates to:
+  /// **'Off duty'**
+  String get homeOffDuty;
+
+  /// No description provided for @homeOnDutyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Open to new work'**
+  String get homeOnDutyHint;
+
+  /// No description provided for @homeOffDutyHint.
+  ///
+  /// In en, this message translates to:
+  /// **'Scheduled bookings are still open'**
+  String get homeOffDutyHint;
+
+  /// No description provided for @homeSchedule.
+  ///
+  /// In en, this message translates to:
+  /// **'Schedule'**
+  String get homeSchedule;
+
+  /// No description provided for @homeHistory.
+  ///
+  /// In en, this message translates to:
+  /// **'History'**
+  String get homeHistory;
+
+  /// No description provided for @confirmCashReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm cash received'**
+  String get confirmCashReceived;
+
+  /// No description provided for @confirmCashReceivedBody.
+  ///
+  /// In en, this message translates to:
+  /// **'Confirm that you received {amount} from the customer. This will complete the job.'**
+  String confirmCashReceivedBody(String amount);
+
+  /// No description provided for @cashReceived.
+  ///
+  /// In en, this message translates to:
+  /// **'Cash received'**
+  String get cashReceived;
+
+  /// No description provided for @cashAmountUnavailable.
+  ///
+  /// In en, this message translates to:
+  /// **'The payable amount could not be loaded. Refresh the job before confirming cash.'**
+  String get cashAmountUnavailable;
+
+  /// No description provided for @callAudioOutputFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not change audio output. The call is still active.'**
+  String get callAudioOutputFailed;
+
+  /// No description provided for @callConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting…'**
+  String get callConnecting;
+
+  /// No description provided for @callCouldNotConnect.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not connect'**
+  String get callCouldNotConnect;
+
+  /// No description provided for @callDeclined.
+  ///
+  /// In en, this message translates to:
+  /// **'Declined'**
+  String get callDeclined;
+
+  /// No description provided for @callEndForEveryone.
+  ///
+  /// In en, this message translates to:
+  /// **'End call for everyone'**
+  String get callEndForEveryone;
+
+  /// No description provided for @callEnded.
+  ///
+  /// In en, this message translates to:
+  /// **'Call ended'**
+  String get callEnded;
+
+  /// No description provided for @callErrorJoin.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not join this call. Retry or ask the caller to start a new call.'**
+  String get callErrorJoin;
+
+  /// No description provided for @callErrorMicrophone.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not access the microphone. Check microphone access for Kaylo and retry.'**
+  String get callErrorMicrophone;
+
+  /// No description provided for @callErrorRoom.
+  ///
+  /// In en, this message translates to:
+  /// **'This call is unavailable or has ended. Ask the caller to start a new call.'**
+  String get callErrorRoom;
+
+  /// No description provided for @callErrorSettings.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not load call settings. Check your connection and retry.'**
+  String get callErrorSettings;
+
+  /// No description provided for @callInterrupted.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection interrupted. Retrying…'**
+  String get callInterrupted;
+
+  /// No description provided for @callInvitedWaiting.
+  ///
+  /// In en, this message translates to:
+  /// **'Invited • Waiting to answer'**
+  String get callInvitedWaiting;
+
+  /// No description provided for @callKeepOpen.
+  ///
+  /// In en, this message translates to:
+  /// **'Keep Kaylo open during the call.'**
+  String get callKeepOpen;
+
+  /// No description provided for @callLeave.
+  ///
+  /// In en, this message translates to:
+  /// **'Leave call'**
+  String get callLeave;
+
+  /// No description provided for @callLeft.
+  ///
+  /// In en, this message translates to:
+  /// **'Left the call'**
+  String get callLeft;
+
+  /// No description provided for @callPeerConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Connected'**
+  String get callPeerConnected;
+
+  /// No description provided for @callPeerConnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Connecting'**
+  String get callPeerConnecting;
+
+  /// No description provided for @callPeerFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Connection failed'**
+  String get callPeerFailed;
+
+  /// No description provided for @callPeerReconnecting.
+  ///
+  /// In en, this message translates to:
+  /// **'Reconnecting'**
+  String get callPeerReconnecting;
+
+  /// No description provided for @callTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo SOS call'**
+  String get callTitle;
+
+  /// No description provided for @callYou.
+  ///
+  /// In en, this message translates to:
+  /// **'You'**
+  String get callYou;
+
+  /// No description provided for @callYouMuted.
+  ///
+  /// In en, this message translates to:
+  /// **'You • Muted'**
+  String get callYouMuted;
+
+  /// No description provided for @callYourCircle.
+  ///
+  /// In en, this message translates to:
+  /// **'Your trusted circle'**
+  String get callYourCircle;
+
+  /// No description provided for @close.
+  ///
+  /// In en, this message translates to:
+  /// **'Close'**
+  String get close;
+
+  /// No description provided for @mute.
+  ///
+  /// In en, this message translates to:
+  /// **'Mute'**
+  String get mute;
+
+  /// No description provided for @retryCall.
+  ///
+  /// In en, this message translates to:
+  /// **'Retry call'**
+  String get retryCall;
+
+  /// No description provided for @speaker.
+  ///
+  /// In en, this message translates to:
+  /// **'Speaker'**
+  String get speaker;
+
+  /// No description provided for @unmute.
+  ///
+  /// In en, this message translates to:
+  /// **'Unmute'**
+  String get unmute;
+
+  /// No description provided for @bookingCallTitle.
+  ///
+  /// In en, this message translates to:
+  /// **'Kaylo call'**
+  String get bookingCallTitle;
+
+  /// No description provided for @bookingCallConnected.
+  ///
+  /// In en, this message translates to:
+  /// **'Booking call'**
+  String get bookingCallConnected;
+
+  /// No description provided for @bookingCallIncoming.
+  ///
+  /// In en, this message translates to:
+  /// **'Incoming Kaylo call'**
+  String get bookingCallIncoming;
+
+  /// No description provided for @bookingCallIncomingBody.
+  ///
+  /// In en, this message translates to:
+  /// **'A booking participant is calling.'**
+  String get bookingCallIncomingBody;
+
+  /// No description provided for @bookingCallFailed.
+  ///
+  /// In en, this message translates to:
+  /// **'Could not start the call. Check your connection and retry.'**
+  String get bookingCallFailed;
 }
 
 class _AppLocalizationsDelegate

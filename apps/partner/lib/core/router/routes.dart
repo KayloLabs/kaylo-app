@@ -6,6 +6,7 @@ class Routes {
   // Auth
   static const String splash = '/splash';
   static const String login = '/login';
+  static const String forgotPassword = '/forgot-password';
   static const String apply = '/apply';
   static const String applicationStatus = '/application-status';
   static const String changePassword = '/change-password';

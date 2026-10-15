@@ -373,7 +373,7 @@ class AppLocalizationsHi extends AppLocalizations {
   String get authHidePassword => 'पासवर्ड छिपाएँ';
 
   @override
-  String get authForgotPassword => 'पासवर्ड भूल गए? Kaylo से संपर्क करें';
+  String get authForgotPassword => 'पासवर्ड भूल गए?';
 
   @override
   String get authSupport => 'Kaylo सहायता से संपर्क करें';
@@ -1040,4 +1040,220 @@ class AppLocalizationsHi extends AppLocalizations {
 
   @override
   String get mapApproximateArea => 'अनुमानित क्षेत्र';
+
+  @override
+  String get authResetTitle => 'पासवर्ड रीसेट करें';
+
+  @override
+  String get authResetDescription =>
+      'अपना Partner ID और पंजीकृत ईमेल पता दर्ज करें। नया पासवर्ड चुनने का लिंक ईमेल पर भेजा जाएगा।';
+
+  @override
+  String get authResetEmail => 'पंजीकृत ईमेल';
+
+  @override
+  String get authResetInvalidEmail => 'अपना पंजीकृत ईमेल पता दर्ज करें।';
+
+  @override
+  String get authResetSend => 'रीसेट लिंक भेजें';
+
+  @override
+  String get authResetInbox => 'अपना इनबॉक्स देखें';
+
+  @override
+  String get authResetSent =>
+      'यदि ये विवरण किसी सक्रिय पार्टनर खाते से मेल खाते हैं, तो रीसेट लिंक ईमेल पर आएगा। स्पैम फ़ोल्डर भी देखें। फिर अपने Partner ID और नए पासवर्ड से साइन इन करें।';
+
+  @override
+  String get authResetResend => 'दूसरा लिंक भेजें';
+
+  @override
+  String authResetResendIn(int seconds) {
+    return '$seconds सेकंड में फिर भेजें';
+  }
+
+  @override
+  String get authResetBack => 'साइन इन पर लौटें';
+
+  @override
+  String get authResetDemo =>
+      'डेमो मोड में रीसेट ईमेल नहीं भेजे जाते। पासवर्ड रीसेट करने के लिए लाइव ऐप का उपयोग करें।';
+
+  @override
+  String jobStageUpdated(String stage) {
+    return 'स्थिति $stage में बदली गई';
+  }
+
+  @override
+  String get jobStageUpdateFailed =>
+      'स्थिति का बदलाव पुष्ट नहीं हो सका। काम की मौजूदा स्थिति जाँचकर फिर कोशिश करें।';
+
+  @override
+  String get jobCashRequired =>
+      'इस नकद बुकिंग को पूरा करने से पहले नकद भुगतान मिलने की पुष्टि करें।';
+
+  @override
+  String get homeMorning => 'सुप्रभात';
+
+  @override
+  String get homeAfternoon => 'शुभ दोपहर';
+
+  @override
+  String get homeEvening => 'शुभ संध्या';
+
+  @override
+  String get homeDayOverview => 'आपका दिन, एक नज़र में।';
+
+  @override
+  String get homeReadyTitle => 'अगले काम के लिए तैयार';
+
+  @override
+  String get homeReadyBody =>
+      'बुकिंग अनुरोध यहाँ दिखेंगे। अपने काम के घंटे अपडेट रखें।';
+
+  @override
+  String get homeRestTitle => 'अभी विराम पर';
+
+  @override
+  String get homeRestBody =>
+      'ग्राहक आपके काम के समय में बुकिंग का अनुरोध कर सकते हैं।';
+
+  @override
+  String get homeOnDuty => 'ड्यूटी पर';
+
+  @override
+  String get homeOffDuty => 'ड्यूटी से बाहर';
+
+  @override
+  String get homeOnDutyHint => 'नए काम के लिए उपलब्ध';
+
+  @override
+  String get homeOffDutyHint => 'निर्धारित बुकिंग अभी भी उपलब्ध हैं';
+
+  @override
+  String get homeSchedule => 'समय-सारणी';
+
+  @override
+  String get homeHistory => 'इतिहास';
+
+  @override
+  String get confirmCashReceived => 'नकद मिलने की पुष्टि करें';
+
+  @override
+  String confirmCashReceivedBody(String amount) {
+    return 'पुष्टि करें कि ग्राहक से $amount मिले हैं। इससे काम पूरा होगा।';
+  }
+
+  @override
+  String get cashReceived => 'नकद मिला';
+
+  @override
+  String get cashAmountUnavailable =>
+      'देय राशि लोड नहीं हुई। पुष्टि से पहले काम रीफ़्रेश करें।';
+
+  @override
+  String get callAudioOutputFailed =>
+      'ऑडियो आउटपुट नहीं बदल सका। कॉल अभी भी चालू है।';
+
+  @override
+  String get callConnecting => 'कनेक्ट हो रहा है…';
+
+  @override
+  String get callCouldNotConnect => 'कनेक्ट नहीं हो सका';
+
+  @override
+  String get callDeclined => 'अस्वीकार किया';
+
+  @override
+  String get callEndForEveryone => 'सबके लिए कॉल समाप्त करें';
+
+  @override
+  String get callEnded => 'कॉल समाप्त';
+
+  @override
+  String get callErrorJoin =>
+      'इस कॉल में जुड़ नहीं सके। फिर कोशिश करें, या कॉल करने वाले से नई SOS कॉल शुरू करने को कहें।';
+
+  @override
+  String get callErrorMicrophone =>
+      'माइक्रोफ़ोन तक पहुंच नहीं हो सकी। कायलो के लिए माइक्रोफ़ोन अनुमति जांचकर फिर कोशिश करें।';
+
+  @override
+  String get callErrorRoom =>
+      'यह कॉल उपलब्ध नहीं है या समाप्त हो चुकी है। नई कॉल शुरू करने के लिए SOS पर लौटें।';
+
+  @override
+  String get callErrorSettings =>
+      'कॉल सेटिंग लोड नहीं हो सकीं। अपना कनेक्शन जांचकर फिर कोशिश करें।';
+
+  @override
+  String get callInterrupted => 'कनेक्शन बाधित हुआ। फिर कोशिश हो रही है…';
+
+  @override
+  String get callInvitedWaiting => 'आमंत्रित • जवाब का इंतज़ार';
+
+  @override
+  String get callKeepOpen => 'कॉल के दौरान कायलो खुला रखें।';
+
+  @override
+  String get callLeave => 'कॉल छोड़ें';
+
+  @override
+  String get callLeft => 'कॉल छोड़ दी';
+
+  @override
+  String get callPeerConnected => 'कनेक्ट हो गया';
+
+  @override
+  String get callPeerConnecting => 'कनेक्ट हो रहा है';
+
+  @override
+  String get callPeerFailed => 'कनेक्शन विफल';
+
+  @override
+  String get callPeerReconnecting => 'फिर से कनेक्ट हो रहा है';
+
+  @override
+  String get callTitle => 'कायलो SOS कॉल';
+
+  @override
+  String get callYou => 'आप';
+
+  @override
+  String get callYouMuted => 'आप • म्यूट';
+
+  @override
+  String get callYourCircle => 'आपका भरोसेमंद समूह';
+
+  @override
+  String get close => 'बंद करें';
+
+  @override
+  String get mute => 'म्यूट';
+
+  @override
+  String get retryCall => 'कॉल फिर से आज़माएं';
+
+  @override
+  String get speaker => 'स्पीकर';
+
+  @override
+  String get unmute => 'अनम्यूट';
+
+  @override
+  String get bookingCallTitle => 'Kaylo कॉल';
+
+  @override
+  String get bookingCallConnected => 'बुकिंग कॉल';
+
+  @override
+  String get bookingCallIncoming => 'Kaylo कॉल आ रही है';
+
+  @override
+  String get bookingCallIncomingBody =>
+      'बुकिंग से जुड़ा व्यक्ति कॉल कर रहा है।';
+
+  @override
+  String get bookingCallFailed =>
+      'कॉल शुरू नहीं हुई। कनेक्शन जाँचें और दोबारा कोशिश करें।';
 }

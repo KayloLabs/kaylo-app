@@ -8,6 +8,7 @@ import '../data/mock_reviews_repository.dart';
 import '../data/supabase_reviews_repository.dart';
 import '../domain/reviews_repository.dart';
 import '../domain/worker_review.dart';
+import 'review_changes_provider.dart';
 
 final partnerReviewsRepositoryProvider = Provider<PartnerReviewsRepository>((
   ref,
@@ -34,9 +35,12 @@ final partnerReviewsRepositoryProvider = Provider<PartnerReviewsRepository>((
   }
   return SupabasePartnerReviewsRepository(ref.watch(supabaseClientProvider));
 });
-final reviewsProvider = FutureProvider<List<WorkerReview>>(
-  (ref) => ref.watch(partnerReviewsRepositoryProvider).getReviews(),
-);
+final reviewsProvider = FutureProvider<List<WorkerReview>>((ref) {
+  ref.listen(partnerReviewChangesProvider, (_, next) {
+    if (next.hasValue) ref.invalidateSelf();
+  });
+  return ref.watch(partnerReviewsRepositoryProvider).getReviews();
+});
 final ratingSummaryProvider = Provider<RatingSummary>(
   (ref) =>
       RatingSummary.fromReviews(ref.watch(reviewsProvider).asData?.value ?? []),

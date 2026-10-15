@@ -16,7 +16,9 @@ class SupabaseReviewsRepository implements ReviewsRepository {
     try {
       final row = await _client
           .from('reviews')
-          .select('booking_id, worker_id, rating, review, created_at')
+          .select(
+            'booking_id, worker_id, rating, review, hide_name, created_at',
+          )
           .eq('booking_id', bookingId)
           .maybeSingle();
       if (row == null) return null;
@@ -25,6 +27,7 @@ class SupabaseReviewsRepository implements ReviewsRepository {
         workerId: row['worker_id'] as String,
         rating: (row['rating'] as num).toInt(),
         text: row['review'] as String?,
+        hideName: row['hide_name'] as bool? ?? false,
         createdAt: DateTime.parse(row['created_at'] as String),
       );
     } catch (e) {
@@ -38,6 +41,7 @@ class SupabaseReviewsRepository implements ReviewsRepository {
     required String workerId,
     required int rating,
     String? text,
+    bool hideName = false,
   }) async {
     try {
       await _client.rpc(
@@ -46,6 +50,7 @@ class SupabaseReviewsRepository implements ReviewsRepository {
           'p_booking_id': bookingId,
           'p_rating': rating,
           'p_review': text,
+          'p_hide_name': hideName,
         },
       );
       return await getForBooking(bookingId) ??
@@ -54,6 +59,7 @@ class SupabaseReviewsRepository implements ReviewsRepository {
             workerId: workerId,
             rating: rating,
             text: text,
+            hideName: hideName,
             createdAt: DateTime.now(),
           );
     } catch (e) {

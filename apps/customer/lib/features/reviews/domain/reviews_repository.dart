@@ -10,5 +10,6 @@ abstract class ReviewsRepository {
     required String workerId,
     required int rating,
     String? text,
+    bool hideName = false,
   });
 }

@@ -104,7 +104,13 @@ void main() {
     await tester.tap(find.text('Confirm and pay ₹300'));
     await settle(tester);
 
-    expect(find.text('Booking confirmed'), findsOneWidget);
+    expect(find.text('Booking requested'), findsOneWidget);
+    expect(
+      find.text(
+        'Your request has been sent. Your booking is awaiting the partner’s confirmation.',
+      ),
+      findsOneWidget,
+    );
     expect(find.text('Raju K.'), findsOneWidget);
 
     final after = (await tester.runAsync(

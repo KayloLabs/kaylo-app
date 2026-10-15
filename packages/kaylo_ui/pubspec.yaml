@@ -13,6 +13,8 @@ dependencies:
     sdk: flutter
   kaylo_core:
     path: ../kaylo_core
+  flutter_webrtc: ^1.6.2+hotfix.3
+  supabase_flutter: ^2.17.2
   shimmer: ^3.0.0
 
 dev_dependencies:

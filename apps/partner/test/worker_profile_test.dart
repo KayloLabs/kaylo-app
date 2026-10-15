@@ -184,8 +184,9 @@ void main() {
 
     final profileRepo = container.read(workerProfileRepositoryProvider);
     final jobsRepo = container.read(jobsRepositoryProvider);
-    expect(find.text('Sunil Kumar • Kannur'), findsOneWidget);
-    expect(find.text('Taking orders in Kannur'), findsOneWidget);
+    expect(find.textContaining(', Sunil.'), findsOneWidget);
+    expect(find.textContaining(' · Kannur'), findsOneWidget);
+    expect(tester.widget<Switch>(find.byType(Switch)).value, isTrue);
 
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();

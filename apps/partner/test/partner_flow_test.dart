@@ -41,7 +41,9 @@ Future<void> signIn(WidgetTester tester) async {
 }
 
 void main() {
-  testWidgets('switching offline hides the request feed', (tester) async {
+  testWidgets('switching off duty keeps assigned booking requests visible', (
+    tester,
+  ) async {
     final (container, app) = await createHarness();
     addTearDown(() async {
       await container.read(jobsRepositoryProvider).setDuty(false);
@@ -49,12 +51,15 @@ void main() {
     });
     await tester.pumpWidget(app);
     await signIn(tester);
+    await tester.scrollUntilVisible(find.text('New Requests (2)'), 200);
     expect(find.text('New Requests (2)'), findsOneWidget);
+    await tester.scrollUntilVisible(find.byType(Switch), -200);
     await tester.tap(find.byType(Switch));
     await tester.pumpAndSettle();
 
-    expect(find.text("You're Offline"), findsWidgets);
-    expect(find.text('New Requests (2)'), findsNothing);
+    expect(find.text('Off duty'), findsWidgets);
+    await tester.scrollUntilVisible(find.text('New Requests (2)'), 200);
+    expect(find.text('New Requests (2)'), findsOneWidget);
   });
 
   testWidgets('accepting a request moves it into the active job banner', (

@@ -22,6 +22,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(find.text('Kaylo Partner'), findsOneWidget);
+    await tester.scrollUntilVisible(find.text('New Requests (2)'), 200);
     expect(find.text('New Requests (2)'), findsOneWidget);
   });
 }

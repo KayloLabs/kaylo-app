@@ -115,6 +115,13 @@ class WorkerProfileScreen extends ConsumerWidget {
                               ?.copyWith(color: AppColors.textSecondary),
                         ),
                         const SizedBox(height: AppSpacing.s),
+                        Text(
+                          w.isAvailable
+                              ? l10n.partnerOnDuty
+                              : l10n.partnerOffDuty,
+                          style: Theme.of(context).textTheme.labelMedium,
+                        ),
+                        const SizedBox(height: AppSpacing.s),
                         RatingStars(
                           rating: w.rating,
                           reviewCount: w.reviewsCount,
@@ -346,7 +353,9 @@ class WorkerProfileScreen extends ConsumerWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              l10n.hourlyRate,
+                              w.hourlyRate == null
+                                  ? l10n.bookingDetails
+                                  : l10n.hourlyRate,
                               style: TextStyle(
                                 fontSize: 12,
                                 color: isDark

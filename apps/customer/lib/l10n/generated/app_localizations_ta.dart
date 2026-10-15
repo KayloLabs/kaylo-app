@@ -1474,7 +1474,7 @@ class AppLocalizationsTa extends AppLocalizations {
   String get perHour => 'மணிக்கு';
 
   @override
-  String get priceOnVisit => 'நேரில் பார்த்து கட்டணம் கூறப்படும்';
+  String get priceOnVisit => 'முன்பதிவுக்கு முன் கட்டணத்தைப் பார்க்கவும்';
 
   @override
   String get noReviewsYet => 'இன்னும் மதிப்புரைகள் இல்லை';
@@ -2521,4 +2521,40 @@ class AppLocalizationsTa extends AppLocalizations {
   @override
   String get chatLoadFailed =>
       'இந்த உரையாடலை ஏற்ற முடியவில்லை. மீண்டும் முயற்சிக்கவும்.';
+
+  @override
+  String get partnerOnDuty => 'பணியில் உள்ளார்';
+
+  @override
+  String get partnerOffDuty => 'பணியில் இல்லை · முன்பதிவு செய்யலாம்';
+
+  @override
+  String get bookingRequested => 'முன்பதிவு கோரப்பட்டது';
+
+  @override
+  String get bookingAwaitingPartner =>
+      'உங்கள் கோரிக்கை அனுப்பப்பட்டது. பணியாளரின் உறுதிப்படுத்தலுக்காகக் காத்திருக்கிறது.';
+
+  @override
+  String get hideReviewName => 'என் பெயரை மறைக்கவும்';
+
+  @override
+  String get hideReviewNameHint =>
+      '“Verified customer” எனக் காட்டப்படும். சேவை வழங்குநர் உங்கள் முன்பதிவை அடையாளம் காணக்கூடும்.';
+
+  @override
+  String get bookingCallTitle => 'Kaylo அழைப்பு';
+
+  @override
+  String get bookingCallConnected => 'முன்பதிவு அழைப்பு';
+
+  @override
+  String get bookingCallIncoming => 'Kaylo அழைப்பு வருகிறது';
+
+  @override
+  String get bookingCallIncomingBody => 'முன்பதிவில் உள்ளவர் அழைக்கிறார்.';
+
+  @override
+  String get bookingCallFailed =>
+      'அழைப்பைத் தொடங்க முடியவில்லை. இணைப்பைச் சரிபார்த்து மீண்டும் முயலவும்.';
 }

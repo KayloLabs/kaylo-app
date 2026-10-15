@@ -323,7 +323,8 @@ class _PrescriptionEditorState extends State<_PrescriptionEditor> {
           const SizedBox(height: 16),
           TextField(
             controller: _text,
-            onChanged: (_) => ScaffoldMessenger.of(context).removeCurrentSnackBar(),
+            onChanged: (_) =>
+                ScaffoldMessenger.of(context).removeCurrentSnackBar(),
             minLines: 10,
             maxLines: 25,
             maxLength: 100000,

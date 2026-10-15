@@ -339,7 +339,7 @@ abstract class WorkerProfileRepository {
   /// Applies [edit] and returns the refreshed profile.
   Future<WorkerProfile> updateProfile(WorkerProfileEdit edit);
 
-  /// The on-duty switch: false hides the worker from new bookings.
+  /// The on-duty switch. Off-duty workers remain bookable for scheduled work.
   Future<void> setAvailable(bool available);
 
   /// The catalogue the worker can pick services from.

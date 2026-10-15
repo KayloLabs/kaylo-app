@@ -1,3 +1,4 @@
+import '../domain/booking_destination.dart';
 import 'dart:async';
 
 import 'package:kaylo_core/network/supabase_providers.dart';
@@ -35,9 +36,21 @@ class SupabaseJobsRepository implements JobsRepository {
   }) => SupabaseJobsRepository(
     initiallyOnline: initiallyOnline,
     loadRows: () async {
-      final result = await client.rpc('my_partner_jobs');
-      return (result as List)
-          .map((row) => Map<String, dynamic>.from(row as Map))
+      final results = await Future.wait([
+        client.rpc('my_partner_jobs'),
+        client.rpc('my_partner_payment_states'),
+      ]);
+      final payments = {
+        for (final row in results[1] as List)
+          row['booking_id']: row['payment_status'],
+      };
+      return (results[0] as List)
+          .map(
+            (row) => {
+              ...Map<String, dynamic>.from(row as Map),
+              'payment_status': payments[row['booking_id']] ?? 'pending',
+            },
+          )
           .toList();
     },
     changes: _bookingChanges(client, workerId),
@@ -209,7 +222,17 @@ class SupabaseJobsRepository implements JobsRepository {
       'p_booking_id': id,
       'p_stage': backendStage(stage),
     });
-    await _refresh();
+    // A poll already in flight may contain the pre-write stage. Wait for it,
+    // then read again; never report success on a stale or failed refresh.
+    final pending = _pending;
+    if (pending != null) {
+      try {
+        await pending;
+      } catch (_) {
+        /* Retry the read after the write. */
+      }
+    }
+    await getJobs();
   }
 
   @override
@@ -317,6 +340,17 @@ Job partnerJobFromRow(Map<String, dynamic> row) {
   if (!payout.isFinite || payout < 0) {
     throw const FormatException('Invalid booking payout');
   }
+  final notes = row['notes'] as String? ?? '';
+  final pin = bookingPin(notes);
+  final savedLat = (row['latitude'] as num?)?.toDouble();
+  final savedLng = (row['longitude'] as num?)?.toDouble();
+  final hasSavedPin =
+      savedLat != null &&
+      savedLng != null &&
+      savedLat.isFinite &&
+      savedLng.isFinite &&
+      savedLat.abs() <= 90 &&
+      savedLng.abs() <= 180;
   return Job(
     id: row['booking_id'] as String,
     serviceName: row['service_name'] as String,
@@ -324,11 +358,14 @@ Job partnerJobFromRow(Map<String, dynamic> row) {
     customerName: row['customer_name'] as String,
     customerPhone: row['customer_phone'] as String? ?? '',
     addressLine: row['address'] as String? ?? '',
-    latitude: (row['latitude'] as num?)?.toDouble(),
-    longitude: (row['longitude'] as num?)?.toDouble(),
+    latitude: hasSavedPin ? savedLat : pin?.latitude,
+    longitude: hasSavedPin ? savedLng : pin?.longitude,
     distanceKm: null,
     scheduledAt: DateTime.parse(row['scheduled_at'] as String).toLocal(),
     payout: payout,
+    paymentMode: row['payment_mode'] as String? ?? 'online',
+    customerPrice: (row['customer_price'] as num?)?.toDouble(),
+    paymentStatus: row['payment_status'] as String? ?? 'pending',
     notes: row['notes'] as String? ?? '',
     stage: stage,
   );
@@ -338,9 +375,20 @@ Stream<void> _bookingChanges(SupabaseClient client, String workerId) {
   RealtimeChannel? channel;
   late StreamController<void> changes;
   changes = StreamController<void>.broadcast(
-    onListen: () {
+    onListen: () async {
+      // Reuse the existing private-channel policy scoped to the signed-in
+      // person. Postgres row delivery still uses booking participant RLS.
+      final String? personId;
+      try {
+        personId = await client.rpc('current_person_id') as String?;
+      } catch (_) {
+        if (changes.hasListener) changes.add(null);
+        return;
+      }
+      if (personId == null || !changes.hasListener) return;
       final topic = client.channel(
-        'partner-jobs:$workerId:${identityHashCode(changes)}',
+        'kaylo-chat:$personId:partner-jobs:${identityHashCode(changes)}',
+        opts: const RealtimeChannelConfig(private: true),
       );
       for (final event in [
         PostgresChangeEvent.insert,

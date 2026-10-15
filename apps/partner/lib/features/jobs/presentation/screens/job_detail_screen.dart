@@ -1,5 +1,6 @@
+import '../../../calls/partner_calls.dart';
+import 'package:kaylo_core/network/app_failure.dart';
 import '../widgets/job_map.dart';
-import '../open_in_maps.dart';
 import '../../../messages/application/messages_providers.dart';
 import '../../data/pending_jobs_repository.dart';
 import 'package:flutter/material.dart';
@@ -16,7 +17,6 @@ import 'package:kaylo_ui/widgets/kaylo_card.dart';
 import 'package:kaylo_ui/widgets/kaylo_chip.dart';
 import 'package:kaylo_ui/widgets/kaylo_loader.dart';
 import 'package:kaylo_ui/widgets/kaylo_snackbar.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import '../../../../core/router/routes.dart';
 import '../../../../l10n/generated/app_localizations.dart';
@@ -28,18 +28,6 @@ class JobDetailScreen extends ConsumerWidget {
   final String jobId;
 
   const JobDetailScreen({super.key, required this.jobId});
-
-  Future<void> _callCustomer(BuildContext context, String phone) async {
-    final cleaned = phone.replaceAll(RegExp(r'\s+'), '');
-    final uri = Uri.parse('tel:$cleaned');
-    if (await canLaunchUrl(uri)) {
-      await launchUrl(uri);
-    } else {
-      if (context.mounted) {
-        KayloSnackbar.showError(context, 'Unable to open dialler');
-      }
-    }
-  }
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
@@ -79,11 +67,7 @@ class JobDetailScreen extends ConsumerWidget {
       bottomNavigationBar: jobAsync.whenOrNull(
         data: (job) {
           if (job == null) return null;
-          return _ActionBar(
-            job: job,
-            onCall: _callCustomer,
-            onNavigate: openJobInMaps,
-          );
+          return _ActionBar(job: job);
         },
       ),
     );
@@ -429,19 +413,93 @@ class _StepDot extends StatelessWidget {
 
 // ---------------------------------------------------------------------------
 
-class _ActionBar extends ConsumerWidget {
+class _ActionBar extends ConsumerStatefulWidget {
   final Job job;
-  final Future<void> Function(BuildContext, String) onCall;
-  final Future<void> Function(BuildContext, String) onNavigate;
 
-  const _ActionBar({
-    required this.job,
-    required this.onCall,
-    required this.onNavigate,
-  });
+  const _ActionBar({required this.job});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  ConsumerState<_ActionBar> createState() => _ActionBarState();
+}
+
+class _ActionBarState extends ConsumerState<_ActionBar> {
+  bool _busy = false;
+  bool _calling = false;
+  Job get job => widget.job;
+
+  Future<void> _update(
+    Future<void> Function() action, {
+    bool cancel = false,
+  }) async {
+    if (_busy) return;
+    final next = job.stage.next;
+    setState(() => _busy = true);
+    try {
+      await action();
+      if (!mounted) return;
+      if (cancel) {
+        context.pop();
+      } else if (next != null) {
+        final l10n = AppLocalizations.of(context)!;
+        KayloSnackbar.showSuccess(
+          context,
+          l10n.jobStageUpdated(next.text(l10n)),
+        );
+      }
+    } catch (error) {
+      if (!mounted) return;
+      final l10n = AppLocalizations.of(context)!;
+      final cashRequired =
+          error is AppFailure &&
+          error.message.contains('Confirm the cash you collected first');
+      KayloSnackbar.showError(
+        context,
+        cashRequired ? l10n.jobCashRequired : l10n.jobStageUpdateFailed,
+      );
+    } finally {
+      if (mounted) setState(() => _busy = false);
+    }
+  }
+
+  Future<void> _advance() async {
+    final repository = ref.read(jobsRepositoryProvider);
+    if (job.needsCashCollection) {
+      final l10n = AppLocalizations.of(context)!;
+      final amount = job.customerPrice;
+      if (amount == null || amount <= 0) {
+        KayloSnackbar.showError(context, l10n.cashAmountUnavailable);
+        return;
+      }
+      final confirmed = await showDialog<bool>(
+        context: context,
+        builder: (ctx) => AlertDialog(
+          title: Text(l10n.confirmCashReceived),
+          content: Text(l10n.confirmCashReceivedBody(formatRupees(amount))),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(ctx, false),
+              child: Text(l10n.cancel),
+            ),
+            FilledButton(
+              onPressed: () => Navigator.pop(ctx, true),
+              child: Text(l10n.cashReceived),
+            ),
+          ],
+        ),
+      );
+      if (confirmed != true || !mounted) return;
+      await _update(() => repository.markCashCollected(job.id));
+      return;
+    }
+    await _update(
+      () => job.isRequested
+          ? repository.acceptJob(job.id)
+          : repository.advanceJob(job.id),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
     final l10n = AppLocalizations.of(context)!;
     if (job.isCompleted) {
       return SafeArea(
@@ -494,24 +552,16 @@ class _ActionBar extends ConsumerWidget {
           if (ref.watch(jobsRepositoryProvider).supportsJobActions &&
               job.stage.next != null) ...[
             KayloButton(
-              text: job.stage.actionText(l10n),
-              onPressed: () async {
-                KayloFeedback.press();
-                if (job.stage == JobStage.requested) {
-                  await ref.read(jobsRepositoryProvider).acceptJob(job.id);
-                } else {
-                  await ref.read(jobsRepositoryProvider).advanceJob(job.id);
-                }
-                if (context.mounted) {
-                  final next = job.stage.next;
-                  if (next != null) {
-                    KayloSnackbar.showSuccess(
-                      context,
-                      'Status updated to ${next.text(l10n)}',
-                    );
-                  }
-                }
-              },
+              text: job.needsCashCollection
+                  ? l10n.confirmCashReceived
+                  : job.stage.actionText(l10n),
+              isLoading: _busy,
+              onPressed: _busy
+                  ? null
+                  : () {
+                      KayloFeedback.press();
+                      _advance();
+                    },
             ),
             const SizedBox(height: AppSpacing.s),
           ],
@@ -540,9 +590,20 @@ class _ActionBar extends ConsumerWidget {
                       text: l10n.chatCallCustomer,
                       icon: Icons.call_rounded,
                       variant: KayloButtonVariant.secondary,
-                      onPressed: job.customerPhone.trim().isEmpty
+                      onPressed: !job.isActive || _calling
                           ? null
-                          : () => onCall(context, job.customerPhone),
+                          : () async {
+                              setState(() => _calling = true);
+                              try {
+                                await startPartnerBookingCall(
+                                  context,
+                                  ref,
+                                  job.id,
+                                );
+                              } finally {
+                                if (mounted) setState(() => _calling = false);
+                              }
+                            },
                     ),
                   ),
                   SizedBox(
@@ -566,9 +627,11 @@ class _ActionBar extends ConsumerWidget {
                       text: l10n.chatNavigate,
                       icon: Icons.navigation_rounded,
                       variant: KayloButtonVariant.secondary,
-                      onPressed: job.addressLine.trim().isEmpty
+                      onPressed:
+                          (job.latitude == null || job.longitude == null) &&
+                              job.addressLine.trim().isEmpty
                           ? null
-                          : () => onNavigate(context, job.addressLine),
+                          : () => context.push(Routes.jobMap(job.id)),
                     ),
                   ),
                 ],
@@ -582,35 +645,41 @@ class _ActionBar extends ConsumerWidget {
             KayloButton(
               text: 'Cancel Job',
               variant: KayloButtonVariant.secondary,
-              onPressed: () async {
-                final confirm = await showDialog<bool>(
-                  context: context,
-                  builder: (ctx) => AlertDialog(
-                    title: const Text('Cancel job?'),
-                    content: const Text(
-                      'Repeated cancellations affect your acceptance rate.',
-                    ),
-                    actions: [
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(false),
-                        child: const Text('Keep'),
-                      ),
-                      TextButton(
-                        onPressed: () => Navigator.of(ctx).pop(true),
-                        child: const Text(
-                          'Cancel Job',
-                          style: TextStyle(color: AppColors.error),
+              onPressed: _busy
+                  ? null
+                  : () async {
+                      final confirm = await showDialog<bool>(
+                        context: context,
+                        builder: (ctx) => AlertDialog(
+                          title: const Text('Cancel job?'),
+                          content: const Text(
+                            'Repeated cancellations affect your acceptance rate.',
+                          ),
+                          actions: [
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(false),
+                              child: const Text('Keep'),
+                            ),
+                            TextButton(
+                              onPressed: () => Navigator.of(ctx).pop(true),
+                              child: const Text(
+                                'Cancel Job',
+                                style: TextStyle(color: AppColors.error),
+                              ),
+                            ),
+                          ],
                         ),
-                      ),
-                    ],
-                  ),
-                );
-                if (confirm == true) {
-                  KayloFeedback.tap();
-                  await ref.read(jobsRepositoryProvider).cancelJob(job.id);
-                  if (context.mounted) context.pop();
-                }
-              },
+                      );
+                      if (confirm == true && mounted && !_busy) {
+                        KayloFeedback.tap();
+                        await _update(
+                          () => ref
+                              .read(jobsRepositoryProvider)
+                              .cancelJob(job.id),
+                          cancel: true,
+                        );
+                      }
+                    },
             ),
           ],
         ],

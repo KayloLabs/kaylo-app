@@ -173,7 +173,12 @@ class _PartnerLoginScreenState extends ConsumerState<PartnerLoginScreen> {
                             onPressed: _loading ? null : _signIn,
                           ),
                           TextButton(
-                            onPressed: () => contactPartnerSupport(context),
+                            onPressed: _loading
+                                ? null
+                                : () => context.push(
+                                    Routes.forgotPassword,
+                                    extra: _id.text.trim(),
+                                  ),
                             child: Text(l10n.authForgotPassword),
                           ),
                           if (useMockData)

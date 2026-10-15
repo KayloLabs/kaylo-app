@@ -1,7 +1,4 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:kaylo_core/network/supabase_providers.dart';
-import '../../features/care/application/care_calls.dart';
-import '../../features/care/presentation/screens/care_call_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:go_router/go_router.dart';
@@ -67,7 +64,6 @@ class _KayloBottomNavState extends ConsumerState<KayloBottomNav>
   int? _lastIndex;
   @override
   Widget build(BuildContext context) {
-    final incoming = ref.watch(incomingCareCallsProvider).asData?.value ?? [];
     final currentIndex = widget.navigationShell.currentIndex;
     // Landing on a new tab must always reveal the nav: a short screen
     // (like Care Home) can't scroll it back, stranding the user.
@@ -82,66 +78,7 @@ class _KayloBottomNavState extends ConsumerState<KayloBottomNav>
       extendBody: true,
       body: NotificationListener<ScrollNotification>(
         onNotification: _handleScrollNotification,
-        child: Stack(
-          children: [
-            widget.navigationShell,
-            if (incoming.isNotEmpty)
-              Positioned(
-                top: 0,
-                left: 12,
-                right: 12,
-                child: SafeArea(
-                  child: Card(
-                    color: Theme.of(context).colorScheme.errorContainer,
-                    child: ListTile(
-                      leading: const Icon(Icons.emergency),
-                      title: Text(
-                        AppLocalizations.of(context)!.incomingSosTitle,
-                      ),
-                      subtitle: Text(
-                        AppLocalizations.of(context)!.incomingSosSubtitle,
-                      ),
-                      trailing: Wrap(
-                        children: [
-                          IconButton(
-                            tooltip: AppLocalizations.of(context)!.decline,
-                            icon: const Icon(Icons.call_end),
-                            onPressed: () async {
-                              try {
-                                await ref
-                                    .read(supabaseClientProvider)
-                                    .rpc(
-                                      'respond_care_call',
-                                      params: {
-                                        'p_call_id': incoming.first['call_id'],
-                                        'p_action': 'declined',
-                                      },
-                                    );
-                                ref.invalidate(incomingCareCallsProvider);
-                              } catch (_) {}
-                            },
-                          ),
-                          IconButton(
-                            tooltip: AppLocalizations.of(context)!.joinCall,
-                            icon: const Icon(Icons.call),
-                            onPressed: () =>
-                                Navigator.of(context, rootNavigator: true).push(
-                                  MaterialPageRoute(
-                                    builder: (_) => CareCallScreen(
-                                      callId:
-                                          incoming.first['call_id'] as String,
-                                    ),
-                                  ),
-                                ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ),
-          ],
-        ),
+        child: Stack(children: [widget.navigationShell]),
       ),
       bottomNavigationBar: SlideTransition(
         position: _hideAnimation,

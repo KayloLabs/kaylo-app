@@ -44,6 +44,7 @@ class MockReviewsRepository implements ReviewsRepository {
     required String workerId,
     required int rating,
     String? text,
+    bool hideName = false,
   }) async {
     await Future<void>.delayed(const Duration(milliseconds: 400));
     if (rating < 1 || rating > 5) {
@@ -54,6 +55,7 @@ class MockReviewsRepository implements ReviewsRepository {
       bookingId: bookingId,
       workerId: workerId,
       rating: rating,
+      hideName: hideName,
       text: trimmed == null || trimmed.isEmpty ? null : trimmed,
       createdAt: _load()[bookingId]?.createdAt ?? DateTime.now(),
     );

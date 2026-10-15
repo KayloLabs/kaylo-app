@@ -491,9 +491,9 @@
   "@authHidePassword": {
     "description": "Partner issued-account authentication or notification text"
   },
-  "authForgotPassword": "Forgot password? Contact Kaylo",
+  "authForgotPassword": "Forgot password?",
   "@authForgotPassword": {
-    "description": "Partner issued-account authentication or notification text"
+    "description": "Open self-service password recovery."
   },
   "authSupport": "Contact Kaylo support",
   "@authSupport": {
@@ -1119,5 +1119,92 @@
       }
     }
   },
-  "mapApproximateArea": "Approximate area"
+  "mapApproximateArea": "Approximate area",
+  "authResetTitle": "Reset password",
+  "authResetDescription": "Enter your Partner ID and the email address you registered with. We’ll email you a link to choose a new password.",
+  "authResetEmail": "Registered email",
+  "authResetInvalidEmail": "Enter your registered email address.",
+  "authResetSend": "Send reset link",
+  "authResetInbox": "Check your inbox",
+  "authResetSent": "If these details match an active partner account, a reset link will arrive by email. Check your spam folder too. After resetting, sign in with your Partner ID and new password.",
+  "authResetResend": "Send another link",
+  "authResetResendIn": "Send again in {seconds}s",
+  "authResetBack": "Back to sign in",
+  "authResetDemo": "Demo mode does not send reset emails. Use the live app to reset your password.",
+  "@authResetResendIn": {
+    "placeholders": {
+      "seconds": {
+        "type": "int"
+      }
+    }
+  },
+  "jobStageUpdated": "Status updated to {stage}",
+  "jobStageUpdateFailed": "Could not confirm the status update. Check the current job status and try again.",
+  "jobCashRequired": "Confirm cash collection before completing this cash booking.",
+  "@jobStageUpdated": {
+    "description": "Confirmation after the server updates and reloads the job",
+    "placeholders": {
+      "stage": {
+        "type": "String"
+      }
+    }
+  },
+  "homeMorning": "Good morning",
+  "homeAfternoon": "Good afternoon",
+  "homeEvening": "Good evening",
+  "homeDayOverview": "Your day, at a glance.",
+  "homeReadyTitle": "Ready for your next job",
+  "homeReadyBody": "Your booking requests will appear here. Keep your working hours up to date.",
+  "homeRestTitle": "Taking a break",
+  "homeRestBody": "Customers can still request a booking within your working hours.",
+  "homeOnDuty": "On duty",
+  "homeOffDuty": "Off duty",
+  "homeOnDutyHint": "Open to new work",
+  "homeOffDutyHint": "Scheduled bookings are still open",
+  "homeSchedule": "Schedule",
+  "homeHistory": "History",
+  "confirmCashReceived": "Confirm cash received",
+  "confirmCashReceivedBody": "Confirm that you received {amount} from the customer. This will complete the job.",
+  "cashReceived": "Cash received",
+  "cashAmountUnavailable": "The payable amount could not be loaded. Refresh the job before confirming cash.",
+  "@confirmCashReceivedBody": {
+    "placeholders": {
+      "amount": {
+        "type": "String"
+      }
+    }
+  },
+  "callAudioOutputFailed": "Could not change audio output. The call is still active.",
+  "callConnecting": "Connecting…",
+  "callCouldNotConnect": "Could not connect",
+  "callDeclined": "Declined",
+  "callEndForEveryone": "End call for everyone",
+  "callEnded": "Call ended",
+  "callErrorJoin": "Could not join this call. Retry or ask the caller to start a new call.",
+  "callErrorMicrophone": "Could not access the microphone. Check microphone access for Kaylo and retry.",
+  "callErrorRoom": "This call is unavailable or has ended. Ask the caller to start a new call.",
+  "callErrorSettings": "Could not load call settings. Check your connection and retry.",
+  "callInterrupted": "Connection interrupted. Retrying…",
+  "callInvitedWaiting": "Invited • Waiting to answer",
+  "callKeepOpen": "Keep Kaylo open during the call.",
+  "callLeave": "Leave call",
+  "callLeft": "Left the call",
+  "callPeerConnected": "Connected",
+  "callPeerConnecting": "Connecting",
+  "callPeerFailed": "Connection failed",
+  "callPeerReconnecting": "Reconnecting",
+  "callTitle": "Kaylo SOS call",
+  "callYou": "You",
+  "callYouMuted": "You • Muted",
+  "callYourCircle": "Your trusted circle",
+  "close": "Close",
+  "mute": "Mute",
+  "retryCall": "Retry call",
+  "speaker": "Speaker",
+  "unmute": "Unmute",
+  "bookingCallTitle": "Kaylo call",
+  "bookingCallConnected": "Booking call",
+  "bookingCallIncoming": "Incoming Kaylo call",
+  "bookingCallIncomingBody": "A booking participant is calling.",
+  "bookingCallFailed": "Could not start the call. Check your connection and retry."
 }

@@ -8,6 +8,8 @@ import 'package:flutter_riverpod/misc.dart' show Override;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:go_router/go_router.dart';
 import 'package:kaylo_partner/core/router/routes.dart';
+import 'package:kaylo_partner/features/jobs/data/supabase_jobs_repository.dart';
+import 'supabase_jobs_repository_test.dart' show row;
 import 'package:kaylo_partner/features/jobs/application/jobs_providers.dart';
 import 'package:kaylo_partner/features/jobs/domain/job.dart';
 import 'package:kaylo_partner/features/jobs/presentation/screens/job_detail_screen.dart';
@@ -63,6 +65,61 @@ void main() {
       ),
     );
   }
+
+  testWidgets('cash completion requires confirmation of the customer amount', (
+    tester,
+  ) async {
+    var status = 'in_progress';
+    final calls = <String>[];
+    final repo = SupabaseJobsRepository(
+      initiallyOnline: true,
+      loadRows: () async => [
+        row(status: status)
+          ..['payment_mode'] = 'cash'
+          ..['customer_price'] = 500
+          ..['payment_status'] = 'pending',
+      ],
+      rpc: (function, {params}) async {
+        calls.add(function);
+        if (function == 'confirm_cash_collected') {
+          expect(params, {'p_booking_id': 'booking-1'});
+          status = 'completed';
+        }
+        return null;
+      },
+    );
+    addTearDown(repo.dispose);
+    await tester.pumpWidget(
+      buildTestableWidget(
+        overrides: [jobsRepositoryProvider.overrideWithValue(repo)],
+        child: const JobDetailScreen(jobId: 'booking-1'),
+      ),
+    );
+    await tester.pumpAndSettle();
+    await tester.tap(find.text('Confirm cash received'));
+    await tester.pumpAndSettle();
+    expect(
+      find.descendant(
+        of: find.byType(AlertDialog),
+        matching: find.textContaining('500'),
+      ),
+      findsOneWidget,
+    );
+    await tester.tap(find.text('Cancel'));
+    await tester.pumpAndSettle();
+    expect(calls, isEmpty);
+    await tester.tap(find.text('Confirm cash received'));
+    await tester.pumpAndSettle();
+    await tester.tap(find.widgetWithText(FilledButton, 'Cash received'));
+    await tester.pumpAndSettle();
+    expect(calls, contains('confirm_cash_collected'));
+    expect(calls, isNot(contains('worker_advance_booking')));
+    expect(find.textContaining('Job completed'), findsOneWidget);
+    expect(tester.takeException(), isNull);
+    await tester.pumpWidget(const SizedBox.shrink());
+    repo.dispose();
+    await tester.pump();
+  });
 
   group('JobMap widget', () {
     testWidgets('pumps JobMap(showTiles: false) and finds both markers', (

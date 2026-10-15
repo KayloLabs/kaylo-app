@@ -372,7 +372,7 @@ class AppLocalizationsEn extends AppLocalizations {
   String get authHidePassword => 'Hide password';
 
   @override
-  String get authForgotPassword => 'Forgot password? Contact Kaylo';
+  String get authForgotPassword => 'Forgot password?';
 
   @override
   String get authSupport => 'Contact Kaylo support';
@@ -1057,4 +1057,219 @@ class AppLocalizationsEn extends AppLocalizations {
 
   @override
   String get mapApproximateArea => 'Approximate area';
+
+  @override
+  String get authResetTitle => 'Reset password';
+
+  @override
+  String get authResetDescription =>
+      'Enter your Partner ID and the email address you registered with. We’ll email you a link to choose a new password.';
+
+  @override
+  String get authResetEmail => 'Registered email';
+
+  @override
+  String get authResetInvalidEmail => 'Enter your registered email address.';
+
+  @override
+  String get authResetSend => 'Send reset link';
+
+  @override
+  String get authResetInbox => 'Check your inbox';
+
+  @override
+  String get authResetSent =>
+      'If these details match an active partner account, a reset link will arrive by email. Check your spam folder too. After resetting, sign in with your Partner ID and new password.';
+
+  @override
+  String get authResetResend => 'Send another link';
+
+  @override
+  String authResetResendIn(int seconds) {
+    return 'Send again in ${seconds}s';
+  }
+
+  @override
+  String get authResetBack => 'Back to sign in';
+
+  @override
+  String get authResetDemo =>
+      'Demo mode does not send reset emails. Use the live app to reset your password.';
+
+  @override
+  String jobStageUpdated(String stage) {
+    return 'Status updated to $stage';
+  }
+
+  @override
+  String get jobStageUpdateFailed =>
+      'Could not confirm the status update. Check the current job status and try again.';
+
+  @override
+  String get jobCashRequired =>
+      'Confirm cash collection before completing this cash booking.';
+
+  @override
+  String get homeMorning => 'Good morning';
+
+  @override
+  String get homeAfternoon => 'Good afternoon';
+
+  @override
+  String get homeEvening => 'Good evening';
+
+  @override
+  String get homeDayOverview => 'Your day, at a glance.';
+
+  @override
+  String get homeReadyTitle => 'Ready for your next job';
+
+  @override
+  String get homeReadyBody =>
+      'Your booking requests will appear here. Keep your working hours up to date.';
+
+  @override
+  String get homeRestTitle => 'Taking a break';
+
+  @override
+  String get homeRestBody =>
+      'Customers can still request a booking within your working hours.';
+
+  @override
+  String get homeOnDuty => 'On duty';
+
+  @override
+  String get homeOffDuty => 'Off duty';
+
+  @override
+  String get homeOnDutyHint => 'Open to new work';
+
+  @override
+  String get homeOffDutyHint => 'Scheduled bookings are still open';
+
+  @override
+  String get homeSchedule => 'Schedule';
+
+  @override
+  String get homeHistory => 'History';
+
+  @override
+  String get confirmCashReceived => 'Confirm cash received';
+
+  @override
+  String confirmCashReceivedBody(String amount) {
+    return 'Confirm that you received $amount from the customer. This will complete the job.';
+  }
+
+  @override
+  String get cashReceived => 'Cash received';
+
+  @override
+  String get cashAmountUnavailable =>
+      'The payable amount could not be loaded. Refresh the job before confirming cash.';
+
+  @override
+  String get callAudioOutputFailed =>
+      'Could not change audio output. The call is still active.';
+
+  @override
+  String get callConnecting => 'Connecting…';
+
+  @override
+  String get callCouldNotConnect => 'Could not connect';
+
+  @override
+  String get callDeclined => 'Declined';
+
+  @override
+  String get callEndForEveryone => 'End call for everyone';
+
+  @override
+  String get callEnded => 'Call ended';
+
+  @override
+  String get callErrorJoin =>
+      'Could not join this call. Retry or ask the caller to start a new call.';
+
+  @override
+  String get callErrorMicrophone =>
+      'Could not access the microphone. Check microphone access for Kaylo and retry.';
+
+  @override
+  String get callErrorRoom =>
+      'This call is unavailable or has ended. Ask the caller to start a new call.';
+
+  @override
+  String get callErrorSettings =>
+      'Could not load call settings. Check your connection and retry.';
+
+  @override
+  String get callInterrupted => 'Connection interrupted. Retrying…';
+
+  @override
+  String get callInvitedWaiting => 'Invited • Waiting to answer';
+
+  @override
+  String get callKeepOpen => 'Keep Kaylo open during the call.';
+
+  @override
+  String get callLeave => 'Leave call';
+
+  @override
+  String get callLeft => 'Left the call';
+
+  @override
+  String get callPeerConnected => 'Connected';
+
+  @override
+  String get callPeerConnecting => 'Connecting';
+
+  @override
+  String get callPeerFailed => 'Connection failed';
+
+  @override
+  String get callPeerReconnecting => 'Reconnecting';
+
+  @override
+  String get callTitle => 'Kaylo SOS call';
+
+  @override
+  String get callYou => 'You';
+
+  @override
+  String get callYouMuted => 'You • Muted';
+
+  @override
+  String get callYourCircle => 'Your trusted circle';
+
+  @override
+  String get close => 'Close';
+
+  @override
+  String get mute => 'Mute';
+
+  @override
+  String get retryCall => 'Retry call';
+
+  @override
+  String get speaker => 'Speaker';
+
+  @override
+  String get unmute => 'Unmute';
+
+  @override
+  String get bookingCallTitle => 'Kaylo call';
+
+  @override
+  String get bookingCallConnected => 'Booking call';
+
+  @override
+  String get bookingCallIncoming => 'Incoming Kaylo call';
+
+  @override
+  String get bookingCallIncomingBody => 'A booking participant is calling.';
+
+  @override
+  String get bookingCallFailed =>
+      'Could not start the call. Check your connection and retry.';
 }

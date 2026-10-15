@@ -32,29 +32,37 @@ final paymentGatewayProvider = Provider<PaymentGateway>((ref) {
   );
 });
 
-/// The signed-in user's bookings, newest scheduled first. Invalidate it
-/// after creating a booking so the Bookings tab picks the new row up.
-final userBookingsProvider = FutureProvider.autoDispose<List<Booking>>((
+/// One shared live feed drives both the list and booking details. Invalidating
+/// after customer actions still refreshes mock and live repositories alike.
+final userBookingsProvider = StreamProvider.autoDispose<List<Booking>>((
   ref,
-) async {
+) async* {
   final userId = ref.watch(currentUserIdProvider);
-  if (userId == null) return const [];
-  final bookings = await ref
-      .watch(bookingsRepositoryProvider)
-      .getUserBookings(userId);
-  return [...bookings]..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
+  if (userId == null) {
+    yield const [];
+    return;
+  }
+  final repository = ref.watch(bookingsRepositoryProvider);
+  final stream = repository is LiveBookingsRepository
+      ? (repository as LiveBookingsRepository).watchUserBookings(userId)
+      : Stream.fromFuture(repository.getUserBookings(userId));
+  await for (final rows in stream) {
+    yield [...rows]..sort((a, b) => b.scheduledAt.compareTo(a.scheduledAt));
+  }
 });
 
-final bookingByIdProvider = FutureProvider.autoDispose.family<Booking, String>((
-  ref,
-  id,
-) async {
-  final bookings = await ref.watch(userBookingsProvider.future);
-  return bookings.firstWhere(
-    (b) => b.id == id,
-    orElse: () => throw ServerFailure('Booking not found', code: 'not-found'),
-  );
-});
+final bookingByIdProvider = Provider.autoDispose
+    .family<AsyncValue<Booking>, String>(
+      (ref, id) => ref
+          .watch(userBookingsProvider)
+          .whenData(
+            (bookings) => bookings.firstWhere(
+              (booking) => booking.id == id,
+              orElse: () =>
+                  throw ServerFailure('Booking not found', code: 'not-found'),
+            ),
+          ),
+    );
 
 /// The worker assigned to a booking, for the details screen.
 final bookingWorkerProvider = FutureProvider.autoDispose.family<Worker, String>(

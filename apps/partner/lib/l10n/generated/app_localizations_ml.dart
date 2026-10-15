@@ -375,7 +375,7 @@ class AppLocalizationsMl extends AppLocalizations {
   String get authHidePassword => 'പാസ്‌വേഡ് മറയ്ക്കുക';
 
   @override
-  String get authForgotPassword => 'പാസ്‌വേഡ് മറന്നോ? Kaylo-യെ ബന്ധപ്പെടുക';
+  String get authForgotPassword => 'പാസ്‌വേഡ് മറന്നോ?';
 
   @override
   String get authSupport => 'Kaylo സഹായം തേടുക';
@@ -1058,4 +1058,219 @@ class AppLocalizationsMl extends AppLocalizations {
 
   @override
   String get mapApproximateArea => 'ഏകദേശ സ്ഥലം';
+
+  @override
+  String get authResetTitle => 'പാസ്‌വേഡ് പുനഃസജ്ജമാക്കുക';
+
+  @override
+  String get authResetDescription =>
+      'നിങ്ങളുടെ Partner IDയും രജിസ്റ്റർ ചെയ്ത ഇമെയിൽ വിലാസവും നൽകുക. പുതിയ പാസ്‌വേഡ് തിരഞ്ഞെടുക്കാനുള്ള ലിങ്ക് ഇമെയിലിൽ അയയ്ക്കും.';
+
+  @override
+  String get authResetEmail => 'രജിസ്റ്റർ ചെയ്ത ഇമെയിൽ';
+
+  @override
+  String get authResetInvalidEmail => 'രജിസ്റ്റർ ചെയ്ത ഇമെയിൽ വിലാസം നൽകുക.';
+
+  @override
+  String get authResetSend => 'റീസെറ്റ് ലിങ്ക് അയയ്ക്കുക';
+
+  @override
+  String get authResetInbox => 'ഇൻബോക്സ് പരിശോധിക്കുക';
+
+  @override
+  String get authResetSent =>
+      'ഈ വിവരങ്ങൾ സജീവമായ പങ്കാളി അക്കൗണ്ടുമായി പൊരുത്തപ്പെടുന്നെങ്കിൽ റീസെറ്റ് ലിങ്ക് ഇമെയിലിൽ ലഭിക്കും. സ്പാം ഫോൾഡറും പരിശോധിക്കുക. തുടർന്ന് Partner IDയും പുതിയ പാസ്‌വേഡും ഉപയോഗിച്ച് സൈൻ ഇൻ ചെയ്യുക.';
+
+  @override
+  String get authResetResend => 'മറ്റൊരു ലിങ്ക് അയയ്ക്കുക';
+
+  @override
+  String authResetResendIn(int seconds) {
+    return '$seconds സെക്കൻഡിൽ വീണ്ടും അയയ്ക്കാം';
+  }
+
+  @override
+  String get authResetBack => 'സൈൻ ഇന്നിലേക്ക് മടങ്ങുക';
+
+  @override
+  String get authResetDemo =>
+      'ഡെമോ മോഡിൽ റീസെറ്റ് ഇമെയിലുകൾ അയയ്ക്കില്ല. പാസ്‌വേഡ് മാറ്റാൻ ലൈവ് ആപ്പ് ഉപയോഗിക്കുക.';
+
+  @override
+  String jobStageUpdated(String stage) {
+    return 'നില $stage ആയി പുതുക്കി';
+  }
+
+  @override
+  String get jobStageUpdateFailed =>
+      'നിലയിലെ മാറ്റം സ്ഥിരീകരിക്കാനായില്ല. നിലവിലെ ജോലി നില പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get jobCashRequired =>
+      'ഈ ക്യാഷ് ബുക്കിംഗ് പൂർത്തിയാക്കുന്നതിന് മുമ്പ് പണം ലഭിച്ചതായി സ്ഥിരീകരിക്കുക.';
+
+  @override
+  String get homeMorning => 'സുപ്രഭാതം';
+
+  @override
+  String get homeAfternoon => 'ശുഭ ഉച്ച';
+
+  @override
+  String get homeEvening => 'ശുഭ സായാഹ്നം';
+
+  @override
+  String get homeDayOverview => 'ഇന്നത്തെ കാര്യങ്ങൾ ഒറ്റനോട്ടത്തിൽ.';
+
+  @override
+  String get homeReadyTitle => 'അടുത്ത ജോലിക്ക് തയ്യാറാണ്';
+
+  @override
+  String get homeReadyBody =>
+      'ബുക്കിംഗ് അഭ്യർത്ഥനകൾ ഇവിടെ കാണാം. ജോലി സമയം പുതുക്കി സൂക്ഷിക്കുക.';
+
+  @override
+  String get homeRestTitle => 'വിശ്രമത്തിലാണ്';
+
+  @override
+  String get homeRestBody =>
+      'നിങ്ങളുടെ ജോലി സമയത്തിനുള്ളിൽ ഉപഭോക്താക്കൾക്ക് ബുക്കിംഗ് അഭ്യർത്ഥിക്കാം.';
+
+  @override
+  String get homeOnDuty => 'ഡ്യൂട്ടിയിൽ';
+
+  @override
+  String get homeOffDuty => 'ഡ്യൂട്ടിയിലല്ല';
+
+  @override
+  String get homeOnDutyHint => 'പുതിയ ജോലികൾ സ്വീകരിക്കുന്നു';
+
+  @override
+  String get homeOffDutyHint => 'നിശ്ചിത സമയത്തെ ബുക്കിംഗ് ലഭ്യമാണ്';
+
+  @override
+  String get homeSchedule => 'സമയക്രമം';
+
+  @override
+  String get homeHistory => 'ചരിത്രം';
+
+  @override
+  String get confirmCashReceived => 'പണം ലഭിച്ചതായി സ്ഥിരീകരിക്കുക';
+
+  @override
+  String confirmCashReceivedBody(String amount) {
+    return 'ഉപഭോക്താവിൽ നിന്ന് $amount ലഭിച്ചെന്ന് സ്ഥിരീകരിക്കുക. ജോലി പൂർത്തിയാകും.';
+  }
+
+  @override
+  String get cashReceived => 'പണം ലഭിച്ചു';
+
+  @override
+  String get cashAmountUnavailable =>
+      'തുക ലഭ്യമായില്ല. സ്ഥിരീകരിക്കുന്നതിന് മുമ്പ് ജോലി പുതുക്കുക.';
+
+  @override
+  String get callAudioOutputFailed =>
+      'ഓഡിയോ ഔട്ട്‌പുട്ട് മാറ്റാനായില്ല. കോൾ ഇപ്പോഴും സജീവമാണ്.';
+
+  @override
+  String get callConnecting => 'കണക്റ്റ് ചെയ്യുന്നു…';
+
+  @override
+  String get callCouldNotConnect => 'കണക്റ്റ് ചെയ്യാനായില്ല';
+
+  @override
+  String get callDeclined => 'നിരസിച്ചു';
+
+  @override
+  String get callEndForEveryone => 'എല്ലാവർക്കും കോൾ അവസാനിപ്പിക്കുക';
+
+  @override
+  String get callEnded => 'കോൾ അവസാനിച്ചു';
+
+  @override
+  String get callErrorJoin =>
+      'ഈ കോളിൽ ചേരാനായില്ല. വീണ്ടും ശ്രമിക്കുക, അല്ലെങ്കിൽ വിളിച്ചയാളോട് പുതിയ SOS കോൾ തുടങ്ങാൻ പറയുക.';
+
+  @override
+  String get callErrorMicrophone =>
+      'മൈക്രോഫോൺ ഉപയോഗിക്കാനായില്ല. കെയ്‌ലോയ്ക്കുള്ള മൈക്രോഫോൺ അനുമതി പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get callErrorRoom =>
+      'ഈ കോൾ ലഭ്യമല്ല അല്ലെങ്കിൽ അവസാനിച്ചു. പുതിയ കോൾ തുടങ്ങാൻ SOS-ലേക്ക് മടങ്ങുക.';
+
+  @override
+  String get callErrorSettings =>
+      'കോൾ ക്രമീകരണങ്ങൾ ലോഡ് ചെയ്യാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
+
+  @override
+  String get callInterrupted => 'കണക്ഷൻ തടസ്സപ്പെട്ടു. വീണ്ടും ശ്രമിക്കുന്നു…';
+
+  @override
+  String get callInvitedWaiting => 'ക്ഷണിച്ചു • ഉത്തരത്തിനായി കാത്തിരിക്കുന്നു';
+
+  @override
+  String get callKeepOpen => 'കോൾ സമയത്ത് കെയ്‌ലോ തുറന്നുവയ്ക്കുക.';
+
+  @override
+  String get callLeave => 'കോൾ വിടുക';
+
+  @override
+  String get callLeft => 'കോൾ വിട്ടു';
+
+  @override
+  String get callPeerConnected => 'കണക്റ്റ് ചെയ്തു';
+
+  @override
+  String get callPeerConnecting => 'കണക്റ്റ് ചെയ്യുന്നു';
+
+  @override
+  String get callPeerFailed => 'കണക്ഷൻ പരാജയപ്പെട്ടു';
+
+  @override
+  String get callPeerReconnecting => 'വീണ്ടും കണക്റ്റ് ചെയ്യുന്നു';
+
+  @override
+  String get callTitle => 'കെയ്‌ലോ SOS കോൾ';
+
+  @override
+  String get callYou => 'നിങ്ങൾ';
+
+  @override
+  String get callYouMuted => 'നിങ്ങൾ • മ്യൂട്ട് ചെയ്തു';
+
+  @override
+  String get callYourCircle => 'നിങ്ങളുടെ വിശ്വസ്ത വലയം';
+
+  @override
+  String get close => 'അടയ്ക്കുക';
+
+  @override
+  String get mute => 'മ്യൂട്ട്';
+
+  @override
+  String get retryCall => 'കോൾ വീണ്ടും ശ്രമിക്കുക';
+
+  @override
+  String get speaker => 'സ്പീക്കർ';
+
+  @override
+  String get unmute => 'അൺമ്യൂട്ട്';
+
+  @override
+  String get bookingCallTitle => 'Kaylo കോൾ';
+
+  @override
+  String get bookingCallConnected => 'ബുക്കിംഗ് കോൾ';
+
+  @override
+  String get bookingCallIncoming => 'Kaylo കോൾ വരുന്നു';
+
+  @override
+  String get bookingCallIncomingBody => 'ബുക്കിംഗിലെ അംഗം വിളിക്കുന്നു.';
+
+  @override
+  String get bookingCallFailed =>
+      'കോൾ ആരംഭിക്കാനായില്ല. കണക്ഷൻ പരിശോധിച്ച് വീണ്ടും ശ്രമിക്കുക.';
 }

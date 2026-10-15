@@ -4,7 +4,7 @@ The worker app shares `kaylo_core` and `kaylo_ui` with the customer app. Its And
 
 ## Sign-in and applications
 
-Workers sign in with a Kaylo-issued partner ID and password. A temporary password must be changed before opening the rest of the app. Password recovery goes through Kaylo support at kayloapp@gmail.com.
+Workers sign in with a Kaylo-issued partner ID and password. A temporary password must be changed before opening the rest of the app. Forgot password sends a Firebase single-use reset link to the registered contact email after checking the Partner ID and email. The link opens Firebase’s hosted reset page; the worker then signs in with the same Partner ID and new password. Mock mode does not send recovery email.
 
 Applicants do not need an account. The four-step form collects their details, services, payout method, consent and five private documents. Submission shows a reference number; the public status lookup returns only that reference and its status. The email address is required for credential delivery. Personal application details and documents are kept in memory during submission, not in local preferences.
 

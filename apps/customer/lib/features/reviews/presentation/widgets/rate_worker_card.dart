@@ -118,6 +118,7 @@ class _RateWorkerSheetState extends ConsumerState<RateWorkerSheet> {
   late int _rating = widget.existing?.rating ?? 0;
   late final _text = TextEditingController(text: widget.existing?.text ?? '');
   bool _saving = false;
+  late bool _hideName = widget.existing?.hideName ?? false;
 
   @override
   void dispose() {
@@ -141,6 +142,7 @@ class _RateWorkerSheetState extends ConsumerState<RateWorkerSheet> {
             workerId: widget.booking.workerId!,
             rating: _rating,
             text: _text.text,
+            hideName: _hideName,
           );
     } catch (error) {
       if (!mounted) return;
@@ -218,6 +220,15 @@ class _RateWorkerSheetState extends ConsumerState<RateWorkerSheet> {
             hintText: l10n.reviewTextHint,
             controller: _text,
             maxLength: 400,
+          ),
+          CheckboxListTile(
+            contentPadding: EdgeInsets.zero,
+            title: Text(l10n.hideReviewName),
+            subtitle: Text(l10n.hideReviewNameHint),
+            value: _hideName,
+            onChanged: _saving
+                ? null
+                : (value) => setState(() => _hideName = value ?? false),
           ),
           const SizedBox(height: AppSpacing.l),
           KayloButton(

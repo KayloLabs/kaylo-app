@@ -1,3 +1,5 @@
+import 'dart:async';
+import 'booking_updates.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:kaylo_core/models/booking.dart';
@@ -8,10 +10,59 @@ import '../domain/bookings_repository.dart';
 /// `scheduledAt` maps to the schema's `booking_date` + `booking_time`,
 /// and `totalAmount` maps to `estimated_cost` (until `final_cost` lands
 /// with payments in R2).
-class SupabaseBookingsRepository implements BookingsRepository {
+class SupabaseBookingsRepository
+    implements BookingsRepository, LiveBookingsRepository {
   final SupabaseClient _client;
 
   SupabaseBookingsRepository(this._client);
+
+  @override
+  Stream<List<Booking>> watchUserBookings(String userId) =>
+      watchBookingSnapshots(
+        load: () => getUserBookings(userId),
+        changes: _changes(userId),
+      );
+
+  Stream<void> _changes(String personId) {
+    RealtimeChannel? channel;
+    late StreamController<void> events;
+    events = StreamController<void>(
+      onListen: () {
+        final topic = _client.channel(
+          'kaylo-chat:$personId:customer-bookings:${identityHashCode(events)}',
+          opts: const RealtimeChannelConfig(private: true),
+        );
+        // RLS authorizes row delivery. The app's person ID must not be used
+        // as a customer_id filter: they are different database identifiers.
+        for (final event in [
+          PostgresChangeEvent.insert,
+          PostgresChangeEvent.update,
+          PostgresChangeEvent.delete,
+        ]) {
+          topic.onPostgresChanges(
+            event: event,
+            schema: 'public',
+            table: 'bookings',
+            callback: (_) {
+              if (!events.isClosed) events.add(null);
+            },
+          );
+        }
+        channel = topic.subscribe((status, error) {
+          if (status == RealtimeSubscribeStatus.subscribed &&
+              !events.isClosed) {
+            events.add(null);
+          }
+        });
+      },
+      onCancel: () async {
+        final current = channel;
+        channel = null;
+        if (current != null) await _client.removeChannel(current);
+      },
+    );
+    return events.stream;
+  }
 
   @override
   Future<List<Booking>> getUserBookings(String userId) async {

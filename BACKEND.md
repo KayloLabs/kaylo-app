@@ -728,3 +728,74 @@ for the signed-in worker, zero before the first cash job. `cash_flow.sql` and
 
 Migration 0032 was applied to the live project on 14 October 2026. Its rollback
 preflight and the `cash_flow.sql` and `booking_chat.sql` regression suites passed.
+
+
+### Partner password recovery (15 October 2026)
+
+Migration `0033_partner_password_recovery.sql` and the `partner-password-reset`
+function are applied to the live project. The public endpoint accepts a Partner
+ID and registered contact email. Its service-only lookup checks an active person
+and ready/delivered issuance; Firebase confirms the matching worker UID, alias
+and issuance claims before generating a single-use hosted password-reset link.
+The existing Kaylo Gmail sender delivers it only to the database contact email.
+The link and Firebase response are never returned to the caller or logged.
+
+Recovery uses atomic account (3/hour, 60-second cooldown), client (10/hour) and
+global (100/hour) budgets. Unknown or mismatched accounts return the same generic
+success response; provider failures return a retryable error. No reset codes or
+passwords are stored in Postgres. `partner-password-changed` verifies the Firebase
+password timestamp on the next sign-in when the first-password gate is still set.
+
+Validation: rollback preflight and `supabase/tests/partner_password_recovery.sql`,
+Firebase identity/link and endpoint tests, partner authentication/widget tests,
+and live malformed/unknown-account/throttle smoke requests. Inbox delivery for
+a real worker must be confirmed by requesting a link with their own details.
+
+Redeploy with `supabase functions deploy partner-password-reset --use-api`.
+This endpoint deliberately has `verify_jwt=false`, since recovery is available
+while signed out; it cannot update a password or grant access itself.
+
+### Live booking stages and partner discovery
+
+Migrations `0034_bookable_partner_discovery.sql` and
+`0035_keep_paid_requests_pending.sql` keep approved, issued partners in customer
+discovery regardless of their duty switch, and separate payment confirmation
+from the worker accepting a request. Existing sample profiles remain readable
+for historical bookings but are excluded from new-booking lists.
+
+Customer booking lists and details share a private realtime feed with a ten
+second recovery poll. Partner job details compare complete job snapshots and
+re-read after each successful stage write. The stage action disables repeat
+taps and reports failures. Both use the existing participant row policies.
+
+Run `supabase/tests/booking_stage_sync.sql` after these migrations to verify
+customer and partner projections at all five stages and the discovery rules.
+The test owns a rollback transaction and uses synthetic records. Cash jobs
+still require the separate collection confirmation before completion.
+
+
+### Booking contact and review privacy (0036)
+
+`0036_booking_contact_and_review_privacy.sql` adds an assigned-participant
+booking-call entry point to the existing WebRTC rooms. Both apps use the shared
+`KayloVoiceCallScreen`; no telephone number or SIM call is needed. Calls are
+available after acceptance and during work. Incoming invitations are polled
+while the app is foregrounded. Background/terminated-app ringing is not part of
+this implementation. Existing `care-call` ICE configuration is reused; test
+actual audio on both devices and their networks before the presentation.
+
+The partner feed reads `my_partner_payment_states()` alongside its jobs. Cash
+completion asks the worker to confirm the customer amount and invokes the
+existing atomic `confirm_cash_collected` action, rather than attempting an
+ordinary stage advance. One-off map pins saved in booking notes are recovered
+for the existing in-app map; valid saved coordinates take priority.
+
+`reviews.hide_name` controls public display. Customers can read their own raw
+reviews, while `public_worker_reviews` and `my_worker_reviews` return masked
+names and omit identifying booking/customer IDs for hidden-name reviews. This
+hides the display name, but cannot prevent a worker recognizing a job from its
+review text. Older clients using direct public review-table reads need updating.
+
+`supabase/tests/booking_contact_review_privacy.sql` checks participant access,
+room reuse, atomic cash completion, duplicate prevention and review masking
+inside a rolled-back transaction. No real booking is completed by the tests.
